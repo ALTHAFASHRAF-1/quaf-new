@@ -5,408 +5,1013 @@
     <meta charset="utf-8" />
     <link rel="stylesheet" href="globals.css" />
     <link rel="stylesheet" href="styleguide.css" />
-    <link rel="stylesheet" href="style.css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      /** @type {import('tailwindcss').Config} */
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              maindark: "var(--maindark)",
+              mainprimary: "var(--mainprimary)",
+              mainsecondary: "var(--mainsecondary)",
+              maintertiary: "var(--maintertiary)",
+              mainwhite: "var(--mainwhite)",
+              "shadesblue-15": "var(--shadesblue-15)",
+              "shadesdark-10": "var(--shadesdark-10)",
+              "shadesdark-15": "var(--shadesdark-15)",
+              "shadesdark-30": "var(--shadesdark-30)",
+              "shadesdark-40": "var(--shadesdark-40)",
+              "shadesdark-5": "var(--shadesdark-5)",
+              "shadesdark-60": "var(--shadesdark-60)",
+              "shadesdark-80": "var(--shadesdark-80)",
+              "shadesprimary-10": "var(--shadesprimary-10)",
+              "shadesprimary-15": "var(--shadesprimary-15)",
+              "shadessecondary-15": "var(--shadessecondary-15)",
+              "shadestertiary-15": "var(--shadestertiary-15)",
+            },
+            fontFamily: {
+              "body-text-12-semi-bold-UC": "var(--body-text-12-semi-bold-UC-font-family)",
+              "body-text-16-medium": "var(--body-text-16-medium-font-family)",
+              "body-text-16-regular": "var(--body-text-16-regular-font-family)",
+              "body-text-16-semibold": "var(--body-text-16-semibold-font-family)",
+              "body-text-18-bold": "var(--body-text-18-bold-font-family)",
+              "body-text-18-medium": "var(--body-text-18-medium-font-family)",
+              "heading-h2-46": "var(--heading-h2-46-font-family)",
+              "heading-h3-40": "var(--heading-h3-40-font-family)",
+              "heading-h5-24": "var(--heading-h5-24-font-family)",
+              "heading-h6-20": "var(--heading-h6-20-font-family)",
+              "heading-h6-28": "var(--heading-h6-28-font-family)",
+            },
+          },
+        },
+        plugins: [],
+      };
+    </script>
   </head>
   <body>
-    <div class="homepage">
-      <div class="hero-nav">
-        <div class="bg">
-          <img class="hero-bg" />
-          <img class="glow-effect" src="https://c.animaapp.com/mjtpnr33xG28bA/img/glow-effect-1.svg" />
-          <img class="img" src="https://c.animaapp.com/mjtpnr33xG28bA/img/glow-effect.svg" />
+    <div class="flex flex-col w-[1440px] items-center relative bg-white">
+      <div class="relative self-stretch w-full h-[782px] rounded-3xl">
+        <div
+          class="absolute top-[calc(50.00%_-_391px)] left-[calc(50.00%_-_720px)] w-[1440px] h-[782px] bg-[url(https://c.animaapp.com/mjv3lc9bynq8xp/img/hero-bg.png)] bg-[100%_100%]"
+        >
+          <img class="absolute top-[-822px] left-[-1618px] w-[1440px] h-[782px]" />
+          <img
+            class="absolute top-[293px] left-[925px] w-[515px] h-[489px]"
+            src="https://c.animaapp.com/mjv3lc9bynq8xp/img/glow-effect-1.svg"
+          />
+          <img
+            class="absolute top-[122px] left-[549px] w-[624px] h-[625px]"
+            src="https://c.animaapp.com/mjv3lc9bynq8xp/img/glow-effect.svg"
+          />
         </div>
-        <div class="div">
-          <div class="navigation-bar">
-            <div class="text-wrapper">Monks&nbsp;&nbsp;Event</div>
-            <div class="div-2">
-              <div class="text-wrapper-2">Home</div>
-              <div class="text-wrapper-3">About</div>
-              <div class="text-wrapper-3">Speakers</div>
-              <div class="text-wrapper-3">Gallery</div>
-              <div class="text-wrapper-3">Contact</div>
+        <div class="absolute top-0 left-0 w-[1440px] h-[781px] rounded-3xl">
+          <div
+            class="flex w-[941px] h-[115px] items-center justify-between px-[135px] py-8 absolute top-0 left-[499px]"
+          >
+            <div class="inline-flex items-center gap-12 relative flex-[0_0_auto]">
+              <p
+                class="relative w-fit mt-[-1.00px] [font-family:'Manrope',Helvetica] font-normal text-mainwhite text-base text-center tracking-[0] leading-4"
+              >
+                <a href="https://quaf.me/" target="_blank" rel="noopener noreferrer"
+                  ><span
+                    class="font-[number:var(--body-text-16-medium-font-weight)] leading-[var(--body-text-16-medium-line-height)] font-body-text-16-medium [font-style:var(--body-text-16-medium-font-style)] tracking-[var(--body-text-16-medium-letter-spacing)] text-[length:var(--body-text-16-medium-font-size)]"
+                    >Home</span
+                  ></a
+                >
+              </p>
+              <p
+                class="relative w-fit mt-[-1.00px] [font-family:'Manrope',Helvetica] font-normal text-shadesdark-30 text-base text-center tracking-[0] leading-4"
+              >
+                <span
+                  class="font-[number:var(--body-text-16-medium-font-weight)] leading-[var(--body-text-16-medium-line-height)] font-body-text-16-medium [font-style:var(--body-text-16-medium-font-style)] tracking-[var(--body-text-16-medium-letter-spacing)] text-[length:var(--body-text-16-medium-font-size)]"
+                  >About</span
+                >
+              </p>
+              <div
+                class="relative w-fit mt-[-1.00px] font-body-text-16-medium font-[number:var(--body-text-16-medium-font-weight)] text-shadesdark-30 text-[length:var(--body-text-16-medium-font-size)] text-center tracking-[var(--body-text-16-medium-letter-spacing)] leading-[var(--body-text-16-medium-line-height)] whitespace-nowrap [font-style:var(--body-text-16-medium-font-style)]"
+              >
+                Leaders
+              </div>
+              <div
+                class="relative w-fit mt-[-1.00px] font-body-text-16-medium font-[number:var(--body-text-16-medium-font-weight)] text-shadesdark-30 text-[length:var(--body-text-16-medium-font-size)] text-center tracking-[var(--body-text-16-medium-letter-spacing)] leading-[var(--body-text-16-medium-line-height)] whitespace-nowrap [font-style:var(--body-text-16-medium-font-style)]"
+              >
+                Gallery
+              </div>
+              <div
+                class="relative w-fit mt-[-1.00px] font-body-text-16-medium font-[number:var(--body-text-16-medium-font-weight)] text-shadesdark-30 text-[length:var(--body-text-16-medium-font-size)] text-center tracking-[var(--body-text-16-medium-letter-spacing)] leading-[var(--body-text-16-medium-line-height)] whitespace-nowrap [font-style:var(--body-text-16-medium-font-style)]"
+              >
+                Contact
+              </div>
             </div>
-            <button class="frame">
-              <button class="button"><div class="text-wrapper-4">Get Started</div></button>
+            <button class="all-[unset] box-border relative w-[181px] h-[51px]">
+              <button
+                class="all-[unset] box-border px-5 py-[11px] absolute top-0 right-0 border border-solid border-[#7a38fc] inline-flex items-center justify-center gap-2 rounded-lg"
+              >
+                <div
+                  class="relative w-fit mt-[-1.00px] font-body-text-16-semibold font-[number:var(--body-text-16-semibold-font-weight)] text-mainwhite text-[length:var(--body-text-16-semibold-font-size)] text-center tracking-[var(--body-text-16-semibold-letter-spacing)] leading-[var(--body-text-16-semibold-line-height)] whitespace-nowrap [font-style:var(--body-text-16-semibold-font-style)]"
+                >
+                  Get Started
+                </div>
+              </button>
             </button>
           </div>
-          <div class="frame-2">
-            <div class="text-buttons">
-              <div class="text">
-                <div class="text-2">
-                  <p class="p">15-17 December National IT Hall</p>
-                  <div class="text-wrapper-5">Tech Innovation Event 2025</div>
+          <div class="inline-flex items-start gap-[157px] absolute top-[163px] left-[135px]">
+            <div class="flex flex-col w-[513px] items-start gap-10 px-0 py-12 relative">
+              <div class="flex flex-col items-start gap-4 relative self-stretch w-full flex-[0_0_auto]">
+                <div class="flex flex-col items-start gap-1 relative self-stretch w-full flex-[0_0_auto]">
+                  <div
+                    class="relative self-stretch mt-[-1.00px] font-body-text-18-bold font-[number:var(--body-text-18-bold-font-weight)] text-white text-[length:var(--body-text-18-bold-font-size)] tracking-[var(--body-text-18-bold-letter-spacing)] leading-[var(--body-text-18-bold-line-height)] [font-style:var(--body-text-18-bold-font-style)]"
+                  >
+                    MAY-1-2024
+                  </div>
+                  <div
+                    class="relative self-stretch [font-family:'Abel',Helvetica] font-normal text-mainwhite text-[64px] tracking-[-0.64px] leading-[70.4px]"
+                  >
+                    Qualitative Union for<br />Academic Focus
+                  </div>
                 </div>
-                <p class="text-wrapper-6">
-                  Tech Innovation Event 2025: Unveiling breakthrough technologies and networking opportunities for
-                  industry pioneers.
+                <p
+                  class="relative w-[414px] font-body-text-16-regular font-[number:var(--body-text-16-regular-font-weight)] text-shadesdark-15 text-[length:var(--body-text-16-regular-font-size)] tracking-[var(--body-text-16-regular-letter-spacing)] leading-[var(--body-text-16-regular-line-height)] [font-style:var(--body-text-16-regular-font-style)]"
+                >
+                  27th batch of Darul Hidaya Da’wa College, Manoor
                 </p>
               </div>
-              <div class="buttons">
-                <button class="div-wrapper"><div class="text-wrapper-4">Buy Tickets</div></button>
-                <button class="buy-tickets-wrapper"><div class="text-wrapper-4">See Schedule</div></button>
+              <div class="gap-7 inline-flex items-center relative flex-[0_0_auto]">
+                <button
+                  class="all-[unset] box-border px-7 py-3.5 relative flex-[0_0_auto] bg-mainprimary inline-flex items-center justify-center gap-2 rounded-lg"
+                >
+                  <div
+                    class="relative w-fit mt-[-1.00px] font-body-text-16-semibold font-[number:var(--body-text-16-semibold-font-weight)] text-mainwhite text-[length:var(--body-text-16-semibold-font-size)] text-center tracking-[var(--body-text-16-semibold-letter-spacing)] leading-[var(--body-text-16-semibold-line-height)] whitespace-nowrap [font-style:var(--body-text-16-semibold-font-style)]"
+                  >
+                    Join now
+                  </div>
+                </button>
+                <button
+                  class="all-[unset] box-border px-7 py-3.5 relative flex-[0_0_auto] border border-solid border-[#7a38fc] inline-flex items-center justify-center gap-2 rounded-lg"
+                >
+                  <div
+                    class="relative w-fit mt-[-1.00px] font-body-text-16-semibold font-[number:var(--body-text-16-semibold-font-weight)] text-mainwhite text-[length:var(--body-text-16-semibold-font-size)] text-center tracking-[var(--body-text-16-semibold-letter-spacing)] leading-[var(--body-text-16-semibold-line-height)] whitespace-nowrap [font-style:var(--body-text-16-semibold-font-style)]"
+                  >
+                    Subscribe
+                  </div>
+                </button>
               </div>
             </div>
-            <img class="graphics" src="https://c.animaapp.com/mjtpnr33xG28bA/img/graphics.png" />
-            <img class="vector" src="https://c.animaapp.com/mjtpnr33xG28bA/img/vector-1-1.svg" />
-            <img class="vector-2" src="https://c.animaapp.com/mjtpnr33xG28bA/img/vector.svg" />
+            <img
+              class="relative w-[500px] h-[573.5px] mt-[-1.50px] mb-[-2.00px]"
+              src="https://c.animaapp.com/mjv3lc9bynq8xp/img/graphics.png"
+            />
+            <img
+              class="absolute top-[486px] left-1 w-[85px] h-20"
+              src="https://c.animaapp.com/mjv3lc9bynq8xp/img/vector-1.svg"
+            />
+            <img
+              class="absolute top-[312px] left-[630px] w-[27px] h-[27px]"
+              src="https://c.animaapp.com/mjv3lc9bynq8xp/img/vector.svg"
+            />
           </div>
+          <img
+            class="absolute top-[426px] left-[1161px] w-[164px] h-[343px] object-cover"
+            src="https://c.animaapp.com/mjv3lc9bynq8xp/img/3d-quaf-logo---high-quality-professional-rendering-removebg-prev.png"
+          />
+          <div
+            class="absolute top-11 left-[189px] w-[282px] font-body-text-18-bold font-[number:var(--body-text-18-bold-font-weight)] text-white text-[length:var(--body-text-18-bold-font-size)] tracking-[var(--body-text-18-bold-letter-spacing)] leading-[var(--body-text-18-bold-line-height)] whitespace-nowrap [font-style:var(--body-text-18-bold-font-style)]"
+          >
+            QUAF
+          </div>
+          <img
+            class="absolute top-[34px] left-[135px] w-[47px] h-[47px] object-cover"
+            src="https://c.animaapp.com/mjv3lc9bynq8xp/img/logo3d-1.png"
+          />
         </div>
       </div>
-      <img class="img-2" src="https://c.animaapp.com/mjtpnr33xG28bA/img/frame-37694.svg" />
-      <div class="next-event">
-        <div class="text-3">
-          <div class="text-wrapper-7">About the event</div>
-          <p class="tech-event">
-            <span class="span">Tech Event 2025</span>
-            <span class="text-wrapper-8">
+      <img
+        class="relative self-stretch w-full flex-[0_0_auto]"
+        src="https://c.animaapp.com/mjv3lc9bynq8xp/img/frame-37694.svg"
+      />
+      <div
+        class="flex flex-col items-center gap-16 pt-36 pb-24 px-[135px] relative self-stretch w-full flex-[0_0_auto]"
+      >
+        <div class="flex w-[1170px] items-start justify-between relative flex-[0_0_auto]">
+          <div
+            class="relative w-fit mt-[-1.00px] font-heading-h2-46 font-[number:var(--heading-h2-46-font-weight)] text-maindark text-[length:var(--heading-h2-46-font-size)] text-center tracking-[var(--heading-h2-46-letter-spacing)] leading-[var(--heading-h2-46-line-height)] whitespace-nowrap [font-style:var(--heading-h2-46-font-style)]"
+          >
+            About the event
+          </div>
+          <p
+            class="relative w-[650px] mt-[-1.00px] [font-family:'Manrope',Helvetica] font-normal text-maindark text-base tracking-[0] leading-4"
+          >
+            <span
+              class="text-[#7a38fc] leading-[var(--body-text-16-regular-line-height)] font-body-text-16-regular [font-style:var(--body-text-16-regular-font-style)] font-[number:var(--body-text-16-regular-font-weight)] tracking-[var(--body-text-16-regular-letter-spacing)] text-[length:var(--body-text-16-regular-font-size)]"
+              >Tech Event 2025</span
+            >
+            <span class="text-[#0e0b0b] leading-[25.6px]">
               showcases groundbreaking innovations, featuring keynote talks, interactive workshops, and networking
               sessions for tech enthusiasts and industry leaders.</span
             >
           </p>
         </div>
-        <div class="div-3">
-          <div class="memorable-experience">
-            <div class="frame-wrapper">
-              <div class="frame-3">
-                <div class="div-4">
-                  <div class="text-wrapper-9">MEMORABLE EXPERIENCE</div>
-                  <p class="text-wrapper-10">Unforgettable Moments at Eventive 2025</p>
+        <div class="inline-flex items-start gap-[30px] relative flex-[0_0_auto]">
+          <div
+            class="flex flex-col w-[570px] h-[362px] items-start justify-end relative rounded-2xl [background:url(https://c.animaapp.com/mjv3lc9bynq8xp/img/memorable-experience.png)_50%_50%_/_cover]"
+          >
+            <div
+              class="relative w-[570px] h-[362px] bg-[url(https://c.animaapp.com/mjv3lc9bynq8xp/img/rectangle-27.png)] bg-[100%_100%]"
+            >
+              <div
+                class="flex w-[570px] h-[362px] items-end p-5 relative rounded-2xl [background:linear-gradient(180deg,rgba(0,0,0,0)_63%,rgba(0,0,0,1)_92%)]"
+              >
+                <div class="inline-flex flex-col items-start gap-1 relative flex-[0_0_auto]">
+                  <div
+                    class="relative w-fit mt-[-1.00px] font-body-text-12-semi-bold-UC font-[number:var(--body-text-12-semi-bold-UC-font-weight)] text-shadesdark-5 text-[length:var(--body-text-12-semi-bold-UC-font-size)] tracking-[var(--body-text-12-semi-bold-UC-letter-spacing)] leading-[var(--body-text-12-semi-bold-UC-line-height)] whitespace-nowrap [font-style:var(--body-text-12-semi-bold-UC-font-style)]"
+                  >
+                    MEMORABLE EXPERIENCE
+                  </div>
+                  <p
+                    class="relative w-fit font-heading-h5-24 font-[number:var(--heading-h5-24-font-weight)] text-mainwhite text-[length:var(--heading-h5-24-font-size)] tracking-[var(--heading-h5-24-letter-spacing)] leading-[var(--heading-h5-24-line-height)] whitespace-nowrap [font-style:var(--heading-h5-24-font-style)]"
+                  >
+                    Unforgettable Moments at Eventive 2025
+                  </p>
                 </div>
               </div>
             </div>
           </div>
-          <div class="skilled-speaker">
-            <div class="frame-4">
-              <div class="text-4">
-                <div class="text-wrapper-9">SKILLED SPEAKERS</div>
-                <div class="text-wrapper-10">Storytelling Festival</div>
+          <div
+            class="flex flex-col w-[270px] h-[362px] items-start justify-end relative rounded-2xl [background:url(https://c.animaapp.com/mjv3lc9bynq8xp/img/skilled-speaker.png)_50%_50%_/_cover]"
+          >
+            <div
+              class="flex flex-col w-[270px] h-[362px] items-start justify-end p-5 relative rounded-2xl [background:linear-gradient(180deg,rgba(0,0,0,0)_65%,rgba(0,0,0,0.73)_84%,rgba(0,0,0,1)_100%)]"
+            >
+              <div class="inline-flex flex-col items-start justify-end gap-1 relative flex-[0_0_auto]">
+                <div
+                  class="relative w-fit mt-[-1.00px] font-body-text-12-semi-bold-UC font-[number:var(--body-text-12-semi-bold-UC-font-weight)] text-shadesdark-5 text-[length:var(--body-text-12-semi-bold-UC-font-size)] tracking-[var(--body-text-12-semi-bold-UC-letter-spacing)] leading-[var(--body-text-12-semi-bold-UC-line-height)] whitespace-nowrap [font-style:var(--body-text-12-semi-bold-UC-font-style)]"
+                >
+                  SKILLED SPEAKERS
+                </div>
+                <div
+                  class="relative w-fit font-heading-h5-24 font-[number:var(--heading-h5-24-font-weight)] text-mainwhite text-[length:var(--heading-h5-24-font-size)] tracking-[var(--heading-h5-24-letter-spacing)] leading-[var(--heading-h5-24-line-height)] whitespace-nowrap [font-style:var(--heading-h5-24-font-style)]"
+                >
+                  Storytelling Festival
+                </div>
               </div>
             </div>
           </div>
-          <div class="community-build">
-            <div class="frame-5">
-              <div class="text-4">
-                <div class="text-wrapper-9">COMMUNITY BUILD</div>
-                <div class="text-wrapper-10">Build Networking</div>
+          <div
+            class="flex flex-col w-[270px] h-[362px] items-start justify-end relative rounded-2xl [background:url(https://c.animaapp.com/mjv3lc9bynq8xp/img/community-build.png)_50%_50%_/_cover]"
+          >
+            <div
+              class="flex flex-col w-[270px] h-[362px] items-start justify-end p-5 relative rounded-2xl [background:linear-gradient(180deg,rgba(0,0,0,0)_47%,rgba(0,0,0,0.78)_84%,rgba(0,0,0,1)_100%)]"
+            >
+              <div class="inline-flex flex-col items-start justify-end gap-1 relative flex-[0_0_auto]">
+                <div
+                  class="relative w-fit mt-[-1.00px] font-body-text-12-semi-bold-UC font-[number:var(--body-text-12-semi-bold-UC-font-weight)] text-shadesdark-5 text-[length:var(--body-text-12-semi-bold-UC-font-size)] tracking-[var(--body-text-12-semi-bold-UC-letter-spacing)] leading-[var(--body-text-12-semi-bold-UC-line-height)] whitespace-nowrap [font-style:var(--body-text-12-semi-bold-UC-font-style)]"
+                >
+                  COMMUNITY BUILD
+                </div>
+                <div
+                  class="relative w-fit font-heading-h5-24 font-[number:var(--heading-h5-24-font-weight)] text-mainwhite text-[length:var(--heading-h5-24-font-size)] tracking-[var(--heading-h5-24-letter-spacing)] leading-[var(--heading-h5-24-line-height)] whitespace-nowrap [font-style:var(--heading-h5-24-font-style)]"
+                >
+                  Build Networking
+                </div>
               </div>
             </div>
           </div>
         </div>
-        <img class="bg-shape" src="https://c.animaapp.com/mjtpnr33xG28bA/img/bg-shape.png" />
+        <img
+          class="absolute top-[74px] left-[calc(50.00%_-_720px)] w-[1440px] h-[196px]"
+          src="https://c.animaapp.com/mjv3lc9bynq8xp/img/bg-shape.png"
+        />
       </div>
-      <div class="event-boasts">
-        <img class="BG-glow-effect" src="https://c.animaapp.com/mjtpnr33xG28bA/img/bg-glow-effect.png" />
-        <div class="div-2">
-          <img class="frame-6" src="https://c.animaapp.com/mjtpnr33xG28bA/img/frame-37402.svg" />
-          <div class="text-5">
-            <div class="text-6">
-              <p class="the-event-boasts-our">The event boasts<br />our top creative<br />influencers</p>
-              <p class="text-wrapper-11">
+      <div class="flex flex-col h-[615px] items-start gap-2 px-[135px] py-0 relative self-stretch w-full">
+        <img
+          class="absolute top-0 left-0 w-[1440px] h-[615px]"
+          src="https://c.animaapp.com/mjv3lc9bynq8xp/img/bg-glow-effect.png"
+        />
+        <div class="inline-flex items-center gap-12 relative flex-[0_0_auto]">
+          <img
+            class="relative w-[313.55px] h-[615px]"
+            src="https://c.animaapp.com/mjv3lc9bynq8xp/img/frame-37402.svg"
+          />
+          <div class="flex flex-col w-[450px] items-start gap-8 relative">
+            <div class="inline-flex flex-col items-start gap-5 relative flex-[0_0_auto]">
+              <p
+                class="relative w-fit mt-[-1.00px] font-heading-h2-46 font-[number:var(--heading-h2-46-font-weight)] text-mainwhite text-[length:var(--heading-h2-46-font-size)] tracking-[var(--heading-h2-46-letter-spacing)] leading-[var(--heading-h2-46-line-height)] [font-style:var(--heading-h2-46-font-style)]"
+              >
+                The event boasts<br />our top creative<br />influencers
+              </p>
+              <p
+                class="relative w-[417px] font-body-text-16-regular font-[number:var(--body-text-16-regular-font-weight)] text-shadesdark-15 text-[length:var(--body-text-16-regular-font-size)] tracking-[var(--body-text-16-regular-letter-spacing)] leading-[var(--body-text-16-regular-line-height)] [font-style:var(--body-text-16-regular-font-style)]"
+              >
                 The event features renowned influencers and innovators shaping trends and driving creativity across
                 various industries.
               </p>
             </div>
-            <div class="text-7">
-              <div class="text-8">
-                <div class="div-4">
-                  <div class="text-wrapper-12">Sarah Johnson</div>
-                  <div class="rectangle"></div>
+            <div class="flex items-center gap-[69px] relative self-stretch w-full flex-[0_0_auto]">
+              <div class="flex flex-col w-[178px] items-start gap-6 relative">
+                <div class="inline-flex flex-col items-start gap-1 relative flex-[0_0_auto]">
+                  <div
+                    class="self-stretch relative mt-[-1.00px] font-heading-h6-20 font-[number:var(--heading-h6-20-font-weight)] text-mainwhite text-[length:var(--heading-h6-20-font-size)] tracking-[var(--heading-h6-20-letter-spacing)] leading-[var(--heading-h6-20-line-height)] [font-style:var(--heading-h6-20-font-style)]"
+                  >
+                    Sarah Johnson
+                  </div>
+                  <div class="relative self-stretch w-full h-0.5 bg-shadesdark-60"></div>
                 </div>
-                <div class="text-9">
-                  <div class="text-wrapper-13">December 15, 2025</div>
-                  <p class="text-wrapper-14">10:00 AM - 11:30 AM</p>
+                <div class="inline-flex flex-col items-start relative flex-[0_0_auto]">
+                  <div
+                    class="relative w-fit mt-[-1.00px] font-body-text-18-medium font-[number:var(--body-text-18-medium-font-weight)] text-mainwhite text-[length:var(--body-text-18-medium-font-size)] tracking-[var(--body-text-18-medium-letter-spacing)] leading-[var(--body-text-18-medium-line-height)] whitespace-nowrap [font-style:var(--body-text-18-medium-font-style)]"
+                  >
+                    December 15, 2025
+                  </div>
+                  <p
+                    class="relative w-fit font-body-text-16-regular font-[number:var(--body-text-16-regular-font-weight)] text-shadesdark-40 text-[length:var(--body-text-16-regular-font-size)] tracking-[var(--body-text-16-regular-letter-spacing)] leading-[var(--body-text-16-regular-line-height)] whitespace-nowrap [font-style:var(--body-text-16-regular-font-style)]"
+                  >
+                    10:00 AM - 11:30 AM
+                  </p>
                 </div>
               </div>
-              <div class="text-10">
-                <div class="div-4">
-                  <div class="text-wrapper-15">Christopher Wilson</div>
-                  <div class="rectangle-2"></div>
+              <div class="inline-flex flex-col items-start gap-6 relative flex-[0_0_auto]">
+                <div class="inline-flex flex-col items-start gap-1 relative flex-[0_0_auto]">
+                  <div
+                    class="w-[203px] relative mt-[-1.00px] font-heading-h6-20 font-[number:var(--heading-h6-20-font-weight)] text-mainwhite text-[length:var(--heading-h6-20-font-size)] tracking-[var(--heading-h6-20-letter-spacing)] leading-[var(--heading-h6-20-line-height)] [font-style:var(--heading-h6-20-font-style)]"
+                  >
+                    Christopher Wilson
+                  </div>
+                  <div class="relative w-[184px] h-0.5 bg-shadesdark-60"></div>
                 </div>
-                <div class="text-9">
-                  <div class="text-wrapper-16">December 17, 2025</div>
-                  <p class="text-wrapper-14">12:00 PM - 2:00 PM</p>
+                <div class="inline-flex flex-col items-start relative flex-[0_0_auto]">
+                  <div
+                    class="relative w-[169px] mt-[-1.00px] font-body-text-18-medium font-[number:var(--body-text-18-medium-font-weight)] text-mainwhite text-[length:var(--body-text-18-medium-font-size)] tracking-[var(--body-text-18-medium-letter-spacing)] leading-[var(--body-text-18-medium-line-height)] [font-style:var(--body-text-18-medium-font-style)]"
+                  >
+                    December 17, 2025
+                  </div>
+                  <p
+                    class="relative w-fit font-body-text-16-regular font-[number:var(--body-text-16-regular-font-weight)] text-shadesdark-40 text-[length:var(--body-text-16-regular-font-size)] tracking-[var(--body-text-16-regular-letter-spacing)] leading-[var(--body-text-16-regular-line-height)] whitespace-nowrap [font-style:var(--body-text-16-regular-font-style)]"
+                  >
+                    12:00 PM - 2:00 PM
+                  </p>
                 </div>
               </div>
             </div>
           </div>
-          <div class="frame-7">
-            <div class="pexels-fauxels"></div>
+          <div class="flex w-[312px] h-[615px] items-end relative">
+            <div class="h-[459px] bg-shadessecondary-15 rounded-[208.45px_208.45px_0px_0px] relative w-[299px]"></div>
             <img
-              class="pexels-fauxels-2"
-              src="https://c.animaapp.com/mjtpnr33xG28bA/img/pexels-fauxels-3184315-1.png"
+              class="h-[450px] mr-[-0.94px] ml-[-285.06px] relative w-[299px]"
+              src="https://c.animaapp.com/mjv3lc9bynq8xp/img/pexels-fauxels-3184315-1.png"
             />
           </div>
         </div>
-        <img class="graphic" src="https://c.animaapp.com/mjtpnr33xG28bA/img/graphic.png" />
+        <img
+          class="absolute top-[94px] left-[149px] w-[1119px] h-[438px]"
+          src="https://c.animaapp.com/mjv3lc9bynq8xp/img/graphic.png"
+        />
       </div>
-      <div class="speakers">
-        <div class="frame-8">
-          <div class="div-5">
-            <div class="rectangle-3"></div>
-            <div class="meet-the-top">Meet the top<br />incredible speakers</div>
-            <img class="vector-3" src="https://c.animaapp.com/mjtpnr33xG28bA/img/vector-1.svg" />
+      <div
+        class="flex flex-col items-center gap-16 px-0 py-20 self-stretch w-full bg-shadessecondary-15 relative flex-[0_0_auto]"
+      >
+        <div class="flex w-[1440px] items-center justify-between px-[135px] py-0 relative flex-[0_0_auto]">
+          <div class="inline-flex items-start gap-2 relative flex-[0_0_auto]">
+            <div class="absolute top-[95px] left-[246px] w-[220px] h-1 bg-mainsecondary"></div>
+            <div
+              class="relative w-fit mt-[-1.00px] font-heading-h2-46 font-[number:var(--heading-h2-46-font-weight)] text-maindark text-[length:var(--heading-h2-46-font-size)] tracking-[var(--heading-h2-46-letter-spacing)] leading-[var(--heading-h2-46-line-height)] [font-style:var(--heading-h2-46-font-style)]"
+            >
+              Meet the top<br />incredible speakers
+            </div>
+            <img
+              class="absolute top-3 left-[454px] w-[62px] h-[65px]"
+              src="https://c.animaapp.com/mjv3lc9bynq8xp/img/vector-2.svg"
+            />
           </div>
-          <button class="button-2"><div class="text-wrapper-4">View All Speakers</div></button>
+          <button
+            class="all-[unset] box-border px-6 py-3.5 relative flex-[0_0_auto] bg-mainprimary inline-flex items-center justify-center gap-2 rounded-lg"
+          >
+            <div
+              class="relative w-fit mt-[-1.00px] font-body-text-16-semibold font-[number:var(--body-text-16-semibold-font-weight)] text-mainwhite text-[length:var(--body-text-16-semibold-font-size)] text-center tracking-[var(--body-text-16-semibold-letter-spacing)] leading-[var(--body-text-16-semibold-line-height)] whitespace-nowrap [font-style:var(--body-text-16-semibold-font-style)]"
+            >
+              View All Speakers
+            </div>
+          </button>
         </div>
-        <div class="div-3">
-          <div class="speaker">
-            <div class="photo">
-              <img class="mask-group" src="https://c.animaapp.com/mjtpnr33xG28bA/img/mask-group.png" />
+        <div class="inline-flex items-start gap-[30px] relative flex-[0_0_auto]">
+          <div
+            class="inline-flex flex-col items-start gap-4 pt-0 pb-5 px-0 relative flex-[0_0_auto] bg-mainwhite rounded-2xl"
+          >
+            <div
+              class="relative w-[270px] h-60 rounded-[16px_16px_0px_0px] [background:radial-gradient(50%_50%_at_50%_50%,rgba(255,255,255,1)_0%,rgba(237,237,237,1)_20%,rgba(26,26,26,1)_100%)]"
+            >
+              <img
+                class="absolute top-0 left-0 w-[270px] h-60"
+                src="https://c.animaapp.com/mjv3lc9bynq8xp/img/mask-group.png"
+              />
             </div>
-            <div class="text-11">
-              <div class="text-wrapper-17">Make Torello</div>
-              <div class="UX-designer">UX DESIGNER</div>
+            <div class="flex flex-col items-start gap-1 px-5 py-0 relative self-stretch w-full flex-[0_0_auto]">
+              <div
+                class="relative self-stretch mt-[-1.00px] font-heading-h5-24 font-[number:var(--heading-h5-24-font-weight)] text-maindark text-[length:var(--heading-h5-24-font-size)] tracking-[var(--heading-h5-24-letter-spacing)] leading-[var(--heading-h5-24-line-height)] [font-style:var(--heading-h5-24-font-style)]"
+              >
+                Make Torello
+              </div>
+              <div
+                class="relative self-stretch font-body-text-12-semi-bold-UC font-[number:var(--body-text-12-semi-bold-UC-font-weight)] text-shadesdark-80 text-[length:var(--body-text-12-semi-bold-UC-font-size)] tracking-[var(--body-text-12-semi-bold-UC-letter-spacing)] leading-[var(--body-text-12-semi-bold-UC-line-height)] [font-style:var(--body-text-12-semi-bold-UC-font-style)]"
+              >
+                UX DESIGNER
+              </div>
             </div>
-            <img class="social-links" src="https://c.animaapp.com/mjtpnr33xG28bA/img/social-links.svg" />
+            <img
+              class="absolute top-0 left-[calc(50.00%_-_135px)] w-[270px] h-60"
+              src="https://c.animaapp.com/mjv3lc9bynq8xp/img/social-links.svg"
+            />
           </div>
-          <div class="speaker">
-            <div class="photo">
-              <img class="mask-group" src="https://c.animaapp.com/mjtpnr33xG28bA/img/mask-group-1.png" />
+          <div
+            class="inline-flex flex-col items-start gap-4 pt-0 pb-5 px-0 relative flex-[0_0_auto] bg-mainwhite rounded-2xl"
+          >
+            <div
+              class="relative w-[270px] h-60 rounded-[16px_16px_0px_0px] [background:radial-gradient(50%_50%_at_50%_50%,rgba(255,255,255,1)_0%,rgba(237,237,237,1)_20%,rgba(26,26,26,1)_100%)]"
+            >
+              <img
+                class="absolute top-0 left-0 w-[270px] h-60"
+                src="https://c.animaapp.com/mjv3lc9bynq8xp/img/mask-group-1.png"
+              />
             </div>
-            <div class="text-11">
-              <div class="text-wrapper-17">Templeton Peck</div>
-              <div class="UX-designer">DEVELOPER</div>
+            <div class="flex flex-col items-start gap-1 px-5 py-0 relative self-stretch w-full flex-[0_0_auto]">
+              <div
+                class="relative self-stretch mt-[-1.00px] font-heading-h5-24 font-[number:var(--heading-h5-24-font-weight)] text-maindark text-[length:var(--heading-h5-24-font-size)] tracking-[var(--heading-h5-24-letter-spacing)] leading-[var(--heading-h5-24-line-height)] [font-style:var(--heading-h5-24-font-style)]"
+              >
+                Templeton Peck
+              </div>
+              <div
+                class="relative self-stretch font-body-text-12-semi-bold-UC font-[number:var(--body-text-12-semi-bold-UC-font-weight)] text-shadesdark-80 text-[length:var(--body-text-12-semi-bold-UC-font-size)] tracking-[var(--body-text-12-semi-bold-UC-letter-spacing)] leading-[var(--body-text-12-semi-bold-UC-line-height)] [font-style:var(--body-text-12-semi-bold-UC-font-style)]"
+              >
+                DEVELOPER
+              </div>
             </div>
           </div>
-          <div class="speaker">
-            <div class="photo">
-              <img class="mask-group" src="https://c.animaapp.com/mjtpnr33xG28bA/img/mask-group-2.png" />
+          <div
+            class="inline-flex flex-col items-start gap-4 pt-0 pb-5 px-0 relative flex-[0_0_auto] bg-mainwhite rounded-2xl"
+          >
+            <div
+              class="relative w-[270px] h-60 rounded-[16px_16px_0px_0px] [background:radial-gradient(50%_50%_at_50%_50%,rgba(255,255,255,1)_0%,rgba(237,237,237,1)_20%,rgba(26,26,26,1)_100%)]"
+            >
+              <img
+                class="absolute top-0 left-0 w-[270px] h-60"
+                src="https://c.animaapp.com/mjv3lc9bynq8xp/img/mask-group-2.png"
+              />
             </div>
-            <div class="text-11">
-              <div class="text-wrapper-17">Michael Knight</div>
-              <div class="UX-designer">MARKETER</div>
+            <div class="flex flex-col items-start gap-1 px-5 py-0 relative self-stretch w-full flex-[0_0_auto]">
+              <div
+                class="relative self-stretch mt-[-1.00px] font-heading-h5-24 font-[number:var(--heading-h5-24-font-weight)] text-maindark text-[length:var(--heading-h5-24-font-size)] tracking-[var(--heading-h5-24-letter-spacing)] leading-[var(--heading-h5-24-line-height)] [font-style:var(--heading-h5-24-font-style)]"
+              >
+                Michael Knight
+              </div>
+              <div
+                class="relative self-stretch font-body-text-12-semi-bold-UC font-[number:var(--body-text-12-semi-bold-UC-font-weight)] text-shadesdark-80 text-[length:var(--body-text-12-semi-bold-UC-font-size)] tracking-[var(--body-text-12-semi-bold-UC-letter-spacing)] leading-[var(--body-text-12-semi-bold-UC-line-height)] [font-style:var(--body-text-12-semi-bold-UC-font-style)]"
+              >
+                MARKETER
+              </div>
             </div>
           </div>
-          <div class="speaker">
-            <div class="photo">
-              <img class="mask-group" src="https://c.animaapp.com/mjtpnr33xG28bA/img/mask-group-3.png" />
+          <div
+            class="inline-flex flex-col items-start gap-4 pt-0 pb-5 px-0 relative flex-[0_0_auto] bg-mainwhite rounded-2xl"
+          >
+            <div
+              class="relative w-[270px] h-60 rounded-[16px_16px_0px_0px] [background:radial-gradient(50%_50%_at_50%_50%,rgba(255,255,255,1)_0%,rgba(237,237,237,1)_20%,rgba(26,26,26,1)_100%)]"
+            >
+              <img
+                class="absolute top-0 left-0 w-[270px] h-60"
+                src="https://c.animaapp.com/mjv3lc9bynq8xp/img/mask-group-3.png"
+              />
             </div>
-            <div class="text-11">
-              <div class="text-wrapper-17">Angela Bower</div>
-              <div class="UX-designer">ENTREPRENEUR</div>
+            <div class="flex flex-col items-start gap-1 px-5 py-0 relative self-stretch w-full flex-[0_0_auto]">
+              <div
+                class="relative self-stretch mt-[-1.00px] font-heading-h5-24 font-[number:var(--heading-h5-24-font-weight)] text-maindark text-[length:var(--heading-h5-24-font-size)] tracking-[var(--heading-h5-24-letter-spacing)] leading-[var(--heading-h5-24-line-height)] [font-style:var(--heading-h5-24-font-style)]"
+              >
+                Angela Bower
+              </div>
+              <div
+                class="relative self-stretch font-body-text-12-semi-bold-UC font-[number:var(--body-text-12-semi-bold-UC-font-weight)] text-shadesdark-80 text-[length:var(--body-text-12-semi-bold-UC-font-size)] tracking-[var(--body-text-12-semi-bold-UC-letter-spacing)] leading-[var(--body-text-12-semi-bold-UC-line-height)] [font-style:var(--body-text-12-semi-bold-UC-font-style)]"
+              >
+                ENTREPRENEUR
+              </div>
             </div>
           </div>
         </div>
       </div>
-      <div class="div-6">
-        <div class="frame-9">
-          <div class="text-wrapper-7">Browse all the schedule</div>
-          <p class="text-wrapper-18">
+      <div class="flex flex-col items-center gap-16 px-[135px] py-[120px] relative self-stretch w-full flex-[0_0_auto]">
+        <div class="inline-flex flex-col items-center gap-4 relative flex-[0_0_auto]">
+          <div
+            class="relative w-fit mt-[-1.00px] font-heading-h2-46 font-[number:var(--heading-h2-46-font-weight)] text-maindark text-[length:var(--heading-h2-46-font-size)] text-center tracking-[var(--heading-h2-46-letter-spacing)] leading-[var(--heading-h2-46-line-height)] whitespace-nowrap [font-style:var(--heading-h2-46-font-style)]"
+          >
+            Browse all the schedule
+          </div>
+          <p
+            class="relative w-[507px] font-body-text-16-regular font-[number:var(--body-text-16-regular-font-weight)] text-shadesdark-80 text-[length:var(--body-text-16-regular-font-size)] text-center tracking-[var(--body-text-16-regular-letter-spacing)] leading-[var(--body-text-16-regular-line-height)] [font-style:var(--body-text-16-regular-font-style)]"
+          >
             Explore the complete event schedule to find sessions, speakers, and activities that match your interests and
             needs.
           </p>
         </div>
-        <div class="schedules-button">
-          <div class="frame-10">
-            <div class="text-12">
-              <div class="text-13">
-                <div class="frame-11">
+        <div class="flex flex-col items-center gap-12 relative self-stretch w-full flex-[0_0_auto]">
+          <div class="flex flex-col items-start gap-6 relative self-stretch w-full flex-[0_0_auto]">
+            <div
+              class="flex items-center justify-between px-6 py-8 relative self-stretch w-full flex-[0_0_auto] bg-maindark rounded-2xl"
+            >
+              <div class="inline-flex items-center gap-8 relative flex-[0_0_auto]">
+                <div class="inline-flex items-center gap-2 relative flex-[0_0_auto]">
                   <img
-                    class="vuesax-bold-calendar"
-                    src="https://c.animaapp.com/mjtpnr33xG28bA/img/vuesax-bold-calendar.svg"
+                    class="relative w-8 h-8"
+                    src="https://c.animaapp.com/mjv3lc9bynq8xp/img/vuesax-bold-calendar.svg"
                   />
-                  <div class="text-wrapper-19">Day 1</div>
-                </div>
-                <div class="text-wrapper-19">Sunday, December 2025</div>
-              </div>
-              <div class="text-wrapper-19">Innovation &amp; Technology</div>
-            </div>
-            <div class="schedule">
-              <div class="mask-group-wrapper">
-                <img class="mask-group-2" src="https://c.animaapp.com/mjtpnr33xG28bA/img/mask-group-4.png" />
-              </div>
-              <div class="text-14">
-                <div class="text-15">
-                  <div class="text-16">
-                    <p class="text-wrapper-20">The Future of Digital Innovation</p>
-                    <p class="text-wrapper-20">10:00 AM - 11:00 AM</p>
+                  <div
+                    class="relative w-fit font-heading-h5-24 font-[number:var(--heading-h5-24-font-weight)] text-mainwhite text-[length:var(--heading-h5-24-font-size)] text-center tracking-[var(--heading-h5-24-letter-spacing)] leading-[var(--heading-h5-24-line-height)] whitespace-nowrap [font-style:var(--heading-h5-24-font-style)]"
+                  >
+                    Day 1
                   </div>
-                  <div class="by-make-torello">By&nbsp;&nbsp;Make Torello</div>
                 </div>
-                <p class="text-wrapper-21">
+                <div
+                  class="relative w-fit font-heading-h5-24 font-[number:var(--heading-h5-24-font-weight)] text-mainwhite text-[length:var(--heading-h5-24-font-size)] text-center tracking-[var(--heading-h5-24-letter-spacing)] leading-[var(--heading-h5-24-line-height)] whitespace-nowrap [font-style:var(--heading-h5-24-font-style)]"
+                >
+                  Sunday, December 2025
+                </div>
+              </div>
+              <div
+                class="relative w-fit font-heading-h5-24 font-[number:var(--heading-h5-24-font-weight)] text-mainwhite text-[length:var(--heading-h5-24-font-size)] text-center tracking-[var(--heading-h5-24-letter-spacing)] leading-[var(--heading-h5-24-line-height)] whitespace-nowrap [font-style:var(--heading-h5-24-font-style)]"
+              >
+                Innovation &amp; Technology
+              </div>
+            </div>
+            <div class="bg-shadessecondary-15 inline-flex items-center gap-5 p-4 relative flex-[0_0_auto] rounded-2xl">
+              <div
+                class="relative w-[180px] h-[135px] rounded-xl [background:radial-gradient(50%_50%_at_50%_50%,rgba(255,255,255,1)_0%,rgba(237,237,237,1)_20%,rgba(26,26,26,1)_100%)]"
+              >
+                <img
+                  class="absolute top-0 left-0 w-[180px] h-[135px]"
+                  src="https://c.animaapp.com/mjv3lc9bynq8xp/img/mask-group-4.png"
+                />
+              </div>
+              <div class="inline-flex flex-col items-start gap-4 relative flex-[0_0_auto]">
+                <div class="flex flex-col w-[938px] items-start relative flex-[0_0_auto]">
+                  <div class="flex items-center justify-between relative self-stretch w-full flex-[0_0_auto]">
+                    <p
+                      class="relative w-fit mt-[-1.00px] font-heading-h5-24 font-[number:var(--heading-h5-24-font-weight)] text-maindark text-[length:var(--heading-h5-24-font-size)] tracking-[var(--heading-h5-24-letter-spacing)] leading-[var(--heading-h5-24-line-height)] whitespace-nowrap [font-style:var(--heading-h5-24-font-style)]"
+                    >
+                      The Future of Digital Innovation
+                    </p>
+                    <p
+                      class="relative w-fit mt-[-1.00px] font-heading-h5-24 font-[number:var(--heading-h5-24-font-weight)] text-maindark text-[length:var(--heading-h5-24-font-size)] tracking-[var(--heading-h5-24-letter-spacing)] leading-[var(--heading-h5-24-line-height)] whitespace-nowrap [font-style:var(--heading-h5-24-font-style)]"
+                    >
+                      10:00 AM - 11:00 AM
+                    </p>
+                  </div>
+                  <div
+                    class="relative self-stretch font-body-text-16-medium font-[number:var(--body-text-16-medium-font-weight)] text-maindark text-[length:var(--body-text-16-medium-font-size)] tracking-[var(--body-text-16-medium-letter-spacing)] leading-[var(--body-text-16-medium-line-height)] [font-style:var(--body-text-16-medium-font-style)]"
+                  >
+                    By&nbsp;&nbsp;Make Torello
+                  </div>
+                </div>
+                <p
+                  class="relative w-[926px] font-body-text-16-regular font-[number:var(--body-text-16-regular-font-weight)] text-shadesdark-80 text-[length:var(--body-text-16-regular-font-size)] tracking-[var(--body-text-16-regular-letter-spacing)] leading-[var(--body-text-16-regular-line-height)] [font-style:var(--body-text-16-regular-font-style)]"
+                >
                   The Future of Digital Innovation: Harnessing emerging technologies to revolutionize industries,
                   enhance user experiences, and drive unprecedented growth in a rapidly evolving digital landscape.
                 </p>
               </div>
             </div>
-            <div class="schedule-2">
-              <div class="mask-group-wrapper">
-                <img class="mask-group-2" src="https://c.animaapp.com/mjtpnr33xG28bA/img/mask-group-5.png" />
+            <div class="bg-shadesprimary-15 inline-flex items-center gap-5 p-4 relative flex-[0_0_auto] rounded-2xl">
+              <div
+                class="relative w-[180px] h-[135px] rounded-xl [background:radial-gradient(50%_50%_at_50%_50%,rgba(255,255,255,1)_0%,rgba(237,237,237,1)_20%,rgba(26,26,26,1)_100%)]"
+              >
+                <img
+                  class="absolute top-0 left-0 w-[180px] h-[135px]"
+                  src="https://c.animaapp.com/mjv3lc9bynq8xp/img/mask-group-5.png"
+                />
               </div>
-              <div class="text-14">
-                <div class="text-15">
-                  <div class="text-16">
-                    <p class="text-wrapper-20">Trends AI and Machine Learning</p>
-                    <p class="text-wrapper-20">11:15 AM - 12:30 PM</p>
+              <div class="inline-flex flex-col items-start gap-4 relative flex-[0_0_auto]">
+                <div class="flex flex-col w-[938px] items-start relative flex-[0_0_auto]">
+                  <div class="flex items-center justify-between relative self-stretch w-full flex-[0_0_auto]">
+                    <p
+                      class="relative w-fit mt-[-1.00px] font-heading-h5-24 font-[number:var(--heading-h5-24-font-weight)] text-maindark text-[length:var(--heading-h5-24-font-size)] tracking-[var(--heading-h5-24-letter-spacing)] leading-[var(--heading-h5-24-line-height)] whitespace-nowrap [font-style:var(--heading-h5-24-font-style)]"
+                    >
+                      Trends AI and Machine Learning
+                    </p>
+                    <p
+                      class="relative w-fit mt-[-1.00px] font-heading-h5-24 font-[number:var(--heading-h5-24-font-weight)] text-maindark text-[length:var(--heading-h5-24-font-size)] tracking-[var(--heading-h5-24-letter-spacing)] leading-[var(--heading-h5-24-line-height)] whitespace-nowrap [font-style:var(--heading-h5-24-font-style)]"
+                    >
+                      11:15 AM - 12:30 PM
+                    </p>
                   </div>
-                  <div class="by-make-torello">By&nbsp;&nbsp;David Brown</div>
+                  <div
+                    class="relative self-stretch font-body-text-16-medium font-[number:var(--body-text-16-medium-font-weight)] text-maindark text-[length:var(--body-text-16-medium-font-size)] tracking-[var(--body-text-16-medium-letter-spacing)] leading-[var(--body-text-16-medium-line-height)] [font-style:var(--body-text-16-medium-font-style)]"
+                  >
+                    By&nbsp;&nbsp;David Brown
+                  </div>
                 </div>
-                <p class="text-wrapper-21">
+                <p
+                  class="relative w-[926px] font-body-text-16-regular font-[number:var(--body-text-16-regular-font-weight)] text-shadesdark-80 text-[length:var(--body-text-16-regular-font-size)] tracking-[var(--body-text-16-regular-letter-spacing)] leading-[var(--body-text-16-regular-line-height)] [font-style:var(--body-text-16-regular-font-style)]"
+                >
                   AI and Machine Learning are revolutionizing industries by enabling advanced data analysis,
                   personalized experiences, and intelligent automation, paving the way for smarter and more efficient
                   solutions across various sectors.
                 </p>
               </div>
             </div>
-            <div class="lunch-break">
-              <div class="lunch-break-2">Lunch Break &amp; Networking</div>
-              <div class="text-wrapper-22">12:30 PM - 2:00PM</div>
-            </div>
-            <div class="schedule-3">
-              <div class="mask-group-wrapper">
-                <img class="mask-group-2" src="https://c.animaapp.com/mjtpnr33xG28bA/img/mask-group-6.png" />
+            <div
+              class="flex flex-col items-center justify-center gap-2 px-6 py-5 relative self-stretch w-full flex-[0_0_auto] bg-shadesdark-5 rounded-2xl"
+            >
+              <div
+                class="relative w-fit mt-[-1.00px] font-heading-h5-24 font-[number:var(--heading-h5-24-font-weight)] text-maindark text-[length:var(--heading-h5-24-font-size)] text-center tracking-[var(--heading-h5-24-letter-spacing)] leading-[var(--heading-h5-24-line-height)] whitespace-nowrap [font-style:var(--heading-h5-24-font-style)]"
+              >
+                Lunch Break &amp; Networking
               </div>
-              <div class="text-14">
-                <div class="text-15">
-                  <div class="text-16">
-                    <p class="text-wrapper-20">Digital Marketing for a New Era</p>
-                    <p class="text-wrapper-20">2:00 PM - 3:00 PM</p>
+              <div
+                class="relative w-fit font-heading-h5-24 font-[number:var(--heading-h5-24-font-weight)] text-maindark text-[length:var(--heading-h5-24-font-size)] text-center tracking-[var(--heading-h5-24-letter-spacing)] leading-[var(--heading-h5-24-line-height)] whitespace-nowrap [font-style:var(--heading-h5-24-font-style)]"
+              >
+                12:30 PM - 2:00PM
+              </div>
+            </div>
+            <div class="bg-shadesblue-15 inline-flex items-center gap-5 p-4 relative flex-[0_0_auto] rounded-2xl">
+              <div
+                class="relative w-[180px] h-[135px] rounded-xl [background:radial-gradient(50%_50%_at_50%_50%,rgba(255,255,255,1)_0%,rgba(237,237,237,1)_20%,rgba(26,26,26,1)_100%)]"
+              >
+                <img
+                  class="absolute top-0 left-0 w-[180px] h-[135px]"
+                  src="https://c.animaapp.com/mjv3lc9bynq8xp/img/mask-group-6.png"
+                />
+              </div>
+              <div class="inline-flex flex-col items-start gap-4 relative flex-[0_0_auto]">
+                <div class="flex flex-col w-[938px] items-start relative flex-[0_0_auto]">
+                  <div class="flex items-center justify-between relative self-stretch w-full flex-[0_0_auto]">
+                    <p
+                      class="relative w-fit mt-[-1.00px] font-heading-h5-24 font-[number:var(--heading-h5-24-font-weight)] text-maindark text-[length:var(--heading-h5-24-font-size)] tracking-[var(--heading-h5-24-letter-spacing)] leading-[var(--heading-h5-24-line-height)] whitespace-nowrap [font-style:var(--heading-h5-24-font-style)]"
+                    >
+                      Digital Marketing for a New Era
+                    </p>
+                    <p
+                      class="relative w-fit mt-[-1.00px] font-heading-h5-24 font-[number:var(--heading-h5-24-font-weight)] text-maindark text-[length:var(--heading-h5-24-font-size)] tracking-[var(--heading-h5-24-letter-spacing)] leading-[var(--heading-h5-24-line-height)] whitespace-nowrap [font-style:var(--heading-h5-24-font-style)]"
+                    >
+                      2:00 PM - 3:00 PM
+                    </p>
                   </div>
-                  <div class="by-make-torello">By&nbsp;&nbsp;Jenifer Moore</div>
+                  <div
+                    class="relative self-stretch font-body-text-16-medium font-[number:var(--body-text-16-medium-font-weight)] text-maindark text-[length:var(--body-text-16-medium-font-size)] tracking-[var(--body-text-16-medium-letter-spacing)] leading-[var(--body-text-16-medium-line-height)] [font-style:var(--body-text-16-medium-font-style)]"
+                  >
+                    By&nbsp;&nbsp;Jenifer Moore
+                  </div>
                 </div>
-                <p class="text-wrapper-21">
+                <p
+                  class="relative w-[926px] font-body-text-16-regular font-[number:var(--body-text-16-regular-font-weight)] text-shadesdark-80 text-[length:var(--body-text-16-regular-font-size)] tracking-[var(--body-text-16-regular-letter-spacing)] leading-[var(--body-text-16-regular-line-height)] [font-style:var(--body-text-16-regular-font-style)]"
+                >
                   Navigate the evolving landscape of digital marketing in a new era, harnessing innovative strategies
                   and technologies to create compelling campaigns that resonate with audiences and drive business
                   growth.
                 </p>
               </div>
             </div>
-            <div class="schedule-4">
-              <div class="mask-group-wrapper">
-                <img class="mask-group-2" src="https://c.animaapp.com/mjtpnr33xG28bA/img/mask-group-7.png" />
+            <div class="bg-shadestertiary-15 inline-flex items-center gap-5 p-4 relative flex-[0_0_auto] rounded-2xl">
+              <div
+                class="relative w-[180px] h-[135px] rounded-xl [background:radial-gradient(50%_50%_at_50%_50%,rgba(255,255,255,1)_0%,rgba(237,237,237,1)_20%,rgba(26,26,26,1)_100%)]"
+              >
+                <img
+                  class="absolute top-0 left-0 w-[180px] h-[135px]"
+                  src="https://c.animaapp.com/mjv3lc9bynq8xp/img/mask-group-7.png"
+                />
               </div>
-              <div class="text-14">
-                <div class="text-15">
-                  <div class="text-16">
-                    <div class="text-wrapper-20">Introduction to Blockchain</div>
-                    <p class="text-wrapper-20">3:00 PM - 4:00 PM</p>
+              <div class="inline-flex flex-col items-start gap-4 relative flex-[0_0_auto]">
+                <div class="flex flex-col w-[938px] items-start relative flex-[0_0_auto]">
+                  <div class="flex items-center justify-between relative self-stretch w-full flex-[0_0_auto]">
+                    <div
+                      class="relative w-fit mt-[-1.00px] font-heading-h5-24 font-[number:var(--heading-h5-24-font-weight)] text-maindark text-[length:var(--heading-h5-24-font-size)] tracking-[var(--heading-h5-24-letter-spacing)] leading-[var(--heading-h5-24-line-height)] whitespace-nowrap [font-style:var(--heading-h5-24-font-style)]"
+                    >
+                      Introduction to Blockchain
+                    </div>
+                    <p
+                      class="relative w-fit mt-[-1.00px] font-heading-h5-24 font-[number:var(--heading-h5-24-font-weight)] text-maindark text-[length:var(--heading-h5-24-font-size)] tracking-[var(--heading-h5-24-letter-spacing)] leading-[var(--heading-h5-24-line-height)] whitespace-nowrap [font-style:var(--heading-h5-24-font-style)]"
+                    >
+                      3:00 PM - 4:00 PM
+                    </p>
                   </div>
-                  <div class="by-make-torello">By&nbsp;&nbsp;Emily Davis</div>
+                  <div
+                    class="relative self-stretch font-body-text-16-medium font-[number:var(--body-text-16-medium-font-weight)] text-maindark text-[length:var(--body-text-16-medium-font-size)] tracking-[var(--body-text-16-medium-letter-spacing)] leading-[var(--body-text-16-medium-line-height)] [font-style:var(--body-text-16-medium-font-style)]"
+                  >
+                    By&nbsp;&nbsp;Emily Davis
+                  </div>
                 </div>
-                <p class="text-wrapper-21">
+                <p
+                  class="relative w-[926px] font-body-text-16-regular font-[number:var(--body-text-16-regular-font-weight)] text-shadesdark-80 text-[length:var(--body-text-16-regular-font-size)] tracking-[var(--body-text-16-regular-letter-spacing)] leading-[var(--body-text-16-regular-line-height)] [font-style:var(--body-text-16-regular-font-style)]"
+                >
                   Blockchain introduction: Decentralized ledger tech records secure, transparent, immutable transactions
                   across networks, transforming finance and supply chain management.
                 </p>
               </div>
             </div>
           </div>
-          <button class="button-2"><div class="text-wrapper-4">See All Schedule</div></button>
+          <button
+            class="all-[unset] box-border px-6 py-3.5 relative flex-[0_0_auto] bg-mainprimary inline-flex items-center justify-center gap-2 rounded-lg"
+          >
+            <div
+              class="relative w-fit mt-[-1.00px] font-body-text-16-semibold font-[number:var(--body-text-16-semibold-font-weight)] text-mainwhite text-[length:var(--body-text-16-semibold-font-size)] text-center tracking-[var(--body-text-16-semibold-letter-spacing)] leading-[var(--body-text-16-semibold-line-height)] whitespace-nowrap [font-style:var(--body-text-16-semibold-font-style)]"
+            >
+              See All Schedule
+            </div>
+          </button>
         </div>
-        <img class="elements" src="https://c.animaapp.com/mjtpnr33xG28bA/img/elements.png" />
+        <img
+          class="absolute top-[158px] left-[135px] w-[1172px] h-[95px]"
+          src="https://c.animaapp.com/mjv3lc9bynq8xp/img/elements.png"
+        />
       </div>
-      <div class="reels">
-        <div class="frame-12">
-          <div class="text-wrapper-23">More from Monks Event</div>
-          <button class="button-3"><div class="text-wrapper-24">Follow on Instagram</div></button>
+      <div
+        class="flex-col gap-16 px-[135px] py-[100px] self-stretch w-full bg-shadessecondary-15 flex items-start relative flex-[0_0_auto]"
+      >
+        <div class="flex w-[1170px] items-center justify-between relative flex-[0_0_auto]">
+          <div
+            class="relative w-fit font-heading-h2-46 font-[number:var(--heading-h2-46-font-weight)] text-maindark text-[length:var(--heading-h2-46-font-size)] tracking-[var(--heading-h2-46-letter-spacing)] leading-[var(--heading-h2-46-line-height)] whitespace-nowrap [font-style:var(--heading-h2-46-font-style)]"
+          >
+            More from Monks Event
+          </div>
+          <button
+            class="all-[unset] box-border px-6 py-3.5 relative flex-[0_0_auto] border border-solid border-[#0e0b0b] inline-flex items-center justify-center gap-2 rounded-lg"
+          >
+            <div
+              class="relative w-fit mt-[-1.00px] font-body-text-16-semibold font-[number:var(--body-text-16-semibold-font-weight)] text-maindark text-[length:var(--body-text-16-semibold-font-size)] text-center tracking-[var(--body-text-16-semibold-letter-spacing)] leading-[var(--body-text-16-semibold-line-height)] whitespace-nowrap [font-style:var(--body-text-16-semibold-font-style)]"
+            >
+              Follow on Instagram
+            </div>
+          </button>
         </div>
-        <div class="reels-2">
-          <div class="reel">
-            <div class="reel-wrapper">
-              <img class="reel-2" src="https://c.animaapp.com/mjtpnr33xG28bA/img/reel-1.png" />
+        <div class="w-[1170px] gap-[30px] flex items-start relative flex-[0_0_auto]">
+          <div class="relative w-[270px] h-[488px]">
+            <div class="absolute top-0 left-0 w-[270px] h-[488px] flex bg-[100%_100%]">
+              <img class="w-[270px] h-[488px]" src="https://c.animaapp.com/mjv3lc9bynq8xp/img/reel-1.png" />
             </div>
-            <img class="text-17" src="https://c.animaapp.com/mjtpnr33xG28bA/img/text.png" />
+            <img
+              class="absolute top-[calc(50.00%_-_244px)] left-[calc(50.00%_-_135px)] w-[270px] h-[488px]"
+              src="https://c.animaapp.com/mjv3lc9bynq8xp/img/text.png"
+            />
           </div>
-          <div class="reel-3">
-            <div class="text-18">
-              <div class="friendship-club">Business Confer...</div>
-              <div class="element-views">24K VIEWS</div>
+          <div
+            class="relative bg-[url(https://c.animaapp.com/mjv3lc9bynq8xp/img/photo.png)] bg-[100%_100%] w-[270px] h-[488px]"
+          >
+            <div
+              class="flex flex-col w-[270px] h-[488px] items-start justify-end gap-1 p-5 relative top-[calc(50.00%_-_244px)] left-[calc(50.00%_-_135px)] rounded-2xl [background:linear-gradient(180deg,rgba(26,26,26,0)_40%,rgba(26,26,26,1)_77%)]"
+            >
+              <div
+                class="relative flex items-center justify-center self-stretch h-6 font-heading-h5-24 font-[number:var(--heading-h5-24-font-weight)] text-mainwhite text-[length:var(--heading-h5-24-font-size)] tracking-[var(--heading-h5-24-letter-spacing)] leading-[var(--heading-h5-24-line-height)] whitespace-nowrap [font-style:var(--heading-h5-24-font-style)]"
+              >
+                Business Confer...
+              </div>
+              <div
+                class="relative self-stretch font-body-text-12-semi-bold-UC font-[number:var(--body-text-12-semi-bold-UC-font-weight)] text-shadesdark-10 text-[length:var(--body-text-12-semi-bold-UC-font-size)] tracking-[var(--body-text-12-semi-bold-UC-letter-spacing)] leading-[var(--body-text-12-semi-bold-UC-line-height)] [font-style:var(--body-text-12-semi-bold-UC-font-style)]"
+              >
+                24K VIEWS
+              </div>
             </div>
           </div>
-          <div class="reel-4">
-            <div class="text-18">
-              <div class="friendship-club">Holi Festival</div>
-              <div class="element-views">26K VIEWS</div>
+          <div
+            class="relative bg-[url(https://c.animaapp.com/mjv3lc9bynq8xp/img/photo-1.png)] bg-[100%_100%] w-[270px] h-[488px]"
+          >
+            <div
+              class="flex flex-col w-[270px] h-[488px] items-start justify-end gap-1 p-5 relative top-[calc(50.00%_-_244px)] left-[calc(50.00%_-_135px)] rounded-2xl [background:linear-gradient(180deg,rgba(26,26,26,0)_40%,rgba(26,26,26,1)_77%)]"
+            >
+              <div
+                class="relative flex items-center justify-center self-stretch h-6 font-heading-h5-24 font-[number:var(--heading-h5-24-font-weight)] text-mainwhite text-[length:var(--heading-h5-24-font-size)] tracking-[var(--heading-h5-24-letter-spacing)] leading-[var(--heading-h5-24-line-height)] whitespace-nowrap [font-style:var(--heading-h5-24-font-style)]"
+              >
+                Holi Festival
+              </div>
+              <div
+                class="relative self-stretch font-body-text-12-semi-bold-UC font-[number:var(--body-text-12-semi-bold-UC-font-weight)] text-shadesdark-10 text-[length:var(--body-text-12-semi-bold-UC-font-size)] tracking-[var(--body-text-12-semi-bold-UC-letter-spacing)] leading-[var(--body-text-12-semi-bold-UC-line-height)] [font-style:var(--body-text-12-semi-bold-UC-font-style)]"
+              >
+                26K VIEWS
+              </div>
             </div>
           </div>
-          <div class="reel">
-            <div class="reel-wrapper">
-              <img class="reel-2" src="https://c.animaapp.com/mjtpnr33xG28bA/img/reel-1-1.png" />
+          <div class="relative w-[270px] h-[488px]">
+            <div class="absolute top-0 left-0 w-[270px] h-[488px] flex bg-[100%_100%]">
+              <img class="w-[270px] h-[488px]" src="https://c.animaapp.com/mjv3lc9bynq8xp/img/reel-1-1.png" />
             </div>
-            <div class="text-19">
-              <div class="friendship-club">Next-gen Marketing</div>
-              <div class="element-views">30K VIEWS</div>
+            <div
+              class="flex flex-col w-[270px] h-[488px] items-start justify-end gap-1 p-5 absolute top-[calc(50.00%_-_244px)] left-[calc(50.00%_-_135px)] rounded-2xl [background:linear-gradient(180deg,rgba(26,26,26,0)_40%,rgba(26,26,26,1)_76%)]"
+            >
+              <div
+                class="relative flex items-center justify-center self-stretch h-6 font-heading-h5-24 font-[number:var(--heading-h5-24-font-weight)] text-mainwhite text-[length:var(--heading-h5-24-font-size)] tracking-[var(--heading-h5-24-letter-spacing)] leading-[var(--heading-h5-24-line-height)] whitespace-nowrap [font-style:var(--heading-h5-24-font-style)]"
+              >
+                Next-gen Marketing
+              </div>
+              <div
+                class="relative self-stretch font-body-text-12-semi-bold-UC font-[number:var(--body-text-12-semi-bold-UC-font-weight)] text-shadesdark-10 text-[length:var(--body-text-12-semi-bold-UC-font-size)] tracking-[var(--body-text-12-semi-bold-UC-letter-spacing)] leading-[var(--body-text-12-semi-bold-UC-line-height)] [font-style:var(--body-text-12-semi-bold-UC-font-style)]"
+              >
+                30K VIEWS
+              </div>
             </div>
           </div>
         </div>
       </div>
-      <div class="div-6">
-        <img class="image" src="https://c.animaapp.com/mjtpnr33xG28bA/img/image-8.png" />
-        <div class="text-20">
-          <div class="text-wrapper-25">Check our latest gallery</div>
-          <p class="text-wrapper-26">
+      <div class="flex flex-col items-center gap-16 px-[135px] py-[120px] relative self-stretch w-full flex-[0_0_auto]">
+        <img
+          class="absolute top-[1121px] left-[623px] w-[151px] h-[191px]"
+          src="https://c.animaapp.com/mjv3lc9bynq8xp/img/image-8.png"
+        />
+        <div class="flex flex-col w-[512px] items-center gap-4 relative flex-[0_0_auto]">
+          <div
+            class="relative w-fit mt-[-1.00px] ml-[-23.00px] mr-[-23.00px] font-heading-h2-46 font-[number:var(--heading-h2-46-font-weight)] text-maindark text-[length:var(--heading-h2-46-font-size)] text-center tracking-[var(--heading-h2-46-letter-spacing)] leading-[var(--heading-h2-46-line-height)] whitespace-nowrap [font-style:var(--heading-h2-46-font-style)]"
+          >
+            Check our latest gallery
+          </div>
+          <p
+            class="relative w-[493px] font-body-text-16-regular font-[number:var(--body-text-16-regular-font-weight)] text-shadesdark-80 text-[length:var(--body-text-16-regular-font-size)] text-center tracking-[var(--body-text-16-regular-letter-spacing)] leading-[var(--body-text-16-regular-line-height)] [font-style:var(--body-text-16-regular-font-style)]"
+          >
             Team with all the tools they need to streamline your event planning process. Some top artists have gained
             global
           </p>
         </div>
-        <img class="img-2" src="https://c.animaapp.com/mjtpnr33xG28bA/img/images.svg" />
-        <button class="button-2"><div class="text-wrapper-4">View All Gallery</div></button>
+        <img
+          class="relative self-stretch w-full flex-[0_0_auto]"
+          src="https://c.animaapp.com/mjv3lc9bynq8xp/img/images.svg"
+        />
+        <button
+          class="all-[unset] box-border px-6 py-3.5 relative flex-[0_0_auto] bg-mainprimary inline-flex items-center justify-center gap-2 rounded-lg"
+        >
+          <div
+            class="relative w-fit mt-[-1.00px] font-body-text-16-semibold font-[number:var(--body-text-16-semibold-font-weight)] text-mainwhite text-[length:var(--body-text-16-semibold-font-size)] text-center tracking-[var(--body-text-16-semibold-letter-spacing)] leading-[var(--body-text-16-semibold-line-height)] whitespace-nowrap [font-style:var(--body-text-16-semibold-font-style)]"
+          >
+            View All Gallery
+          </div>
+        </button>
       </div>
-      <div class="let-s-join">
-        <div class="BG">
-          <div class="glow-effect-2"></div>
-          <div class="glow-effect-3"></div>
+      <div
+        class="flex flex-col items-start gap-[126px] pt-20 pb-36 px-[135px] relative self-stretch w-full flex-[0_0_auto]"
+      >
+        <div class="relative w-[1170px] h-[310px] bg-maindark rounded-2xl">
+          <div
+            class="absolute w-[28.68%] h-[44.70%] top-[9.64%] left-0 bg-[#febf00b2] rounded-[167.78px/69.28px] blur-[185px]"
+          ></div>
+          <div
+            class="absolute w-[25.14%] h-[39.18%] top-[50.00%] left-[72.91%] bg-[#4399e2b2] rounded-[147.06px/60.73px] blur-[175px]"
+          ></div>
         </div>
-        <div class="text-image">
-          <div class="text-21">
-            <div class="text-14">
-              <p class="text-wrapper-27">Let’s join the tech achievement</p>
-              <p class="let-s-join-the-tech">
+        <div class="flex w-[1170px] items-end justify-between px-14 py-0 absolute left-[135px] bottom-36">
+          <div class="inline-flex flex-col items-start gap-8 pt-0 pb-14 px-0 relative flex-[0_0_auto]">
+            <div class="inline-flex flex-col items-start gap-4 relative flex-[0_0_auto]">
+              <p
+                class="relative w-fit mt-[-1.00px] font-heading-h3-40 font-[number:var(--heading-h3-40-font-weight)] text-mainwhite text-[length:var(--heading-h3-40-font-size)] tracking-[var(--heading-h3-40-letter-spacing)] leading-[var(--heading-h3-40-line-height)] whitespace-nowrap [font-style:var(--heading-h3-40-font-style)]"
+              >
+                Let’s join the tech achievement
+              </p>
+              <p
+                class="relative w-[607px] font-body-text-16-regular font-[number:var(--body-text-16-regular-font-weight)] text-shadesdark-15 text-[length:var(--body-text-16-regular-font-size)] tracking-[var(--body-text-16-regular-letter-spacing)] leading-[var(--body-text-16-regular-line-height)] [font-style:var(--body-text-16-regular-font-style)]"
+              >
                 Let&#39;s join the tech achievement: Innovate, collaborate, and revolutionize the future with
                 cutting-edge technology and groundbreaking advancements.
               </p>
             </div>
-            <button class="button-4"><div class="text-wrapper-24">Buy Tickets</div></button>
+            <button
+              class="all-[unset] box-border px-6 py-3.5 relative flex-[0_0_auto] bg-mainsecondary inline-flex items-center justify-center gap-2 rounded-lg"
+            >
+              <div
+                class="relative w-fit mt-[-1.00px] font-body-text-16-semibold font-[number:var(--body-text-16-semibold-font-weight)] text-maindark text-[length:var(--body-text-16-semibold-font-size)] text-center tracking-[var(--body-text-16-semibold-letter-spacing)] leading-[var(--body-text-16-semibold-line-height)] whitespace-nowrap [font-style:var(--body-text-16-semibold-font-style)]"
+              >
+                Buy Tickets
+              </div>
+            </button>
           </div>
-          <img class="image-2" src="https://c.animaapp.com/mjtpnr33xG28bA/img/image.png" />
+          <img class="relative w-[298px] h-[470px]" src="https://c.animaapp.com/mjv3lc9bynq8xp/img/image.png" />
         </div>
       </div>
-      <footer class="footer">
-        <img class="bg-2" src="https://c.animaapp.com/mjtpnr33xG28bA/img/bg.png" />
-        <div class="footer-content">
-          <div class="text-email">
-            <div class="text-22">
-              <p class="text-wrapper-28">Never miss a single news</p>
-              <p class="text-wrapper-29">
+      <footer
+        class="flex items-start gap-2 pt-[100px] pb-8 px-[135px] self-stretch w-full bg-transparent flex-col relative flex-[0_0_auto]"
+      >
+        <img class="absolute w-full h-full top-0 left-0" src="https://c.animaapp.com/mjv3lc9bynq8xp/img/bg.png" />
+        <div class="inline-flex items-center gap-[100px] flex-col relative flex-[0_0_auto]">
+          <div class="flex flex-col w-[751px] items-center gap-12 relative flex-[0_0_auto]">
+            <div class="flex flex-col items-center gap-4 relative self-stretch w-full flex-[0_0_auto]">
+              <p
+                class="relative self-stretch mt-[-1.00px] font-heading-h2-46 font-[number:var(--heading-h2-46-font-weight)] text-mainwhite text-[length:var(--heading-h2-46-font-size)] text-center tracking-[var(--heading-h2-46-letter-spacing)] leading-[var(--heading-h2-46-line-height)] [font-style:var(--heading-h2-46-font-style)]"
+              >
+                Never miss a single news
+              </p>
+              <p
+                class="relative w-[730px] font-body-text-16-regular font-[number:var(--body-text-16-regular-font-weight)] text-shadesdark-15 text-[length:var(--body-text-16-regular-font-size)] text-center tracking-[var(--body-text-16-regular-letter-spacing)] leading-[var(--body-text-16-regular-line-height)] [font-style:var(--body-text-16-regular-font-style)]"
+              >
                 Stay informed with all the latest updates and news about our events. Never miss a moment of our exciting
                 and innovative gatherings in the world of technology and beyond.
               </p>
             </div>
-            <div class="buttons-2">
-              <div class="mail"><div class="text-wrapper-30">Enter your email address</div></div>
-              <button class="button-2"><div class="buy-tickets">Subscribe</div></button>
+            <div class="justify-center gap-4 inline-flex items-center relative flex-[0_0_auto]">
+              <div
+                class="flex w-[394px] h-14 items-center gap-2.5 px-6 py-[18px] relative bg-mainwhite rounded-lg overflow-hidden"
+              >
+                <div
+                  class="relative w-fit mt-[-4.00px] mb-[-2.00px] font-body-text-16-regular font-[number:var(--body-text-16-regular-font-weight)] text-shadesdark-80 text-[length:var(--body-text-16-regular-font-size)] tracking-[var(--body-text-16-regular-letter-spacing)] leading-[var(--body-text-16-regular-line-height)] whitespace-nowrap [font-style:var(--body-text-16-regular-font-style)]"
+                >
+                  Enter your email address
+                </div>
+              </div>
+              <button
+                class="all-[unset] box-border px-6 py-3.5 relative flex-[0_0_auto] bg-mainprimary inline-flex items-center justify-center gap-2 rounded-lg"
+              >
+                <div
+                  class="relative w-fit mt-[-1.00px] [font-family:'Manrope',Helvetica] font-semibold text-mainwhite text-base text-center tracking-[0] leading-[25.6px] whitespace-nowrap"
+                >
+                  Subscribe
+                </div>
+              </button>
             </div>
           </div>
-          <div class="bottom-bar">
-            <div class="text-16">
-              <div class="text-wrapper">Eventive</div>
-              <div class="menu">
-                <div class="text-wrapper-31">About</div>
-                <div class="text-wrapper-31">Tickets</div>
-                <div class="text-wrapper-31">Speakers</div>
-                <div class="text-wrapper-31">Gallery</div>
-                <div class="text-wrapper-31">Pricing</div>
-                <div class="text-wrapper-31">FAQ</div>
-                <div class="text-wrapper-31">Contact</div>
+          <div class="flex-col w-[1170px] gap-8 flex items-start relative flex-[0_0_auto]">
+            <div class="flex items-center justify-between relative self-stretch w-full flex-[0_0_auto]">
+              <div
+                class="relative w-fit font-heading-h6-28 font-[number:var(--heading-h6-28-font-weight)] text-mainwhite text-[length:var(--heading-h6-28-font-size)] text-center tracking-[var(--heading-h6-28-letter-spacing)] leading-[var(--heading-h6-28-line-height)] whitespace-nowrap [font-style:var(--heading-h6-28-font-style)]"
+              >
+                Eventive
               </div>
-              <div class="div-5">
-                <div class="component-wrapper"><div class="component"></div></div>
-                <div class="frame-13"><div class="component-2"></div></div>
-                <div class="frame-13"><div class="component-3"></div></div>
-                <img class="frame-14" src="https://c.animaapp.com/mjtpnr33xG28bA/img/frame-97.svg" />
+              <div class="inline-flex items-center gap-10 relative flex-[0_0_auto]">
+                <div
+                  class="relative w-fit mt-[-1.00px] font-body-text-16-medium font-[number:var(--body-text-16-medium-font-weight)] text-mainwhite text-[length:var(--body-text-16-medium-font-size)] tracking-[var(--body-text-16-medium-letter-spacing)] leading-[var(--body-text-16-medium-line-height)] whitespace-nowrap [font-style:var(--body-text-16-medium-font-style)]"
+                >
+                  About
+                </div>
+                <div
+                  class="relative w-fit mt-[-1.00px] font-body-text-16-medium font-[number:var(--body-text-16-medium-font-weight)] text-mainwhite text-[length:var(--body-text-16-medium-font-size)] tracking-[var(--body-text-16-medium-letter-spacing)] leading-[var(--body-text-16-medium-line-height)] whitespace-nowrap [font-style:var(--body-text-16-medium-font-style)]"
+                >
+                  Tickets
+                </div>
+                <div
+                  class="relative w-fit mt-[-1.00px] font-body-text-16-medium font-[number:var(--body-text-16-medium-font-weight)] text-mainwhite text-[length:var(--body-text-16-medium-font-size)] tracking-[var(--body-text-16-medium-letter-spacing)] leading-[var(--body-text-16-medium-line-height)] whitespace-nowrap [font-style:var(--body-text-16-medium-font-style)]"
+                >
+                  Speakers
+                </div>
+                <div
+                  class="relative w-fit mt-[-1.00px] font-body-text-16-medium font-[number:var(--body-text-16-medium-font-weight)] text-mainwhite text-[length:var(--body-text-16-medium-font-size)] tracking-[var(--body-text-16-medium-letter-spacing)] leading-[var(--body-text-16-medium-line-height)] whitespace-nowrap [font-style:var(--body-text-16-medium-font-style)]"
+                >
+                  Gallery
+                </div>
+                <div
+                  class="relative w-fit mt-[-1.00px] font-body-text-16-medium font-[number:var(--body-text-16-medium-font-weight)] text-mainwhite text-[length:var(--body-text-16-medium-font-size)] tracking-[var(--body-text-16-medium-letter-spacing)] leading-[var(--body-text-16-medium-line-height)] whitespace-nowrap [font-style:var(--body-text-16-medium-font-style)]"
+                >
+                  Pricing
+                </div>
+                <div
+                  class="relative w-fit mt-[-1.00px] font-body-text-16-medium font-[number:var(--body-text-16-medium-font-weight)] text-mainwhite text-[length:var(--body-text-16-medium-font-size)] tracking-[var(--body-text-16-medium-letter-spacing)] leading-[var(--body-text-16-medium-line-height)] whitespace-nowrap [font-style:var(--body-text-16-medium-font-style)]"
+                >
+                  FAQ
+                </div>
+                <div
+                  class="relative w-fit mt-[-1.00px] font-body-text-16-medium font-[number:var(--body-text-16-medium-font-weight)] text-mainwhite text-[length:var(--body-text-16-medium-font-size)] tracking-[var(--body-text-16-medium-letter-spacing)] leading-[var(--body-text-16-medium-line-height)] whitespace-nowrap [font-style:var(--body-text-16-medium-font-style)]"
+                >
+                  Contact
+                </div>
+              </div>
+              <div class="inline-flex items-start gap-2 relative flex-[0_0_auto]">
+                <div
+                  class="flex w-[42px] h-[42px] items-center justify-center gap-2.5 p-2.5 relative bg-mainprimary rounded-[30px] overflow-hidden"
+                >
+                  <div
+                    class="bg-[url(https://c.animaapp.com/mjv3lc9bynq8xp/img/twitter.svg)] relative w-[22px] h-[22px] bg-[100%_100%]"
+                  ></div>
+                </div>
+                <div
+                  class="flex w-[42px] h-[42px] items-center justify-center gap-2.5 p-2.5 relative rounded-[30px] overflow-hidden border border-solid border-[#7a38fc]"
+                >
+                  <div
+                    class="bg-[url(https://c.animaapp.com/mjv3lc9bynq8xp/img/facebook.svg)] relative w-[22px] h-[22px] bg-[100%_100%]"
+                  ></div>
+                </div>
+                <div
+                  class="flex w-[42px] h-[42px] items-center justify-center gap-2.5 p-2.5 relative rounded-[30px] overflow-hidden border border-solid border-[#7a38fc]"
+                >
+                  <div
+                    class="bg-[url(https://c.animaapp.com/mjv3lc9bynq8xp/img/linkedin-.svg)] relative w-[22px] h-[22px] bg-[100%_100%]"
+                  ></div>
+                </div>
+                <img class="relative w-[42px] h-[42px]" src="https://c.animaapp.com/mjv3lc9bynq8xp/img/frame-97.svg" />
               </div>
             </div>
-            <div class="text-23">
-              <div class="rectangle-4"></div>
-              <div class="bottom">
-                <p class="text-wrapper-32">Copyright © Designmonks All Rights Reserved</p>
-                <div class="links">
-                  <div class="text-wrapper-33">Terms &amp; Conditions</div>
-                  <div class="text-wrapper-33">Privacy Policy</div>
+            <div class="flex flex-col items-start gap-8 relative self-stretch w-full flex-[0_0_auto]">
+              <div class="relative w-[1170px] h-0.5 bg-shadesdark-60 opacity-40"></div>
+              <div class="justify-between self-stretch w-full flex items-start relative flex-[0_0_auto]">
+                <p
+                  class="relative w-fit mt-[-1.00px] font-body-text-16-regular font-[number:var(--body-text-16-regular-font-weight)] text-shadesdark-15 text-[length:var(--body-text-16-regular-font-size)] text-center tracking-[var(--body-text-16-regular-letter-spacing)] leading-[var(--body-text-16-regular-line-height)] whitespace-nowrap [font-style:var(--body-text-16-regular-font-style)]"
+                >
+                  Copyright © Designmonks All Rights Reserved
+                </p>
+                <div class="inline-flex items-start gap-6 relative flex-[0_0_auto]">
+                  <div
+                    class="relative w-fit mt-[-1.00px] font-body-text-16-regular font-[number:var(--body-text-16-regular-font-weight)] text-mainwhite text-[length:var(--body-text-16-regular-font-size)] text-center tracking-[var(--body-text-16-regular-letter-spacing)] leading-[var(--body-text-16-regular-line-height)] whitespace-nowrap [font-style:var(--body-text-16-regular-font-style)]"
+                  >
+                    Terms &amp; Conditions
+                  </div>
+                  <div
+                    class="relative w-fit mt-[-1.00px] font-body-text-16-regular font-[number:var(--body-text-16-regular-font-weight)] text-mainwhite text-[length:var(--body-text-16-regular-font-size)] text-center tracking-[var(--body-text-16-regular-letter-spacing)] leading-[var(--body-text-16-regular-line-height)] whitespace-nowrap [font-style:var(--body-text-16-regular-font-style)]"
+                  >
+                    Privacy Policy
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-          <img class="BG-shape" src="https://c.animaapp.com/mjtpnr33xG28bA/img/bg-shape-1.png" />
+          <img
+            class="absolute -top-0.5 left-0 w-[1129px] h-[226px]"
+            src="https://c.animaapp.com/mjv3lc9bynq8xp/img/bg-shape-1.png"
+          />
         </div>
       </footer>
     </div>
