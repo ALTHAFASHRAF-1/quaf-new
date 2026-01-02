@@ -1,5 +1,5 @@
 @import url("https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css");
-@import url("https://fonts.googleapis.com/css?family=Manrope:var(--body-text-18-medium-font-weight),var(--body-text-12-semi-bold-UC-font-weight),var(--body-text-16-regular-font-weight),600,var(--body-text-18-bold-font-weight),var(--body-text-16-semibold-font-weight),var(--body-text-16-medium-font-weight),400|Abel:400");
+@import url("https://fonts.googleapis.com/css?family=Manrope:var(--body-text-18-medium-font-weight),var(--body-text-12-semi-bold-UC-font-weight),var(--body-text-16-regular-font-weight),600,var(--body-text-18-bold-font-weight),var(--body-text-16-semibold-font-weight),var(--body-text-16-medium-font-weight),400|Abel:400|Inika:700,400|Alfa+Slab+One:400|ABeeZee:400|ADLaM+Display:400");
 * {
   -webkit-font-smoothing: antialiased;
   box-sizing: border-box;
