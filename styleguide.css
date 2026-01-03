@@ -50,3 +50,14 @@
   --body-text-18-medium-line-height: 160%;
   --body-text-18-medium-font-style: normal;
 }
+
+/* Responsive font sizes */
+@media (max-width: 768px) {
+  :root {
+    --body-text-16-medium-font-size: 14px;
+    --body-text-16-regular-font-size: 14px;
+    --body-text-16-semibold-font-size: 14px;
+    --body-text-18-bold-font-size: 16px;
+    --body-text-18-medium-font-size: 16px;
+  }
+}
