@@ -1,169 +1,128 @@
-:root {
-  /* Colors */
-  --maindark: rgba(15, 11, 12, 1);
-  --mainwhite: rgba(255, 255, 255, 1);
-  --shadesdark-30: rgba(183, 182, 182, 1);
-  --mainprimary: rgba(122, 56, 252, 1);
-  --shadesdark-15: rgba(219, 218, 219, 1);
-  --mainsecondary: rgba(254, 191, 0, 1);
-  --maintertiary: rgba(251, 113, 76, 1);
-  --shadessecondary-15: rgba(255, 245, 217, 1);
-  --shadesdark-5: rgba(243, 243, 243, 1);
-  --shadesdark-60: rgba(111, 109, 109, 1);
-  --shadesdark-40: rgba(159, 157, 158, 1);
-  --shadesprimary-10: rgba(242, 235, 255, 1);
-  --shadesdark-80: rgba(63, 60, 61, 1);
-  --shadesdark-10: rgba(231, 231, 231, 1);
-  
-  /* Font Families */
-  --body-text-16-medium-font-family: "Manrope", sans-serif;
-  --body-text-16-semibold-font-family: "Manrope", sans-serif;
-  --body-text-18-bold-font-family: "Manrope", sans-serif;
-  --body-text-16-regular-font-family: "Manrope", sans-serif;
-  --body-text-12-semi-bold-UC-font-family: "Manrope", sans-serif;
-  --body-text-18-medium-font-family: "Manrope", sans-serif;
-  
-  /* Font Weights */
-  --body-text-16-medium-font-weight: 500;
-  --body-text-16-semibold-font-weight: 600;
-  --body-text-18-bold-font-weight: 700;
-  --body-text-16-regular-font-weight: 400;
-  --body-text-12-semi-bold-UC-font-weight: 600;
-  --body-text-18-medium-font-weight: 500;
-  
-  /* Font Sizes */
-  --body-text-16-medium-font-size: 16px;
-  --body-text-16-semibold-font-size: 16px;
-  --body-text-18-bold-font-size: 18px;
-  --body-text-16-regular-font-size: 16px;
-  --body-text-12-semi-bold-UC-font-size: 12px;
-  --body-text-18-medium-font-size: 18px;
-  
-  /* Line Heights */
-  --body-text-16-medium-line-height: 160%;
-  --body-text-16-semibold-line-height: 160%;
-  --body-text-18-bold-line-height: 160%;
-  --body-text-16-regular-line-height: 160%;
-  --body-text-12-semi-bold-UC-line-height: 130%;
-  --body-text-18-medium-line-height: 160%;
-  
-  /* Letter Spacing */
-  --body-text-16-medium-letter-spacing: 0px;
-  --body-text-16-semibold-letter-spacing: 0px;
-  --body-text-18-bold-letter-spacing: 0px;
-  --body-text-16-regular-letter-spacing: 0px;
-  --body-text-12-semi-bold-UC-letter-spacing: 0px;
-  --body-text-18-medium-letter-spacing: 0px;
+/* styleguide.css - Typography and Component Styles */
+
+/* Font Family Definitions */
+@import url('https://fonts.googleapis.com/css2?family=Abel&family=ABeeZee&family=Alfa+Slab+One&family=ADLaM+Display&family=Inika&family=Manrope:wght@300;400;500;600;700;800&display=swap');
+
+/* Typography Classes */
+.body-text-12-semi-bold-UC {
+    font-family: var(--body-text-12-semi-bold-UC-font-family);
+    font-size: var(--body-text-12-semi-bold-UC-font-size);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
-/* Responsive Typography */
+.body-text-16-regular {
+    font-family: var(--body-text-16-regular-font-family);
+    font-size: var(--body-text-16-regular-font-size);
+    font-weight: 400;
+    line-height: 1.5;
+}
+
+.body-text-16-medium {
+    font-family: var(--body-text-16-medium-font-family);
+    font-size: var(--body-text-16-medium-font-size);
+    font-weight: 500;
+    line-height: 1.5;
+}
+
+.body-text-16-semibold {
+    font-family: var(--body-text-16-semibold-font-family);
+    font-size: var(--body-text-16-semibold-font-size);
+    font-weight: 600;
+    line-height: 1.5;
+}
+
+.body-text-18-bold {
+    font-family: var(--body-text-18-bold-font-family);
+    font-size: var(--body-text-18-bold-font-size);
+    font-weight: 700;
+    line-height: 1.4;
+}
+
+.body-text-18-medium {
+    font-family: var(--body-text-18-medium-font-family);
+    font-size: var(--body-text-18-medium-font-size);
+    font-weight: 500;
+    line-height: 1.4;
+}
+
+/* Component Styles */
+.btn-primary {
+    background-color: var(--mainprimary);
+    color: var(--mainwhite);
+    padding: 12px 28px;
+    border-radius: 8px;
+    border: none;
+    font-family: var(--body-text-16-semibold-font-family);
+    font-size: var(--body-text-16-semibold-font-size);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #6a2be2;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(122, 56, 252, 0.3);
+}
+
+.btn-secondary {
+    background-color: transparent;
+    color: var(--mainwhite);
+    padding: 12px 28px;
+    border-radius: 8px;
+    border: 1px solid var(--mainprimary);
+    font-family: var(--body-text-16-semibold-font-family);
+    font-size: var(--body-text-16-semibold-font-size);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-secondary:hover {
+    background-color: var(--shadesprimary-10);
+    transform: translateY(-2px);
+}
+
+.card {
+    background: var(--mainwhite);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+}
+
+.section-padding {
+    padding: 4rem 0;
+}
+
 @media (max-width: 768px) {
-  :root {
-    --body-text-16-medium-font-size: 14px;
-    --body-text-16-semibold-font-size: 14px;
-    --body-text-18-bold-font-size: 16px;
-    --body-text-16-regular-font-size: 14px;
-    --body-text-18-medium-font-size: 16px;
-  }
+    .section-padding {
+        padding: 2rem 0;
+    }
 }
 
-/* Utility Classes for Fonts */
-.font-body-text-16-medium {
-  font-family: var(--body-text-16-medium-font-family);
-  font-weight: var(--body-text-16-medium-font-weight);
-  font-size: var(--body-text-16-medium-font-size);
-  line-height: var(--body-text-16-medium-line-height);
-  letter-spacing: var(--body-text-16-medium-letter-spacing);
+/* Custom Font Classes */
+.font-abel {
+    font-family: 'Abel', sans-serif;
 }
 
-.font-body-text-16-semibold {
-  font-family: var(--body-text-16-semibold-font-family);
-  font-weight: var(--body-text-16-semibold-font-weight);
-  font-size: var(--body-text-16-semibold-font-size);
-  line-height: var(--body-text-16-semibold-line-height);
-  letter-spacing: var(--body-text-16-semibold-letter-spacing);
+.font-abeeyzee {
+    font-family: 'ABeeZee', sans-serif;
 }
 
-.font-body-text-18-bold {
-  font-family: var(--body-text-18-bold-font-family);
-  font-weight: var(--body-text-18-bold-font-weight);
-  font-size: var(--body-text-18-bold-font-size);
-  line-height: var(--body-text-18-bold-line-height);
-  letter-spacing: var(--body-text-18-bold-letter-spacing);
+.font-alfa-slab {
+    font-family: 'Alfa Slab One', cursive;
 }
 
-.font-body-text-16-regular {
-  font-family: var(--body-text-16-regular-font-family);
-  font-weight: var(--body-text-16-regular-font-weight);
-  font-size: var(--body-text-16-regular-font-size);
-  line-height: var(--body-text-16-regular-line-height);
-  letter-spacing: var(--body-text-16-regular-letter-spacing);
+.font-adlam {
+    font-family: 'ADLaM Display', cursive;
 }
 
-.font-body-text-12-semi-bold-UC {
-  font-family: var(--body-text-12-semi-bold-UC-font-family);
-  font-weight: var(--body-text-12-semi-bold-UC-font-weight);
-  font-size: var(--body-text-12-semi-bold-UC-font-size);
-  line-height: var(--body-text-12-semi-bold-UC-line-height);
-  letter-spacing: var(--body-text-12-semi-bold-UC-letter-spacing);
-  text-transform: uppercase;
-}
-
-.font-body-text-18-medium {
-  font-family: var(--body-text-18-medium-font-family);
-  font-weight: var(--body-text-18-medium-font-weight);
-  font-size: var(--body-text-18-medium-font-size);
-  line-height: var(--body-text-18-medium-line-height);
-  letter-spacing: var(--body-text-18-medium-letter-spacing);
-}
-
-/* Responsive Container */
-.responsive-container {
-  width: 100%;
-  margin: 0 auto;
-  padding-left: 1rem;
-  padding-right: 1rem;
-}
-
-@media (min-width: 640px) {
-  .responsive-container {
-    max-width: 640px;
-  }
-}
-
-@media (min-width: 768px) {
-  .responsive-container {
-    max-width: 768px;
-  }
-}
-
-@media (min-width: 1024px) {
-  .responsive-container {
-    max-width: 1024px;
-  }
-}
-
-@media (min-width: 1280px) {
-  .responsive-container {
-    max-width: 1280px;
-  }
-}
-
-/* Hide/Show Utilities */
-.mobile-only {
-  display: block;
-}
-
-.desktop-only {
-  display: none;
-}
-
-@media (min-width: 768px) {
-  .mobile-only {
-    display: none;
-  }
-  
-  .desktop-only {
-    display: block;
-  }
+.font-inika {
+    font-family: 'Inika', serif;
 }
