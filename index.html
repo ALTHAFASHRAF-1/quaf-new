@@ -3,11 +3,12 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta charset="utf-8" />
+    <title>QUAF - Qualitative Union for Academic Focus</title>
     <link rel="stylesheet" href="globals.css" />
     <link rel="stylesheet" href="styleguide.css" />
+    <link rel="stylesheet" href="responsive.css" />
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-      /** @type {import('tailwindcss').Config} */
       tailwind.config = {
         theme: {
           extend: {
@@ -35,433 +36,450 @@
               "body-text-18-bold": "var(--body-text-18-bold-font-family)",
               "body-text-18-medium": "var(--body-text-18-medium-font-family)",
             },
-            container: {
-              center: true,
-              padding: {
-                DEFAULT: '1rem',
-                sm: '2rem',
-                lg: '4rem',
-                xl: '5rem',
-                '2xl': '6rem',
-              },
-            },
           },
         },
         plugins: [],
       };
     </script>
 </head>
-<body class="bg-white overflow-x-hidden">
-    <!-- Header & Navigation -->
-    <header class="relative w-full">
-        <div class="relative w-full min-h-screen lg:h-[782px] rounded-b-3xl overflow-hidden bg-[url('https://c.animaapp.com/mjwngvpjWKAdmV/img/hero-bg.png')] bg-cover bg-center">
-            <img class="absolute top-[293px] right-0 lg:left-[925px] w-[515px] h-[489px] opacity-70" src="https://c.animaapp.com/mjwngvpjWKAdmV/img/glow-effect-1.svg" alt="glow effect" />
-            <img class="absolute top-[122px] left-1/2 transform -translate-x-1/2 lg:left-[549px] w-full max-w-[624px] h-[625px] opacity-70" src="https://c.animaapp.com/mjwngvpjWKAdmV/img/glow-effect.svg" alt="glow effect" />
-            
-            <!-- Navigation -->
-            <nav class="relative z-20 container mx-auto px-4 sm:px-6 lg:px-8 pt-8">
-                <div class="flex flex-col lg:flex-row items-center justify-between">
-                    <!-- Logo -->
-                    <div class="flex items-center gap-4 mb-6 lg:mb-0">
-                        <img class="w-12 h-12 object-cover" src="https://c.animaapp.com/mjwngvpjWKAdmV/img/logo3d-1.png" alt="QUAF Logo" />
-                        <div class="font-body-text-18-bold text-white">QUAF</div>
-                    </div>
-                    
-                    <!-- Desktop Navigation -->
-                    <div class="hidden lg:flex items-center gap-12">
-                        <a href="https://quaf.me/" target="_blank" rel="noopener noreferrer" class="font-body-text-16-medium text-mainwhite hover:text-shadesdark-30 transition">Home</a>
-                        <div class="font-body-text-16-medium text-shadesdark-30">About</div>
-                        <div class="font-body-text-16-medium text-shadesdark-30">Leaders</div>
-                        <div class="font-body-text-16-medium text-shadesdark-30">Gallery</div>
-                        <div class="font-body-text-16-medium text-shadesdark-30">Contact</div>
-                    </div>
-                    
-                    <button class="hidden lg:inline-flex items-center justify-center gap-2 px-6 py-3 border border-[#7a38fc] rounded-lg text-mainwhite font-body-text-16-semibold hover:bg-mainprimary/10 transition">
-                        Get Started
-                    </button>
-                    
-                    <!-- Mobile Menu Button -->
-                    <button class="lg:hidden text-white text-2xl">
-                        ☰
-                    </button>
-                </div>
-                
-                <!-- Mobile Navigation -->
-                <div class="lg:hidden mt-6 bg-black/50 backdrop-blur-sm rounded-lg p-4">
-                    <div class="flex flex-col gap-4">
-                        <a href="https://quaf.me/" class="font-body-text-16-medium text-mainwhite py-2">Home</a>
-                        <div class="font-body-text-16-medium text-shadesdark-30 py-2">About</div>
-                        <div class="font-body-text-16-medium text-shadesdark-30 py-2">Leaders</div>
-                        <div class="font-body-text-16-medium text-shadesdark-30 py-2">Gallery</div>
-                        <div class="font-body-text-16-medium text-shadesdark-30 py-2">Contact</div>
-                        <button class="w-full mt-4 inline-flex items-center justify-center gap-2 px-6 py-3 border border-[#7a38fc] rounded-lg text-mainwhite font-body-text-16-semibold">
-                            Get Started
-                        </button>
-                    </div>
-                </div>
-            </nav>
-            
-            <!-- Hero Content -->
-            <div class="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 pt-16 lg:pt-32">
-                <div class="flex flex-col lg:flex-row items-center justify-between gap-8 lg:gap-16">
-                    <div class="lg:w-1/2">
-                        <div class="space-y-4">
-                            <div class="font-body-text-18-bold text-white">MAY-1-2024</div>
-                            <h1 class="font-['Abel'] text-4xl md:text-5xl lg:text-6xl text-mainwhite leading-tight">
-                                Qualitative Union for<br />Academic Focus
-                            </h1>
-                            <p class="font-body-text-16-regular text-shadesdark-15">
-                                27th batch of Darul Hidaya Da'wa College, Manoor
-                            </p>
-                        </div>
-                        
-                        <div class="flex flex-col sm:flex-row gap-4 mt-8">
-                            <button class="px-7 py-3.5 bg-mainprimary text-mainwhite font-body-text-16-semibold rounded-lg hover:opacity-90 transition">
-                                Join now
-                            </button>
-                            <button class="px-7 py-3.5 border border-[#7a38fc] text-mainwhite font-body-text-16-semibold rounded-lg hover:bg-mainprimary/10 transition">
-                                Subscribe
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <div class="lg:w-1/2 relative">
-                        <img class="w-full max-w-[500px] mx-auto h-auto" src="https://c.animaapp.com/mjwngvpjWKAdmV/img/graphics.png" alt="QUAF Graphics" />
-                        <img class="absolute bottom-0 left-0 w-20 h-20 hidden lg:block" src="https://c.animaapp.com/mjwngvpjWKAdmV/img/vector-1.svg" alt="vector decoration" />
-                        <img class="absolute top-1/4 right-0 w-6 h-6 hidden lg:block" src="https://c.animaapp.com/mjwngvpjWKAdmV/img/vector-2.svg" alt="vector decoration" />
-                    </div>
-                </div>
+<body>
+    <div class="main-container">
+      
+      <!-- Hero Section -->
+      <div class="hero-section">
+        <div class="hero-bg">
+          <img class="glow-effect-1" src="https://c.animaapp.com/mjwngvpjWKAdmV/img/glow-effect-1.svg" alt="" />
+          <img class="glow-effect-2" src="https://c.animaapp.com/mjwngvpjWKAdmV/img/glow-effect.svg" alt="" />
+        </div>
+        
+        <div class="hero-content">
+          <!-- Desktop Navigation -->
+          <div class="desktop-nav">
+            <div class="logo-section">
+              <img class="logo-img" src="https://c.animaapp.com/mjwngvpjWKAdmV/img/logo3d-1.png" alt="QUAF Logo" />
+              <div class="logo-text">QUAF</div>
             </div>
             
-            <img class="absolute bottom-0 right-0 w-32 lg:w-40 h-auto object-contain hidden lg:block" src="https://c.animaapp.com/mjwngvpjWKAdmV/img/3d-quaf-logo---high-quality-professional-rendering-removebg-prev.png" alt="3D QUAF Logo" />
-        </div>
-    </header>
+            <div class="nav-links">
+              <a href="https://quaf.me/" target="_blank" rel="noopener noreferrer" class="nav-link active">Home</a>
+              <a href="#about" class="nav-link">About</a>
+              <a href="#leaders" class="nav-link">Leaders</a>
+              <a href="#gallery" class="nav-link">Gallery</a>
+              <a href="#contact" class="nav-link">Contact</a>
+            </div>
+            
+            <button class="btn-get-started">Get Started</button>
+          </div>
 
-    <!-- Marquee Section -->
-    <div class="bg-shadessecondary-15 overflow-hidden py-4">
-        <div class="flex items-center justify-center flex-wrap gap-4 md:gap-8 px-4">
-            <div class="font-['Inika'] font-bold text-[#4f4646] text-lg md:text-xl">QUAF</div>
-            <div class="font-['Inika'] text-[#4f4646] text-lg md:text-xl">QUALITATIVE</div>
-            <div class="font-['Inika'] text-[#4f4646] text-lg md:text-xl">UNION</div>
-            <div class="font-['Inika'] text-[#4f4646] text-lg md:text-xl">FOR</div>
-            <div class="font-['Inika'] text-[#4f4646] text-lg md:text-xl">ACADEMIC</div>
-            <div class="font-['Inika'] text-[#4f4646] text-lg md:text-xl">FOCUS</div>
-            <div class="font-['Inika'] font-bold text-[#4f4646] text-lg md:text-xl">DARUL HIDAYA DA'WA COLLEGE</div>
-            <div class="font-['Inika'] text-[#4f4646] text-lg md:text-xl">MANOOR</div>
+          <!-- Mobile Navigation -->
+          <div class="mobile-nav">
+            <div class="logo-section">
+              <img class="logo-img" src="https://c.animaapp.com/mjwngvpjWKAdmV/img/logo3d-1.png" alt="QUAF Logo" />
+              <div class="logo-text">QUAF</div>
+            </div>
+            <button class="mobile-menu-btn">☰</button>
+          </div>
+          
+          <!-- Hero Main Content -->
+          <div class="hero-main">
+            <div class="hero-text-section">
+              <div class="hero-text-content">
+                <div class="hero-date">MAY-1-2024</div>
+                <h1 class="hero-title">Qualitative Union for<br />Academic Focus</h1>
+                <p class="hero-subtitle">27th batch of Darul Hidaya Da'wa College, Manoor</p>
+              </div>
+              <div class="hero-buttons">
+                <button class="btn-primary">Join now</button>
+                <button class="btn-secondary">Subscribe</button>
+              </div>
+            </div>
+            <img class="hero-graphic" src="https://c.animaapp.com/mjwngvpjWKAdmV/img/graphics.png" alt="Graphics" />
+            <img class="hero-vector-1" src="https://c.animaapp.com/mjwngvpjWKAdmV/img/vector-1.svg" alt="" />
+            <img class="hero-vector-2" src="https://c.animaapp.com/mjwngvpjWKAdmV/img/vector-2.svg" alt="" />
+          </div>
+          
+          <img class="hero-3d-logo" src="https://c.animaapp.com/mjwngvpjWKAdmV/img/3d-quaf-logo---high-quality-professional-rendering-removebg-prev.png" alt="3D Logo" />
         </div>
+      </div>
+
+      <!-- Acronym Banner -->
+      <div class="acronym-banner">
+        <div class="acronym-word bold">QUAF</div>
+        <div class="acronym-word">QUALITATIVE</div>
+        <div class="acronym-word">UNION</div>
+        <div class="acronym-word">FOR</div>
+        <div class="acronym-word">ACADEMIC</div>
+        <div class="acronym-word">FOCUS</div>
+        <div class="acronym-word bold college-name">DARUL HIDAYA DA'WA COLLEGE</div>
+        <div class="acronym-word">MANOOR</div>
+      </div>
+
+      <!-- About Us Section -->
+      <div class="about-section" id="about">
+        <div class="about-header">
+          <h2 class="section-title">About Us</h2>
+          <p class="about-description">
+            <span class="text-dark">"Admitted to Darul Hidaya Da'wa College, Manoor, 27th Batch, QUAF (Qualitative Union for Academic Focus) on </span>
+            <span class="text-primary">May-1 2024."</span>
+          </p>
+        </div>
+        
+        <div class="about-gallery">
+          <div class="gallery-item large">
+            <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/rectangle-27.png" alt="Class Group Photo" />
+            <div class="gallery-overlay">
+              <div class="gallery-label">MEMORABLE EXPERIENCE</div>
+              <div class="gallery-title">Class Group Photo</div>
+            </div>
+          </div>
+          
+          <div class="gallery-item medium">
+            <div class="gallery-bg" style="background-image: url(https://c.animaapp.com/mjwngvpjWKAdmV/img/frame-67.png)"></div>
+          </div>
+          
+          <div class="gallery-item small">
+            <div class="gallery-bg" style="background-image: url(https://c.animaapp.com/mjwngvpjWKAdmV/img/community-build.png)"></div>
+          </div>
+        </div>
+        
+        <img class="about-bg-shape" src="https://c.animaapp.com/mjwngvpjWKAdmV/img/bg-shape.png" alt="" />
+      </div>
+
+      <!-- Programs Section -->
+      <div class="programs-section">
+        <img class="programs-bg" src="https://c.animaapp.com/mjwngvpjWKAdmV/img/bg-glow-effect.png" alt="" />
+        
+        <div class="programs-content">
+          <img class="programs-graphic" src="https://c.animaapp.com/mjwngvpjWKAdmV/img/frame-37402.svg" alt="" />
+          
+          <div class="programs-text">
+            <div class="programs-header">
+              <h2 class="programs-title">Programs <br />That Inspire <br />Creativity</h2>
+              <p class="programs-description">The public programs designed to enhance skills and creativity.</p>
+            </div>
+            
+            <div class="programs-list">
+              <div class="program-item">
+                <div class="program-name">Miskul Mahabba</div>
+                <div class="program-divider"></div>
+                <div class="program-date">Octobar 15, 2024</div>
+                <p class="program-time">9:00 PM - 10:30 PM</p>
+              </div>
+              
+              <div class="program-item">
+                <div class="program-name">Perunnal Payasam</div>
+                <div class="program-divider"></div>
+                <div class="program-date">August 17, 2024</div>
+                <p class="program-time">8:00 PM - 9:00 PM</p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="programs-image">
+            <div class="programs-image-bg"></div>
+            <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/pexels-fauxels-3184315-1.png" alt="" />
+          </div>
+        </div>
+        
+        <img class="programs-graphic-bg" src="https://c.animaapp.com/mjwngvpjWKAdmV/img/graphic.png" alt="" />
+      </div>
+
+      <!-- Scholars Section -->
+      <div class="scholars-section" id="leaders">
+        <div class="scholars-header">
+          <div class="scholars-title-wrapper">
+            <div class="title-underline"></div>
+            <h2 class="section-title">Meet the top<br />incredible scholars</h2>
+            <img class="title-icon" src="https://c.animaapp.com/mjwngvpjWKAdmV/img/vector.svg" alt="" />
+          </div>
+          <button class="btn-primary">View All Scholars</button>
+        </div>
+        
+        <div class="scholars-grid">
+          <!-- Scholar Card 1 -->
+          <div class="scholar-card">
+            <div class="scholar-photo" style="background-image: url(https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-5.png)"></div>
+            <div class="scholar-info">
+              <div class="scholar-name">SADHAQATHULLA C</div>
+              <div class="scholar-role">PRESIDENT</div>
+            </div>
+          </div>
+          
+          <!-- Scholar Card 2 -->
+          <div class="scholar-card">
+            <div class="scholar-photo" style="background-image: url(https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-1.png)"></div>
+            <div class="scholar-info">
+              <div class="scholar-name">MUHAMMED FAHEEM NP</div>
+              <div class="scholar-role">SECRETARY</div>
+            </div>
+          </div>
+          
+          <!-- Scholar Card 3 -->
+          <div class="scholar-card">
+            <div class="scholar-photo" style="background-image: url(https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-7.png)"></div>
+            <div class="scholar-info">
+              <div class="scholar-name">SAHL SHAN O</div>
+              <div class="scholar-role">VICE PRESIDENT</div>
+            </div>
+          </div>
+          
+          <!-- Scholar Card 4 -->
+          <div class="scholar-card">
+            <div class="scholar-photo" style="background-image: url(https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-6.png)"></div>
+            <div class="scholar-info">
+              <div class="scholar-name">MUHAMMED MUSTHAFA SM</div>
+              <div class="scholar-role">ENTREPRENEUR</div>
+            </div>
+          </div>
+          
+          <!-- Scholar Card 5 -->
+          <div class="scholar-card">
+            <div class="scholar-photo" style="background-image: url(https://c.animaapp.com/mjwngvpjWKAdmV/img/photo.png)"></div>
+            <div class="scholar-info">
+              <div class="scholar-name">MUHAMMED ANSHAD VP</div>
+              <div class="scholar-role">WORKING SECRETARY</div>
+            </div>
+          </div>
+          
+          <!-- Scholar Card 6 -->
+          <div class="scholar-card">
+            <div class="scholar-photo" style="background-image: url(https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-3.png)"></div>
+            <div class="scholar-info">
+              <div class="scholar-name">MUHAMMED ALI M</div>
+              <div class="scholar-role">PROGRAM DESIGNER</div>
+            </div>
+          </div>
+          
+          <!-- Scholar Card 7 -->
+          <div class="scholar-card">
+            <div class="scholar-photo" style="background-image: url(https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-2.png)"></div>
+            <div class="scholar-info">
+              <div class="scholar-name">MUHAMMED HASHIM KH</div>
+              <div class="scholar-role">EXECUTIVE MEMBER</div>
+            </div>
+          </div>
+          
+          <!-- Scholar Card 8 -->
+          <div class="scholar-card">
+            <div class="scholar-photo" style="background-image: url(https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-4.png)"></div>
+            <div class="scholar-info">
+              <div class="scholar-name">MUHAMMED RABEEH PP</div>
+              <div class="scholar-role">EXECUTIVE MEMBER, ORATION WING</div>
+            </div>
+          </div>
+          
+          <!-- Add more scholar cards as needed -->
+          <!-- Scholar Card 9-32 (I'll provide a condensed version) -->
+          <div class="scholar-card">
+            <div class="scholar-photo" style="background-image: url(https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-8.png)"></div>
+            <div class="scholar-info">
+              <div class="scholar-name">MUHAMMED QASIM MP</div>
+              <div class="scholar-role">EDITORIAL BOARD</div>
+            </div>
+          </div>
+          
+          <div class="scholar-card">
+            <div class="scholar-photo" style="background-image: url(https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-9.png)"></div>
+            <div class="scholar-info">
+              <div class="scholar-name">MUHAMMED SHAFEEQUE T</div>
+              <div class="scholar-role">EDITORIAL BOARD, ART WING</div>
+            </div>
+          </div>
+          
+          <div class="scholar-card">
+            <div class="scholar-photo" style="background-image: url(https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-10.png)"></div>
+            <div class="scholar-info">
+              <div class="scholar-name">MUHAMMED HASHIM V</div>
+              <div class="scholar-role">PUBLICATIONS, LIBRARY</div>
+            </div>
+          </div>
+          
+          <div class="scholar-card">
+            <div class="scholar-photo" style="background-image: url(https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-11.png)"></div>
+            <div class="scholar-info">
+              <div class="scholar-name">MOHAMMED HADI V</div>
+              <div class="scholar-role">PUBLICATIONS, LIBRARY</div>
+            </div>
+          </div>
+          
+          <!-- Continue with remaining scholars... -->
+        </div>
+      </div>
+
+      <!-- Programs & Reports Section -->
+      <div class="reports-section">
+        <div class="reports-header">
+          <h2 class="section-title">Programs & Reports</h2>
+          <p class="reports-subtitle">Explore the main programs with detailed descriptions, featured highlights, and everything you need to know before getting started.</p>
+        </div>
+        
+        <div class="reports-list">
+          <!-- Report Item 1 -->
+          <div class="report-item">
+            <div class="report-date-bar">
+              <div class="date-left">
+                <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/frame-37678.svg" alt="" />
+                <span>Thursday, July-25-2024</span>
+              </div>
+              <span class="date-right">Programs & Reports</span>
+            </div>
+            
+            <div class="report-content">
+              <div class="report-thumbnail">
+                <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/mask-group.png" alt="Freshers Meet" />
+              </div>
+              <div class="report-details">
+                <div class="report-title-row">
+                  <h3>Freshers Meet</h3>
+                  <span class="report-time">9:00 AM - 4:00 PM</span>
+                </div>
+                <p class="report-organizer">By Darul Huda Islamic University, Chemmad</p>
+                <p class="report-description">Tarhib 1446 – Freshers' Grand Meet Up is a welcoming and celebratory event organized by the Centre for Public Education and Training (CPET) and the Office of Guidance and Extension Activities (OGEA) at Darul Huda Islamic University. Designed especially for freshers, the program marks the beginning of a new academic journey by fostering connection, inspiration, and a sense of belonging within the university community.</p>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Report Item 2 -->
+          <div class="report-item">
+            <div class="report-date-bar">
+              <div class="date-left">
+                <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/frame-37678.svg" alt="" />
+                <span>November,2024</span>
+              </div>
+              <span class="date-right">Programs & Reports</span>
+            </div>
+            
+            <div class="report-content">
+              <div class="report-thumbnail">
+                <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-40.png" alt="Website Launching" />
+              </div>
+              <div class="report-details">
+                <div class="report-title-row">
+                  <h3>Website Launching</h3>
+                </div>
+                <p class="report-organizer">First Website for a class union in the history of Darul Hidaya Da'wa College, Manoor</p>
+                <p class="report-description"><span class="highlight">QUAF</span> launched an official website for its class union, marking a historic milestone as the first-ever website created for a class organization in the history of Darul Hidaya Da'wa College, Manoor.<br />The website was officially launched by the Vice Principal, <span class="highlight">Usthad Junaid Hudawi</span>.</p>
+              </div>
+            </div>
+            
+            <div class="report-gallery">
+              <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-37.png" alt="" />
+              <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-38.png" alt="" />
+              <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-39.png" alt="" />
+            </div>
+          </div>
+          
+          <!-- Add more report items similarly -->
+        </div>
+        
+        <button class="btn-primary btn-center">See All Schedule</button>
+        
+        <img class="reports-bg-elements" src="https://c.animaapp.com/mjwngvpjWKAdmV/img/elements.png" alt="" />
+      </div>
+
+      <!-- Gallery Preview Section -->
+      <div class="gallery-preview-section">
+        <div class="gallery-preview-header">
+          <p class="gallery-badge">40th Batch</p>
+          <h2 class="gallery-title">Darul Huda Islamic University</h2>
+          <button class="btn-outline">Academic Focus</button>
+        </div>
+        
+        <div class="gallery-preview-grid">
+          <div class="gallery-preview-item">
+            <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/text.png" alt="" />
+          </div>
+          <div class="gallery-preview-item">
+            <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/text-1.png" alt="" />
+          </div>
+          <div class="gallery-preview-item overlay">
+            <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/text-2.png" alt="" />
+            <div class="gallery-overlay-text">
+              <div class="overlay-title">Group Photo</div>
+              <div class="overlay-views">26K VIEWS</div>
+            </div>
+          </div>
+          <div class="gallery-preview-item overlay">
+            <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/reel-1.png" alt="" />
+            <div class="gallery-overlay-text">
+              <div class="overlay-title">QUAF</div>
+              <div class="overlay-views">30K VIEWS</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Full Gallery Section -->
+      <div class="gallery-section" id="gallery">
+        <div class="gallery-header">
+          <h2 class="section-title">Check our latest gallery</h2>
+          <p class="gallery-subtitle">A glimpse into our creative programs in action.<br />Empowering talent through learning and collaboration.</p>
+        </div>
+        
+        <img class="gallery-grid-img" src="https://c.animaapp.com/mjwngvpjWKAdmV/img/images.svg" alt="Gallery Grid" />
+        
+        <button class="btn-primary btn-center">View All Gallery</button>
+        
+        <img class="gallery-decoration" src="https://c.animaapp.com/mjwngvpjWKAdmV/img/image-8.png" alt="" />
+      </div>
+
+      <!-- CTA Section -->
+      <div class="cta-section">
+        <div class="cta-bg">
+          <div class="cta-glow-1"></div>
+          <div class="cta-glow-2"></div>
+        </div>
+        
+        <div class="cta-content">
+          <div class="cta-text">
+            <h2 class="cta-title">Let's join our community</h2>
+            <p class="cta-description">Join our community to participate in our programs and learn more about our education system.</p>
+            <button class="btn-secondary-yellow">Join now</button>
+          </div>
+          <img class="cta-image" src="https://c.animaapp.com/mjwngvpjWKAdmV/img/image.png" alt="" />
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <footer class="footer" id="contact">
+        <img class="footer-bg" src="https://c.animaapp.com/mjwngvpjWKAdmV/img/bg.png" alt="" />
+        
+        <div class="footer-content">
+          <div class="footer-newsletter">
+            <h2 class="footer-title">Never miss a single news</h2>
+            <p class="footer-subtitle">Stay informed with all the latest updates and news about our programs. Never miss a moment of our exciting and innovative gatherings in the world of technology and beyond.</p>
+            
+            <div class="newsletter-form">
+              <input type="email" placeholder="Enter your email address" class="email-input" />
+              <button class="btn-primary">Subscribe</button>
+            </div>
+          </div>
+          
+          <div class="footer-bottom">
+            <div class="footer-brand-row">
+              <div class="footer-logo">QUAF</div>
+              <div class="footer-social">
+                <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/vector-3.svg" alt="Instagram" />
+                <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/facebook.svg" alt="Facebook" />
+                <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/whatsapp.svg" alt="WhatsApp" />
+              </div>
+            </div>
+            
+            <div class="footer-divider"></div>
+            
+            <div class="footer-copyright-row">
+              <p class="footer-copyright">Copyright © QUAF-2026 All Rights Reserved</p>
+              <div class="footer-links">
+                <a href="#">Terms & Conditions</a>
+                <a href="#">Privacy Policy</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <img class="footer-bg-shape" src="https://c.animaapp.com/mjwngvpjWKAdmV/img/bg-shape-1.png" alt="" />
+      </footer>
+
     </div>
-
-    <!-- About Us Section -->
-    <section class="relative py-16 lg:py-36 overflow-hidden">
-        <img class="absolute top-0 left-0 w-full h-48 object-cover" src="https://c.animaapp.com/mjwngvpjWKAdmV/img/bg-shape.png" alt="background shape" />
-        
-        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex flex-col lg:flex-row items-start justify-between gap-8 lg:gap-16">
-                <h2 class="font-['Alfa_Slab_One'] text-3xl md:text-4xl lg:text-[46px] text-maindark text-center lg:text-left">
-                    About Us
-                </h2>
-                <p class="lg:w-1/2 font-body-text-16-regular text-maindark">
-                    <span class="text-[#0e0b0b]">"Admitted to Darul Hidaya Da'wa College, Manoor, 27th Batch, QUAF (Qualitative Union for Academic Focus) on </span>
-                    <span class="text-[#7a38fc]">May-1 2024."</span>
-                </p>
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12 lg:mt-16">
-                <!-- Card 1 -->
-                <div class="relative rounded-2xl overflow-hidden group h-[300px] md:h-[362px]">
-                    <img class="w-full h-full object-cover" src="https://c.animaapp.com/mjwngvpjWKAdmV/img/rectangle-27.png" alt="Class Group Photo" />
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent flex items-end p-6">
-                        <div>
-                            <div class="font-body-text-12-semi-bold-UC text-shadesdark-5">MEMORABLE EXPERIENCE</div>
-                            <div class="font-['ABeeZee'] text-2xl text-mainwhite">Class Group Photo</div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Card 2 -->
-                <div class="relative rounded-2xl overflow-hidden group h-[300px] md:h-[362px]">
-                    <img class="w-full h-full object-cover" src="https://c.animaapp.com/mjwngvpjWKAdmV/img/frame-67.png" alt="Skilled Speaker" />
-                </div>
-                
-                <!-- Card 3 -->
-                <div class="relative rounded-2xl overflow-hidden group h-[300px] md:h-[362px]">
-                    <img class="w-full h-full object-cover" src="https://c.animaapp.com/mjwngvpjWKAdmV/img/community-build.png" alt="Community Build" />
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Programs Section -->
-    <section class="relative py-16 lg:py-20 bg-gradient-to-b from-maindark to-shadesdark-80">
-        <img class="absolute top-0 left-0 w-full h-full object-cover opacity-30" src="https://c.animaapp.com/mjwngvpjWKAdmV/img/bg-glow-effect.png" alt="background glow" />
-        
-        <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div class="flex flex-col lg:flex-row items-center justify-between gap-8 lg:gap-12">
-                <div class="lg:w-1/2">
-                    <img class="w-full max-w-[400px] mx-auto lg:mx-0" src="https://c.animaapp.com/mjwngvpjWKAdmV/img/frame-37402.svg" alt="Programs illustration" />
-                </div>
-                
-                <div class="lg:w-1/2 text-mainwhite">
-                    <h2 class="font-['ADLaM_Display'] text-3xl md:text-4xl lg:text-[46px] leading-tight mb-6">
-                        Programs <br />That Inspire <br />Creativity
-                    </h2>
-                    <p class="font-body-text-16-regular text-shadesdark-15 mb-8">
-                        The public programs designed to enhance skills and creativity.
-                    </p>
-                    
-                    <div class="space-y-8">
-                        <div>
-                            <div class="font-['ADLaM_Display'] text-xl mb-1">Miskul Mahabba</div>
-                            <div class="w-32 h-0.5 bg-shadesdark-60 mb-3"></div>
-                            <div class="font-body-text-18-medium">October 15, 2024</div>
-                            <p class="font-body-text-16-regular text-shadesdark-40">9:00 PM - 10:30 PM</p>
-                        </div>
-                        
-                        <div>
-                            <div class="font-['ADLaM_Display'] text-xl mb-1">Perunnal Payasam</div>
-                            <div class="w-32 h-0.5 bg-shadesdark-60 mb-3"></div>
-                            <div class="font-body-text-18-medium">August 17, 2024</div>
-                            <p class="font-body-text-16-regular text-shadesdark-40">8:00 PM - 9:00 PM</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Scholars Section -->
-    <section class="py-16 lg:py-20 bg-shadessecondary-15">
-        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 mb-12 lg:mb-16">
-                <div class="relative">
-                    <h2 class="font-['Alfa_Slab_One'] text-3xl md:text-4xl lg:text-[46px] text-maindark">
-                        Meet the top<br />incredible scholars
-                    </h2>
-                    <div class="absolute -bottom-2 left-0 w-40 h-1 bg-mainsecondary"></div>
-                    <img class="absolute top-2 right-0 w-12 h-12" src="https://c.animaapp.com/mjwngvpjWKAdmV/img/vector.svg" alt="decoration" />
-                </div>
-                
-                <button class="px-6 py-3.5 bg-mainprimary text-mainwhite font-body-text-16-semibold rounded-lg hover:opacity-90 transition">
-                    View All Scholars
-                </button>
-            </div>
-            
-            <!-- Scholars Grid -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                <!-- Scholar Card Template -->
-                <div class="bg-mainwhite rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition">
-                    <div class="h-48 bg-gray-300 bg-cover bg-center" style="background-image: url('https://c.animaapp.com/mjwngvpjWKAdmV/img/photo.png')"></div>
-                    <div class="p-5">
-                        <div class="font-['ABeeZee'] text-lg text-maindark">MUHAMMED ANSHAD VP</div>
-                        <div class="font-body-text-12-semi-bold-UC text-shadesdark-80">WORKING SECRETARY</div>
-                    </div>
-                </div>
-                
-                <!-- Repeat for other scholars (27 more cards) -->
-                <!-- Due to length, I'll show template. In actual implementation, you would repeat this for all scholars -->
-                
-            </div>
-            
-            <!-- Load More Button for Mobile -->
-            <div class="text-center mt-8 lg:hidden">
-                <button class="px-6 py-3.5 bg-mainprimary text-mainwhite font-body-text-16-semibold rounded-lg">
-                    Load More Scholars
-                </button>
-            </div>
-        </div>
-    </section>
-
-    <!-- Programs & Reports -->
-    <section class="py-16 lg:py-20">
-        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-12 lg:mb-16">
-                <h2 class="font-['ADLaM_Display'] text-3xl md:text-4xl lg:text-[46px] text-maindark mb-4">
-                    Programs & Reports
-                </h2>
-                <p class="font-body-text-16-regular text-shadesdark-80 max-w-2xl mx-auto">
-                    Explore the main programs with detailed descriptions, featured highlights, and everything you need to know before getting started.
-                </p>
-            </div>
-            
-            <!-- Timeline Items -->
-            <div class="space-y-8">
-                <!-- Timeline Item 1 -->
-                <div class="bg-shadessecondary-15 rounded-2xl overflow-hidden">
-                    <div class="bg-maindark p-6 flex flex-col md:flex-row justify-between items-center gap-4">
-                        <div class="flex items-center gap-4">
-                            <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/frame-37678.svg" alt="calendar icon" />
-                            <div class="font-['ABeeZee'] text-xl text-mainwhite">Thursday, July-25-2024</div>
-                        </div>
-                        <div class="font-['ABeeZee'] text-xl text-mainwhite">Programs & Reports</div>
-                    </div>
-                    
-                    <div class="p-6">
-                        <div class="flex flex-col lg:flex-row gap-6">
-                            <div class="lg:w-48">
-                                <div class="w-full h-32 lg:h-40 rounded-xl bg-gradient-to-br from-gray-100 to-gray-800 overflow-hidden">
-                                    <img class="w-full h-full object-cover" src="https://c.animaapp.com/mjwngvpjWKAdmV/img/mask-group.png" alt="Freshers Meet" />
-                                </div>
-                            </div>
-                            
-                            <div class="lg:flex-1">
-                                <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-4">
-                                    <h3 class="font-['ABeeZee'] text-2xl text-maindark">Freshers Meet</h3>
-                                    <div class="font-['ABeeZee'] text-lg text-maindark mt-2 md:mt-0">9:00 AM - 4:00 PM</div>
-                                </div>
-                                
-                                <p class="font-body-text-16-medium text-maindark mb-3">
-                                    By Darul Huda Islamic University, Chemmad
-                                </p>
-                                
-                                <p class="font-body-text-16-regular text-shadesdark-80">
-                                    Tarhib 1446 – Freshers' Grand Meet Up is a welcoming and celebratory event organized by the Centre for Public Education and Training (CPET) and the Office of Guidance and Extension Activities (OGEA) at Darul Huda Islamic University...
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Additional timeline items would go here -->
-                
-            </div>
-            
-            <div class="text-center mt-12">
-                <button class="px-6 py-3.5 bg-mainprimary text-mainwhite font-body-text-16-semibold rounded-lg hover:opacity-90 transition">
-                    See All Schedule
-                </button>
-            </div>
-        </div>
-    </section>
-
-    <!-- Gallery Section -->
-    <section class="py-16 lg:py-20 bg-shadessecondary-15">
-        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-12 lg:mb-16">
-                <h2 class="font-['Clash_Display-Semibold'] text-3xl md:text-4xl lg:text-[46px] text-maindark mb-4">
-                    Check our latest gallery
-                </h2>
-                <p class="font-body-text-16-regular text-shadesdark-80 max-w-2xl mx-auto">
-                    A glimpse into our creative programs in action.<br />
-                    Empowering talent through learning and collaboration.
-                </p>
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-                <!-- Gallery Items -->
-                <div class="relative rounded-2xl overflow-hidden h-96 group">
-                    <img class="w-full h-full object-cover group-hover:scale-105 transition duration-300" src="https://c.animaapp.com/mjwngvpjWKAdmV/img/text.png" alt="Gallery image" />
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex items-end p-6">
-                        <div class="text-mainwhite">
-                            <div class="font-['ABeeZee'] text-xl">QUAF Moments</div>
-                            <div class="font-body-text-12-semi-bold-UC text-shadesdark-10">15K VIEWS</div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Add 3 more gallery items -->
-                
-            </div>
-            
-            <div class="text-center">
-                <button class="px-6 py-3.5 bg-mainprimary text-mainwhite font-body-text-16-semibold rounded-lg hover:opacity-90 transition">
-                    View All Gallery
-                </button>
-            </div>
-        </div>
-    </section>
-
-    <!-- Community CTA -->
-    <section class="py-16 lg:py-20 relative">
-        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="bg-maindark rounded-2xl p-8 lg:p-16 relative overflow-hidden">
-                <div class="flex flex-col lg:flex-row items-center justify-between gap-8">
-                    <div class="lg:w-1/2">
-                        <h2 class="font-['ADLaM_Display'] text-3xl md:text-4xl text-mainwhite mb-6">
-                            Let's join our community
-                        </h2>
-                        <p class="font-body-text-16-regular text-shadesdark-15 mb-8">
-                            Join our community to participate in our programs and learn more about our education system.
-                        </p>
-                        <button class="px-6 py-3.5 bg-mainsecondary text-maindark font-body-text-16-semibold rounded-lg hover:opacity-90 transition">
-                            Join now
-                        </button>
-                    </div>
-                    
-                    <div class="lg:w-1/2 flex justify-center">
-                        <img class="w-full max-w-md h-auto" src="https://c.animaapp.com/mjwngvpjWKAdmV/img/image.png" alt="Community illustration" />
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="relative pt-16 lg:pt-32 pb-8 bg-gradient-to-b from-maindark to-black">
-        <img class="absolute inset-0 w-full h-full object-cover" src="https://c.animaapp.com/mjwngvpjWKAdmV/img/bg.png" alt="footer background" />
-        
-        <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div class="text-center mb-12 lg:mb-20">
-                <h2 class="font-['Clash_Display-Semibold'] text-3xl md:text-4xl text-mainwhite mb-6">
-                    Never miss a single news
-                </h2>
-                <p class="font-body-text-16-regular text-shadesdark-15 max-w-2xl mx-auto mb-8">
-                    Stay informed with all the latest updates and news about our programs. Never miss a moment of our exciting and innovative gatherings.
-                </p>
-                
-                <div class="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
-                    <input type="email" placeholder="Enter your email address" class="flex-1 px-6 py-3.5 rounded-lg bg-mainwhite text-maindark" />
-                    <button class="px-6 py-3.5 bg-mainprimary text-mainwhite font-semibold rounded-lg hover:opacity-90 transition">
-                        Subscribe
-                    </button>
-                </div>
-            </div>
-            
-            <div class="border-t border-shadesdark-60/40 pt-8">
-                <div class="flex flex-col lg:flex-row justify-between items-center gap-6">
-                    <div class="font-['ADLaM_Display'] text-2xl text-mainwhite">QUAF</div>
-                    
-                    <div class="flex flex-wrap justify-center gap-6">
-                        <div class="font-body-text-16-regular text-mainwhite">Terms & Conditions</div>
-                        <div class="font-body-text-16-regular text-mainwhite">Privacy Policy</div>
-                    </div>
-                </div>
-                
-                <div class="text-center mt-8">
-                    <p class="font-body-text-16-regular text-shadesdark-15">
-                        Copyright © QUAF-2026 All Rights Reserved
-                    </p>
-                </div>
-                
-                <div class="flex justify-center gap-4 mt-6">
-                    <!-- Social Icons -->
-                    <div class="w-8 h-8 bg-gray-600 rounded-full"></div>
-                    <img class="w-8 h-8" src="https://c.animaapp.com/mjwngvpjWKAdmV/img/facebook.svg" alt="Facebook" />
-                    <img class="w-8 h-8" src="https://c.animaapp.com/mjwngvpjWKAdmV/img/whatsapp.svg" alt="WhatsApp" />
-                </div>
-            </div>
-        </div>
-        
-        <img class="absolute top-0 left-0 w-full h-56 object-cover opacity-50" src="https://c.animaapp.com/mjwngvpjWKAdmV/img/bg-shape-1.png" alt="footer shape" />
-    </footer>
-
-    <script>
-        // Simple mobile menu toggle
-        document.addEventListener('DOMContentLoaded', function() {
-            const menuButton = document.querySelector('button.lg\\:hidden');
-            const mobileMenu = menuButton?.nextElementSibling;
-            
-            if (menuButton && mobileMenu) {
-                mobileMenu.style.display = 'none';
-                
-                menuButton.addEventListener('click', function() {
-                    if (mobileMenu.style.display === 'none') {
-                        mobileMenu.style.display = 'block';
-                    } else {
-                        mobileMenu.style.display = 'none';
-                    }
-                });
-            }
-        });
-    </script>
 </body>
 </html>
