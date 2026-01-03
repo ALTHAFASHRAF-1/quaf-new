@@ -1,4 +1,5 @@
 :root {
+  /* Colors */
   --maindark: rgba(15, 11, 12, 1);
   --mainwhite: rgba(255, 255, 255, 1);
   --shadesdark-30: rgba(183, 182, 182, 1);
@@ -13,51 +14,156 @@
   --shadesprimary-10: rgba(242, 235, 255, 1);
   --shadesdark-80: rgba(63, 60, 61, 1);
   --shadesdark-10: rgba(231, 231, 231, 1);
-  --body-text-16-medium-font-family: "Manrope", Helvetica;
+  
+  /* Font Families */
+  --body-text-16-medium-font-family: "Manrope", sans-serif;
+  --body-text-16-semibold-font-family: "Manrope", sans-serif;
+  --body-text-18-bold-font-family: "Manrope", sans-serif;
+  --body-text-16-regular-font-family: "Manrope", sans-serif;
+  --body-text-12-semi-bold-UC-font-family: "Manrope", sans-serif;
+  --body-text-18-medium-font-family: "Manrope", sans-serif;
+  
+  /* Font Weights */
   --body-text-16-medium-font-weight: 500;
-  --body-text-16-medium-font-size: 16px;
-  --body-text-16-medium-letter-spacing: 0px;
-  --body-text-16-medium-line-height: 160%;
-  --body-text-16-medium-font-style: normal;
-  --body-text-16-semibold-font-family: "Manrope", Helvetica;
   --body-text-16-semibold-font-weight: 600;
-  --body-text-16-semibold-font-size: 16px;
-  --body-text-16-semibold-letter-spacing: 0px;
-  --body-text-16-semibold-line-height: 160%;
-  --body-text-16-semibold-font-style: normal;
-  --body-text-18-bold-font-family: "Manrope", Helvetica;
   --body-text-18-bold-font-weight: 700;
-  --body-text-18-bold-font-size: 18px;
-  --body-text-18-bold-letter-spacing: 0px;
-  --body-text-18-bold-line-height: 160%;
-  --body-text-18-bold-font-style: normal;
-  --body-text-16-regular-font-family: "Manrope", Helvetica;
   --body-text-16-regular-font-weight: 400;
-  --body-text-16-regular-font-size: 16px;
-  --body-text-16-regular-letter-spacing: 0px;
-  --body-text-16-regular-line-height: 160%;
-  --body-text-16-regular-font-style: normal;
-  --body-text-12-semi-bold-UC-font-family: "Manrope", Helvetica;
   --body-text-12-semi-bold-UC-font-weight: 600;
-  --body-text-12-semi-bold-UC-font-size: 12px;
-  --body-text-12-semi-bold-UC-letter-spacing: 0px;
-  --body-text-12-semi-bold-UC-line-height: 130%;
-  --body-text-12-semi-bold-UC-font-style: normal;
-  --body-text-18-medium-font-family: "Manrope", Helvetica;
   --body-text-18-medium-font-weight: 500;
+  
+  /* Font Sizes */
+  --body-text-16-medium-font-size: 16px;
+  --body-text-16-semibold-font-size: 16px;
+  --body-text-18-bold-font-size: 18px;
+  --body-text-16-regular-font-size: 16px;
+  --body-text-12-semi-bold-UC-font-size: 12px;
   --body-text-18-medium-font-size: 18px;
-  --body-text-18-medium-letter-spacing: 0px;
+  
+  /* Line Heights */
+  --body-text-16-medium-line-height: 160%;
+  --body-text-16-semibold-line-height: 160%;
+  --body-text-18-bold-line-height: 160%;
+  --body-text-16-regular-line-height: 160%;
+  --body-text-12-semi-bold-UC-line-height: 130%;
   --body-text-18-medium-line-height: 160%;
-  --body-text-18-medium-font-style: normal;
+  
+  /* Letter Spacing */
+  --body-text-16-medium-letter-spacing: 0px;
+  --body-text-16-semibold-letter-spacing: 0px;
+  --body-text-18-bold-letter-spacing: 0px;
+  --body-text-16-regular-letter-spacing: 0px;
+  --body-text-12-semi-bold-UC-letter-spacing: 0px;
+  --body-text-18-medium-letter-spacing: 0px;
 }
 
-/* Responsive font sizes */
+/* Responsive Typography */
 @media (max-width: 768px) {
   :root {
     --body-text-16-medium-font-size: 14px;
-    --body-text-16-regular-font-size: 14px;
     --body-text-16-semibold-font-size: 14px;
     --body-text-18-bold-font-size: 16px;
+    --body-text-16-regular-font-size: 14px;
     --body-text-18-medium-font-size: 16px;
+  }
+}
+
+/* Utility Classes for Fonts */
+.font-body-text-16-medium {
+  font-family: var(--body-text-16-medium-font-family);
+  font-weight: var(--body-text-16-medium-font-weight);
+  font-size: var(--body-text-16-medium-font-size);
+  line-height: var(--body-text-16-medium-line-height);
+  letter-spacing: var(--body-text-16-medium-letter-spacing);
+}
+
+.font-body-text-16-semibold {
+  font-family: var(--body-text-16-semibold-font-family);
+  font-weight: var(--body-text-16-semibold-font-weight);
+  font-size: var(--body-text-16-semibold-font-size);
+  line-height: var(--body-text-16-semibold-line-height);
+  letter-spacing: var(--body-text-16-semibold-letter-spacing);
+}
+
+.font-body-text-18-bold {
+  font-family: var(--body-text-18-bold-font-family);
+  font-weight: var(--body-text-18-bold-font-weight);
+  font-size: var(--body-text-18-bold-font-size);
+  line-height: var(--body-text-18-bold-line-height);
+  letter-spacing: var(--body-text-18-bold-letter-spacing);
+}
+
+.font-body-text-16-regular {
+  font-family: var(--body-text-16-regular-font-family);
+  font-weight: var(--body-text-16-regular-font-weight);
+  font-size: var(--body-text-16-regular-font-size);
+  line-height: var(--body-text-16-regular-line-height);
+  letter-spacing: var(--body-text-16-regular-letter-spacing);
+}
+
+.font-body-text-12-semi-bold-UC {
+  font-family: var(--body-text-12-semi-bold-UC-font-family);
+  font-weight: var(--body-text-12-semi-bold-UC-font-weight);
+  font-size: var(--body-text-12-semi-bold-UC-font-size);
+  line-height: var(--body-text-12-semi-bold-UC-line-height);
+  letter-spacing: var(--body-text-12-semi-bold-UC-letter-spacing);
+  text-transform: uppercase;
+}
+
+.font-body-text-18-medium {
+  font-family: var(--body-text-18-medium-font-family);
+  font-weight: var(--body-text-18-medium-font-weight);
+  font-size: var(--body-text-18-medium-font-size);
+  line-height: var(--body-text-18-medium-line-height);
+  letter-spacing: var(--body-text-18-medium-letter-spacing);
+}
+
+/* Responsive Container */
+.responsive-container {
+  width: 100%;
+  margin: 0 auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+@media (min-width: 640px) {
+  .responsive-container {
+    max-width: 640px;
+  }
+}
+
+@media (min-width: 768px) {
+  .responsive-container {
+    max-width: 768px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .responsive-container {
+    max-width: 1024px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .responsive-container {
+    max-width: 1280px;
+  }
+}
+
+/* Hide/Show Utilities */
+.mobile-only {
+  display: block;
+}
+
+.desktop-only {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .mobile-only {
+    display: none;
+  }
+  
+  .desktop-only {
+    display: block;
   }
 }
