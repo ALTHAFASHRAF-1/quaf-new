@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="globals.css" />
+    <link rel="stylesheet" href="styleguide.css" />
+    <link rel="stylesheet" href="responsive.css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      /** @type {import('tailwindcss').Config} */
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              maindark: "var(--maindark)",
+              mainprimary: "var(--mainprimary)",
+              mainsecondary: "var(--mainsecondary)",
+              maintertiary: "var(--maintertiary)",
+              mainwhite: "var(--mainwhite)",
+              "shadesdark-10": "var(--shadesdark-10)",
+              "shadesdark-15": "var(--shadesdark-15)",
+              "shadesdark-30": "var(--shadesdark-30)",
+              "shadesdark-40": "var(--shadesdark-40)",
+              "shadesdark-5": "var(--shadesdark-5)",
+              "shadesdark-60": "var(--shadesdark-60)",
+              "shadesdark-80": "var(--shadesdark-80)",
+              "shadesprimary-10": "var(--shadesprimary-10)",
+              "shadessecondary-15": "var(--shadessecondary-15)",
+            },
+            fontFamily: {
+              "body-text-12-semi-bold-UC": "var(--body-text-12-semi-bold-UC-font-family)",
+              "body-text-16-medium": "var(--body-text-16-medium-font-family)",
+              "body-text-16-regular": "var(--body-text-16-regular-font-family)",
+              "body-text-16-semibold": "var(--body-text-16-semibold-font-family)",
+              "body-text-18-bold": "var(--body-text-18-bold-font-family)",
+              "body-text-18-medium": "var(--body-text-18-medium-font-family)",
+            },
+          },
+        },
+        plugins: [],
+      };
+    </script>
+  </head>
+  <body>
+    <div class="flex flex-col items-center relative bg-white overflow-hidden">
+      <!-- Hero Section -->
+      <div class="relative self-stretch w-full min-h-[600px] md:min-h-[782px] rounded-3xl">
+        <div class="absolute inset-0 w-full h-full bg-cover bg-center bg-[url(https://c.animaapp.com/mjwngvpjWKAdmV/img/hero-bg.png)]">
+          <img class="absolute top-[293px] right-0 w-[300px] md:w-[515px] h-auto opacity-50 md:opacity-100" 
+               src="https://c.animaapp.com/mjwngvpjWKAdmV/img/glow-effect-1.svg" />
+          <img class="absolute top-[122px] left-1/2 transform -translate-x-1/2 w-[400px] md:w-[624px] h-auto opacity-30 md:opacity-100" 
+               src="https://c.animaapp.com/mjwngvpjWKAdmV/img/glow-effect.svg" />
+        </div>
+        
+        <div class="absolute inset-0 w-full h-full rounded-3xl">
+          <!-- Navigation -->
+          <div class="hidden lg:flex w-full items-center justify-between px-4 md:px-8 lg:px-[135px] py-8">
+            <div class="flex items-center gap-4">
+              <img class="w-[47px] h-[47px] object-cover" src="https://c.animaapp.com/mjwngvpjWKAdmV/img/logo3d-1.png" />
+              <div class="font-body-text-18-bold text-white text-lg">QUAF</div>
+            </div>
+            
+            <div class="flex items-center gap-8 lg:gap-12">
+              <a href="https://quaf.me/" target="_blank" rel="noopener noreferrer" 
+                 class="font-body-text-16-medium text-mainwhite hover:text-mainsecondary transition-colors">Home</a>
+              <a href="#" class="font-body-text-16-medium text-shadesdark-30 hover:text-mainwhite transition-colors">About</a>
+              <a href="#" class="font-body-text-16-medium text-shadesdark-30 hover:text-mainwhite transition-colors">Leaders</a>
+              <a href="#" class="font-body-text-16-medium text-shadesdark-30 hover:text-mainwhite transition-colors">Gallery</a>
+              <a href="#" class="font-body-text-16-medium text-shadesdark-30 hover:text-mainwhite transition-colors">Contact</a>
+            </div>
+            
+            <button class="px-5 py-3 border border-solid border-[#7a38fc] rounded-lg text-mainwhite font-body-text-16-semibold hover:bg-mainprimary transition-colors">
+              Get Started
+            </button>
+          </div>
+
+          <!-- Mobile Navigation -->
+          <div class="lg:hidden flex items-center justify-between px-4 py-6">
+            <div class="flex items-center gap-3">
+              <img class="w-[40px] h-[40px] object-cover" src="https://c.animaapp.com/mjwngvpjWKAdmV/img/logo3d-1.png" />
+              <div class="font-body-text-18-bold text-white text-base">QUAF</div>
+            </div>
+            <button class="px-4 py-2 border border-solid border-[#7a38fc] rounded-lg text-mainwhite text-sm">
+              Menu
+            </button>
+          </div>
+          
+          <!-- Hero Content -->
+          <div class="flex flex-col lg:flex-row items-center lg:items-start gap-8 lg:gap-[157px] px-4 md:px-8 lg:px-[135px] pt-12 md:pt-24 lg:pt-[163px]">
+            <div class="flex flex-col w-full lg:w-[513px] items-start gap-6 md:gap-10 px-0 py-6 md:py-12">
+              <div class="flex flex-col items-start gap-4 w-full">
+                <div class="flex flex-col items-start gap-1 w-full">
+                  <div class="font-body-text-18-bold text-white text-sm md:text-base">
+                    MAY-1-2024
+                  </div>
+                  <h1 class="font-['Abel',Helvetica] font-normal text-mainwhite text-3xl md:text-5xl lg:text-[64px] tracking-[-0.64px] leading-tight md:leading-[70.4px]">
+                    Qualitative Union for<br />Academic Focus
+                  </h1>
+                </div>
+                <p class="font-body-text-16-regular text-shadesdark-15 text-sm md:text-base max-w-[414px]">
+                  27th batch of Darul Hidaya Da'wa College, Manoor
+                </p>
+              </div>
+              <div class="flex flex-col sm:flex-row gap-4 md:gap-7 w-full sm:w-auto">
+                <button class="px-6 md:px-7 py-3 md:py-3.5 bg-mainprimary rounded-lg text-mainwhite font-body-text-16-semibold text-sm md:text-base hover:opacity-90 transition-opacity w-full sm:w-auto">
+                  Join now
+                </button>
+                <button class="px-6 md:px-7 py-3 md:py-3.5 border border-solid border-[#7a38fc] rounded-lg text-mainwhite font-body-text-16-semibold text-sm md:text-base hover:bg-mainprimary transition-colors w-full sm:w-auto">
+                  Subscribe
+                </button>
+              </div>
+            </div>
+            <img class="w-full max-w-[300px] md:max-w-[400px] lg:max-w-[500px] h-auto mx-auto lg:mx-0" 
+                 src="https://c.animaapp.com/mjwngvpjWKAdmV/img/graphics.png" />
+          </div>
+          
+          <img class="hidden lg:block absolute top-[426px] right-[100px] xl:right-[279px] w-[120px] xl:w-[164px] h-auto object-cover" 
+               src="https://c.animaapp.com/mjwngvpjWKAdmV/img/3d-quaf-logo---high-quality-professional-rendering-removebg-prev.png" />
+        </div>
+      </div>
+
+      <!-- Acronym Banner -->
+      <div class="flex flex-wrap items-center justify-center gap-4 md:gap-8 lg:gap-[70px] px-4 md:px-[25px] py-6 md:py-10 w-full bg-shadessecondary-15">
+        <div class="font-bold font-['Inika',Helvetica] text-[#4f4646] text-base md:text-xl">QUAF</div>
+        <div class="font-normal font-['Inika',Helvetica] text-[#4f4646] text-base md:text-xl">QUALITATIVE</div>
+        <div class="font-normal font-['Inika',Helvetica] text-[#4f4646] text-base md:text-xl">UNION</div>
+        <div class="font-normal font-['Inika',Helvetica] text-[#4f4646] text-base md:text-xl">FOR</div>
+        <div class="font-normal font-['Inika',Helvetica] text-[#4f4646] text-base md:text-xl">ACADEMIC</div>
+        <div class="font-normal font-['Inika',Helvetica] text-[#4f4646] text-base md:text-xl">FOCUS</div>
+        <div class="hidden md:block font-['Inika',Helvetica] font-bold text-[#4f4646] text-base md:text-xl">DARUL HIDAYA DA'WA COLLEGE</div>
+        <div class="hidden md:block font-normal font-['Inika',Helvetica] text-[#4f4646] text-base md:text-xl">MANOOR</div>
+      </div>
+
+      <!-- About Us Section -->
+      <div class="flex flex-col items-center gap-8 md:gap-16 pt-16 md:pt-36 pb-12 md:pb-24 px-4 md:px-8 lg:px-[135px] w-full">
+        <div class="flex flex-col lg:flex-row w-full items-start justify-between gap-8 lg:gap-0">
+          <h2 class="font-['Alfa_Slab_One',Helvetica] text-maindark text-3xl md:text-[46px] tracking-[0.92px] leading-tight text-center lg:text-left w-full lg:w-auto">
+            About Us
+          </h2>
+          <p class="font-body-text-16-regular text-maindark text-sm md:text-base w-full lg:w-[650px]">
+            <span class="text-[#0e0b0b]">
+              "Admitted to Darul Hidaya Da'wa College, Manoor, 27th Batch, QUAF (Qualitative Union for Academic Focus) on
+            </span>
+            <span class="text-[#7a38fc]">May-1 2024."</span>
+          </p>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-4 md:gap-[30px] w-full">
+          <div class="lg:col-span-7 w-full h-[250px] md:h-[362px] relative rounded-2xl overflow-hidden">
+            <img class="absolute inset-0 w-full h-full object-cover rounded-2xl" 
+                 src="https://c.animaapp.com/mjwngvpjWKAdmV/img/rectangle-27.png" />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent flex items-end p-5">
+              <div class="flex flex-col gap-1">
+                <div class="font-body-text-12-semi-bold-UC text-shadesdark-5 text-xs">
+                  MEMORABLE EXPERIENCE
+                </div>
+                <div class="font-['ABeeZee',Helvetica] font-normal text-mainwhite text-lg md:text-2xl">
+                  Class Group Photo
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="lg:col-span-3 w-full h-[250px] md:h-[362px] rounded-2xl bg-cover bg-center" 
+               style="background-image: url(https://c.animaapp.com/mjwngvpjWKAdmV/img/frame-67.png)">
+          </div>
+          
+          <div class="lg:col-span-2 w-full h-[250px] md:h-[362px] rounded-2xl bg-cover bg-center" 
+               style="background-image: url(https://c.animaapp.com/mjwngvpjWKAdmV/img/community-build.png)">
+          </div>
+        </div>
+      </div>
+
+      <!-- Programs Section -->
+      <div class="flex flex-col items-start gap-2 px-4 md:px-8 lg:px-[135px] py-12 md:py-0 w-full min-h-[400px] md:min-h-[615px] relative">
+        <img class="absolute inset-0 w-full h-full object-cover -z-10" 
+             src="https://c.animaapp.com/mjwngvpjWKAdmV/img/bg-glow-effect.png" />
+        
+        <div class="flex flex-col lg:flex-row items-start lg:items-center gap-8 md:gap-12 w-full relative z-10">
+          <img class="hidden md:block w-full max-w-[200px] lg:max-w-[313.55px] h-auto mx-auto lg:mx-0" 
+               src="https://c.animaapp.com/mjwngvpjWKAdmV/img/frame-37402.svg" />
+          
+          <div class="flex flex-col w-full lg:w-[450px] items-start gap-6 md:gap-8">
+            <div class="flex flex-col items-start gap-4 md:gap-5">
+              <h2 class="font-['ADLaM_Display',Helvetica] font-normal text-mainwhite text-2xl md:text-[46px] tracking-[0.92px] leading-tight">
+                Programs <br />That Inspire <br />Creativity
+              </h2>
+              <p class="font-body-text-16-regular text-shadesdark-15 text-sm md:text-base max-w-[417px]">
+                The public programs designed to enhance skills and creativity.
+              </p>
+            </div>
+            
+            <div class="flex flex-col md:flex-row items-start gap-6 md:gap-[69px] w-full">
+              <div class="flex flex-col w-full md:w-[178px] gap-4 md:gap-6">
+                <div class="flex flex-col gap-1">
+                  <div class="font-['ADLaM_Display',Helvetica] font-normal text-mainwhite text-lg md:text-xl">
+                    Miskul Mahabba
+                  </div>
+                  <div class="w-full h-0.5 bg-shadesdark-60"></div>
+                </div>
+                <div class="flex flex-col">
+                  <div class="font-body-text-18-medium text-mainwhite text-base md:text-lg">
+                    Octobar 15, 2024
+                  </div>
+                  <p class="font-body-text-16-regular text-shadesdark-40 text-sm md:text-base">
+                    9:00 PM - 10:30 PM
+                  </p>
+                </div>
+              </div>
+              
+              <div class="flex flex-col gap-4 md:gap-6">
+                <div class="flex flex-col gap-1">
+                  <div class="font-['ADLaM_Display',Helvetica] font-normal text-mainwhite text-lg md:text-xl">
+                    Perunnal Payasam
+                  </div>
+                  <div class="w-full md:w-[184px] h-0.5 bg-shadesdark-60"></div>
+                </div>
+                <div class="flex flex-col">
+                  <div class="font-body-text-18-medium text-mainwhite text-base md:text-lg">
+                    August 17, 2024
+                  </div>
+                  <p class="font-body-text-16-regular text-shadesdark-40 text-sm md:text-base">
+                    8:00 PM - 9:00 PM
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="hidden md:flex w-full lg:w-[312px] h-[300px] md:h-[450px] items-end justify-center mx-auto lg:mx-0">
+            <img class="w-full max-w-[299px] h-full object-cover rounded-t-[208.45px]" 
+                 src="https://c.animaapp.com/mjwngvpjWKAdmV/img/pexels-fauxels-3184315-1.png" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Scholars Section -->
+      <div class="flex flex-col items-center gap-8 md:gap-16 px-4 md:px-8 lg:px-[135px] py-12 md:py-20 w-full bg-shadessecondary-15">
+        <div class="flex flex-col md:flex-row w-full items-center justify-between gap-6 md:gap-0">
+          <div class="flex items-start gap-2 relative">
+            <h2 class="font-['Alfa_Slab_One',Helvetica] font-normal text-maindark text-2xl md:text-[46px] tracking-[0.92px] leading-tight text-center md:text-left">
+              Meet the top<br />incredible scholars
+            </h2>
+          </div>
+          <button class="px-6 py-3.5 bg-mainprimary rounded-lg text-mainwhite font-body-text-16-semibold text-sm md:text-base hover:opacity-90 transition-opacity">
+            View All Scholars
+          </button>
+        </div>
+        
+        <!-- Scholars Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8 w-full">
+          <!-- Scholar Card Template (repeat for each scholar) -->
+          <div class="flex flex-col items-start gap-4 bg-mainwhite rounded-2xl overflow-hidden hover:shadow-xl transition-shadow">
+            <div class="w-full h-60 bg-cover bg-center rounded-t-2xl" 
+                 style="background-image: url(https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-5.png)">
+            </div>
+            <div class="flex flex-col items-start gap-1 px-5 pb-5 w-full">
+              <div class="font-['ABeeZee',Helvetica] font-normal text-maindark text-lg">
+                SADHAQATHULLA C
+              </div>
+              <div class="font-body-text-12-semi-bold-UC text-shadesdark-80 text-xs">
+                PRESIDENT
+              </div>
+            </div>
+          </div>
+
+          <div class="flex flex-col items-start gap-4 bg-mainwhite rounded-2xl overflow-hidden hover:shadow-xl transition-shadow">
+            <div class="w-full h-60 bg-cover bg-center rounded-t-2xl" 
+                 style="background-image: url(https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-1.png)">
+            </div>
+            <div class="flex flex-col items-start gap-1 px-5 pb-5 w-full">
+              <div class="font-['ABeeZee',Helvetica] font-normal text-maindark text-lg">
+                MUHAMMED FAHEEM NP
+              </div>
+              <div class="font-body-text-12-semi-bold-UC text-shadesdark-80 text-xs">
+                SECRETARY
+              </div>
+            </div>
+          </div>
+
+          <div class="flex flex-col items-start gap-4 bg-mainwhite rounded-2xl overflow-hidden hover:shadow-xl transition-shadow">
+            <div class="w-full h-60 bg-cover bg-center rounded-t-2xl" 
+                 style="background-image: url(https://c.animaapp.com/mjwngvpjWKAdmV/img/photo.png)">
+            </div>
+            <div class="flex flex-col items-start gap-1 px-5 pb-5 w-full">
+              <div class="font-['ABeeZee',Helvetica] font-normal text-maindark text-lg">
+                MUHAMMED ANSHAD VP
+              </div>
+              <div class="font-body-text-12-semi-bold-UC text-shadesdark-80 text-xs">
+                WORKING SECRETARY
+              </div>
+            </div>
+          </div>
+
+          <div class="flex flex-col items-start gap-4 bg-mainwhite rounded-2xl overflow-hidden hover:shadow-xl transition-shadow">
+            <div class="w-full h-60 bg-cover bg-center rounded-t-2xl" 
+                 style="background-image: url(https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-7.png)">
+            </div>
+            <div class="flex flex-col items-start gap-1 px-5 pb-5 w-full">
+              <div class="font-['ABeeZee',Helvetica] font-normal text-maindark text-lg">
+                SAHL SHAN O
+              </div>
+              <div class="font-body-text-12-semi-bold-UC text-shadesdark-80 text-xs">
+                VICE PRESIDENT
+              </div>
+            </div>
+          </div>
+
+          <!-- Add more scholar cards as needed - I'm showing 4 as example -->
+        </div>
+      </div>
+
+      <!-- Programs & Reports Section -->
+      <div class="flex flex-col items-center gap-8 md:gap-16 px-4 md:px-8 lg:px-[135px] py-12 md:py-[120px] w-full">
+        <div class="flex flex-col items-center gap-4 text-center">
+          <h2 class="font-['ADLaM_Display',Helvetica] font-normal text-maindark text-3xl md:text-[46px] tracking-[0.92px] leading-tight">
+            Programs & Reports
+          </h2>
+          <p class="font-body-text-16-regular text-shadesdark-80 text-sm md:text-base max-w-[507px]">
+            Explore the main programs with detailed descriptions, featured highlights, and everything you need to know before getting started.
+          </p>
+        </div>
+        
+        <div class="flex flex-col items-center gap-8 md:gap-12 w-full">
+          <!-- Program Card Example -->
+          <div class="flex flex-col items-start gap-6 w-full">
+            <div class="flex flex-col md:flex-row items-start md:items-center justify-between px-4 md:px-6 py-6 md:py-8 w-full bg-maindark rounded-2xl gap-4 md:gap-0">
+              <div class="flex items-center gap-4 md:gap-8">
+                <img class="w-8 h-8 md:w-auto md:h-auto" src="https://c.animaapp.com/mjwngvpjWKAdmV/img/frame-37678.svg" />
+                <div class="font-['ABeeZee',Helvetica] font-normal text-mainwhite text-lg md:text-2xl">
+                  Thursday, July-25-2024
+                </div>
+              </div>
+              <div class="font-['ABeeZee',Helvetica] font-normal text-mainwhite text-lg md:text-2xl">
+                Programs & Reports
+              </div>
+            </div>
+            
+            <div class="flex flex-col md:flex-row items-start gap-5 p-4 w-full bg-shadessecondary-15 rounded-2xl">
+              <div class="w-full md:w-[180px] h-[135px] rounded-xl bg-cover bg-center flex-shrink-0" 
+                   style="background-image: url(https://c.animaapp.com/mjwngvpjWKAdmV/img/mask-group.png)">
+              </div>
+              <div class="flex flex-col items-start gap-4 flex-1">
+                <div class="flex flex-col w-full">
+                  <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-2 md:gap-0 w-full">
+                    <div class="font-['ABeeZee',Helvetica] font-normal text-maindark text-xl md:text-2xl">
+                      Freshers Meet
+                    </div>
+                    <p class="font-['ABeeZee',Helvetica] font-normal text-maindark text-base md:text-2xl">
+                      9:00 AM - 4:00 PM
+                    </p>
+                  </div>
+                  <p class="font-body-text-16-medium text-maindark text-sm md:text-base">
+                    By Darul Huda Islamic University, Chemmad
+                  </p>
+                </div>
+                <p class="font-body-text-16-regular text-shadesdark-80 text-sm md:text-base">
+                  Tarhib 1446 – Freshers' Grand Meet Up is a welcoming and celebratory event organized by the Centre for Public Education and Training (CPET) and the Office of Guidance and Extension Activities (OGEA) at Darul Huda Islamic University...
+                </p>
+              </div>
+            </div>
+          </div>
+          
+          <button class="px-6 py-3.5 bg-mainprimary rounded-lg text-mainwhite font-body-text-16-semibold text-sm md:text-base hover:opacity-90 transition-opacity">
+            See All Schedule
+          </button>
+        </div>
+      </div>
+
+      <!-- Gallery Section -->
+      <div class="flex flex-col items-center gap-8 md:gap-16 px-4 md:px-8 lg:px-[135px] py-12 md:py-[120px] w-full">
+        <div class="flex flex-col items-center gap-4 text-center">
+          <h2 class="font-['Clash_Display-Semibold',Helvetica] font-normal text-maindark text-3xl md:text-[46px] tracking-[0.92px] leading-tight">
+            Check our latest gallery
+          </h2>
+          <p class="font-body-text-16-regular text-shadesdark-80 text-sm md:text-base max-w-[493px]">
+            A glimpse into our creative programs in action.<br />
+            Empowering talent through learning and collaboration.
+          </p>
+        </div>
+        
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 w-full">
+          <!-- Add your gallery images here -->
+          <div class="aspect-square rounded-xl bg-gray-200"></div>
+          <div class="aspect-square rounded-xl bg-gray-200"></div>
+          <div class="aspect-square rounded-xl bg-gray-200"></div>
+          <div class="aspect-square rounded-xl bg-gray-200"></div>
+        </div>
+        
+        <button class="px-6 py-3.5 bg-mainprimary rounded-lg text-mainwhite font-body-text-16-semibold text-sm md:text-base hover:opacity-90 transition-opacity">
+          View All Gallery
+        </button>
+      </div>
+
+      <!-- CTA Section -->
+      <div class="flex flex-col w-full items-start gap-12 md:gap-[126px] pt-12 md:pt-20 pb-20 md:pb-36 px-4 md:px-8 lg:px-[135px]">
+        <div class="relative w-full h-auto md:h-[310px] bg-maindark rounded-2xl p-6 md:p-14 overflow-hidden">
+          <div class="absolute w-1/3 h-1/2 top-0 left-0 bg-[#febf00b2] rounded-full blur-[185px]"></div>
+          <div class="absolute w-1/4 h-1/3 bottom-0 right-0 bg-[#4399e2b2] rounded-full blur-[175px]"></div>
+          
+          <div class="flex flex-col lg:flex-row items-start lg:items-end justify-between gap-8 relative z-10">
+            <div class="flex flex-col items-start gap-6 md:gap-8">
+              <div class="flex flex-col items-start gap-4">
+                <h2 class="font-['ADLaM_Display',Helvetica] font-normal text-mainwhite text-2xl md:text-[40px] tracking-[0.80px] leading-tight">
+                  Let's join our community
+                </h2>
+                <p class="font-body-text-16-regular text-shadesdark-15 text-sm md:text-base max-w-[607px]">
+                  Join our community to participate in our programs and learn more about our education system.
+                </p>
+              </div>
+              <button class="px-6 py-3.5 bg-mainsecondary rounded-lg text-maindark font-body-text-16-semibold text-sm md:text-base hover:opacity-90 transition-opacity">
+                Join now
+              </button>
+            </div>
+            <img class="hidden lg:block w-full max-w-[298px] h-auto" 
+                 src="https://c.animaapp.com/mjwngvpjWKAdmV/img/image.png" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <footer class="flex flex-col w-full items-start gap-2 pt-12 md:pt-[100px] pb-8 px-4 md:px-8 lg:px-[135px] bg-maindark relative">
+        <img class="absolute w-full h-full top-0 left-0 object-cover" 
+             src="https://c.animaapp.com/mjwngvpjWKAdmV/img/bg.png" />
+        
+        <div class="flex flex-col items-center gap-12 md:gap-[100px] w-full relative z-10">
+          <div class="flex flex-col w-full items-center gap-8 md:gap-12">
+            <div class="flex flex-col items-center gap-4 text-center w-full">
+              <h2 class="font-['Clash_Display-Semibold',Helvetica] font-normal text-mainwhite text-2xl md:text-[46px] tracking-[0.92px] leading-tight">
+                Never miss a single news
+              </h2>
+              <p class="font-body-text-16-regular text-shadesdark-15 text-sm md:text-base max-w-[730px]">
+                Stay informed with all the latest updates and news about our programs. Never miss a moment of our exciting and innovative gatherings in the world of technology and beyond.
+              </p>
+            </div>
+            
+            <div class="flex flex-col sm:flex-row justify-center gap-4 w-full max-w-[600px]">
+              <div class="flex items-center gap-2.5 px-6 py-[18px] bg-mainwhite rounded-lg flex-1">
+                <input type="email" placeholder="Enter your email address" 
+                       class="w-full bg-transparent outline-none font-body-text-16-regular text-shadesdark-80" />
+              </div>
+              <button class="px-6 py-3.5 bg-mainprimary rounded-lg text-mainwhite font-semibold hover:opacity-90 transition-opacity">
+                Subscribe
+              </button>
+            </div>
+          </div>
+          
+          <div class="flex flex-col w-full gap-8">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-6 w-full">
+              <div class="font-['ADLaM_Display',Helvetica] font-normal text-mainwhite text-2xl md:text-[28px]">
+                QUAF
+              </div>
+              
+              <!-- Social Media Icons -->
+              <div class="flex items-center gap-4">
+                <img class="w-[29px] h-[29px]" src="https://c.animaapp.com/mjwngvpjWKAdmV/img/facebook.svg" />
+                <img class="w-[29px] h-[29px]" src="https://c.animaapp.com/mjwngvpjWKAdmV/img/whatsapp.svg" />
+              </div>
+            </div>
+            
+            <div class="flex flex-col items-start gap-8 w-full">
+              <div class="w-full h-0.5 bg-shadesdark-60 opacity-40"></div>
+              
+              <div class="flex flex-col md:flex-row justify-between items-center gap-4 w-full">
+                <p class="font-body-text-16-regular text-shadesdark-15 text-sm md:text-base text-center md:text-left">
+                  Copyright © QUAF-2026 All Rights Reserved
+                </p>
+                <div class="flex items-start gap-6">
+                  <a href="#" class="font-body-text-16-regular text-mainwhite text-sm md:text-base hover:text-mainsecondary transition-colors">
+                    Terms & Conditions
+                  </a>
+                  <a href="#" class="font-body-text-16-regular text-mainwhite text-sm md:text-base hover:text-mainsecondary transition-colors">
+                    Privacy Policy
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>
