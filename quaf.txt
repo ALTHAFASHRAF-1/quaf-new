@@ -1,0 +1,1895 @@
+index.html:
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="globals.css" />
+    <link rel="stylesheet" href="styleguide.css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      /** @type {import('tailwindcss').Config} */
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              maindark: "var(--maindark)",
+              mainprimary: "var(--mainprimary)",
+              mainsecondary: "var(--mainsecondary)",
+              maintertiary: "var(--maintertiary)",
+              mainwhite: "var(--mainwhite)",
+              "shadesdark-10": "var(--shadesdark-10)",
+              "shadesdark-15": "var(--shadesdark-15)",
+              "shadesdark-30": "var(--shadesdark-30)",
+              "shadesdark-40": "var(--shadesdark-40)",
+              "shadesdark-5": "var(--shadesdark-5)",
+              "shadesdark-60": "var(--shadesdark-60)",
+              "shadesdark-80": "var(--shadesdark-80)",
+              "shadesprimary-10": "var(--shadesprimary-10)",
+              "shadessecondary-15": "var(--shadessecondary-15)",
+            },
+            fontFamily: {
+              "body-text-12-semi-bold-UC": "var(--body-text-12-semi-bold-UC-font-family)",
+              "body-text-16-medium": "var(--body-text-16-medium-font-family)",
+              "body-text-16-regular": "var(--body-text-16-regular-font-family)",
+              "body-text-16-semibold": "var(--body-text-16-semibold-font-family)",
+              "body-text-18-bold": "var(--body-text-18-bold-font-family)",
+              "body-text-18-medium": "var(--body-text-18-medium-font-family)",
+            },
+          },
+        },
+        plugins: [],
+      };
+    </script>
+  </head>
+  <body>
+    <div class="flex flex-col h-[11906px] items-center relative bg-white overflow-hidden">
+      <div class="relative self-stretch w-full h-[782px] rounded-3xl">
+        <div
+          class="absolute top-[calc(50.00%_-_391px)] left-[calc(50.00%_-_720px)] w-[1440px] h-[782px] bg-[url(https://c.animaapp.com/mjwngvpjWKAdmV/img/hero-bg.png)] bg-[100%_100%]"
+        >
+          <img class="absolute top-[-822px] left-[-1618px] w-[1440px] h-[782px]" />
+          <img
+            class="absolute top-[293px] left-[925px] w-[515px] h-[489px]"
+            src="https://c.animaapp.com/mjwngvpjWKAdmV/img/glow-effect-1.svg"
+          />
+          <img
+            class="absolute top-[122px] left-[549px] w-[624px] h-[625px]"
+            src="https://c.animaapp.com/mjwngvpjWKAdmV/img/glow-effect.svg"
+          />
+        </div>
+        <div class="absolute top-0 left-0 w-[1440px] h-[781px] rounded-3xl">
+          <div
+            class="flex w-[941px] h-[115px] items-center justify-between px-[135px] py-8 absolute top-0 left-[499px]"
+          >
+            <div class="inline-flex items-center gap-12 relative flex-[0_0_auto]">
+              <p
+                class="relative w-fit mt-[-1.00px] [font-family:'Manrope',Helvetica] font-normal text-mainwhite text-base text-center tracking-[0] leading-4"
+              >
+                <a href="https://quaf.me/" target="_blank" rel="noopener noreferrer"
+                  ><span
+                    class="font-[number:var(--body-text-16-medium-font-weight)] leading-[var(--body-text-16-medium-line-height)] font-body-text-16-medium [font-style:var(--body-text-16-medium-font-style)] tracking-[var(--body-text-16-medium-letter-spacing)] text-[length:var(--body-text-16-medium-font-size)]"
+                    >Home</span
+                  ></a
+                >
+              </p>
+              <p
+                class="[font-family:'Manrope',Helvetica] text-shadesdark-30 text-base tracking-[0] leading-4 relative w-fit mt-[-1.00px] font-normal text-center"
+              >
+                <span
+                  class="font-[number:var(--body-text-16-medium-font-weight)] leading-[var(--body-text-16-medium-line-height)] font-body-text-16-medium [font-style:var(--body-text-16-medium-font-style)] tracking-[var(--body-text-16-medium-letter-spacing)] text-[length:var(--body-text-16-medium-font-size)]"
+                  >About</span
+                >
+              </p>
+              <div
+                class="relative w-fit mt-[-1.00px] font-body-text-16-medium font-[number:var(--body-text-16-medium-font-weight)] text-shadesdark-30 text-[length:var(--body-text-16-medium-font-size)] text-center tracking-[var(--body-text-16-medium-letter-spacing)] leading-[var(--body-text-16-medium-line-height)] whitespace-nowrap [font-style:var(--body-text-16-medium-font-style)]"
+              >
+                Leaders
+              </div>
+              <div
+                class="relative w-fit mt-[-1.00px] font-body-text-16-medium font-[number:var(--body-text-16-medium-font-weight)] text-shadesdark-30 text-[length:var(--body-text-16-medium-font-size)] text-center tracking-[var(--body-text-16-medium-letter-spacing)] leading-[var(--body-text-16-medium-line-height)] whitespace-nowrap [font-style:var(--body-text-16-medium-font-style)]"
+              >
+                Gallery
+              </div>
+              <div
+                class="relative w-fit mt-[-1.00px] font-body-text-16-medium font-[number:var(--body-text-16-medium-font-weight)] text-shadesdark-30 text-[length:var(--body-text-16-medium-font-size)] text-center tracking-[var(--body-text-16-medium-letter-spacing)] leading-[var(--body-text-16-medium-line-height)] whitespace-nowrap [font-style:var(--body-text-16-medium-font-style)]"
+              >
+                Contact
+              </div>
+            </div>
+            <button class="all-[unset] box-border relative w-[181px] h-[51px]">
+              <button
+                class="all-[unset] box-border px-5 py-[11px] absolute top-0 right-0 border border-solid border-[#7a38fc] inline-flex items-center justify-center gap-2 rounded-lg"
+              >
+                <div
+                  class="relative w-fit mt-[-1.00px] font-body-text-16-semibold font-[number:var(--body-text-16-semibold-font-weight)] text-mainwhite text-[length:var(--body-text-16-semibold-font-size)] text-center tracking-[var(--body-text-16-semibold-letter-spacing)] leading-[var(--body-text-16-semibold-line-height)] whitespace-nowrap [font-style:var(--body-text-16-semibold-font-style)]"
+                >
+                  Get Started
+                </div>
+              </button>
+            </button>
+          </div>
+          <div class="inline-flex items-start gap-[157px] absolute top-[163px] left-[135px]">
+            <div class="flex flex-col w-[513px] items-start gap-10 px-0 py-12 relative">
+              <div class="flex flex-col items-start gap-4 relative self-stretch w-full flex-[0_0_auto]">
+                <div class="flex flex-col items-start gap-1 relative self-stretch w-full flex-[0_0_auto]">
+                  <div
+                    class="relative self-stretch mt-[-1.00px] font-body-text-18-bold font-[number:var(--body-text-18-bold-font-weight)] text-white text-[length:var(--body-text-18-bold-font-size)] tracking-[var(--body-text-18-bold-letter-spacing)] leading-[var(--body-text-18-bold-line-height)] [font-style:var(--body-text-18-bold-font-style)]"
+                  >
+                    MAY-1-2024
+                  </div>
+                  <div
+                    class="relative self-stretch [font-family:'Abel',Helvetica] font-normal text-mainwhite text-[64px] tracking-[-0.64px] leading-[70.4px]"
+                  >
+                    Qualitative Union for<br />Academic Focus
+                  </div>
+                </div>
+                <p
+                  class="relative w-[414px] font-body-text-16-regular font-[number:var(--body-text-16-regular-font-weight)] text-shadesdark-15 text-[length:var(--body-text-16-regular-font-size)] tracking-[var(--body-text-16-regular-letter-spacing)] leading-[var(--body-text-16-regular-line-height)] [font-style:var(--body-text-16-regular-font-style)]"
+                >
+                  27th batch of Darul Hidaya Da’wa College, Manoor
+                </p>
+              </div>
+              <div class="gap-7 inline-flex items-center relative flex-[0_0_auto]">
+                <button
+                  class="all-[unset] box-border px-7 py-3.5 relative flex-[0_0_auto] bg-mainprimary inline-flex items-center justify-center gap-2 rounded-lg"
+                >
+                  <div
+                    class="relative w-fit mt-[-1.00px] font-body-text-16-semibold font-[number:var(--body-text-16-semibold-font-weight)] text-mainwhite text-[length:var(--body-text-16-semibold-font-size)] text-center tracking-[var(--body-text-16-semibold-letter-spacing)] leading-[var(--body-text-16-semibold-line-height)] whitespace-nowrap [font-style:var(--body-text-16-semibold-font-style)]"
+                  >
+                    Join now
+                  </div>
+                </button>
+                <button
+                  class="all-[unset] box-border px-7 py-3.5 relative flex-[0_0_auto] border border-solid border-[#7a38fc] inline-flex items-center justify-center gap-2 rounded-lg"
+                >
+                  <div
+                    class="relative w-fit mt-[-1.00px] font-body-text-16-semibold font-[number:var(--body-text-16-semibold-font-weight)] text-mainwhite text-[length:var(--body-text-16-semibold-font-size)] text-center tracking-[var(--body-text-16-semibold-letter-spacing)] leading-[var(--body-text-16-semibold-line-height)] whitespace-nowrap [font-style:var(--body-text-16-semibold-font-style)]"
+                  >
+                    Subscribe
+                  </div>
+                </button>
+              </div>
+            </div>
+            <img
+              class="relative w-[500px] h-[573.5px] mt-[-1.50px] mb-[-2.00px]"
+              src="https://c.animaapp.com/mjwngvpjWKAdmV/img/graphics.png"
+            />
+            <img
+              class="absolute top-[486px] left-1 w-[85px] h-20"
+              src="https://c.animaapp.com/mjwngvpjWKAdmV/img/vector-1.svg"
+            />
+            <img
+              class="absolute top-[312px] left-[630px] w-[27px] h-[27px]"
+              src="https://c.animaapp.com/mjwngvpjWKAdmV/img/vector-2.svg"
+            />
+          </div>
+          <img
+            class="absolute top-[426px] left-[1161px] w-[164px] h-[343px] object-cover"
+            src="https://c.animaapp.com/mjwngvpjWKAdmV/img/3d-quaf-logo---high-quality-professional-rendering-removebg-prev.png"
+          />
+          <div
+            class="absolute top-11 left-[189px] w-[282px] font-body-text-18-bold font-[number:var(--body-text-18-bold-font-weight)] text-white text-[length:var(--body-text-18-bold-font-size)] tracking-[var(--body-text-18-bold-letter-spacing)] leading-[var(--body-text-18-bold-line-height)] whitespace-nowrap [font-style:var(--body-text-18-bold-font-style)]"
+          >
+            QUAF
+          </div>
+          <img
+            class="absolute top-[34px] left-[135px] w-[47px] h-[47px] object-cover"
+            src="https://c.animaapp.com/mjwngvpjWKAdmV/img/logo3d-1.png"
+          />
+        </div>
+      </div>
+      <div
+        class="flex h-[55px] items-center gap-[70px] px-[25px] py-10 relative self-stretch w-full bg-shadessecondary-15"
+      >
+        <div
+          class="w-[55px] h-[34px] mt-[-30.50px] mb-[-28.50px] font-bold relative [font-family:'Inika',Helvetica] text-[#4f4646] text-xl tracking-[0] leading-[normal]"
+        >
+          QUAF
+        </div>
+        <div
+          class="w-[135px] h-[26px] mt-[-26.50px] mb-[-24.50px] font-normal relative [font-family:'Inika',Helvetica] text-[#4f4646] text-xl tracking-[0] leading-[normal]"
+        >
+          QUALITATIVE
+        </div>
+        <div
+          class="w-[71px] h-[26px] mt-[-26.50px] mb-[-24.50px] font-normal relative [font-family:'Inika',Helvetica] text-[#4f4646] text-xl tracking-[0] leading-[normal]"
+        >
+          UNION
+        </div>
+        <div
+          class="w-[42px] h-[26px] mt-[-26.50px] mb-[-24.50px] font-normal relative [font-family:'Inika',Helvetica] text-[#4f4646] text-xl tracking-[0] leading-[normal]"
+        >
+          FOR
+        </div>
+        <div
+          class="w-[113px] h-[26px] mt-[-26.50px] mb-[-24.50px] font-normal relative [font-family:'Inika',Helvetica] text-[#4f4646] text-xl tracking-[0] leading-[normal]"
+        >
+          ACADEMIC
+        </div>
+        <div
+          class="w-[67px] h-[26px] mt-[-26.50px] mb-[-24.50px] font-normal relative [font-family:'Inika',Helvetica] text-[#4f4646] text-xl tracking-[0] leading-[normal]"
+        >
+          FOCUS
+        </div>
+        <div
+          class="relative w-[322px] h-[26px] mt-[-26.50px] mb-[-24.50px] [font-family:'Inika',Helvetica] font-bold text-[#4f4646] text-xl tracking-[0] leading-[normal]"
+        >
+          DARUL HIDAYA DA’WA COLLEGE
+        </div>
+        <div
+          class="w-[127px] h-[34px] mt-[-30.50px] mb-[-28.50px] mr-[-32.00px] font-normal relative [font-family:'Inika',Helvetica] text-[#4f4646] text-xl tracking-[0] leading-[normal]"
+        >
+          MANOOR
+        </div>
+      </div>
+      <div
+        class="flex flex-col items-center gap-16 pt-36 pb-24 px-[135px] relative self-stretch w-full flex-[0_0_auto]"
+      >
+        <div class="flex w-[1170px] items-start justify-between relative flex-[0_0_auto]">
+          <div
+            class="[font-family:'Alfa_Slab_One',Helvetica] text-maindark text-[46px] tracking-[0.92px] leading-[50.6px] whitespace-nowrap relative w-fit mt-[-1.00px] font-normal text-center"
+          >
+            About Us
+          </div>
+          <p
+            class="relative w-[650px] mt-[-1.00px] font-body-text-16-regular font-[number:var(--body-text-16-regular-font-weight)] text-maindark text-[length:var(--body-text-16-regular-font-size)] tracking-[var(--body-text-16-regular-letter-spacing)] leading-[var(--body-text-16-regular-line-height)] [font-style:var(--body-text-16-regular-font-style)]"
+          >
+            <span
+              class="text-[#0e0b0b] font-body-text-16-regular [font-style:var(--body-text-16-regular-font-style)] font-[number:var(--body-text-16-regular-font-weight)] tracking-[var(--body-text-16-regular-letter-spacing)] leading-[var(--body-text-16-regular-line-height)] text-[length:var(--body-text-16-regular-font-size)]"
+            >
+              &#34;Admitted to Darul Hidaya Da&#39;wa College, Manoor, 27th Batch, QUAF (Qualitative Union for Academic
+              Focus) on
+            </span>
+            <span
+              class="text-[#7a38fc] font-body-text-16-regular [font-style:var(--body-text-16-regular-font-style)] font-[number:var(--body-text-16-regular-font-weight)] tracking-[var(--body-text-16-regular-letter-spacing)] leading-[var(--body-text-16-regular-line-height)] text-[length:var(--body-text-16-regular-font-size)]"
+              >May-1 2024.”</span
+            >
+          </p>
+        </div>
+        <div class="inline-flex items-start gap-[30px] relative flex-[0_0_auto]">
+          <div
+            class="flex flex-col w-[570px] h-[362px] items-start justify-end relative rounded-2xl [background:url(https://c.animaapp.com/mjwngvpjWKAdmV/img/memorable-experience.png)_50%_50%_/_cover]"
+          >
+            <div class="relative w-[570px] h-[362px]">
+              <img
+                class="absolute top-0 left-0 w-[570px] h-[362px] rounded-2xl object-cover"
+                src="https://c.animaapp.com/mjwngvpjWKAdmV/img/rectangle-27.png"
+              />
+              <div
+                class="flex w-[570px] h-[296px] items-end p-5 absolute top-[66px] left-0 rounded-2xl [background:linear-gradient(180deg,rgba(0,0,0,0)_63%,rgba(0,0,0,1)_92%)]"
+              >
+                <div class="inline-flex flex-col items-start gap-1 relative flex-[0_0_auto]">
+                  <div
+                    class="relative w-fit mt-[-1.00px] font-body-text-12-semi-bold-UC font-[number:var(--body-text-12-semi-bold-UC-font-weight)] text-shadesdark-5 text-[length:var(--body-text-12-semi-bold-UC-font-size)] tracking-[var(--body-text-12-semi-bold-UC-letter-spacing)] leading-[var(--body-text-12-semi-bold-UC-line-height)] whitespace-nowrap [font-style:var(--body-text-12-semi-bold-UC-font-style)]"
+                  >
+                    MEMORABLE EXPERIENCE
+                  </div>
+                  <div
+                    class="relative w-fit [font-family:'ABeeZee',Helvetica] font-normal text-mainwhite text-2xl tracking-[-0.24px] leading-[28.8px] whitespace-nowrap"
+                  >
+                    Class Group Photo
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="flex flex-col w-[270px] h-[362px] items-start justify-end relative rounded-2xl [background:url(https://c.animaapp.com/mjwngvpjWKAdmV/img/skilled-speaker.png)_50%_50%_/_cover]"
+          >
+            <div
+              class="flex flex-col w-[270px] h-[362px] items-start justify-end p-5 relative rounded-2xl [background:url(https://c.animaapp.com/mjwngvpjWKAdmV/img/frame-67.png)_50%_50%_/_cover]"
+            >
+              <div class="relative w-[222px] h-[29px]"></div>
+            </div>
+          </div>
+          <div
+            class="relative w-[270px] h-[362px] rounded-2xl [background:url(https://c.animaapp.com/mjwngvpjWKAdmV/img/community-build.png)_50%_50%_/_cover]"
+          ></div>
+        </div>
+        <img
+          class="absolute top-[74px] left-[calc(50.00%_-_720px)] w-[1440px] h-[196px]"
+          src="https://c.animaapp.com/mjwngvpjWKAdmV/img/bg-shape.png"
+        />
+      </div>
+      <div class="flex flex-col h-[615px] items-start gap-2 px-[135px] py-0 relative self-stretch w-full">
+        <img
+          class="absolute top-0 left-0 w-[1440px] h-[615px]"
+          src="https://c.animaapp.com/mjwngvpjWKAdmV/img/bg-glow-effect.png"
+        />
+        <div class="inline-flex items-center gap-12 relative flex-[0_0_auto]">
+          <img
+            class="relative w-[313.55px] h-[615px]"
+            src="https://c.animaapp.com/mjwngvpjWKAdmV/img/frame-37402.svg"
+          />
+          <div class="flex flex-col w-[450px] items-start gap-8 relative">
+            <div class="inline-flex flex-col items-start gap-5 relative flex-[0_0_auto]">
+              <div
+                class="relative w-fit mt-[-1.00px] [font-family:'ADLaM_Display',Helvetica] font-normal text-mainwhite text-[46px] tracking-[0.92px] leading-[50.6px]"
+              >
+                Programs <br />That Inspire <br />Creativity
+              </div>
+              <p
+                class="relative w-[417px] font-body-text-16-regular font-[number:var(--body-text-16-regular-font-weight)] text-shadesdark-15 text-[length:var(--body-text-16-regular-font-size)] tracking-[var(--body-text-16-regular-letter-spacing)] leading-[var(--body-text-16-regular-line-height)] [font-style:var(--body-text-16-regular-font-style)]"
+              >
+                The&nbsp;&nbsp;public programs designed to enhance skills and creativity.
+              </p>
+            </div>
+            <div class="flex items-center gap-[69px] relative self-stretch w-full flex-[0_0_auto]">
+              <div class="flex flex-col w-[178px] items-start gap-6 relative">
+                <div class="inline-flex flex-col items-start gap-1 relative flex-[0_0_auto]">
+                  <div
+                    class="relative self-stretch mt-[-1.00px] [font-family:'ADLaM_Display',Helvetica] font-normal text-mainwhite text-xl tracking-[-0.20px] leading-[26px]"
+                  >
+                    Miskul Mahabba
+                  </div>
+                  <div class="relative self-stretch w-full h-0.5 bg-shadesdark-60"></div>
+                </div>
+                <div class="inline-flex flex-col items-start relative flex-[0_0_auto]">
+                  <div
+                    class="relative w-fit mt-[-1.00px] font-body-text-18-medium font-[number:var(--body-text-18-medium-font-weight)] text-mainwhite text-[length:var(--body-text-18-medium-font-size)] tracking-[var(--body-text-18-medium-letter-spacing)] leading-[var(--body-text-18-medium-line-height)] whitespace-nowrap [font-style:var(--body-text-18-medium-font-style)]"
+                  >
+                    Octobar 15, 2024
+                  </div>
+                  <p
+                    class="relative w-fit font-body-text-16-regular font-[number:var(--body-text-16-regular-font-weight)] text-shadesdark-40 text-[length:var(--body-text-16-regular-font-size)] tracking-[var(--body-text-16-regular-letter-spacing)] leading-[var(--body-text-16-regular-line-height)] whitespace-nowrap [font-style:var(--body-text-16-regular-font-style)]"
+                  >
+                    9:00 PM - 10:30 PM
+                  </p>
+                </div>
+              </div>
+              <div class="inline-flex flex-col items-start gap-6 relative flex-[0_0_auto]">
+                <div class="inline-flex flex-col items-start gap-1 relative flex-[0_0_auto]">
+                  <div
+                    class="relative w-[203px] mt-[-1.00px] [font-family:'ADLaM_Display',Helvetica] font-normal text-mainwhite text-xl tracking-[-0.20px] leading-[26px]"
+                  >
+                    Perunnal Payasam
+                  </div>
+                  <div class="relative w-[184px] h-0.5 bg-shadesdark-60"></div>
+                </div>
+                <div class="inline-flex flex-col items-start relative flex-[0_0_auto]">
+                  <div
+                    class="relative w-[169px] mt-[-1.00px] font-body-text-18-medium font-[number:var(--body-text-18-medium-font-weight)] text-mainwhite text-[length:var(--body-text-18-medium-font-size)] tracking-[var(--body-text-18-medium-letter-spacing)] leading-[var(--body-text-18-medium-line-height)] [font-style:var(--body-text-18-medium-font-style)]"
+                  >
+                    August 17, 2024
+                  </div>
+                  <p
+                    class="relative w-fit font-body-text-16-regular font-[number:var(--body-text-16-regular-font-weight)] text-shadesdark-40 text-[length:var(--body-text-16-regular-font-size)] tracking-[var(--body-text-16-regular-letter-spacing)] leading-[var(--body-text-16-regular-line-height)] whitespace-nowrap [font-style:var(--body-text-16-regular-font-style)]"
+                  >
+                    8:00 PM - 9:00 PM
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="flex w-[312px] h-[615px] items-end relative">
+            <div class="h-[459px] bg-shadessecondary-15 relative w-[299px] rounded-[208.45px_208.45px_0px_0px]"></div>
+            <img
+              class="h-[450px] mr-[-0.94px] ml-[-285.06px] object-cover relative w-[299px] rounded-[208.45px_208.45px_0px_0px]"
+              src="https://c.animaapp.com/mjwngvpjWKAdmV/img/pexels-fauxels-3184315-1.png"
+            />
+          </div>
+        </div>
+        <img
+          class="absolute top-[94px] left-[149px] w-[1119px] h-[438px]"
+          src="https://c.animaapp.com/mjwngvpjWKAdmV/img/graphic.png"
+        />
+      </div>
+      <div
+        class="flex flex-col h-[3491px] items-center gap-16 px-0 py-20 relative self-stretch w-full bg-shadessecondary-15"
+      >
+        <div class="flex w-[1440px] items-center justify-between px-[135px] py-0 relative flex-[0_0_auto]">
+          <div class="inline-flex items-start gap-2 relative flex-[0_0_auto]">
+            <div class="absolute top-[95px] left-[265px] w-[220px] h-1 bg-mainsecondary"></div>
+            <div
+              class="relative w-fit mt-[-1.00px] [font-family:'Alfa_Slab_One',Helvetica] font-normal text-maindark text-[46px] tracking-[0.92px] leading-[50.6px]"
+            >
+              Meet the top<br />incredible scholars
+            </div>
+            <img
+              class="absolute top-2.5 left-[467px] w-[62px] h-[65px]"
+              src="https://c.animaapp.com/mjwngvpjWKAdmV/img/vector.svg"
+            />
+          </div>
+          <button
+            class="all-[unset] box-border px-6 py-3.5 relative flex-[0_0_auto] bg-mainprimary inline-flex items-center justify-center gap-2 rounded-lg"
+          >
+            <div
+              class="relative w-fit mt-[-1.00px] font-body-text-16-semibold font-[number:var(--body-text-16-semibold-font-weight)] text-mainwhite text-[length:var(--body-text-16-semibold-font-size)] text-center tracking-[var(--body-text-16-semibold-letter-spacing)] leading-[var(--body-text-16-semibold-line-height)] whitespace-nowrap [font-style:var(--body-text-16-semibold-font-style)]"
+            >
+              View All Scholars
+            </div>
+          </button>
+        </div>
+        <div
+          class="top-[618px] left-[77px] inline-flex flex-col items-start gap-4 pt-0 pb-5 px-0 absolute bg-mainwhite rounded-2xl"
+        >
+          <div
+            class="relative w-[270px] h-60 rounded-[16px_16px_0px_0px] [background:url(https://c.animaapp.com/mjwngvpjWKAdmV/img/photo.png)_50%_50%_/_cover]"
+          >
+            <img class="absolute top-0 left-0 w-[270px] h-60" />
+          </div>
+          <div class="flex flex-col items-start gap-1 px-5 py-0 relative self-stretch w-full flex-[0_0_auto]">
+            <div
+              class="relative self-stretch mt-[-1.00px] [font-family:'ABeeZee',Helvetica] font-normal text-maindark text-lg tracking-[-0.18px] leading-[21.6px]"
+            >
+              MUHAMMED ANSHAD VP
+            </div>
+            <div
+              class="relative self-stretch font-body-text-12-semi-bold-UC font-[number:var(--body-text-12-semi-bold-UC-font-weight)] text-shadesdark-80 text-[length:var(--body-text-12-semi-bold-UC-font-size)] tracking-[var(--body-text-12-semi-bold-UC-letter-spacing)] leading-[var(--body-text-12-semi-bold-UC-line-height)] [font-style:var(--body-text-12-semi-bold-UC-font-style)]"
+            >
+              WORKING SECRETARY
+            </div>
+          </div>
+        </div>
+        <div
+          class="top-[265px] left-[416px] inline-flex flex-col items-start gap-4 pt-0 pb-5 px-0 absolute bg-mainwhite rounded-2xl"
+        >
+          <div
+            class="relative w-[270px] h-60 rounded-[16px_16px_0px_0px] [background:url(https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-1.png)_50%_50%_/_cover]"
+          >
+            <img class="absolute top-0 left-0 w-[270px] h-60" />
+          </div>
+          <div class="flex flex-col items-start gap-1 px-5 py-0 relative self-stretch w-full flex-[0_0_auto]">
+            <div
+              class="relative self-stretch mt-[-1.00px] [font-family:'ABeeZee',Helvetica] font-normal text-maindark text-lg tracking-[-0.18px] leading-[21.6px]"
+            >
+              MUHAMMED FAHEEM NP
+            </div>
+            <div
+              class="relative self-stretch font-body-text-12-semi-bold-UC font-[number:var(--body-text-12-semi-bold-UC-font-weight)] text-shadesdark-80 text-[length:var(--body-text-12-semi-bold-UC-font-size)] tracking-[var(--body-text-12-semi-bold-UC-letter-spacing)] leading-[var(--body-text-12-semi-bold-UC-line-height)] [font-style:var(--body-text-12-semi-bold-UC-font-style)]"
+            >
+              SECRETARY
+            </div>
+          </div>
+        </div>
+        <div
+          class="top-[618px] left-[754px] inline-flex flex-col items-start gap-4 pt-0 pb-5 px-0 absolute bg-mainwhite rounded-2xl"
+        >
+          <div
+            class="relative w-[270px] h-60 rounded-[16px_16px_0px_0px] [background:url(https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-2.png)_50%_50%_/_cover]"
+          >
+            <img class="absolute top-0 left-0 w-[270px] h-60" />
+          </div>
+          <div class="flex flex-col items-start gap-1 px-5 py-0 relative self-stretch w-full flex-[0_0_auto]">
+            <div
+              class="relative self-stretch mt-[-1.00px] [font-family:'ABeeZee',Helvetica] font-normal text-maindark text-lg tracking-[-0.18px] leading-[21.6px]"
+            >
+              MUHAMMED HASHIM KH
+            </div>
+            <div
+              class="relative self-stretch font-body-text-12-semi-bold-UC font-[number:var(--body-text-12-semi-bold-UC-font-weight)] text-shadesdark-80 text-[length:var(--body-text-12-semi-bold-UC-font-size)] tracking-[var(--body-text-12-semi-bold-UC-letter-spacing)] leading-[var(--body-text-12-semi-bold-UC-line-height)] [font-style:var(--body-text-12-semi-bold-UC-font-style)]"
+            >
+              EXECUTIVE MEMBER
+            </div>
+          </div>
+        </div>
+        <div
+          class="top-[618px] left-[416px] inline-flex flex-col items-start gap-4 pt-0 pb-5 px-0 absolute bg-mainwhite rounded-2xl"
+        >
+          <div
+            class="relative w-[270px] h-60 rounded-[16px_16px_0px_0px] [background:url(https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-3.png)_50%_50%_/_cover]"
+          >
+            <img class="absolute top-0 left-0 w-[270px] h-60" />
+          </div>
+          <div class="flex flex-col items-start gap-1 px-5 py-0 relative self-stretch w-full flex-[0_0_auto]">
+            <div
+              class="relative self-stretch mt-[-1.00px] [font-family:'ABeeZee',Helvetica] font-normal text-maindark text-lg tracking-[-0.18px] leading-[21.6px]"
+            >
+              MUHAMMED ALI M
+            </div>
+            <div
+              class="relative self-stretch font-body-text-12-semi-bold-UC font-[number:var(--body-text-12-semi-bold-UC-font-weight)] text-shadesdark-80 text-[length:var(--body-text-12-semi-bold-UC-font-size)] tracking-[var(--body-text-12-semi-bold-UC-letter-spacing)] leading-[var(--body-text-12-semi-bold-UC-line-height)] [font-style:var(--body-text-12-semi-bold-UC-font-style)]"
+            >
+              PROGRAM DESIGNER
+            </div>
+          </div>
+        </div>
+        <div
+          class="top-[618px] left-[1093px] inline-flex flex-col items-start gap-4 pt-0 pb-5 px-0 absolute bg-mainwhite rounded-2xl"
+        >
+          <div
+            class="relative w-[270px] h-60 rounded-[16px_16px_0px_0px] [background:url(https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-4.png)_50%_50%_/_cover]"
+          >
+            <img class="absolute top-0 left-0 w-[270px] h-60" />
+          </div>
+          <div class="flex flex-col items-start gap-1 px-5 py-0 relative self-stretch w-full flex-[0_0_auto]">
+            <div
+              class="relative self-stretch mt-[-1.00px] [font-family:'ABeeZee',Helvetica] font-normal text-maindark text-lg tracking-[-0.18px] leading-[21.6px]"
+            >
+              MUHAMMED RABEEH PP
+            </div>
+            <div
+              class="relative self-stretch font-body-text-12-semi-bold-UC font-[number:var(--body-text-12-semi-bold-UC-font-weight)] text-shadesdark-80 text-[length:var(--body-text-12-semi-bold-UC-font-size)] tracking-[var(--body-text-12-semi-bold-UC-letter-spacing)] leading-[var(--body-text-12-semi-bold-UC-line-height)] [font-style:var(--body-text-12-semi-bold-UC-font-style)]"
+            >
+              EXECUTIVE MEMBER, ORATION WING
+            </div>
+          </div>
+        </div>
+        <div
+          class="top-[265px] left-[77px] inline-flex flex-col items-start gap-4 pt-0 pb-5 px-0 absolute bg-mainwhite rounded-2xl"
+        >
+          <div
+            class="relative w-[270px] h-60 rounded-[16px_16px_0px_0px] [background:url(https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-5.png)_50%_50%_/_cover]"
+          >
+            <img class="absolute top-0 left-0 w-[270px] h-60" />
+          </div>
+          <div class="flex flex-col items-start gap-1 px-5 py-0 relative self-stretch w-full flex-[0_0_auto]">
+            <div
+              class="relative self-stretch mt-[-1.00px] [font-family:'ABeeZee',Helvetica] font-normal text-maindark text-lg tracking-[-0.18px] leading-[21.6px]"
+            >
+              SADHAQATHULLA C
+            </div>
+            <div
+              class="relative self-stretch font-body-text-12-semi-bold-UC font-[number:var(--body-text-12-semi-bold-UC-font-weight)] text-shadesdark-80 text-[length:var(--body-text-12-semi-bold-UC-font-size)] tracking-[var(--body-text-12-semi-bold-UC-letter-spacing)] leading-[var(--body-text-12-semi-bold-UC-line-height)] [font-style:var(--body-text-12-semi-bold-UC-font-style)]"
+            >
+              PRESIDENT
+            </div>
+          </div>
+        </div>
+        <div
+          class="top-[265px] left-[754px] inline-flex flex-col items-start gap-4 pt-0 pb-5 px-0 absolute bg-mainwhite rounded-2xl"
+        >
+          <div
+            class="relative w-[270px] h-60 rounded-[16px_16px_0px_0px] [background:url(https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-6.png)_50%_50%_/_cover]"
+          >
+            <img class="absolute top-0 left-0 w-[270px] h-60" />
+          </div>
+          <div class="flex flex-col items-start gap-1 px-5 py-0 relative self-stretch w-full flex-[0_0_auto]">
+            <div
+              class="relative self-stretch mt-[-1.00px] [font-family:'ABeeZee',Helvetica] font-normal text-maindark text-lg tracking-[-0.18px] leading-[21.6px]"
+            >
+              MUHAMMED MUSTHAFA SM
+            </div>
+            <div
+              class="relative self-stretch font-body-text-12-semi-bold-UC font-[number:var(--body-text-12-semi-bold-UC-font-weight)] text-shadesdark-80 text-[length:var(--body-text-12-semi-bold-UC-font-size)] tracking-[var(--body-text-12-semi-bold-UC-letter-spacing)] leading-[var(--body-text-12-semi-bold-UC-line-height)] [font-style:var(--body-text-12-semi-bold-UC-font-style)]"
+            >
+              ENTREPRENEUR
+            </div>
+          </div>
+        </div>
+        <div
+          class="top-[265px] left-[1093px] inline-flex flex-col items-start gap-4 pt-0 pb-5 px-0 absolute bg-mainwhite rounded-2xl"
+        >
+          <div
+            class="relative w-[270px] h-60 rounded-[16px_16px_0px_0px] [background:url(https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-7.png)_50%_50%_/_cover]"
+          >
+            <img class="absolute top-0 left-0 w-[270px] h-60" />
+          </div>
+          <div class="flex flex-col items-start gap-1 px-5 py-0 relative self-stretch w-full flex-[0_0_auto]">
+            <div
+              class="relative self-stretch mt-[-1.00px] [font-family:'ABeeZee',Helvetica] font-normal text-maindark text-lg tracking-[-0.18px] leading-[21.6px]"
+            >
+              SAHL SHAN O
+            </div>
+            <div
+              class="relative self-stretch font-body-text-12-semi-bold-UC font-[number:var(--body-text-12-semi-bold-UC-font-weight)] text-shadesdark-80 text-[length:var(--body-text-12-semi-bold-UC-font-size)] tracking-[var(--body-text-12-semi-bold-UC-letter-spacing)] leading-[var(--body-text-12-semi-bold-UC-line-height)] [font-style:var(--body-text-12-semi-bold-UC-font-style)]"
+            >
+              VICE PRESIDENT
+            </div>
+          </div>
+        </div>
+        <div
+          class="top-[971px] left-[77px] inline-flex flex-col items-start gap-4 pt-0 pb-5 px-0 absolute bg-mainwhite rounded-2xl"
+        >
+          <div
+            class="relative w-[270px] h-60 rounded-[16px_16px_0px_0px] [background:url(https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-8.png)_50%_50%_/_cover]"
+          >
+            <img class="absolute top-0 left-0 w-[270px] h-60" />
+          </div>
+          <div class="flex flex-col items-start gap-1 px-5 py-0 relative self-stretch w-full flex-[0_0_auto]">
+            <div
+              class="relative self-stretch mt-[-1.00px] [font-family:'ABeeZee',Helvetica] font-normal text-maindark text-lg tracking-[-0.18px] leading-[21.6px]"
+            >
+              MUHAMMED QASIM MP
+            </div>
+            <div
+              class="relative self-stretch font-body-text-12-semi-bold-UC font-[number:var(--body-text-12-semi-bold-UC-font-weight)] text-shadesdark-80 text-[length:var(--body-text-12-semi-bold-UC-font-size)] tracking-[var(--body-text-12-semi-bold-UC-letter-spacing)] leading-[var(--body-text-12-semi-bold-UC-line-height)] [font-style:var(--body-text-12-semi-bold-UC-font-style)]"
+            >
+              EDITORIAL BOARD
+            </div>
+          </div>
+        </div>
+        <div
+          class="top-[971px] left-[416px] inline-flex flex-col items-start gap-4 pt-0 pb-5 px-0 absolute bg-mainwhite rounded-2xl"
+        >
+          <div
+            class="relative w-[270px] h-60 rounded-[16px_16px_0px_0px] [background:url(https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-9.png)_50%_50%_/_cover]"
+          >
+            <img class="absolute top-0 left-0 w-[270px] h-60" />
+          </div>
+          <div class="flex flex-col items-start gap-1 px-5 py-0 relative self-stretch w-full flex-[0_0_auto]">
+            <div
+              class="relative self-stretch mt-[-1.00px] [font-family:'ABeeZee',Helvetica] font-normal text-maindark text-lg tracking-[-0.18px] leading-[21.6px]"
+            >
+              MUHAMMED SHAFEEQUE T
+            </div>
+            <div
+              class="relative self-stretch font-body-text-12-semi-bold-UC font-[number:var(--body-text-12-semi-bold-UC-font-weight)] text-shadesdark-80 text-[length:var(--body-text-12-semi-bold-UC-font-size)] tracking-[var(--body-text-12-semi-bold-UC-letter-spacing)] leading-[var(--body-text-12-semi-bold-UC-line-height)] [font-style:var(--body-text-12-semi-bold-UC-font-style)]"
+            >
+              EDITORIAL BOARD, ART WING
+            </div>
+          </div>
+        </div>
+        <div
+          class="top-[971px] left-[754px] inline-flex flex-col items-start gap-4 pt-0 pb-5 px-0 absolute bg-mainwhite rounded-2xl"
+        >
+          <div
+            class="relative w-[270px] h-60 rounded-[16px_16px_0px_0px] [background:url(https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-10.png)_50%_50%_/_cover]"
+          >
+            <img class="absolute top-0 left-0 w-[270px] h-60" />
+          </div>
+          <div class="flex flex-col items-start gap-1 px-5 py-0 relative self-stretch w-full flex-[0_0_auto]">
+            <div
+              class="relative self-stretch mt-[-1.00px] [font-family:'ABeeZee',Helvetica] font-normal text-maindark text-lg tracking-[-0.18px] leading-[21.6px]"
+            >
+              MUHAMMED HASHIM V
+            </div>
+            <div
+              class="relative self-stretch font-body-text-12-semi-bold-UC font-[number:var(--body-text-12-semi-bold-UC-font-weight)] text-shadesdark-80 text-[length:var(--body-text-12-semi-bold-UC-font-size)] tracking-[var(--body-text-12-semi-bold-UC-letter-spacing)] leading-[var(--body-text-12-semi-bold-UC-line-height)] [font-style:var(--body-text-12-semi-bold-UC-font-style)]"
+            >
+              PUBLICATIONS, LIBRARY
+            </div>
+          </div>
+        </div>
+        <div
+          class="top-[971px] left-[1093px] inline-flex flex-col items-start gap-4 pt-0 pb-5 px-0 absolute bg-mainwhite rounded-2xl"
+        >
+          <div
+            class="relative w-[270px] h-60 rounded-[16px_16px_0px_0px] [background:url(https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-11.png)_50%_50%_/_cover]"
+          >
+            <img class="absolute top-0 left-0 w-[270px] h-60" />
+          </div>
+          <div class="flex flex-col items-start gap-1 px-5 py-0 relative self-stretch w-full flex-[0_0_auto]">
+            <div
+              class="relative self-stretch mt-[-1.00px] [font-family:'ABeeZee',Helvetica] font-normal text-maindark text-lg tracking-[-0.18px] leading-[21.6px]"
+            >
+              MOHAMMED HADI V
+            </div>
+            <div
+              class="relative self-stretch font-body-text-12-semi-bold-UC font-[number:var(--body-text-12-semi-bold-UC-font-weight)] text-shadesdark-80 text-[length:var(--body-text-12-semi-bold-UC-font-size)] tracking-[var(--body-text-12-semi-bold-UC-letter-spacing)] leading-[var(--body-text-12-semi-bold-UC-line-height)] [font-style:var(--body-text-12-semi-bold-UC-font-style)]"
+            >
+              PUBLICATIONS, LIBRARY
+            </div>
+          </div>
+        </div>
+        <div
+          class="top-[1324px] left-[77px] inline-flex flex-col items-start gap-4 pt-0 pb-5 px-0 absolute bg-mainwhite rounded-2xl"
+        >
+          <div
+            class="relative w-[270px] h-60 rounded-[16px_16px_0px_0px] [background:url(https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-12.png)_50%_50%_/_cover]"
+          >
+            <img class="absolute top-0 left-0 w-[270px] h-60" />
+          </div>
+          <div class="flex flex-col items-start gap-1 px-5 py-0 relative self-stretch w-full flex-[0_0_auto]">
+            <div
+              class="relative self-stretch mt-[-1.00px] [font-family:'ABeeZee',Helvetica] font-normal text-maindark text-lg tracking-[-0.18px] leading-[21.6px]"
+            >
+              MUHAMMED HAYYAN VP
+            </div>
+            <div
+              class="relative self-stretch font-body-text-12-semi-bold-UC font-[number:var(--body-text-12-semi-bold-UC-font-weight)] text-shadesdark-80 text-[length:var(--body-text-12-semi-bold-UC-font-size)] tracking-[var(--body-text-12-semi-bold-UC-letter-spacing)] leading-[var(--body-text-12-semi-bold-UC-line-height)] [font-style:var(--body-text-12-semi-bold-UC-font-style)]"
+            >
+              ARABIC WING
+            </div>
+          </div>
+        </div>
+        <div
+          class="top-[1324px] left-[416px] inline-flex flex-col items-start gap-4 pt-0 pb-5 px-0 absolute bg-mainwhite rounded-2xl"
+        >
+          <div
+            class="relative w-[270px] h-60 rounded-[16px_16px_0px_0px] [background:url(https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-13.png)_50%_50%_/_cover]"
+          >
+            <img class="absolute top-0 left-0 w-[270px] h-60" />
+          </div>
+          <div class="flex flex-col items-start gap-1 px-5 py-0 relative self-stretch w-full flex-[0_0_auto]">
+            <div
+              class="relative self-stretch mt-[-1.00px] [font-family:'ABeeZee',Helvetica] font-normal text-maindark text-lg tracking-[-0.18px] leading-[21.6px]"
+            >
+              HAMDAN CC
+            </div>
+            <div
+              class="relative self-stretch font-body-text-12-semi-bold-UC font-[number:var(--body-text-12-semi-bold-UC-font-weight)] text-shadesdark-80 text-[length:var(--body-text-12-semi-bold-UC-font-size)] tracking-[var(--body-text-12-semi-bold-UC-letter-spacing)] leading-[var(--body-text-12-semi-bold-UC-line-height)] [font-style:var(--body-text-12-semi-bold-UC-font-style)]"
+            >
+              ARABIC WING
+            </div>
+          </div>
+        </div>
+        <div
+          class="top-[1324px] left-[754px] inline-flex flex-col items-start gap-4 pt-0 pb-5 px-0 absolute bg-mainwhite rounded-2xl"
+        >
+          <div
+            class="relative w-[270px] h-60 rounded-[16px_16px_0px_0px] [background:url(https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-14.png)_50%_50%_/_cover]"
+          >
+            <img class="absolute top-0 left-0 w-[270px] h-60" />
+          </div>
+          <div class="flex flex-col items-start gap-1 px-5 py-0 relative self-stretch w-full flex-[0_0_auto]">
+            <div
+              class="relative self-stretch mt-[-1.00px] [font-family:'ABeeZee',Helvetica] font-normal text-maindark text-lg tracking-[-0.18px] leading-[21.6px]"
+            >
+              MUHAMMED SAHL
+            </div>
+            <div
+              class="relative self-stretch font-body-text-12-semi-bold-UC font-[number:var(--body-text-12-semi-bold-UC-font-weight)] text-shadesdark-80 text-[length:var(--body-text-12-semi-bold-UC-font-size)] tracking-[var(--body-text-12-semi-bold-UC-letter-spacing)] leading-[var(--body-text-12-semi-bold-UC-line-height)] [font-style:var(--body-text-12-semi-bold-UC-font-style)]"
+            >
+              URDU WING
+            </div>
+          </div>
+        </div>
+        <div
+          class="top-[1324px] left-[1093px] inline-flex flex-col items-start gap-4 pt-0 pb-5 px-0 absolute bg-mainwhite rounded-2xl"
+        >
+          <div
+            class="relative w-[270px] h-60 rounded-[16px_16px_0px_0px] [background:url(https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-15.png)_50%_50%_/_cover]"
+          >
+            <img class="absolute top-0 left-0 w-[270px] h-60" />
+          </div>
+          <div class="flex flex-col items-start gap-1 px-5 py-0 relative self-stretch w-full flex-[0_0_auto]">
+            <div
+              class="relative self-stretch mt-[-1.00px] [font-family:'ABeeZee',Helvetica] font-normal text-maindark text-lg tracking-[-0.18px] leading-[21.6px]"
+            >
+              MUHAMMED RAMEES VP
+            </div>
+            <div
+              class="relative self-stretch font-body-text-12-semi-bold-UC font-[number:var(--body-text-12-semi-bold-UC-font-weight)] text-shadesdark-80 text-[length:var(--body-text-12-semi-bold-UC-font-size)] tracking-[var(--body-text-12-semi-bold-UC-letter-spacing)] leading-[var(--body-text-12-semi-bold-UC-line-height)] [font-style:var(--body-text-12-semi-bold-UC-font-style)]"
+            >
+              URDU WING
+            </div>
+          </div>
+        </div>
+        <div
+          class="top-[1679px] left-[77px] inline-flex flex-col items-start gap-4 pt-0 pb-5 px-0 absolute bg-mainwhite rounded-2xl"
+        >
+          <div
+            class="relative w-[270px] h-60 rounded-[16px_16px_0px_0px] [background:url(https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-16.png)_50%_50%_/_cover]"
+          >
+            <img class="absolute top-0 left-0 w-[270px] h-60" />
+          </div>
+          <div class="flex flex-col items-start gap-1 px-5 py-0 relative self-stretch w-full flex-[0_0_auto]">
+            <div
+              class="relative self-stretch mt-[-1.00px] [font-family:'ABeeZee',Helvetica] font-normal text-maindark text-lg tracking-[-0.18px] leading-[21.6px]"
+            >
+              MUHAMMED YASEEN K
+            </div>
+            <div
+              class="relative self-stretch font-body-text-12-semi-bold-UC font-[number:var(--body-text-12-semi-bold-UC-font-weight)] text-shadesdark-80 text-[length:var(--body-text-12-semi-bold-UC-font-size)] tracking-[var(--body-text-12-semi-bold-UC-letter-spacing)] leading-[var(--body-text-12-semi-bold-UC-line-height)] [font-style:var(--body-text-12-semi-bold-UC-font-style)]"
+            >
+              MALAYALAM WING
+            </div>
+          </div>
+        </div>
+        <div
+          class="top-[1679px] left-[416px] inline-flex flex-col items-start gap-4 pt-0 pb-5 px-0 absolute bg-mainwhite rounded-2xl"
+        >
+          <div
+            class="relative w-[270px] h-60 rounded-[16px_16px_0px_0px] [background:url(https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-17.png)_50%_50%_/_cover]"
+          >
+            <img class="absolute top-0 left-0 w-[270px] h-60" />
+          </div>
+          <div class="flex flex-col items-start gap-1 px-5 py-0 relative self-stretch w-full flex-[0_0_auto]">
+            <div
+              class="relative self-stretch mt-[-1.00px] [font-family:'ABeeZee',Helvetica] font-normal text-maindark text-lg tracking-[-0.18px] leading-[21.6px]"
+            >
+              MUHAMMED LASIN KC
+            </div>
+            <div
+              class="relative self-stretch font-body-text-12-semi-bold-UC font-[number:var(--body-text-12-semi-bold-UC-font-weight)] text-shadesdark-80 text-[length:var(--body-text-12-semi-bold-UC-font-size)] tracking-[var(--body-text-12-semi-bold-UC-letter-spacing)] leading-[var(--body-text-12-semi-bold-UC-line-height)] [font-style:var(--body-text-12-semi-bold-UC-font-style)]"
+            >
+              MALAYALAM WING
+            </div>
+          </div>
+        </div>
+        <div
+          class="top-[1678px] left-[754px] inline-flex flex-col items-start gap-4 pt-0 pb-5 px-0 absolute bg-mainwhite rounded-2xl"
+        >
+          <div
+            class="relative w-[270px] h-60 rounded-[16px_16px_0px_0px] [background:url(https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-18.png)_50%_50%_/_cover]"
+          >
+            <img class="absolute top-0 left-0 w-[270px] h-60" />
+          </div>
+          <div class="flex flex-col items-start gap-1 px-5 py-0 relative self-stretch w-full flex-[0_0_auto]">
+            <div
+              class="relative self-stretch mt-[-1.00px] [font-family:'ABeeZee',Helvetica] font-normal text-maindark text-lg tracking-[-0.18px] leading-[21.6px]"
+            >
+              MUHAMMED SHAHAL
+            </div>
+            <div
+              class="relative self-stretch font-body-text-12-semi-bold-UC font-[number:var(--body-text-12-semi-bold-UC-font-weight)] text-shadesdark-80 text-[length:var(--body-text-12-semi-bold-UC-font-size)] tracking-[var(--body-text-12-semi-bold-UC-letter-spacing)] leading-[var(--body-text-12-semi-bold-UC-line-height)] [font-style:var(--body-text-12-semi-bold-UC-font-style)]"
+            >
+              ENGLISH WING
+            </div>
+          </div>
+        </div>
+        <div
+          class="top-[1679px] left-[1093px] inline-flex flex-col items-start gap-4 pt-0 pb-5 px-0 absolute bg-mainwhite rounded-2xl"
+        >
+          <div
+            class="relative w-[270px] h-60 rounded-[16px_16px_0px_0px] [background:url(https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-19.png)_50%_50%_/_cover]"
+          >
+            <img class="absolute top-0 left-0 w-[270px] h-60" />
+          </div>
+          <div class="flex flex-col items-start gap-1 px-5 py-0 relative self-stretch w-full flex-[0_0_auto]">
+            <div
+              class="relative self-stretch mt-[-1.00px] [font-family:'ABeeZee',Helvetica] font-normal text-maindark text-lg tracking-[-0.18px] leading-[21.6px]"
+            >
+              ABDUL HADI
+            </div>
+            <div
+              class="relative self-stretch font-body-text-12-semi-bold-UC font-[number:var(--body-text-12-semi-bold-UC-font-weight)] text-shadesdark-80 text-[length:var(--body-text-12-semi-bold-UC-font-size)] tracking-[var(--body-text-12-semi-bold-UC-letter-spacing)] leading-[var(--body-text-12-semi-bold-UC-line-height)] [font-style:var(--body-text-12-semi-bold-UC-font-style)]"
+            >
+              ENGLISH WING
+            </div>
+          </div>
+        </div>
+        <div
+          class="top-[2031px] left-[416px] inline-flex flex-col items-start gap-4 pt-0 pb-5 px-0 absolute bg-mainwhite rounded-2xl"
+        >
+          <div
+            class="relative w-[270px] h-60 rounded-[16px_16px_0px_0px] [background:url(https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-20.png)_50%_50%_/_cover]"
+          >
+            <img class="absolute top-0 left-0 w-[270px] h-60" />
+          </div>
+          <div class="flex flex-col items-start gap-1 px-5 py-0 relative self-stretch w-full flex-[0_0_auto]">
+            <div
+              class="relative self-stretch mt-[-1.00px] [font-family:'ABeeZee',Helvetica] font-normal text-maindark text-lg tracking-[-0.18px] leading-[21.6px]"
+            >
+              MUHAMMED ZIYAD C
+            </div>
+            <div
+              class="relative self-stretch font-body-text-12-semi-bold-UC font-[number:var(--body-text-12-semi-bold-UC-font-weight)] text-shadesdark-80 text-[length:var(--body-text-12-semi-bold-UC-font-size)] tracking-[var(--body-text-12-semi-bold-UC-letter-spacing)] leading-[var(--body-text-12-semi-bold-UC-line-height)] [font-style:var(--body-text-12-semi-bold-UC-font-style)]"
+            >
+              MEDIA WING
+            </div>
+          </div>
+        </div>
+        <div
+          class="top-[2031px] left-[754px] inline-flex flex-col items-start gap-4 pt-0 pb-5 px-0 absolute bg-mainwhite rounded-2xl"
+        >
+          <div
+            class="relative w-[270px] h-60 rounded-[16px_16px_0px_0px] [background:url(https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-21.png)_50%_50%_/_cover]"
+          >
+            <img class="absolute top-0 left-0 w-[270px] h-60" />
+          </div>
+          <div class="flex flex-col items-start gap-1 px-5 py-0 relative self-stretch w-full flex-[0_0_auto]">
+            <div
+              class="relative self-stretch mt-[-1.00px] [font-family:'ABeeZee',Helvetica] font-normal text-maindark text-lg tracking-[-0.18px] leading-[21.6px]"
+            >
+              MUHAMMED RASIN KP
+            </div>
+            <div
+              class="relative self-stretch font-body-text-12-semi-bold-UC font-[number:var(--body-text-12-semi-bold-UC-font-weight)] text-shadesdark-80 text-[length:var(--body-text-12-semi-bold-UC-font-size)] tracking-[var(--body-text-12-semi-bold-UC-letter-spacing)] leading-[var(--body-text-12-semi-bold-UC-line-height)] [font-style:var(--body-text-12-semi-bold-UC-font-style)]"
+            >
+              SIGMA WING
+            </div>
+          </div>
+        </div>
+        <div
+          class="top-[2737px] left-[77px] inline-flex flex-col items-start gap-4 pt-0 pb-5 px-0 absolute bg-mainwhite rounded-2xl"
+        >
+          <div
+            class="relative w-[270px] h-60 rounded-[16px_16px_0px_0px] [background:url(https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-22.png)_50%_50%_/_cover]"
+          >
+            <img class="absolute top-0 left-0 w-[270px] h-60" />
+          </div>
+          <div class="flex flex-col items-start gap-1 px-5 py-0 relative self-stretch w-full flex-[0_0_auto]">
+            <div
+              class="relative self-stretch mt-[-1.00px] [font-family:'ABeeZee',Helvetica] font-normal text-maindark text-lg tracking-[-0.18px] leading-[21.6px]"
+            >
+              MISHAB PT
+            </div>
+            <div
+              class="relative self-stretch font-body-text-12-semi-bold-UC font-[number:var(--body-text-12-semi-bold-UC-font-weight)] text-shadesdark-80 text-[length:var(--body-text-12-semi-bold-UC-font-size)] tracking-[var(--body-text-12-semi-bold-UC-letter-spacing)] leading-[var(--body-text-12-semi-bold-UC-line-height)] [font-style:var(--body-text-12-semi-bold-UC-font-style)]"
+            >
+              LEADER, HIMAYA
+            </div>
+          </div>
+        </div>
+        <div
+          class="top-[2737px] left-[1093px] inline-flex flex-col items-start gap-4 pt-0 pb-5 px-0 absolute bg-mainwhite rounded-2xl"
+        >
+          <div
+            class="relative w-[270px] h-60 rounded-[16px_16px_0px_0px] [background:url(https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-23.png)_50%_50%_/_cover]"
+          >
+            <img class="absolute top-0 left-0 w-[270px] h-60" />
+          </div>
+          <div class="flex flex-col items-start gap-1 px-5 py-0 relative self-stretch w-full flex-[0_0_auto]">
+            <div
+              class="relative self-stretch mt-[-1.00px] [font-family:'ABeeZee',Helvetica] font-normal text-maindark text-lg tracking-[-0.18px] leading-[21.6px]"
+            >
+              MOHAMMED AFRAH N
+            </div>
+            <div
+              class="relative self-stretch font-body-text-12-semi-bold-UC font-[number:var(--body-text-12-semi-bold-UC-font-weight)] text-shadesdark-80 text-[length:var(--body-text-12-semi-bold-UC-font-size)] tracking-[var(--body-text-12-semi-bold-UC-letter-spacing)] leading-[var(--body-text-12-semi-bold-UC-line-height)] [font-style:var(--body-text-12-semi-bold-UC-font-style)]"
+            >
+              MEMBER
+            </div>
+          </div>
+        </div>
+        <div
+          class="top-[2737px] left-[754px] inline-flex flex-col items-start gap-4 pt-0 pb-5 px-0 absolute bg-mainwhite rounded-2xl"
+        >
+          <div
+            class="relative w-[270px] h-60 rounded-[16px_16px_0px_0px] [background:url(https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-24.png)_50%_50%_/_cover]"
+          >
+            <img class="absolute top-0 left-0 w-[270px] h-60" />
+          </div>
+          <div class="flex flex-col items-start gap-1 px-5 py-0 relative self-stretch w-full flex-[0_0_auto]">
+            <div
+              class="relative self-stretch mt-[-1.00px] [font-family:'ABeeZee',Helvetica] font-normal text-maindark text-lg tracking-[-0.18px] leading-[21.6px]"
+            >
+              MUHAMMED RASAL PP
+            </div>
+            <div
+              class="relative self-stretch font-body-text-12-semi-bold-UC font-[number:var(--body-text-12-semi-bold-UC-font-weight)] text-shadesdark-80 text-[length:var(--body-text-12-semi-bold-UC-font-size)] tracking-[var(--body-text-12-semi-bold-UC-letter-spacing)] leading-[var(--body-text-12-semi-bold-UC-line-height)] [font-style:var(--body-text-12-semi-bold-UC-font-style)]"
+            >
+              MEMBER
+            </div>
+          </div>
+        </div>
+        <div
+          class="top-[2737px] left-[407px] inline-flex flex-col items-start gap-4 pt-0 pb-5 px-0 absolute bg-mainwhite rounded-2xl"
+        >
+          <div
+            class="relative w-[270px] h-60 rounded-[16px_16px_0px_0px] [background:url(https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-25.png)_50%_50%_/_cover]"
+          >
+            <img class="absolute top-0 left-0 w-[270px] h-60" />
+          </div>
+          <div class="flex flex-col items-start gap-1 px-5 py-0 relative self-stretch w-full flex-[0_0_auto]">
+            <div
+              class="relative self-stretch mt-[-1.00px] [font-family:'ABeeZee',Helvetica] font-normal text-maindark text-lg tracking-[-0.18px] leading-[21.6px]"
+            >
+              MUHAMMED SHAFAN A
+            </div>
+            <div
+              class="relative self-stretch font-body-text-12-semi-bold-UC font-[number:var(--body-text-12-semi-bold-UC-font-weight)] text-shadesdark-80 text-[length:var(--body-text-12-semi-bold-UC-font-size)] tracking-[var(--body-text-12-semi-bold-UC-letter-spacing)] leading-[var(--body-text-12-semi-bold-UC-line-height)] [font-style:var(--body-text-12-semi-bold-UC-font-style)]"
+            >
+              MEMBER
+            </div>
+          </div>
+        </div>
+        <div
+          class="top-[3090px] left-[754px] inline-flex flex-col items-start gap-4 pt-0 pb-5 px-0 absolute bg-mainwhite rounded-2xl"
+        >
+          <div
+            class="relative w-[270px] h-60 rounded-[16px_16px_0px_0px] [background:url(https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-26.png)_50%_50%_/_cover]"
+          >
+            <img class="absolute top-0 left-0 w-[270px] h-60" />
+          </div>
+          <div class="flex flex-col items-start gap-1 px-5 py-0 relative self-stretch w-full flex-[0_0_auto]">
+            <div
+              class="relative self-stretch mt-[-1.00px] [font-family:'ABeeZee',Helvetica] font-normal text-maindark text-lg tracking-[-0.18px] leading-[21.6px]"
+            >
+              MUHAMMED NASWIH IK
+            </div>
+            <div
+              class="relative self-stretch font-body-text-12-semi-bold-UC font-[number:var(--body-text-12-semi-bold-UC-font-weight)] text-shadesdark-80 text-[length:var(--body-text-12-semi-bold-UC-font-size)] tracking-[var(--body-text-12-semi-bold-UC-letter-spacing)] leading-[var(--body-text-12-semi-bold-UC-line-height)] [font-style:var(--body-text-12-semi-bold-UC-font-style)]"
+            >
+              MEMBER
+            </div>
+          </div>
+        </div>
+        <div
+          class="top-[3090px] left-[77px] inline-flex flex-col items-start gap-4 pt-0 pb-5 px-0 absolute bg-mainwhite rounded-2xl"
+        >
+          <div
+            class="relative w-[270px] h-60 rounded-[16px_16px_0px_0px] [background:url(https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-27.png)_50%_50%_/_cover]"
+          >
+            <img class="absolute top-0 left-0 w-[270px] h-60" />
+          </div>
+          <div class="flex flex-col items-start gap-1 px-5 py-0 relative self-stretch w-full flex-[0_0_auto]">
+            <div
+              class="relative self-stretch mt-[-1.00px] [font-family:'ABeeZee',Helvetica] font-normal text-maindark text-lg tracking-[-0.18px] leading-[21.6px]"
+            >
+              SAIDALAVI SHAMIL MC
+            </div>
+            <div
+              class="relative self-stretch font-body-text-12-semi-bold-UC font-[number:var(--body-text-12-semi-bold-UC-font-weight)] text-shadesdark-80 text-[length:var(--body-text-12-semi-bold-UC-font-size)] tracking-[var(--body-text-12-semi-bold-UC-letter-spacing)] leading-[var(--body-text-12-semi-bold-UC-line-height)] [font-style:var(--body-text-12-semi-bold-UC-font-style)]"
+            >
+              MEMBER
+            </div>
+          </div>
+        </div>
+        <div
+          class="top-[3090px] left-[1093px] inline-flex flex-col items-start gap-4 pt-0 pb-5 px-0 absolute bg-mainwhite rounded-2xl"
+        >
+          <div
+            class="relative w-[270px] h-60 rounded-[16px_16px_0px_0px] [background:url(https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-28.png)_50%_50%_/_cover]"
+          >
+            <img class="absolute top-0 left-0 w-[270px] h-60" />
+          </div>
+          <div class="flex flex-col items-start gap-1 px-5 py-0 relative self-stretch w-full flex-[0_0_auto]">
+            <div
+              class="relative self-stretch mt-[-1.00px] [font-family:'ABeeZee',Helvetica] font-normal text-maindark text-lg tracking-[-0.18px] leading-[21.6px]"
+            >
+              AMAN ASKAR CT
+            </div>
+            <div
+              class="relative self-stretch font-body-text-12-semi-bold-UC font-[number:var(--body-text-12-semi-bold-UC-font-weight)] text-shadesdark-80 text-[length:var(--body-text-12-semi-bold-UC-font-size)] tracking-[var(--body-text-12-semi-bold-UC-letter-spacing)] leading-[var(--body-text-12-semi-bold-UC-line-height)] [font-style:var(--body-text-12-semi-bold-UC-font-style)]"
+            >
+              MEMBER
+            </div>
+          </div>
+        </div>
+        <div
+          class="top-[2031px] left-[1093px] inline-flex flex-col items-start gap-4 pt-0 pb-5 px-0 absolute bg-mainwhite rounded-2xl"
+        >
+          <div
+            class="relative w-[270px] h-60 rounded-[16px_16px_0px_0px] [background:url(https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-29.png)_50%_50%_/_cover]"
+          >
+            <img class="absolute top-0 left-0 w-[270px] h-60" />
+          </div>
+          <div class="flex flex-col items-start gap-1 px-5 py-0 relative self-stretch w-full flex-[0_0_auto]">
+            <div
+              class="relative self-stretch mt-[-1.00px] [font-family:'ABeeZee',Helvetica] font-normal text-maindark text-lg tracking-[-0.18px] leading-[21.6px]"
+            >
+              MUHAMMED SHAFIN
+            </div>
+            <div
+              class="relative self-stretch font-body-text-12-semi-bold-UC font-[number:var(--body-text-12-semi-bold-UC-font-weight)] text-shadesdark-80 text-[length:var(--body-text-12-semi-bold-UC-font-size)] tracking-[var(--body-text-12-semi-bold-UC-letter-spacing)] leading-[var(--body-text-12-semi-bold-UC-line-height)] [font-style:var(--body-text-12-semi-bold-UC-font-style)]"
+            >
+              SIGMA WING
+            </div>
+          </div>
+        </div>
+        <div
+          class="top-[2384px] left-[77px] inline-flex flex-col items-start gap-4 pt-0 pb-5 px-0 absolute bg-mainwhite rounded-2xl"
+        >
+          <div
+            class="relative w-[270px] h-60 rounded-[16px_16px_0px_0px] [background:url(https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-30.png)_50%_50%_/_cover]"
+          >
+            <img class="absolute top-0 left-0 w-[270px] h-60" />
+          </div>
+          <div class="flex flex-col items-start gap-1 px-5 py-0 relative self-stretch w-full flex-[0_0_auto]">
+            <div
+              class="relative self-stretch mt-[-1.00px] [font-family:'ABeeZee',Helvetica] font-normal text-maindark text-lg tracking-[-0.18px] leading-[21.6px]"
+            >
+              AQIB MUHAMMED KT
+            </div>
+            <div
+              class="relative self-stretch font-body-text-12-semi-bold-UC font-[number:var(--body-text-12-semi-bold-UC-font-weight)] text-shadesdark-80 text-[length:var(--body-text-12-semi-bold-UC-font-size)] tracking-[var(--body-text-12-semi-bold-UC-letter-spacing)] leading-[var(--body-text-12-semi-bold-UC-line-height)] [font-style:var(--body-text-12-semi-bold-UC-font-style)]"
+            >
+              ART WING
+            </div>
+          </div>
+        </div>
+        <div
+          class="top-[2384px] left-[407px] inline-flex flex-col items-start gap-4 pt-0 pb-5 px-0 absolute bg-mainwhite rounded-2xl"
+        >
+          <div
+            class="relative w-[270px] h-60 rounded-[16px_16px_0px_0px] [background:url(https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-31.png)_50%_50%_/_cover]"
+          >
+            <img class="absolute top-0 left-0 w-[270px] h-60" />
+          </div>
+          <div class="flex flex-col items-start gap-1 px-5 py-0 relative self-stretch w-full flex-[0_0_auto]">
+            <div
+              class="relative self-stretch mt-[-1.00px] [font-family:'ABeeZee',Helvetica] font-normal text-maindark text-lg tracking-[-0.18px] leading-[21.6px]"
+            >
+              MUHAMMED SINAN CK
+            </div>
+            <div
+              class="relative self-stretch font-body-text-12-semi-bold-UC font-[number:var(--body-text-12-semi-bold-UC-font-weight)] text-shadesdark-80 text-[length:var(--body-text-12-semi-bold-UC-font-size)] tracking-[var(--body-text-12-semi-bold-UC-letter-spacing)] leading-[var(--body-text-12-semi-bold-UC-line-height)] [font-style:var(--body-text-12-semi-bold-UC-font-style)]"
+            >
+              ORATION WING
+            </div>
+          </div>
+        </div>
+        <div
+          class="top-[2384px] left-[754px] inline-flex flex-col items-start gap-4 pt-0 pb-5 px-0 absolute bg-mainwhite rounded-2xl"
+        >
+          <div
+            class="relative w-[270px] h-60 rounded-[16px_16px_0px_0px] [background:url(https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-32.png)_50%_50%_/_cover]"
+          >
+            <img class="absolute top-0 left-0 w-[270px] h-60" />
+          </div>
+          <div class="flex flex-col items-start gap-1 px-5 py-0 relative self-stretch w-full flex-[0_0_auto]">
+            <div
+              class="relative self-stretch mt-[-1.00px] [font-family:'ABeeZee',Helvetica] font-normal text-maindark text-lg tracking-[-0.18px] leading-[21.6px]"
+            >
+              HISHAM RAHMATHULLAH O
+            </div>
+            <div
+              class="relative self-stretch font-body-text-12-semi-bold-UC font-[number:var(--body-text-12-semi-bold-UC-font-weight)] text-shadesdark-80 text-[length:var(--body-text-12-semi-bold-UC-font-size)] tracking-[var(--body-text-12-semi-bold-UC-letter-spacing)] leading-[var(--body-text-12-semi-bold-UC-line-height)] [font-style:var(--body-text-12-semi-bold-UC-font-style)]"
+            >
+              GK WING
+            </div>
+          </div>
+        </div>
+        <div
+          class="top-[2384px] left-[1093px] inline-flex flex-col items-start gap-4 pt-0 pb-5 px-0 absolute bg-mainwhite rounded-2xl"
+        >
+          <div
+            class="relative w-[270px] h-60 rounded-[16px_16px_0px_0px] [background:url(https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-33.png)_50%_50%_/_cover]"
+          >
+            <img class="absolute top-0 left-0 w-[270px] h-60" />
+          </div>
+          <div class="flex flex-col items-start gap-1 px-5 py-0 relative self-stretch w-full flex-[0_0_auto]">
+            <div
+              class="relative self-stretch mt-[-1.00px] [font-family:'ABeeZee',Helvetica] font-normal text-maindark text-lg tracking-[-0.18px] leading-[21.6px]"
+            >
+              MUHAMMED ASLAM
+            </div>
+            <div
+              class="relative self-stretch font-body-text-12-semi-bold-UC font-[number:var(--body-text-12-semi-bold-UC-font-weight)] text-shadesdark-80 text-[length:var(--body-text-12-semi-bold-UC-font-size)] tracking-[var(--body-text-12-semi-bold-UC-letter-spacing)] leading-[var(--body-text-12-semi-bold-UC-line-height)] [font-style:var(--body-text-12-semi-bold-UC-font-style)]"
+            >
+              GK WING
+            </div>
+          </div>
+        </div>
+        <div
+          class="top-[2031px] left-[77px] inline-flex flex-col items-start gap-4 pt-0 pb-5 px-0 absolute bg-mainwhite rounded-2xl"
+        >
+          <div
+            class="relative w-[270px] h-60 rounded-[16px_16px_0px_0px] [background:url(https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-34.png)_50%_50%_/_cover]"
+          >
+            <img class="absolute top-0 left-0 w-[270px] h-60" />
+          </div>
+          <div class="flex flex-col items-start gap-1 px-5 py-0 relative self-stretch w-full flex-[0_0_auto]">
+            <div
+              class="relative self-stretch mt-[-1.00px] [font-family:'ABeeZee',Helvetica] font-normal text-maindark text-lg tracking-[-0.18px] leading-[21.6px]"
+            >
+              ALI RAFI EP
+            </div>
+            <div
+              class="relative self-stretch font-body-text-12-semi-bold-UC font-[number:var(--body-text-12-semi-bold-UC-font-weight)] text-shadesdark-80 text-[length:var(--body-text-12-semi-bold-UC-font-size)] tracking-[var(--body-text-12-semi-bold-UC-letter-spacing)] leading-[var(--body-text-12-semi-bold-UC-line-height)] [font-style:var(--body-text-12-semi-bold-UC-font-style)]"
+            >
+              MEDIA WING
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="top-[5260px] left-[416px] inline-flex flex-col items-start gap-4 pt-0 pb-5 px-0 absolute bg-mainwhite rounded-2xl"
+      >
+        <div
+          class="relative w-[270px] h-60 rounded-[16px_16px_0px_0px] [background:url(https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-35.png)_50%_50%_/_cover]"
+        >
+          <img class="absolute top-0 left-0 w-[270px] h-60" />
+        </div>
+        <div class="flex flex-col items-start gap-1 px-5 py-0 relative self-stretch w-full flex-[0_0_auto]">
+          <div
+            class="relative self-stretch mt-[-1.00px] [font-family:'ABeeZee',Helvetica] font-normal text-maindark text-lg tracking-[-0.18px] leading-[21.6px]"
+          >
+            FARSHAD MR
+          </div>
+          <div
+            class="relative self-stretch font-body-text-12-semi-bold-UC font-[number:var(--body-text-12-semi-bold-UC-font-weight)] text-shadesdark-80 text-[length:var(--body-text-12-semi-bold-UC-font-size)] tracking-[var(--body-text-12-semi-bold-UC-letter-spacing)] leading-[var(--body-text-12-semi-bold-UC-line-height)] [font-style:var(--body-text-12-semi-bold-UC-font-style)]"
+          >
+            MEMBER
+          </div>
+        </div>
+      </div>
+      <div class="flex flex-col items-center gap-16 px-[135px] py-[120px] relative self-stretch w-full flex-[0_0_auto]">
+        <div class="inline-flex flex-col items-center gap-4 relative flex-[0_0_auto]">
+          <div
+            class="relative w-fit mt-[-1.00px] [font-family:'ADLaM_Display',Helvetica] font-normal text-maindark text-[46px] text-center tracking-[0.92px] leading-[50.6px] whitespace-nowrap"
+          >
+            Programs &amp; Reports
+          </div>
+          <p
+            class="relative w-[507px] font-body-text-16-regular font-[number:var(--body-text-16-regular-font-weight)] text-shadesdark-80 text-[length:var(--body-text-16-regular-font-size)] text-center tracking-[var(--body-text-16-regular-letter-spacing)] leading-[var(--body-text-16-regular-line-height)] [font-style:var(--body-text-16-regular-font-style)]"
+          >
+            Explore the main programs with detailed descriptions, featured highlights, and everything you need to know
+            before getting started.
+          </p>
+        </div>
+        <div class="flex flex-col items-center gap-12 relative self-stretch w-full flex-[0_0_auto]">
+          <div class="flex flex-col items-start gap-6 relative self-stretch w-full flex-[0_0_auto]">
+            <div
+              class="flex items-center justify-between px-6 py-8 relative self-stretch w-full flex-[0_0_auto] bg-maindark rounded-2xl"
+            >
+              <div class="inline-flex items-center gap-8 relative flex-[0_0_auto]">
+                <img class="relative flex-[0_0_auto]" src="https://c.animaapp.com/mjwngvpjWKAdmV/img/frame-37678.svg" />
+                <div
+                  class="relative w-fit [font-family:'ABeeZee',Helvetica] font-normal text-mainwhite text-2xl text-center tracking-[-0.24px] leading-[28.8px] whitespace-nowrap"
+                >
+                  Thursday, July-25-2024
+                </div>
+              </div>
+              <div
+                class="relative w-fit [font-family:'ABeeZee',Helvetica] font-normal text-mainwhite text-2xl text-center tracking-[-0.24px] leading-[28.8px] whitespace-nowrap"
+              >
+                Programs &amp; Reports
+              </div>
+            </div>
+            <div class="inline-flex flex-[0_0_auto] items-center gap-5 p-4 relative bg-shadessecondary-15 rounded-2xl">
+              <div
+                class="relative w-[180px] h-[135px] rounded-xl [background:radial-gradient(50%_50%_at_50%_50%,rgba(255,255,255,1)_0%,rgba(237,237,237,1)_20%,rgba(26,26,26,1)_100%)]"
+              >
+                <img
+                  class="absolute top-0 left-0 w-[180px] h-[135px]"
+                  src="https://c.animaapp.com/mjwngvpjWKAdmV/img/mask-group.png"
+                />
+              </div>
+              <div class="inline-flex flex-col items-start gap-4 relative flex-[0_0_auto]">
+                <div class="flex flex-col w-[938px] items-start relative flex-[0_0_auto]">
+                  <div class="flex items-center justify-between relative self-stretch w-full flex-[0_0_auto]">
+                    <div
+                      class="relative w-fit mt-[-1.00px] [font-family:'ABeeZee',Helvetica] font-normal text-maindark text-2xl tracking-[-0.24px] leading-[28.8px] whitespace-nowrap"
+                    >
+                      Freshers Meet
+                    </div>
+                    <p
+                      class="relative w-fit mt-[-1.00px] [font-family:'ABeeZee',Helvetica] font-normal text-maindark text-2xl tracking-[-0.24px] leading-[28.8px] whitespace-nowrap"
+                    >
+                      9:00 AM - 4:00 PM
+                    </p>
+                  </div>
+                  <p
+                    class="relative self-stretch font-body-text-16-medium font-[number:var(--body-text-16-medium-font-weight)] text-maindark text-[length:var(--body-text-16-medium-font-size)] tracking-[var(--body-text-16-medium-letter-spacing)] leading-[var(--body-text-16-medium-line-height)] [font-style:var(--body-text-16-medium-font-style)]"
+                  >
+                    By&nbsp;&nbsp;Darul Huda Islamic University, Chemmad
+                  </p>
+                </div>
+                <p
+                  class="relative w-[926px] font-body-text-16-regular font-[number:var(--body-text-16-regular-font-weight)] text-shadesdark-80 text-[length:var(--body-text-16-regular-font-size)] tracking-[var(--body-text-16-regular-letter-spacing)] leading-[var(--body-text-16-regular-line-height)] [font-style:var(--body-text-16-regular-font-style)]"
+                >
+                  Tarhib 1446 – Freshers’ Grand Meet Up is a welcoming and celebratory event organized by the Centre for
+                  Public Education and Training (CPET) and the Office of Guidance and Extension Activities (OGEA) at
+                  Darul Huda Islamic University. Designed especially for freshers, the program marks the beginning of a
+                  new academic journey by fostering connection, inspiration, and a sense of belonging within the
+                  university community.
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="flex flex-col items-start gap-6 relative self-stretch w-full flex-[0_0_auto]">
+            <div
+              class="flex items-center justify-between px-6 py-8 relative self-stretch w-full flex-[0_0_auto] bg-maindark rounded-2xl"
+            >
+              <div class="inline-flex items-center gap-8 relative flex-[0_0_auto]">
+                <img class="relative flex-[0_0_auto]" src="https://c.animaapp.com/mjwngvpjWKAdmV/img/frame-37678.svg" />
+                <div
+                  class="relative w-fit [font-family:'ABeeZee',Helvetica] font-normal text-mainwhite text-2xl text-center tracking-[-0.24px] leading-[28.8px] whitespace-nowrap"
+                >
+                  November,2024
+                </div>
+              </div>
+              <div
+                class="relative w-fit [font-family:'ABeeZee',Helvetica] font-normal text-mainwhite text-2xl text-center tracking-[-0.24px] leading-[28.8px] whitespace-nowrap"
+              >
+                Programs &amp; Reports
+              </div>
+            </div>
+            <div class="inline-flex h-[297px] items-center gap-5 p-4 relative bg-shadessecondary-15 rounded-2xl">
+              <div
+                class="relative w-[180px] h-[135px] rounded-xl [background:url(https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-40.png)_50%_50%_/_cover]"
+              ></div>
+              <div class="inline-flex flex-col items-start gap-4 relative flex-[0_0_auto]">
+                <div class="flex flex-col w-[938px] items-start relative flex-[0_0_auto]">
+                  <div class="flex items-center justify-between relative self-stretch w-full flex-[0_0_auto]">
+                    <div
+                      class="relative w-fit mt-[-1.00px] [font-family:'ABeeZee',Helvetica] font-normal text-maindark text-2xl tracking-[-0.24px] leading-[28.8px] whitespace-nowrap"
+                    >
+                      Website Launching
+                    </div>
+                    <div
+                      class="relative w-fit mt-[-1.00px] mr-[-1.00px] [font-family:'ABeeZee',Helvetica] font-normal text-maindark text-2xl tracking-[-0.24px] leading-[28.8px] whitespace-nowrap"
+                    ></div>
+                  </div>
+                  <p
+                    class="relative self-stretch font-body-text-16-medium font-[number:var(--body-text-16-medium-font-weight)] text-maindark text-[length:var(--body-text-16-medium-font-size)] tracking-[var(--body-text-16-medium-letter-spacing)] leading-[var(--body-text-16-medium-line-height)] [font-style:var(--body-text-16-medium-font-style)]"
+                  >
+                    First Website for a class union in the history of Darul Hidaya Da’wa College, Manoor
+                  </p>
+                </div>
+                <p
+                  class="relative w-[926px] [font-family:'Manrope',Helvetica] font-normal text-shadesdark-80 text-base tracking-[0] leading-4"
+                >
+                  <span
+                    class="font-[number:var(--body-text-16-regular-font-weight)] leading-[var(--body-text-16-regular-line-height)] font-body-text-16-regular [font-style:var(--body-text-16-regular-font-style)] tracking-[var(--body-text-16-regular-letter-spacing)] text-[length:var(--body-text-16-regular-font-size)]"
+                    >QUAF</span
+                  >
+                  <span class="leading-[25.6px]">
+                    launched an official website for its class union, marking a historic milestone as the first-ever
+                    website created for a class organization in the history of Darul Hidaya Da&#39;wa College, Manoor.
+                    <br />The website was officially launched by the Vice Principal,
+                  </span>
+                  <span
+                    class="font-[number:var(--body-text-16-regular-font-weight)] leading-[var(--body-text-16-regular-line-height)] font-body-text-16-regular [font-style:var(--body-text-16-regular-font-style)] tracking-[var(--body-text-16-regular-letter-spacing)] text-[length:var(--body-text-16-regular-font-size)]"
+                    >Usthad Junaid Hudawi</span
+                  >
+                  <span class="leading-[25.6px]">.</span>
+                </p>
+              </div>
+            </div>
+            <div
+              class="absolute top-[329px] left-[355px] w-[148px] h-[74px] rounded-xl [background:url(https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-37.png)_50%_50%_/_cover]"
+            ></div>
+            <div
+              class="absolute top-[329px] left-[511px] w-[148px] h-[74px] rounded-xl [background:url(https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-38.png)_50%_50%_/_cover]"
+            ></div>
+            <div
+              class="absolute top-[329px] left-[667px] w-[148px] h-[74px] rounded-xl [background:url(https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-39.png)_50%_50%_/_cover]"
+            ></div>
+          </div>
+          <div class="flex flex-col items-start gap-6 relative self-stretch w-full flex-[0_0_auto]">
+            <div
+              class="flex items-center justify-between px-6 py-8 relative self-stretch w-full flex-[0_0_auto] bg-maindark rounded-2xl"
+            >
+              <div class="inline-flex items-center gap-8 relative flex-[0_0_auto]">
+                <img class="relative flex-[0_0_auto]" src="https://c.animaapp.com/mjwngvpjWKAdmV/img/frame-37678.svg" />
+                <div
+                  class="relative w-fit [font-family:'ABeeZee',Helvetica] font-normal text-mainwhite text-2xl text-center tracking-[-0.24px] leading-[28.8px] whitespace-nowrap"
+                >
+                  December,2024
+                </div>
+              </div>
+              <div
+                class="relative w-fit [font-family:'ABeeZee',Helvetica] font-normal text-mainwhite text-2xl text-center tracking-[-0.24px] leading-[28.8px] whitespace-nowrap"
+              >
+                Programs &amp; Reports
+              </div>
+            </div>
+            <div class="inline-flex flex-[0_0_auto] items-center gap-5 p-4 relative bg-shadessecondary-15 rounded-2xl">
+              <div
+                class="relative w-[180px] h-[135px] rounded-xl [background:radial-gradient(50%_50%_at_50%_50%,rgba(255,255,255,1)_0%,rgba(237,237,237,1)_20%,rgba(26,26,26,1)_100%)]"
+              >
+                <img
+                  class="absolute top-0 left-0 w-[180px] h-[135px]"
+                  src="https://c.animaapp.com/mjwngvpjWKAdmV/img/mask-group-1.png"
+                />
+              </div>
+              <div class="inline-flex flex-col items-start gap-4 relative flex-[0_0_auto]">
+                <div class="flex flex-col w-[938px] items-start relative flex-[0_0_auto]">
+                  <div class="flex items-center justify-between relative self-stretch w-full flex-[0_0_auto]">
+                    <div
+                      class="relative w-fit mt-[-1.00px] [font-family:'ABeeZee',Helvetica] font-normal text-maindark text-2xl tracking-[-0.24px] leading-[28.8px] whitespace-nowrap"
+                    >
+                      MALABART
+                    </div>
+                    <div
+                      class="relative w-fit mt-[-1.00px] mr-[-1.00px] [font-family:'ABeeZee',Helvetica] font-normal text-maindark text-2xl tracking-[-0.24px] leading-[28.8px] whitespace-nowrap"
+                    ></div>
+                  </div>
+                  <div
+                    class="relative self-stretch font-body-text-16-medium font-[number:var(--body-text-16-medium-font-weight)] text-maindark text-[length:var(--body-text-16-medium-font-size)] tracking-[var(--body-text-16-medium-letter-spacing)] leading-[var(--body-text-16-medium-line-height)] [font-style:var(--body-text-16-medium-font-style)]"
+                  >
+                    Class Artsfest
+                  </div>
+                </div>
+                <p
+                  class="relative w-[926px] font-body-text-16-regular font-[number:var(--body-text-16-regular-font-weight)] text-shadesdark-80 text-[length:var(--body-text-16-regular-font-size)] tracking-[var(--body-text-16-regular-letter-spacing)] leading-[var(--body-text-16-regular-line-height)] [font-style:var(--body-text-16-regular-font-style)]"
+                >
+                  27th Batch of Darul Hidaya Da&#39;wa College, class union (QUAF) Qualitative Union for Academic Focus,
+                  organized a class Artsfest under the name &#34;MALABART.&#34; Inspired by history of Malabar
+                  Muslims.10/11/2024 The logo was launched by Ustad Abdul Kareem Thangal, Three teams and names were
+                  announced by class teacher Munavvar Hudawi. Coordinators: Ustad Nasik, Ustad Ramees, Ustad Mazin
+                  Sha.<br /><br />Behind The Teams Name These Names (ARAKKAL, MARAKKAR, MAKHDOOM) were more important in
+                  the history of Malabar, especially, when the time of Portuguese and British colonialization. These
+                  dynasties were attacked against them to get freedom to India.<br /><br />3 Teams, 33 Candidates, 30+
+                  Stage Programs, 20+ Non-stage Programs
+                </p>
+              </div>
+            </div>
+            <div
+              class="absolute top-[378px] left-4 w-[57px] h-[43px] rounded-xl [background:url(https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-41.png)_50%_50%_/_cover]"
+            ></div>
+            <div
+              class="absolute top-[378px] left-[77px] w-[57px] h-[43px] rounded-xl [background:url(https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-42.png)_50%_50%_/_cover]"
+            ></div>
+            <div
+              class="absolute top-[378px] left-[139px] w-[57px] h-[43px] rounded-xl [background:url(https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-43.png)_50%_50%_/_cover]"
+            ></div>
+          </div>
+          <div class="flex flex-col items-start gap-6 relative self-stretch w-full flex-[0_0_auto]">
+            <div
+              class="flex items-center justify-between px-6 py-8 relative self-stretch w-full flex-[0_0_auto] bg-maindark rounded-2xl"
+            >
+              <div class="inline-flex items-center gap-8 relative flex-[0_0_auto]">
+                <img class="relative flex-[0_0_auto]" src="https://c.animaapp.com/mjwngvpjWKAdmV/img/frame-37678.svg" />
+                <div
+                  class="relative w-fit [font-family:'ABeeZee',Helvetica] font-normal text-mainwhite text-2xl text-center tracking-[-0.24px] leading-[28.8px] whitespace-nowrap"
+                >
+                  Saturday, March-01-2025
+                </div>
+              </div>
+              <div
+                class="relative w-fit [font-family:'ABeeZee',Helvetica] font-normal text-mainwhite text-2xl text-center tracking-[-0.24px] leading-[28.8px] whitespace-nowrap"
+              >
+                Programs &amp; Reports
+              </div>
+            </div>
+            <div class="inline-flex flex-[0_0_auto] items-center gap-5 p-4 relative bg-shadessecondary-15 rounded-2xl">
+              <div
+                class="relative w-[180px] h-[135px] rounded-xl [background:radial-gradient(50%_50%_at_50%_50%,rgba(255,255,255,1)_0%,rgba(237,237,237,1)_20%,rgba(26,26,26,1)_100%)]"
+              >
+                <img
+                  class="absolute top-0 left-0 w-[180px] h-[135px]"
+                  src="https://c.animaapp.com/mjwngvpjWKAdmV/img/mask-group-2.png"
+                />
+              </div>
+              <div class="inline-flex flex-col items-start gap-4 relative flex-[0_0_auto]">
+                <div class="flex flex-col w-[938px] items-start relative flex-[0_0_auto]">
+                  <div class="flex items-center justify-between relative self-stretch w-full flex-[0_0_auto]">
+                    <div
+                      class="relative w-fit mt-[-1.00px] [font-family:'ABeeZee',Helvetica] font-normal text-maindark text-2xl tracking-[-0.24px] leading-[28.8px] whitespace-nowrap"
+                    >
+                      Career Development Program
+                    </div>
+                    <div
+                      class="relative w-fit mt-[-1.00px] [font-family:'ABeeZee',Helvetica] font-normal text-maindark text-2xl tracking-[-0.24px] leading-[28.8px] whitespace-nowrap"
+                    >
+                      March-1- April-1
+                    </div>
+                  </div>
+                  <div
+                    class="relative self-stretch font-body-text-16-medium font-[number:var(--body-text-16-medium-font-weight)] text-maindark text-[length:var(--body-text-16-medium-font-size)] tracking-[var(--body-text-16-medium-letter-spacing)] leading-[var(--body-text-16-medium-line-height)] [font-style:var(--body-text-16-medium-font-style)]"
+                  >
+                    Ramadan Vocation
+                  </div>
+                </div>
+                <p
+                  class="relative w-[926px] [font-family:'Manrope',Helvetica] font-normal text-shadesdark-80 text-base tracking-[0] leading-4"
+                >
+                  <span class="leading-[25.6px]"
+                    >From March 1 (Saturday) to April 1, 2025, the Quaf Organization conducted a Career Development
+                    Program aimed at enhancing students’ overall skills. The program focused on developing proficiency
+                    in four languages—Arabic, Urdu, English, and Malayalam—along with Quran recitation with Tajweed,
+                    covering Surah Al-Fatiha and Surah Ad-Duha through Surah An-Nas.<br
+                  /></span>
+                  <span
+                    class="font-[number:var(--body-text-16-regular-font-weight)] leading-[var(--body-text-16-regular-line-height)] font-body-text-16-regular [font-style:var(--body-text-16-regular-font-style)] tracking-[var(--body-text-16-regular-letter-spacing)] text-[length:var(--body-text-16-regular-font-size)]"
+                    >Other programs:</span
+                  >
+                </p>
+              </div>
+            </div>
+            <div
+              class="flex h-[178px] self-stretch w-full items-center gap-5 p-4 relative bg-shadessecondary-15 rounded-2xl"
+            >
+              <div class="inline-flex flex-col items-start gap-4 relative flex-[0_0_auto]">
+                <div class="flex flex-col w-[938px] items-start relative flex-[0_0_auto]">
+                  <div class="flex items-center justify-between relative self-stretch w-full flex-[0_0_auto]"></div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="absolute top-[362px] left-[148px] w-[95px] h-[156px] rounded-xl [background:url(https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-44.png)_50%_50%_/_cover]"
+            ></div>
+            <div
+              class="absolute top-[362px] left-[269px] w-[95px] h-[156px] rounded-xl [background:url(https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-45.png)_50%_50%_/_cover]"
+            ></div>
+            <div
+              class="absolute top-[362px] left-[390px] w-[95px] h-[156px] rounded-xl [background:url(https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-46.png)_50%_50%_/_cover]"
+            ></div>
+            <div
+              class="absolute top-[362px] left-[511px] w-[95px] h-[156px] rounded-xl [background:url(https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-47.png)_50%_50%_/_cover]"
+            ></div>
+            <div
+              class="absolute top-[362px] left-[632px] w-[95px] h-[156px] rounded-xl [background:url(https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-48.png)_50%_50%_/_cover]"
+            ></div>
+            <div
+              class="absolute top-[362px] left-[753px] w-[154px] h-[156px] rounded-xl bg-[url(https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-49.png)] bg-cover bg-[50%_50%]"
+            ></div>
+            <div
+              class="absolute top-[362px] left-[933px] w-[95px] h-[75px] rounded-xl [background:url(https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-50.png)_50%_50%_/_cover]"
+            ></div>
+            <div
+              class="absolute top-[362px] left-[1047px] w-[95px] h-[75px] rounded-xl [background:url(https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-51.png)_50%_50%_/_cover]"
+            ></div>
+            <div
+              class="absolute top-[443px] left-[1047px] w-[95px] h-[75px] rounded-xl [background:url(https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-52.png)_50%_50%_/_cover]"
+            ></div>
+            <div
+              class="absolute top-[443px] left-[933px] w-[95px] h-[75px] rounded-xl [background:url(https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-53.png)_50%_50%_/_cover]"
+            ></div>
+          </div>
+          <div
+            class="absolute top-[1733px] left-7 w-[95px] h-[156px] rounded-xl [background:url(https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-36.png)_50%_50%_/_cover]"
+          ></div>
+          <div class="flex flex-col items-start gap-6 relative self-stretch w-full flex-[0_0_auto]">
+            <div
+              class="flex items-center justify-between px-6 py-8 relative self-stretch w-full flex-[0_0_auto] bg-maindark rounded-2xl"
+            >
+              <div class="inline-flex items-center gap-8 relative flex-[0_0_auto]">
+                <img class="relative flex-[0_0_auto]" src="https://c.animaapp.com/mjwngvpjWKAdmV/img/frame-37678.svg" />
+                <div
+                  class="relative w-fit [font-family:'ABeeZee',Helvetica] font-normal text-mainwhite text-2xl text-center tracking-[-0.24px] leading-[28.8px] whitespace-nowrap"
+                >
+                  December,2025
+                </div>
+              </div>
+              <div
+                class="relative w-fit [font-family:'ABeeZee',Helvetica] font-normal text-mainwhite text-2xl text-center tracking-[-0.24px] leading-[28.8px] whitespace-nowrap"
+              >
+                Programs &amp; Reports
+              </div>
+            </div>
+            <div class="inline-flex h-[323px] items-center gap-5 p-4 relative bg-shadessecondary-15 rounded-2xl">
+              <div
+                class="relative w-[180px] h-[135px] rounded-xl [background:radial-gradient(50%_50%_at_50%_50%,rgba(255,255,255,1)_0%,rgba(237,237,237,1)_20%,rgba(26,26,26,1)_100%)]"
+              >
+                <img
+                  class="absolute top-0 left-0 w-[180px] h-[135px]"
+                  src="https://c.animaapp.com/mjwngvpjWKAdmV/img/mask-group-3.png"
+                />
+              </div>
+              <div class="inline-flex flex-col items-start gap-4 relative flex-[0_0_auto]">
+                <div class="flex flex-col w-[938px] items-start relative flex-[0_0_auto]">
+                  <div class="flex items-center justify-between relative self-stretch w-full flex-[0_0_auto]">
+                    <div
+                      class="relative w-fit mt-[-1.00px] [font-family:'ABeeZee',Helvetica] font-normal text-maindark text-2xl tracking-[-0.24px] leading-[28.8px] whitespace-nowrap"
+                    >
+                      KALWAR
+                    </div>
+                    <div
+                      class="relative w-fit mt-[-1.00px] mr-[-1.00px] [font-family:'ABeeZee',Helvetica] font-normal text-maindark text-2xl tracking-[-0.24px] leading-[28.8px] whitespace-nowrap"
+                    ></div>
+                  </div>
+                  <div
+                    class="relative self-stretch font-body-text-16-medium font-[number:var(--body-text-16-medium-font-weight)] text-maindark text-[length:var(--body-text-16-medium-font-size)] tracking-[var(--body-text-16-medium-letter-spacing)] leading-[var(--body-text-16-medium-line-height)] [font-style:var(--body-text-16-medium-font-style)]"
+                  >
+                    Class Artsfest
+                  </div>
+                </div>
+                <p
+                  class="relative w-[926px] font-body-text-16-regular font-[number:var(--body-text-16-regular-font-weight)] text-shadesdark-80 text-[length:var(--body-text-16-regular-font-size)] tracking-[var(--body-text-16-regular-letter-spacing)] leading-[var(--body-text-16-regular-line-height)] [font-style:var(--body-text-16-regular-font-style)]"
+                >
+                  27th Batch of Darul Hidaya Da&#39;wa College, class union (QUAF) Qualitative Union for Academic Focus,
+                  organized a class Artsfest under the name &#34;KALWAR.&#34; Three teams and names were announced by
+                  class teacher Munavvar Hudawi. <br /><br />Behind The Teams Name These Names (BURSA, EDIRNE, ISTANBUL)
+                  were more important in Islamic history.<br /><br />3 Teams, 27 Candidates, 30+ Stage Programs, 20+
+                  Non-stage Programs and 10+ Sports
+                </p>
+              </div>
+            </div>
+            <div
+              class="absolute top-[371px] left-4 w-[57px] h-[43px] rounded-xl bg-[url(https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-54.png)] bg-cover bg-[50%_50%]"
+            ></div>
+            <div
+              class="absolute top-[371px] left-[77px] w-[57px] h-[43px] rounded-xl bg-[url(https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-55.png)] bg-cover bg-[50%_50%]"
+            ></div>
+            <div
+              class="absolute top-[371px] left-[139px] w-[57px] h-[43px] rounded-xl bg-[url(https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-56.png)] bg-cover bg-[50%_50%]"
+            ></div>
+          </div>
+          <button
+            class="all-[unset] box-border px-6 py-3.5 relative flex-[0_0_auto] bg-mainprimary inline-flex items-center justify-center gap-2 rounded-lg"
+          >
+            <div
+              class="relative w-fit mt-[-1.00px] font-body-text-16-semibold font-[number:var(--body-text-16-semibold-font-weight)] text-mainwhite text-[length:var(--body-text-16-semibold-font-size)] text-center tracking-[var(--body-text-16-semibold-letter-spacing)] leading-[var(--body-text-16-semibold-line-height)] whitespace-nowrap [font-style:var(--body-text-16-semibold-font-style)]"
+            >
+              See All Schedule
+            </div>
+          </button>
+        </div>
+        <img
+          class="absolute top-[158px] left-[135px] w-[1172px] h-[95px]"
+          src="https://c.animaapp.com/mjwngvpjWKAdmV/img/elements.png"
+        />
+      </div>
+      <div
+        class="flex-col gap-16 px-[135px] py-[100px] self-stretch w-full bg-shadessecondary-15 flex items-start relative flex-[0_0_auto]"
+      >
+        <div class="flex w-[1170px] items-center justify-between relative flex-[0_0_auto]">
+          <p
+            class="relative w-fit mt-[-2.00px] ml-[-1.00px] [-webkit-text-stroke:1px_#000000] [font-family:'Alfa_Slab_One',Helvetica] font-normal text-maindark text-[50px] tracking-[1.00px] leading-[55.0px]"
+          >
+            <span class="text-[#0088ff] tracking-[0.50px]">40th Batch<br /></span>
+            <span class="text-white text-[46px] tracking-[0.42px] leading-[50.6px]">Darul Huda Islamic University</span>
+          </p>
+          <button
+            class="all-[unset] box-border px-6 py-3.5 relative flex-[0_0_auto] border border-solid border-[#0e0b0b] inline-flex items-center justify-center gap-2 rounded-lg"
+          >
+            <div
+              class="relative w-fit mt-[-1.00px] font-body-text-16-semibold font-[number:var(--body-text-16-semibold-font-weight)] text-maindark text-[length:var(--body-text-16-semibold-font-size)] text-center tracking-[var(--body-text-16-semibold-letter-spacing)] leading-[var(--body-text-16-semibold-line-height)] whitespace-nowrap [font-style:var(--body-text-16-semibold-font-style)]"
+            >
+              Academic Focus
+            </div>
+          </button>
+        </div>
+        <div class="w-[1170px] gap-[30px] flex items-start relative flex-[0_0_auto]">
+          <div class="relative w-[270px] h-[488px]">
+            <img
+              class="absolute top-[calc(50.00%_-_244px)] left-[calc(50.00%_-_135px)] w-[270px] h-[488px] rounded-2xl object-cover"
+              src="https://c.animaapp.com/mjwngvpjWKAdmV/img/text.png"
+            />
+          </div>
+          <div class="relative w-[270px] h-[488px]">
+            <div
+              class="flex flex-col w-[270px] h-[488px] items-start justify-end gap-1 p-5 relative top-[calc(50.00%_-_244px)] left-[calc(50.00%_-_135px)] rounded-2xl [background:url(https://c.animaapp.com/mjwngvpjWKAdmV/img/text-1.png)_50%_50%_/_cover]"
+            ></div>
+          </div>
+          <div class="relative w-[270px] h-[488px]">
+            <div
+              class="flex flex-col w-[270px] h-[488px] items-start justify-end gap-1 p-5 relative top-[calc(50.00%_-_244px)] left-[calc(50.00%_-_135px)] rounded-2xl [background:url(https://c.animaapp.com/mjwngvpjWKAdmV/img/text-2.png)_50%_50%_/_cover]"
+            >
+              <div
+                class="relative flex items-center justify-center self-stretch h-6 [font-family:'ABeeZee',Helvetica] font-normal text-mainwhite text-2xl tracking-[-0.24px] leading-[28.8px] whitespace-nowrap"
+              >
+                Group Photo
+              </div>
+              <div
+                class="relative self-stretch font-body-text-12-semi-bold-UC font-[number:var(--body-text-12-semi-bold-UC-font-weight)] text-shadesdark-10 text-[length:var(--body-text-12-semi-bold-UC-font-size)] tracking-[var(--body-text-12-semi-bold-UC-letter-spacing)] leading-[var(--body-text-12-semi-bold-UC-line-height)] [font-style:var(--body-text-12-semi-bold-UC-font-style)]"
+              >
+                26K VIEWS
+              </div>
+            </div>
+          </div>
+          <div class="relative w-[270px] h-[488px]">
+            <div class="absolute top-0 left-0 w-[270px] h-[488px] flex bg-[100%_100%]">
+              <img class="w-[270px] h-[488px]" src="https://c.animaapp.com/mjwngvpjWKAdmV/img/reel-1.png" />
+            </div>
+            <div
+              class="flex flex-col w-[270px] h-[488px] items-start justify-end gap-1 p-5 absolute top-[calc(50.00%_-_244px)] left-[calc(50.00%_-_135px)] rounded-2xl [background:url(https://c.animaapp.com/mjwngvpjWKAdmV/img/text-3.png)_50%_50%_/_cover]"
+            >
+              <div
+                class="relative flex items-center justify-center self-stretch h-6 [font-family:'ABeeZee',Helvetica] font-normal text-mainwhite text-2xl tracking-[-0.24px] leading-[28.8px] whitespace-nowrap"
+              >
+                QUAF
+              </div>
+              <div
+                class="relative self-stretch font-body-text-12-semi-bold-UC font-[number:var(--body-text-12-semi-bold-UC-font-weight)] text-shadesdark-10 text-[length:var(--body-text-12-semi-bold-UC-font-size)] tracking-[var(--body-text-12-semi-bold-UC-letter-spacing)] leading-[var(--body-text-12-semi-bold-UC-line-height)] [font-style:var(--body-text-12-semi-bold-UC-font-style)]"
+              >
+                30K VIEWS
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="flex flex-col items-center gap-16 px-[135px] py-[120px] relative self-stretch w-full flex-[0_0_auto]">
+        <img
+          class="absolute top-[1121px] left-[623px] w-[151px] h-[191px]"
+          src="https://c.animaapp.com/mjwngvpjWKAdmV/img/image-8.png"
+        />
+        <div class="flex flex-col w-[512px] items-center gap-4 relative flex-[0_0_auto]">
+          <div
+            class="relative w-fit mt-[-1.00px] ml-[-23.00px] mr-[-23.00px] [font-family:'Clash_Display-Semibold',Helvetica] font-normal text-maindark text-[46px] text-center tracking-[0.92px] leading-[50.6px] whitespace-nowrap"
+          >
+            Check our latest gallery
+          </div>
+          <p
+            class="relative w-[493px] font-body-text-16-regular font-[number:var(--body-text-16-regular-font-weight)] text-shadesdark-80 text-[length:var(--body-text-16-regular-font-size)] text-center tracking-[var(--body-text-16-regular-letter-spacing)] leading-[var(--body-text-16-regular-line-height)] [font-style:var(--body-text-16-regular-font-style)]"
+          >
+            A glimpse into our creative programs in action.<br />
+            Empowering talent through learning and collaboration.
+          </p>
+        </div>
+        <img
+          class="relative self-stretch w-full flex-[0_0_auto]"
+          src="https://c.animaapp.com/mjwngvpjWKAdmV/img/images.svg"
+        />
+        <button
+          class="all-[unset] box-border px-6 py-3.5 relative flex-[0_0_auto] bg-mainprimary inline-flex items-center justify-center gap-2 rounded-lg"
+        >
+          <div
+            class="relative w-fit mt-[-1.00px] font-body-text-16-semibold font-[number:var(--body-text-16-semibold-font-weight)] text-mainwhite text-[length:var(--body-text-16-semibold-font-size)] text-center tracking-[var(--body-text-16-semibold-letter-spacing)] leading-[var(--body-text-16-semibold-line-height)] whitespace-nowrap [font-style:var(--body-text-16-semibold-font-style)]"
+          >
+            View All Gallery
+          </div>
+        </button>
+      </div>
+      <footer
+        class="flex flex-col w-[1440px] h-[590px] items-start gap-2 pt-[100px] pb-8 px-[135px] absolute top-[11331px] left-0 bg-transparent"
+      >
+        <img class="absolute w-full h-[99.83%] top-0 left-0" src="https://c.animaapp.com/mjwngvpjWKAdmV/img/bg.png" />
+        <div class="inline-flex flex-col items-center gap-[100px] relative flex-[0_0_auto]">
+          <div class="flex flex-col w-[751px] items-center gap-12 relative flex-[0_0_auto]">
+            <div class="flex flex-col items-center gap-4 relative self-stretch w-full flex-[0_0_auto]">
+              <p
+                class="relative self-stretch mt-[-1.00px] [font-family:'Clash_Display-Semibold',Helvetica] font-normal text-mainwhite text-[46px] text-center tracking-[0.92px] leading-[50.6px]"
+              >
+                Never miss a single news
+              </p>
+              <p
+                class="relative w-[730px] font-body-text-16-regular font-[number:var(--body-text-16-regular-font-weight)] text-shadesdark-15 text-[length:var(--body-text-16-regular-font-size)] text-center tracking-[var(--body-text-16-regular-letter-spacing)] leading-[var(--body-text-16-regular-line-height)] [font-style:var(--body-text-16-regular-font-style)]"
+              >
+                Stay informed with all the latest updates and news about our programs. Never miss a moment of our
+                exciting and innovative gatherings in the world of technology and beyond.
+              </p>
+            </div>
+            <div class="justify-center gap-4 inline-flex items-center relative flex-[0_0_auto]">
+              <div
+                class="flex w-[394px] h-14 items-center gap-2.5 px-6 py-[18px] relative bg-mainwhite rounded-lg overflow-hidden"
+              >
+                <p
+                  class="relative w-fit mt-[-4.00px] mb-[-2.00px] [font-family:'Manrope',Helvetica] font-normal text-shadesdark-80 text-base tracking-[0] leading-4"
+                >
+                  <span
+                    class="leading-[var(--body-text-16-regular-line-height)] font-body-text-16-regular [font-style:var(--body-text-16-regular-font-style)] font-[number:var(--body-text-16-regular-font-weight)] tracking-[var(--body-text-16-regular-letter-spacing)] text-[length:var(--body-text-16-regular-font-size)]"
+                    >Enter your email address</span
+                  >
+                </p>
+              </div>
+              <button
+                class="all-[unset] box-border px-6 py-3.5 relative flex-[0_0_auto] bg-mainprimary inline-flex items-center justify-center gap-2 rounded-lg"
+              >
+                <div
+                  class="relative w-fit mt-[-1.00px] [font-family:'Manrope',Helvetica] font-semibold text-mainwhite text-base text-center tracking-[0] leading-[25.6px] whitespace-nowrap"
+                >
+                  Subscribe
+                </div>
+              </button>
+            </div>
+          </div>
+          <div class="flex-col w-[1170px] gap-8 flex items-start relative flex-[0_0_auto]">
+            <div class="flex items-center justify-between relative self-stretch w-full flex-[0_0_auto]">
+              <div
+                class="relative w-fit mt-[-1.00px] [font-family:'ADLaM_Display',Helvetica] font-normal text-mainwhite text-[28px] text-center tracking-[-0.28px] leading-[30.8px] whitespace-nowrap"
+              >
+                QUAF
+              </div>
+              <div class="inline-flex items-center gap-10 relative flex-[0_0_auto]">
+                <div
+                  class="relative w-fit mt-[-1.00px] font-body-text-16-medium font-[number:var(--body-text-16-medium-font-weight)] text-mainwhite text-[length:var(--body-text-16-medium-font-size)] tracking-[var(--body-text-16-medium-letter-spacing)] leading-[var(--body-text-16-medium-line-height)] whitespace-nowrap [font-style:var(--body-text-16-medium-font-style)]"
+                ></div>
+                <div
+                  class="relative w-fit mt-[-1.00px] font-body-text-16-medium font-[number:var(--body-text-16-medium-font-weight)] text-mainwhite text-[length:var(--body-text-16-medium-font-size)] tracking-[var(--body-text-16-medium-letter-spacing)] leading-[var(--body-text-16-medium-line-height)] whitespace-nowrap [font-style:var(--body-text-16-medium-font-style)]"
+                ></div>
+                <div
+                  class="relative w-fit mt-[-1.00px] font-body-text-16-medium font-[number:var(--body-text-16-medium-font-weight)] text-mainwhite text-[length:var(--body-text-16-medium-font-size)] tracking-[var(--body-text-16-medium-letter-spacing)] leading-[var(--body-text-16-medium-line-height)] whitespace-nowrap [font-style:var(--body-text-16-medium-font-style)]"
+                ></div>
+                <div
+                  class="relative w-fit mt-[-1.00px] font-body-text-16-medium font-[number:var(--body-text-16-medium-font-weight)] text-mainwhite text-[length:var(--body-text-16-medium-font-size)] tracking-[var(--body-text-16-medium-letter-spacing)] leading-[var(--body-text-16-medium-line-height)] whitespace-nowrap [font-style:var(--body-text-16-medium-font-style)]"
+                ></div>
+                <div
+                  class="relative w-fit mt-[-1.00px] font-body-text-16-medium font-[number:var(--body-text-16-medium-font-weight)] text-mainwhite text-[length:var(--body-text-16-medium-font-size)] tracking-[var(--body-text-16-medium-letter-spacing)] leading-[var(--body-text-16-medium-line-height)] whitespace-nowrap [font-style:var(--body-text-16-medium-font-style)]"
+                ></div>
+                <div
+                  class="relative w-fit mt-[-1.00px] font-body-text-16-medium font-[number:var(--body-text-16-medium-font-weight)] text-mainwhite text-[length:var(--body-text-16-medium-font-size)] tracking-[var(--body-text-16-medium-letter-spacing)] leading-[var(--body-text-16-medium-line-height)] whitespace-nowrap [font-style:var(--body-text-16-medium-font-style)]"
+                ></div>
+                <div
+                  class="relative w-fit mt-[-1.00px] mr-[-1.00px] font-body-text-16-medium font-[number:var(--body-text-16-medium-font-weight)] text-mainwhite text-[length:var(--body-text-16-medium-font-size)] tracking-[var(--body-text-16-medium-letter-spacing)] leading-[var(--body-text-16-medium-line-height)] whitespace-nowrap [font-style:var(--body-text-16-medium-font-style)]"
+                ></div>
+              </div>
+            </div>
+            <div class="flex flex-col items-start gap-8 relative self-stretch w-full flex-[0_0_auto]">
+              <div class="relative w-[1170px] h-0.5 bg-shadesdark-60 opacity-40"></div>
+              <div class="justify-between self-stretch w-full flex items-start relative flex-[0_0_auto]">
+                <p
+                  class="relative w-fit mt-[-1.00px] font-body-text-16-regular font-[number:var(--body-text-16-regular-font-weight)] text-shadesdark-15 text-[length:var(--body-text-16-regular-font-size)] text-center tracking-[var(--body-text-16-regular-letter-spacing)] leading-[var(--body-text-16-regular-line-height)] whitespace-nowrap [font-style:var(--body-text-16-regular-font-style)]"
+                >
+                  Copyright © QUAF-2026 All Rights Reserved
+                </p>
+                <div class="inline-flex items-start gap-6 relative flex-[0_0_auto]">
+                  <div
+                    class="relative w-fit mt-[-1.00px] font-body-text-16-regular font-[number:var(--body-text-16-regular-font-weight)] text-mainwhite text-[length:var(--body-text-16-regular-font-size)] text-center tracking-[var(--body-text-16-regular-letter-spacing)] leading-[var(--body-text-16-regular-line-height)] whitespace-nowrap [font-style:var(--body-text-16-regular-font-style)]"
+                  >
+                    Terms &amp; Conditions
+                  </div>
+                  <div
+                    class="relative w-fit mt-[-1.00px] font-body-text-16-regular font-[number:var(--body-text-16-regular-font-weight)] text-mainwhite text-[length:var(--body-text-16-regular-font-size)] text-center tracking-[var(--body-text-16-regular-letter-spacing)] leading-[var(--body-text-16-regular-line-height)] whitespace-nowrap [font-style:var(--body-text-16-regular-font-style)]"
+                  >
+                    Privacy Policy
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <img
+            class="absolute -top-0.5 left-0 w-[1129px] h-[226px]"
+            src="https://c.animaapp.com/mjwngvpjWKAdmV/img/bg-shape-1.png"
+          />
+        </div>
+      </footer>
+      <div
+        class="absolute top-[11766px] left-[1037px] w-[41px] h-[29px] bg-[url(https://c.animaapp.com/mjwngvpjWKAdmV/img/vector-3.svg)] bg-[100%_100%]"
+      ></div>
+      <img
+        class="absolute top-[11766px] left-[1147px] w-[29px] h-[29px]"
+        src="https://c.animaapp.com/mjwngvpjWKAdmV/img/facebook.svg"
+      />
+      <img
+        class="absolute top-[11766px] left-[1196px] w-[29px] h-[29px]"
+        src="https://c.animaapp.com/mjwngvpjWKAdmV/img/whatsapp.svg"
+      />
+      <div
+        class="flex flex-col w-[1440px] items-start gap-[126px] pt-20 pb-36 px-[135px] absolute top-[10877px] left-0"
+      >
+        <div class="relative w-[1170px] h-[310px] bg-maindark rounded-2xl">
+          <div
+            class="absolute w-[28.68%] h-[44.70%] top-[9.64%] left-0 bg-[#febf00b2] rounded-[167.78px/69.28px] blur-[185px]"
+          ></div>
+          <div
+            class="absolute w-[25.14%] h-[39.18%] top-[50.00%] left-[72.91%] bg-[#4399e2b2] rounded-[147.06px/60.73px] blur-[175px]"
+          ></div>
+        </div>
+        <div class="flex w-[1170px] items-end justify-between px-14 py-0 absolute left-[135px] bottom-36">
+          <div class="inline-flex flex-col items-start gap-8 pt-0 pb-14 px-0 relative flex-[0_0_auto]">
+            <div class="inline-flex flex-col items-start gap-4 relative flex-[0_0_auto]">
+              <div
+                class="relative w-fit mt-[-1.00px] [font-family:'ADLaM_Display',Helvetica] font-normal text-mainwhite text-[40px] tracking-[0.80px] leading-[44px] whitespace-nowrap"
+              >
+                Let’s join our community
+              </div>
+              <p
+                class="relative w-[607px] font-body-text-16-regular font-[number:var(--body-text-16-regular-font-weight)] text-shadesdark-15 text-[length:var(--body-text-16-regular-font-size)] tracking-[var(--body-text-16-regular-letter-spacing)] leading-[var(--body-text-16-regular-line-height)] [font-style:var(--body-text-16-regular-font-style)]"
+              >
+                Join our community to participate in our programs and learn more about our education system.
+              </p>
+            </div>
+            <button
+              class="all-[unset] box-border px-6 py-3.5 relative flex-[0_0_auto] bg-mainsecondary inline-flex items-center justify-center gap-2 rounded-lg"
+            >
+              <div
+                class="relative w-fit mt-[-1.00px] font-body-text-16-semibold font-[number:var(--body-text-16-semibold-font-weight)] text-maindark text-[length:var(--body-text-16-semibold-font-size)] text-center tracking-[var(--body-text-16-semibold-letter-spacing)] leading-[var(--body-text-16-semibold-line-height)] whitespace-nowrap [font-style:var(--body-text-16-semibold-font-style)]"
+              >
+                Join now
+              </div>
+            </button>
+          </div>
+          <img class="relative w-[298px] h-[470px]" src="https://c.animaapp.com/mjwngvpjWKAdmV/img/image.png" />
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
+
+globals.css:
+@import url("https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css");
+@import url("https://fonts.googleapis.com/css?family=Manrope:var(--body-text-18-medium-font-weight),var(--body-text-12-semi-bold-UC-font-weight),var(--body-text-16-regular-font-weight),600,var(--body-text-18-bold-font-weight),var(--body-text-16-semibold-font-weight),var(--body-text-16-medium-font-weight),400|Abel:400|Inika:700,400|Alfa+Slab+One:400|ABeeZee:400|ADLaM+Display:400");
+* {
+  -webkit-font-smoothing: antialiased;
+  box-sizing: border-box;
+}
+html,
+body {
+  margin: 0px;
+  height: 100%;
+}
+/* a blue color as a generic focus style */
+button:focus-visible {
+  outline: 2px solid #4a90e2 !important;
+  outline: -webkit-focus-ring-color auto 5px !important;
+}
+a {
+  text-decoration: none;
+}
+
+styleguide.css:
+:root {
+  --maindark: rgba(15, 11, 12, 1);
+  --mainwhite: rgba(255, 255, 255, 1);
+  --shadesdark-30: rgba(183, 182, 182, 1);
+  --mainprimary: rgba(122, 56, 252, 1);
+  --shadesdark-15: rgba(219, 218, 219, 1);
+  --mainsecondary: rgba(254, 191, 0, 1);
+  --maintertiary: rgba(251, 113, 76, 1);
+  --shadessecondary-15: rgba(255, 245, 217, 1);
+  --shadesdark-5: rgba(243, 243, 243, 1);
+  --shadesdark-60: rgba(111, 109, 109, 1);
+  --shadesdark-40: rgba(159, 157, 158, 1);
+  --shadesprimary-10: rgba(242, 235, 255, 1);
+  --shadesdark-80: rgba(63, 60, 61, 1);
+  --shadesdark-10: rgba(231, 231, 231, 1);
+  --body-text-16-medium-font-family: "Manrope", Helvetica;
+  --body-text-16-medium-font-weight: 500;
+  --body-text-16-medium-font-size: 16px;
+  --body-text-16-medium-letter-spacing: 0px;
+  --body-text-16-medium-line-height: 160%;
+  --body-text-16-medium-font-style: normal;
+  --body-text-16-semibold-font-family: "Manrope", Helvetica;
+  --body-text-16-semibold-font-weight: 600;
+  --body-text-16-semibold-font-size: 16px;
+  --body-text-16-semibold-letter-spacing: 0px;
+  --body-text-16-semibold-line-height: 160%;
+  --body-text-16-semibold-font-style: normal;
+  --body-text-18-bold-font-family: "Manrope", Helvetica;
+  --body-text-18-bold-font-weight: 700;
+  --body-text-18-bold-font-size: 18px;
+  --body-text-18-bold-letter-spacing: 0px;
+  --body-text-18-bold-line-height: 160%;
+  --body-text-18-bold-font-style: normal;
+  --body-text-16-regular-font-family: "Manrope", Helvetica;
+  --body-text-16-regular-font-weight: 400;
+  --body-text-16-regular-font-size: 16px;
+  --body-text-16-regular-letter-spacing: 0px;
+  --body-text-16-regular-line-height: 160%;
+  --body-text-16-regular-font-style: normal;
+  --body-text-12-semi-bold-UC-font-family: "Manrope", Helvetica;
+  --body-text-12-semi-bold-UC-font-weight: 600;
+  --body-text-12-semi-bold-UC-font-size: 12px;
+  --body-text-12-semi-bold-UC-letter-spacing: 0px;
+  --body-text-12-semi-bold-UC-line-height: 130%;
+  --body-text-12-semi-bold-UC-font-style: normal;
+  --body-text-18-medium-font-family: "Manrope", Helvetica;
+  --body-text-18-medium-font-weight: 500;
+  --body-text-18-medium-font-size: 18px;
+  --body-text-18-medium-letter-spacing: 0px;
+  --body-text-18-medium-line-height: 160%;
+  --body-text-18-medium-font-style: normal;
+}
+
+this is my current website codes, it is not perfect in responsiveness for all devices,
+i want to fit the width of website for all devices with fully responsive currently the design is over the screen i mean out of screen without fitting
+make me solution and give me full updated codes for each files
