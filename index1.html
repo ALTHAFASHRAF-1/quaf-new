@@ -4,19 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>QUAF - Qualitative Union for Academic Focus</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Abel&family=ABeeZee&family=Alfa+Slab+One&family=ADLaM+Display&family=Inika&family=Manrope:wght@300;400;500;600;700;800&family=Clash+Display:wght@600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Abel&family=ABeeZee&family=Alfa+Slab+One&family=ADLaM+Display&family=Inika:wght@400;700&family=Manrope:wght@300;400;500;600;700;800&family=Clash+Display:wght@600&display=swap" rel="stylesheet">
     <style>
-        /* CSS Variables */
         :root {
             --maindark: #0f0b0c;
             --mainprimary: #7a38fc;
             --mainsecondary: #febf00;
             --maintertiary: #fb714c;
             --mainwhite: #ffffff;
-            
             --shadesdark-5: #f3f3f3;
             --shadesdark-10: #e7e7e7;
             --shadesdark-15: #dbdadb;
@@ -24,21 +23,10 @@
             --shadesdark-40: #9f9d9e;
             --shadesdark-60: #6f6d6d;
             --shadesdark-80: #3f3c3d;
-            
             --shadesprimary-10: #f2ebff;
             --shadessecondary-15: #fff5d9;
-            
-            /* Font Families */
-            --font-manrope: 'Manrope', Helvetica, sans-serif;
-            --font-abel: 'Abel', sans-serif;
-            --font-inika: 'Inika', serif;
-            --font-alfaslab: 'Alfa Slab One', cursive;
-            --font-abeeyzee: 'ABeeZee', sans-serif;
-            --font-adlam: 'ADLaM Display', cursive;
-            --font-clash: 'Clash Display', sans-serif;
         }
         
-        /* Reset & Base Styles */
         * {
             margin: 0;
             padding: 0;
@@ -50,55 +38,116 @@
         }
         
         body {
-            font-family: var(--font-manrope);
-            font-size: 14px;
+            font-family: 'Manrope', sans-serif;
+            font-size: 13px;
             line-height: 1.5;
             color: var(--maindark);
             background-color: var(--mainwhite);
             overflow-x: hidden;
         }
         
-        h1, h2, h3, h4, h5, h6 {
-            font-weight: 700;
-            line-height: 1.2;
-            margin-bottom: 0.75rem;
-        }
-        
-        a {
-            text-decoration: none;
-            color: inherit;
-        }
-        
-        img {
-            max-width: 100%;
-            height: auto;
-            display: block;
-        }
-        
         .container {
             width: 100%;
-            max-width: 1200px;
+            max-width: 1000px;
             margin: 0 auto;
             padding: 0 1rem;
         }
         
-        section {
-            padding: 2.5rem 0;
+        .hero-section {
+            background: linear-gradient(rgba(15, 11, 12, 0.9), rgba(15, 11, 12, 0.9)), 
+                        url('https://c.animaapp.com/mjwngvpjWKAdmV/img/hero-bg.png');
+            background-size: cover;
+            background-position: center;
+            color: var(--mainwhite);
+            min-height: 75vh;
+            position: relative;
+        }
+        
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-family: 'Abel', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+        
+        .logo img {
+            width: 30px;
+            height: 30px;
+        }
+        
+        .nav-links {
+            display: none;
+            gap: 1.25rem;
+            align-items: center;
+            list-style: none;
+        }
+        
+        .nav-links a {
+            color: var(--shadesdark-30);
+            font-weight: 500;
+            font-size: 13px;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: var(--mainwhite);
+        }
+        
+        .mobile-menu-btn {
+            background: none;
+            border: none;
+            color: var(--mainwhite);
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: block;
+        }
+        
+        .hero-content {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            padding: 2rem 0;
+        }
+        
+        .hero-title {
+            font-family: 'Abel', sans-serif;
+            font-size: 1.75rem;
+            line-height: 1.1;
+            margin-bottom: 0.5rem;
+        }
+        
+        .hero-subtitle {
+            color: var(--shadesdark-15);
+            font-size: 0.85rem;
+            margin-bottom: 1rem;
+        }
+        
+        .hero-graphics img {
+            max-width: 100%;
+            height: auto;
         }
         
         .btn {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            padding: 0.75rem 1.5rem;
+            padding: 0.6rem 1.25rem;
             border-radius: 6px;
             font-weight: 600;
-            font-size: 14px;
+            font-size: 13px;
             cursor: pointer;
             border: none;
-            transition: all 0.3s ease;
+            transition: all 0.3s;
             text-align: center;
-            font-family: var(--font-manrope);
         }
         
         .btn-primary {
@@ -109,17 +158,11 @@
         .btn-primary:hover {
             background-color: #6a30e5;
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(122, 56, 252, 0.2);
         }
         
         .btn-secondary {
             background-color: var(--mainsecondary);
             color: var(--maindark);
-        }
-        
-        .btn-secondary:hover {
-            background-color: #e0a900;
-            transform: translateY(-2px);
         }
         
         .btn-outline {
@@ -128,26 +171,16 @@
             border: 1.5px solid var(--mainprimary);
         }
         
-        .btn-outline:hover {
-            background-color: rgba(122, 56, 252, 0.1);
-        }
-        
         .btn-outline-dark {
             background-color: transparent;
             color: var(--maindark);
             border: 1.5px solid var(--maindark);
         }
         
-        .btn-outline-dark:hover {
-            background-color: rgba(15, 11, 12, 0.05);
-        }
-        
-        /* Marquee Banner */
         .marquee-banner {
             background-color: var(--shadessecondary-15);
-            padding: 0.75rem 0;
+            padding: 0.6rem 0;
             overflow: hidden;
-            position: relative;
         }
         
         .marquee-container {
@@ -157,8 +190,8 @@
         }
         
         .marquee-item {
-            font-family: var(--font-inika);
-            font-size: 0.85rem;
+            font-family: 'Inika', serif;
+            font-size: 0.75rem;
             color: #4f4646;
             padding: 0 1rem;
             white-space: nowrap;
@@ -173,331 +206,100 @@
             100% { transform: translateX(-50%); }
         }
         
-        /* Hero Section */
-        .hero-section {
-            background: linear-gradient(rgba(15, 11, 12, 0.9), rgba(15, 11, 12, 0.9)), 
-                        url('https://c.animaapp.com/mjwngvpjWKAdmV/img/hero-bg.png');
-            background-size: cover;
-            background-position: center;
-            color: var(--mainwhite);
-            min-height: 90vh;
-            display: flex;
-            flex-direction: column;
-            position: relative;
-            overflow: hidden;
-            padding-top: 1rem;
-        }
-        
-        .hero-content {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            position: relative;
-            z-index: 1;
-            padding: 1rem 0 2rem;
-        }
-        
-        .hero-title {
-            font-family: var(--font-abel);
-            font-size: 2rem;
-            line-height: 1.1;
-            margin-bottom: 0.75rem;
-        }
-        
-        .hero-subtitle {
-            color: var(--shadesdark-15);
-            font-size: 0.9rem;
-            margin-bottom: 1.5rem;
-        }
-        
-        .hero-buttons {
-            display: flex;
-            gap: 0.75rem;
-            flex-wrap: wrap;
-            margin-bottom: 2rem;
-        }
-        
-        .hero-graphics {
-            margin-top: 2rem;
-            position: relative;
-        }
-        
-        .hero-graphics img {
-            max-width: 100%;
-            height: auto;
-        }
-        
-        /* Navigation */
-        .navbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1rem 0;
-            position: relative;
-            z-index: 10;
-        }
-        
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-family: var(--font-abel);
-            font-size: 1.25rem;
-            font-weight: 700;
-        }
-        
-        .logo img {
-            width: 35px;
-            height: 35px;
-        }
-        
-        .nav-links {
-            display: none;
-            list-style: none;
-            gap: 1.5rem;
-            align-items: center;
-        }
-        
-        .nav-links a {
-            color: var(--shadesdark-30);
-            font-weight: 500;
-            font-size: 14px;
-            transition: color 0.3s ease;
-        }
-        
-        .nav-links a:hover {
-            color: var(--mainwhite);
-        }
-        
-        .mobile-menu-btn {
-            background: none;
-            border: none;
-            color: var(--mainwhite);
-            font-size: 1.25rem;
-            cursor: pointer;
-            z-index: 100;
-        }
-        
-        .mobile-menu {
-            position: fixed;
-            top: 0;
-            right: -100%;
-            width: 80%;
-            max-width: 300px;
-            height: 100%;
-            background-color: var(--maindark);
-            padding: 1.5rem;
-            z-index: 999;
-            transition: right 0.3s ease;
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-        
-        .mobile-menu.active {
-            right: 0;
-        }
-        
-        .mobile-menu-close {
-            align-self: flex-end;
-            background: none;
-            border: none;
-            color: var(--mainwhite);
-            font-size: 1.25rem;
-            cursor: pointer;
-            margin-bottom: 1rem;
-        }
-        
-        .mobile-menu a {
-            color: var(--mainwhite);
-            font-size: 1rem;
-            padding: 0.75rem 0;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-        }
-        
-        /* About Section */
-        .about-section {
-            position: relative;
-            background-color: var(--mainwhite);
-        }
-        
-        .section-header {
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-            margin-bottom: 2.5rem;
-        }
-        
         .section-title {
-            font-family: var(--font-alfaslab);
-            font-size: 1.75rem;
-            color: var(--maindark);
+            font-family: 'Alfa Slab One', cursive;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
         }
         
         .about-grid {
             display: grid;
             grid-template-columns: 1fr;
-            gap: 1rem;
+            gap: 0.75rem;
         }
         
         .about-card {
             border-radius: 0.75rem;
             overflow: hidden;
-            height: 200px;
+            height: 160px;
             position: relative;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
         }
         
         .about-card img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: transform 0.3s ease;
         }
         
-        .about-card:hover img {
-            transform: scale(1.05);
-        }
-        
-        /* Programs Section */
         .programs-section {
             background: linear-gradient(135deg, #0f0b0c 0%, #1a1a2e 100%);
             color: var(--mainwhite);
-            position: relative;
-            overflow: hidden;
+            padding: 2rem 0;
         }
         
         .programs-title {
-            font-family: var(--font-adlam);
-            font-size: 1.75rem;
+            font-family: 'ADLaM Display', cursive;
+            font-size: 1.5rem;
             line-height: 1.1;
-            margin-bottom: 1.5rem;
-        }
-        
-        .programs-list {
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
+            margin-bottom: 1rem;
         }
         
         .program-item {
-            padding: 1rem;
+            padding: 0.75rem;
             background: rgba(255, 255, 255, 0.05);
             border-radius: 0.5rem;
-            border-left: 4px solid var(--mainprimary);
+            border-left: 3px solid var(--mainprimary);
+            margin-bottom: 1rem;
         }
         
         .program-name {
-            font-family: var(--font-adlam);
-            font-size: 1.1rem;
-            margin-bottom: 0.5rem;
-            color: var(--mainsecondary);
-        }
-        
-        .program-date {
-            font-weight: 500;
-            font-size: 0.9rem;
+            font-family: 'ADLaM Display', cursive;
+            font-size: 0.95rem;
             margin-bottom: 0.25rem;
-        }
-        
-        .program-time {
-            color: var(--shadesdark-40);
-            font-size: 0.85rem;
-        }
-        
-        .program-images {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1rem;
-            margin-top: 2rem;
-        }
-        
-        .program-image {
-            border-radius: 0.75rem;
-            overflow: hidden;
-            height: 150px;
-        }
-        
-        .program-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        
-        /* Scholars Section */
-        .scholars-section {
-            background-color: var(--shadessecondary-15);
-        }
-        
-        .scholars-title {
-            font-family: var(--font-alfaslab);
-            font-size: 1.75rem;
-            color: var(--maindark);
-            margin-bottom: 2rem;
+            color: var(--mainsecondary);
         }
         
         .scholars-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-            gap: 1rem;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 0.75rem;
+            margin-top: 1.5rem;
         }
         
         .scholar-card {
             background-color: var(--mainwhite);
             border-radius: 0.75rem;
             overflow: hidden;
-            box-shadow: 0 3px 8px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
         }
         
         .scholar-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            transform: translateY(-3px);
         }
         
         .scholar-image {
-            height: 160px;
+            height: 140px;
             width: 100%;
             object-fit: cover;
         }
         
         .scholar-info {
-            padding: 1rem;
+            padding: 0.75rem;
         }
         
         .scholar-name {
-            font-family: var(--font-abeeyzee);
-            font-size: 0.9rem;
+            font-family: 'ABeeZee', sans-serif;
+            font-size: 0.8rem;
             margin-bottom: 0.25rem;
-            line-height: 1.3;
         }
         
         .scholar-role {
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             color: var(--shadesdark-80);
             font-weight: 600;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        
-        /* Reports Section */
-        .reports-section {
-            position: relative;
-            background-color: var(--mainwhite);
-        }
-        
-        .reports-title {
-            font-family: var(--font-adlam);
-            font-size: 1.75rem;
-            margin-bottom: 1rem;
-            text-align: center;
-        }
-        
-        .reports-description {
-            text-align: center;
-            margin-bottom: 2.5rem;
-            color: var(--shadesdark-80);
         }
         
         .report-card {
@@ -505,40 +307,28 @@
             background-color: var(--shadessecondary-15);
             border-radius: 0.75rem;
             overflow: hidden;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
         
         .report-header {
             background-color: var(--maindark);
             color: var(--mainwhite);
-            padding: 1rem;
+            padding: 0.75rem 1rem;
             display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
             justify-content: space-between;
             align-items: center;
-        }
-        
-        .report-date, .report-type {
-            font-family: var(--font-abeeyzee);
-            font-size: 0.9rem;
+            font-size: 0.85rem;
         }
         
         .report-content {
-            padding: 1.5rem;
-        }
-        
-        .report-content-with-image {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
+            padding: 1rem;
         }
         
         .report-image {
             width: 100%;
-            height: 180px;
+            height: 140px;
             border-radius: 0.5rem;
             overflow: hidden;
+            margin-bottom: 1rem;
         }
         
         .report-image img {
@@ -547,288 +337,79 @@
             object-fit: cover;
         }
         
-        .report-text {
-            flex: 1;
-        }
-        
-        .report-content-title {
-            font-family: var(--font-abeeyzee);
-            font-size: 1.25rem;
-            margin-bottom: 0.5rem;
-        }
-        
-        .report-time {
-            font-family: var(--font-abeeyzee);
-            font-size: 0.9rem;
-            color: var(--shadesdark-60);
-            margin-bottom: 0.5rem;
-        }
-        
-        .report-by {
-            font-weight: 500;
-            font-size: 0.9rem;
-            color: var(--maindark);
-            margin-bottom: 1rem;
-        }
-        
-        .report-images {
+        .gallery-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 0.5rem;
-            margin-top: 1rem;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 0.75rem;
         }
         
-        .report-images img {
-            width: 100%;
-            height: 80px;
-            object-fit: cover;
-            border-radius: 0.4rem;
-        }
-        
-        /* Gallery Preview */
-        .gallery-preview {
-            background-color: var(--shadessecondary-15);
-        }
-        
-        .gallery-preview-header {
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-        
-        .gallery-preview-title {
-            font-family: var(--font-alfaslab);
-            font-size: 1.75rem;
-            -webkit-text-stroke: 0.5px #000000;
-        }
-        
-        .gallery-preview-title .blue {
-            color: #0088ff;
-        }
-        
-        .gallery-preview-title .white {
-            color: var(--maindark);
-        }
-        
-        .gallery-preview-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 1rem;
-        }
-        
-        .gallery-preview-item {
+        .gallery-item {
             border-radius: 0.75rem;
             overflow: hidden;
-            height: 200px;
+            height: 160px;
             position: relative;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
         
-        .gallery-preview-item img {
+        .gallery-item img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: transform 0.3s ease;
         }
         
-        .gallery-preview-item:hover img {
-            transform: scale(1.05);
-        }
-        
-        .gallery-preview-info {
-            position: absolute;
-            bottom: 1rem;
-            left: 1rem;
-            color: var(--mainwhite);
-            text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
-        }
-        
-        .gallery-preview-name {
-            font-family: var(--font-abeeyzee);
-            font-size: 1.1rem;
-        }
-        
-        .gallery-preview-views {
-            font-size: 0.7rem;
-            color: var(--shadesdark-10);
-            font-weight: 600;
-            text-transform: uppercase;
-        }
-        
-        /* Gallery Section */
-        .gallery-section {
-            position: relative;
-            background-color: var(--mainwhite);
-        }
-        
-        .gallery-header {
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-        
-        .gallery-title {
-            font-family: var(--font-clash);
-            font-size: 1.75rem;
-            margin-bottom: 0.75rem;
-        }
-        
-        .gallery-image-grid {
-            width: 100%;
-            height: auto;
-            margin-bottom: 2rem;
-            border-radius: 0.75rem;
-            overflow: hidden;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-        }
-        
-        /* CTA Section - Compact Design */
         .cta-section {
             background: linear-gradient(135deg, var(--maindark) 0%, #2a2a3e 100%);
             border-radius: 1rem;
             margin: 2rem auto;
             max-width: 900px;
+            padding: 1.5rem;
             position: relative;
             overflow: hidden;
-            box-shadow: 0 8px 30px rgba(0,0,0,0.2);
         }
         
-        .cta-content {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 2rem;
-            position: relative;
-            z-index: 1;
-            text-align: center;
-        }
-        
-        .cta-text {
-            margin-bottom: 1.5rem;
-        }
-        
-        .cta-title {
-            font-family: var(--font-adlam);
-            font-size: 1.5rem;
-            color: var(--mainwhite);
-            margin-bottom: 0.75rem;
-        }
-        
-        .cta-description {
-            color: var(--shadesdark-15);
-            margin-bottom: 1rem;
-            font-size: 0.9rem;
-            max-width: 400px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        
-        .cta-logo {
-            width: 100px;
-            height: 100px;
-            margin: 0 auto 1.5rem;
-            background-color: rgba(255,255,255,0.1);
-            border-radius: 50%;
-            padding: 1rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .cta-logo img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-        }
-        
-        /* Footer */
         .footer {
             background: linear-gradient(135deg, #0a0809 0%, #151522 100%);
             color: var(--mainwhite);
-            position: relative;
-        }
-        
-        .footer-content {
-            padding: 2.5rem 0;
-        }
-        
-        .footer-newsletter {
-            text-align: center;
-            margin-bottom: 2.5rem;
+            padding: 2rem 0 1rem;
         }
         
         .footer-title {
-            font-family: var(--font-clash);
-            font-size: 1.75rem;
+            font-family: 'Clash Display', sans-serif;
+            font-size: 1.5rem;
             margin-bottom: 0.75rem;
-        }
-        
-        .footer-description {
-            color: var(--shadesdark-15);
-            margin-bottom: 1.5rem;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-            font-size: 0.9rem;
         }
         
         .newsletter-form {
             display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
-            max-width: 400px;
-            margin: 0 auto;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
         }
         
         .newsletter-input {
-            padding: 0.75rem 1rem;
+            padding: 0.6rem 1rem;
             border-radius: 0.4rem;
             border: none;
-            font-size: 0.9rem;
-            font-family: var(--font-manrope);
+            font-size: 0.85rem;
             background-color: rgba(255,255,255,0.1);
             color: var(--mainwhite);
-        }
-        
-        .newsletter-input::placeholder {
-            color: var(--shadesdark-30);
-        }
-        
-        .footer-bottom {
-            padding-top: 1.5rem;
-            border-top: 1px solid rgba(111, 109, 109, 0.4);
-        }
-        
-        .footer-bottom-content {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 1rem;
-        }
-        
-        .footer-logo {
-            font-family: var(--font-adlam);
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
+            flex: 1;
         }
         
         .social-links {
             display: flex;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
         }
         
         .social-links a {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            width: 40px;
-            height: 40px;
+            width: 35px;
+            height: 35px;
             background-color: rgba(255,255,255,0.1);
             border-radius: 50%;
             color: var(--mainwhite);
-            font-size: 1.1rem;
-            transition: all 0.3s ease;
+            transition: all 0.3s;
         }
         
         .social-links a:hover {
@@ -836,283 +417,52 @@
             transform: translateY(-3px);
         }
         
-        .footer-links {
-            display: flex;
-            gap: 1.5rem;
-            margin-bottom: 1rem;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-        
-        .footer-links a {
-            color: var(--shadesdark-15);
-            font-size: 0.85rem;
-            transition: color 0.3s ease;
-        }
-        
-        .footer-links a:hover {
-            color: var(--mainwhite);
-        }
-        
-        .footer-copyright {
-            color: var(--shadesdark-15);
-            font-size: 0.8rem;
-            text-align: center;
-        }
-        
-        /* Responsive Styles */
-        @media (min-width: 480px) {
-            .scholars-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            
-            .gallery-preview-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-        
         @media (min-width: 640px) {
-            body {
-                font-size: 15px;
-            }
-            
             .hero-title {
-                font-size: 2.5rem;
-            }
-            
-            .section-title {
                 font-size: 2rem;
             }
-            
+            .section-title {
+                font-size: 1.75rem;
+            }
             .about-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
-            
-            .about-card {
-                height: 180px;
-            }
-            
-            .program-images {
-                grid-template-columns: repeat(4, 1fr);
-            }
-            
-            .program-image {
-                height: 120px;
-            }
-            
             .scholars-grid {
                 grid-template-columns: repeat(3, 1fr);
-            }
-            
-            .report-content-with-image {
-                flex-direction: row;
-            }
-            
-            .report-image {
-                flex: 0 0 180px;
-                height: 150px;
-            }
-            
-            .gallery-preview-grid {
-                grid-template-columns: repeat(3, 1fr);
-            }
-            
-            .gallery-preview-item {
-                height: 180px;
-            }
-            
-            .newsletter-form {
-                flex-direction: row;
-            }
-            
-            .newsletter-input {
-                flex: 1;
             }
         }
         
         @media (min-width: 768px) {
-            .container {
-                padding: 0 1.5rem;
-            }
-            
             .nav-links {
                 display: flex;
             }
-            
             .mobile-menu-btn {
                 display: none;
             }
-            
             .hero-content {
-                flex-direction: row;
+                grid-template-columns: 1fr 1fr;
                 align-items: center;
-                gap: 2rem;
-                padding: 2rem 0 3rem;
             }
-            
-            .hero-text {
-                flex: 1;
-            }
-            
-            .hero-graphics {
-                flex: 1;
-                margin-top: 0;
-            }
-            
             .hero-title {
-                font-size: 2.75rem;
+                font-size: 2.25rem;
             }
-            
-            .section-header {
-                flex-direction: row;
-                justify-content: space-between;
-                align-items: flex-start;
-            }
-            
-            .section-title {
-                flex: 1;
-            }
-            
-            .section-description {
-                flex: 1;
-            }
-            
             .about-grid {
                 grid-template-columns: repeat(3, 1fr);
             }
-            
             .about-card:first-child {
                 grid-column: span 2;
-                height: 220px;
             }
-            
             .scholars-grid {
                 grid-template-columns: repeat(4, 1fr);
-            }
-            
-            .gallery-preview-grid {
-                grid-template-columns: repeat(4, 1fr);
-            }
-            
-            .gallery-preview-item {
-                height: 160px;
-            }
-            
-            .cta-content {
-                flex-direction: row;
-                text-align: left;
-                padding: 2.5rem;
-            }
-            
-            .cta-text {
-                text-align: left;
-                flex: 1;
-                margin-bottom: 0;
-                margin-right: 2rem;
-            }
-            
-            .cta-logo {
-                margin: 0;
-                width: 120px;
-                height: 120px;
-            }
-            
-            .footer-bottom-content {
-                flex-direction: row;
-                justify-content: space-between;
-                align-items: center;
-            }
-            
-            .footer-links {
-                margin-bottom: 0;
             }
         }
         
         @media (min-width: 1024px) {
-            .container {
-                max-width: 1100px;
-                padding: 0 2rem;
-            }
-            
             .hero-title {
-                font-size: 3rem;
-            }
-            
-            .section-title {
-                font-size: 2.25rem;
-            }
-            
-            .about-card {
-                height: 200px;
-            }
-            
-            .about-card:first-child {
-                height: 240px;
-            }
-            
-            .scholar-image {
-                height: 180px;
-            }
-            
-            .gallery-preview-item {
-                height: 180px;
-            }
-            
-            .cta-title {
-                font-size: 1.75rem;
-            }
-            
-            .footer-title {
-                font-size: 2rem;
-            }
-        }
-        
-        @media (min-width: 1280px) {
-            .container {
-                max-width: 1200px;
-            }
-            
-            .hero-title {
-                font-size: 3.5rem;
-            }
-            
-            .section-title {
                 font-size: 2.5rem;
             }
-        }
-        
-        /* Utility Classes */
-        .text-center {
-            text-align: center;
-        }
-        
-        .mt-1 { margin-top: 0.25rem; }
-        .mt-2 { margin-top: 0.5rem; }
-        .mt-3 { margin-top: 1rem; }
-        .mt-4 { margin-top: 1.5rem; }
-        .mt-5 { margin-top: 2rem; }
-        
-        .mb-1 { margin-bottom: 0.25rem; }
-        .mb-2 { margin-bottom: 0.5rem; }
-        .mb-3 { margin-bottom: 1rem; }
-        .mb-4 { margin-bottom: 1.5rem; }
-        .mb-5 { margin-bottom: 2rem; }
-        
-        .hidden {
-            display: none !important;
-        }
-        
-        .desktop-only {
-            display: none;
-        }
-        
-        @media (min-width: 768px) {
-            .desktop-only {
-                display: block;
-            }
-            
-            .mobile-only {
-                display: none;
+            .section-title {
+                font-size: 2rem;
             }
         }
     </style>
@@ -1121,7 +471,6 @@
     <!-- Hero Section -->
     <section class="hero-section">
         <div class="container">
-            <!-- Navigation -->
             <nav class="navbar">
                 <a href="#" class="logo">
                     <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/logo3d-1.png" alt="QUAF Logo">
@@ -1142,33 +491,13 @@
                 </button>
             </nav>
             
-            <!-- Mobile Menu -->
-            <div class="mobile-menu" id="mobileMenu">
-                <button class="mobile-menu-close" id="mobileMenuClose">
-                    <i class="fas fa-times"></i>
-                </button>
-                <a href="#home">Home</a>
-                <a href="#about">About</a>
-                <a href="#leaders">Leaders</a>
-                <a href="#gallery">Gallery</a>
-                <a href="#contact">Contact</a>
-                <button class="btn btn-outline">Get Started</button>
-            </div>
-            
-            <!-- Hero Content -->
             <div class="hero-content">
                 <div class="hero-text">
-                    <div class="mb-4">
-                        <div class="font-bold mb-2">MAY-1-2024</div>
-                        <h1 class="hero-title">
-                            Qualitative Union for<br>Academic Focus
-                        </h1>
-                        <p class="hero-subtitle">
-                            27th batch of Darul Hidaya Da'wa College, Manoor
-                        </p>
-                    </div>
+                    <div class="font-bold mb-2" style="font-size: 0.85rem;">MAY-1-2024</div>
+                    <h1 class="hero-title">Qualitative Union for Academic Focus</h1>
+                    <p class="hero-subtitle">27th batch of Darul Hidaya Da'wa College, Manoor</p>
                     
-                    <div class="hero-buttons">
+                    <div class="flex gap-3 flex-wrap mb-4">
                         <button class="btn btn-primary">Join now</button>
                         <button class="btn btn-outline">Subscribe</button>
                     </div>
@@ -1204,13 +533,12 @@
     </div>
     
     <!-- About Us Section -->
-    <section id="about" class="about-section">
+    <section id="about" class="py-16">
         <div class="container">
-            <div class="section-header">
+            <div class="flex flex-col md:flex-row justify-between gap-4 mb-8">
                 <h2 class="section-title">About Us</h2>
-                <p class="section-description">
-                    "Admitted to Darul Hidaya Da'wa College, Manoor, 27th Batch, QUAF (Qualitative Union for Academic Focus) on 
-                    <span style="color: #7a38fc;">May-1 2024."</span>
+                <p class="text-sm max-w-xl">
+                    "Admitted to Darul Hidaya Da'wa College, Manoor, 27th Batch, QUAF (Qualitative Union for Academic Focus) on <span style="color: #7a38fc;">May-1 2024.</span>"
                 </p>
             </div>
             
@@ -1218,11 +546,9 @@
                 <div class="about-card">
                     <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/rectangle-27.png" alt="Class Group Photo">
                 </div>
-                
                 <div class="about-card">
                     <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/frame-67.png" alt="QUAF Activities">
                 </div>
-                
                 <div class="about-card">
                     <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/community-build.png" alt="Community Building">
                 </div>
@@ -1233,49 +559,45 @@
     <!-- Programs Section -->
     <section class="programs-section">
         <div class="container">
-            <h2 class="programs-title mb-4">
-                Programs That Inspire Creativity
-            </h2>
-            <p class="mb-4">
-                The public programs designed to enhance skills and creativity.
-            </p>
+            <h2 class="programs-title">Programs That Inspire Creativity</h2>
+            <p class="mb-4 text-sm" style="color: var(--shadesdark-15);">The public programs designed to enhance skills and creativity.</p>
             
-            <div class="programs-list">
+            <div class="grid md:grid-cols-2 gap-4">
                 <div class="program-item">
                     <div class="program-name">Miskul Mahabba</div>
-                    <div class="program-date">October 15, 2024</div>
-                    <div class="program-time">9:00 PM - 10:30 PM</div>
+                    <div style="font-size: 0.85rem; font-weight: 500;">October 15, 2024</div>
+                    <div style="font-size: 0.75rem; color: var(--shadesdark-40);">9:00 PM - 10:30 PM</div>
                 </div>
                 
                 <div class="program-item">
                     <div class="program-name">Perunnal Payasam</div>
-                    <div class="program-date">August 17, 2024</div>
-                    <div class="program-time">8:00 PM - 9:00 PM</div>
+                    <div style="font-size: 0.85rem; font-weight: 500;">August 17, 2024</div>
+                    <div style="font-size: 0.75rem; color: var(--shadesdark-40);">8:00 PM - 9:00 PM</div>
                 </div>
             </div>
             
-            <div class="program-images">
-                <div class="program-image">
-                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/pexels-fauxels-3184315-1.png" alt="Program Image 1">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-2 mt-4">
+                <div class="h-24 rounded-lg overflow-hidden">
+                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/pexels-fauxels-3184315-1.png" alt="Program" class="w-full h-full object-cover">
                 </div>
-                <div class="program-image">
-                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-40.png" alt="Program Image 2">
+                <div class="h-24 rounded-lg overflow-hidden">
+                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-40.png" alt="Program" class="w-full h-full object-cover">
                 </div>
-                <div class="program-image">
-                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-44.png" alt="Program Image 3">
+                <div class="h-24 rounded-lg overflow-hidden">
+                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-44.png" alt="Program" class="w-full h-full object-cover">
                 </div>
-                <div class="program-image">
-                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-45.png" alt="Program Image 4">
+                <div class="h-24 rounded-lg overflow-hidden">
+                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-45.png" alt="Program" class="w-full h-full object-cover">
                 </div>
             </div>
         </div>
     </section>
     
     <!-- Scholars Section -->
-    <section id="leaders" class="scholars-section">
+    <section id="leaders" class="py-16" style="background-color: var(--shadessecondary-15);">
         <div class="container">
-            <div class="section-header">
-                <h2 class="scholars-title">Meet the top incredible scholars</h2>
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+                <h2 class="section-title">Meet the top incredible scholars</h2>
                 <button class="btn btn-primary">View All Scholars</button>
             </div>
             
@@ -1351,138 +673,429 @@
                         <div class="scholar-role">EXECUTIVE MEMBER</div>
                     </div>
                 </div>
+                
+                <!-- Scholar 9 -->
+                <div class="scholar-card">
+                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-8.png" alt="MUHAMMED QASIM MP" class="scholar-image">
+                    <div class="scholar-info">
+                        <div class="scholar-name">MUHAMMED QASIM MP</div>
+                        <div class="scholar-role">EDITORIAL BOARD</div>
+                    </div>
+                </div>
+                
+                <!-- Scholar 10 -->
+                <div class="scholar-card">
+                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-9.png" alt="MUHAMMED SHAFEEQUE T" class="scholar-image">
+                    <div class="scholar-info">
+                        <div class="scholar-name">MUHAMMED SHAFEEQUE T</div>
+                        <div class="scholar-role">EDITORIAL BOARD</div>
+                    </div>
+                </div>
+                
+                <!-- Scholar 11 -->
+                <div class="scholar-card">
+                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-10.png" alt="MUHAMMED HASHIM V" class="scholar-image">
+                    <div class="scholar-info">
+                        <div class="scholar-name">MUHAMMED HASHIM V</div>
+                        <div class="scholar-role">PUBLICATIONS</div>
+                    </div>
+                </div>
+                
+                <!-- Scholar 12 -->
+                <div class="scholar-card">
+                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-11.png" alt="MOHAMMED HADI V" class="scholar-image">
+                    <div class="scholar-info">
+                        <div class="scholar-name">MOHAMMED HADI V</div>
+                        <div class="scholar-role">PUBLICATIONS</div>
+                    </div>
+                </div>
+                
+                <!-- Scholar 13 -->
+                <div class="scholar-card">
+                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-12.png" alt="MUHAMMED HAYYAN VP" class="scholar-image">
+                    <div class="scholar-info">
+                        <div class="scholar-name">MUHAMMED HAYYAN VP</div>
+                        <div class="scholar-role">ARABIC WING</div>
+                    </div>
+                </div>
+                
+                <!-- Scholar 14 -->
+                <div class="scholar-card">
+                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-13.png" alt="HAMDAN CC" class="scholar-image">
+                    <div class="scholar-info">
+                        <div class="scholar-name">HAMDAN CC</div>
+                        <div class="scholar-role">ARABIC WING</div>
+                    </div>
+                </div>
+                
+                <!-- Scholar 15 -->
+                <div class="scholar-card">
+                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-14.png" alt="MUHAMMED SAHL" class="scholar-image">
+                    <div class="scholar-info">
+                        <div class="scholar-name">MUHAMMED SAHL</div>
+                        <div class="scholar-role">URDU WING</div>
+                    </div>
+                </div>
+                
+                <!-- Scholar 16 -->
+                <div class="scholar-card">
+                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-15.png" alt="MUHAMMED RAMEES VP" class="scholar-image">
+                    <div class="scholar-info">
+                        <div class="scholar-name">MUHAMMED RAMEES VP</div>
+                        <div class="scholar-role">URDU WING</div>
+                    </div>
+                </div>
+                
+                <!-- Scholar 17 -->
+                <div class="scholar-card">
+                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-16.png" alt="MUHAMMED YASEEN K" class="scholar-image">
+                    <div class="scholar-info">
+                        <div class="scholar-name">MUHAMMED YASEEN K</div>
+                        <div class="scholar-role">MALAYALAM WING</div>
+                    </div>
+                </div>
+                
+                <!-- Scholar 18 -->
+                <div class="scholar-card">
+                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-17.png" alt="MUHAMMED LASIN KC" class="scholar-image">
+                    <div class="scholar-info">
+                        <div class="scholar-name">MUHAMMED LASIN KC</div>
+                        <div class="scholar-role">MALAYALAM WING</div>
+                    </div>
+                </div>
+                
+                <!-- Scholar 19 -->
+                <div class="scholar-card">
+                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-18.png" alt="MUHAMMED SHAHAL" class="scholar-image">
+                    <div class="scholar-info">
+                        <div class="scholar-name">MUHAMMED SHAHAL</div>
+                        <div class="scholar-role">ENGLISH WING</div>
+                    </div>
+                </div>
+                
+                <!-- Scholar 20 -->
+                <div class="scholar-card">
+                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-19.png" alt="ABDUL HADI" class="scholar-image">
+                    <div class="scholar-info">
+                        <div class="scholar-name">ABDUL HADI</div>
+                        <div class="scholar-role">ENGLISH WING</div>
+                    </div>
+                </div>
+                
+                <!-- Scholar 21 -->
+                <div class="scholar-card">
+                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-20.png" alt="MUHAMMED ZIYAD C" class="scholar-image">
+                    <div class="scholar-info">
+                        <div class="scholar-name">MUHAMMED ZIYAD C</div>
+                        <div class="scholar-role">MEDIA WING</div>
+                    </div>
+                </div>
+                
+                <!-- Scholar 22 -->
+                <div class="scholar-card">
+                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-34.png" alt="ALI RAFI EP" class="scholar-image">
+                    <div class="scholar-info">
+                        <div class="scholar-name">ALI RAFI EP</div>
+                        <div class="scholar-role">MEDIA WING</div>
+                    </div>
+                </div>
+                
+                <!-- Scholar 23 -->
+                <div class="scholar-card">
+                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-21.png" alt="MUHAMMED RASIN KP" class="scholar-image">
+                    <div class="scholar-info">
+                        <div class="scholar-name">MUHAMMED RASIN KP</div>
+                        <div class="scholar-role">SIGMA WING</div>
+                    </div>
+                </div>
+                
+                <!-- Scholar 24 -->
+                <div class="scholar-card">
+                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-29.png" alt="MUHAMMED SHAFIN" class="scholar-image">
+                    <div class="scholar-info">
+                        <div class="scholar-name">MUHAMMED SHAFIN</div>
+                        <div class="scholar-role">SIGMA WING</div>
+                    </div>
+                </div>
+                
+                <!-- Scholar 25 -->
+                <div class="scholar-card">
+                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-30.png" alt="AQIB MUHAMMED KT" class="scholar-image">
+                    <div class="scholar-info">
+                        <div class="scholar-name">AQIB MUHAMMED KT</div>
+                        <div class="scholar-role">ART WING</div>
+                    </div>
+                </div>
+                
+                <!-- Scholar 26 -->
+                <div class="scholar-card">
+                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-31.png" alt="MUHAMMED SINAN CK" class="scholar-image">
+                    <div class="scholar-info">
+                        <div class="scholar-name">MUHAMMED SINAN CK</div>
+                        <div class="scholar-role">ORATION WING</div>
+                    </div>
+                </div>
+                
+                <!-- Scholar 27 -->
+                <div class="scholar-card">
+                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-32.png" alt="HISHAM RAHMATHULLAH O" class="scholar-image">
+                    <div class="scholar-info">
+                        <div class="scholar-name">HISHAM RAHMATHULLAH O</div>
+                        <div class="scholar-role">GK WING</div>
+                    </div>
+                </div>
+                
+                <!-- Scholar 28 -->
+                <div class="scholar-card">
+                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-33.png" alt="MUHAMMED ASLAM" class="scholar-image">
+                    <div class="scholar-info">
+                        <div class="scholar-name">MUHAMMED ASLAM</div>
+                        <div class="scholar-role">GK WING</div>
+                    </div>
+                </div>
+                
+                <!-- Scholar 29 -->
+                <div class="scholar-card">
+                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-22.png" alt="MISHAB PT" class="scholar-image">
+                    <div class="scholar-info">
+                        <div class="scholar-name">MISHAB PT</div>
+                        <div class="scholar-role">LEADER, HIMAYA</div>
+                    </div>
+                </div>
+                
+                <!-- Scholar 30 -->
+                <div class="scholar-card">
+                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-25.png" alt="MUHAMMED SHAFAN A" class="scholar-image">
+                    <div class="scholar-info">
+                        <div class="scholar-name">MUHAMMED SHAFAN A</div>
+                        <div class="scholar-role">MEMBER</div>
+                    </div>
+                </div>
+                
+                <!-- Scholar 31 -->
+                <div class="scholar-card">
+                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-24.png" alt="MUHAMMED RASAL PP" class="scholar-image">
+                    <div class="scholar-info">
+                        <div class="scholar-name">MUHAMMED RASAL PP</div>
+                        <div class="scholar-role">MEMBER</div>
+                    </div>
+                </div>
+                
+                <!-- Scholar 32 -->
+                <div class="scholar-card">
+                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-23.png" alt="MOHAMMED AFRAH N" class="scholar-image">
+                    <div class="scholar-info">
+                        <div class="scholar-name">MOHAMMED AFRAH N</div>
+                        <div class="scholar-role">MEMBER</div>
+                    </div>
+                </div>
+                
+                <!-- Scholar 33 -->
+                <div class="scholar-card">
+                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-26.png" alt="MUHAMMED NASWIH IK" class="scholar-image">
+                    <div class="scholar-info">
+                        <div class="scholar-name">MUHAMMED NASWIH IK</div>
+                        <div class="scholar-role">MEMBER</div>
+                    </div>
+                </div>
+                
+                <!-- Scholar 34 -->
+                <div class="scholar-card">
+                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-27.png" alt="SAIDALAVI SHAMIL MC" class="scholar-image">
+                    <div class="scholar-info">
+                        <div class="scholar-name">SAIDALAVI SHAMIL MC</div>
+                        <div class="scholar-role">MEMBER</div>
+                    </div>
+                </div>
+                
+                <!-- Scholar 35 -->
+                <div class="scholar-card">
+                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-28.png" alt="AMAN ASKAR CT" class="scholar-image">
+                    <div class="scholar-info">
+                        <div class="scholar-name">AMAN ASKAR CT</div>
+                        <div class="scholar-role">MEMBER</div>
+                    </div>
+                </div>
+                
+                <!-- Scholar 36 -->
+                <div class="scholar-card">
+                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-35.png" alt="FARSHAD MR" class="scholar-image">
+                    <div class="scholar-info">
+                        <div class="scholar-name">FARSHAD MR</div>
+                        <div class="scholar-role">MEMBER</div>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
     
     <!-- Programs & Reports Section -->
-    <section class="reports-section">
+    <section class="py-16">
         <div class="container">
-            <h2 class="reports-title">Programs & Reports</h2>
-            <p class="reports-description">
-                Explore the main programs with detailed descriptions, featured highlights, and everything you need to know before getting started.
-            </p>
+            <div class="text-center mb-8">
+                <h2 class="section-title" style="font-family: 'ADLaM Display', cursive;">Programs & Reports</h2>
+                <p class="text-sm" style="color: var(--shadesdark-80);">Explore the main programs with detailed descriptions and highlights.</p>
+            </div>
             
-            <div class="reports-list">
-                <!-- Report 1 -->
-                <div class="report-card">
-                    <div class="report-header">
-                        <div class="report-date">Thursday, July-25-2024</div>
-                        <div class="report-type">Programs & Reports</div>
+            <!-- Report 1: Freshers Meet -->
+            <div class="report-card">
+                <div class="report-header">
+                    <span>Thursday, July-25-2024</span>
+                    <span>Programs & Reports</span>
+                </div>
+                <div class="report-content">
+                    <div class="md:flex gap-4">
+                        <div class="report-image md:w-48 md:flex-shrink-0">
+                            <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/mask-group.png" alt="Freshers Meet">
+                        </div>
+                        <div class="flex-1">
+                            <h3 style="font-family: 'ABeeZee', sans-serif; font-size: 1.1rem; margin-bottom: 0.5rem;">Freshers Meet</h3>
+                            <p style="font-size: 0.85rem; margin-bottom: 0.25rem;">9:00 AM - 4:00 PM</p>
+                            <p style="font-weight: 500; font-size: 0.85rem; margin-bottom: 0.75rem;">By Darul Huda Islamic University, Chemmad</p>
+                            <p style="font-size: 0.8rem; line-height: 1.6;">Tarhib 1446 – Freshers' Grand Meet Up is a welcoming and celebratory event organized by the Centre for Public Education and Training (CPET) and the Office of Guidance and Extension Activities (OGEA) at Darul Huda Islamic University.</p>
+                        </div>
                     </div>
-                    
-                    <div class="report-content">
-                        <div class="report-content-with-image">
-                            <div class="report-image">
-                                <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/mask-group.png" alt="Freshers Meet">
-                            </div>
-                            <div class="report-text">
-                                <h3 class="report-content-title">Freshers Meet</h3>
-                                <div class="report-time">9:00 AM - 4:00 PM</div>
-                                <p class="report-by">By Darul Huda Islamic University, Chemmad</p>
-                                <p>
-                                    Tarhib 1446 – Freshers' Grand Meet Up is a welcoming and celebratory event organized by the Centre for Public Education and Training (CPET) and the Office of Guidance and Extension Activities (OGEA) at Darul Huda Islamic University.
-                                </p>
+                </div>
+            </div>
+            
+            <!-- Report 2: Website Launching -->
+            <div class="report-card">
+                <div class="report-header">
+                    <span>November, 2024</span>
+                    <span>Programs & Reports</span>
+                </div>
+                <div class="report-content">
+                    <div class="md:flex gap-4">
+                        <div class="report-image md:w-48 md:flex-shrink-0">
+                            <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-40.png" alt="Website Launching">
+                        </div>
+                        <div class="flex-1">
+                            <h3 style="font-family: 'ABeeZee', sans-serif; font-size: 1.1rem; margin-bottom: 0.5rem;">Website Launching</h3>
+                            <p style="font-weight: 500; font-size: 0.85rem; margin-bottom: 0.75rem;">First Website for a class union in the history of Darul Hidaya Da'wa College, Manoor</p>
+                            <p style="font-size: 0.8rem; line-height: 1.6; margin-bottom: 0.75rem;">QUAF launched an official website for its class union, marking a historic milestone as the first-ever website created for a class organization in the history of Darul Hidaya Da'wa College, Manoor. The website was officially launched by the Vice Principal, Usthad Junaid Hudawi.</p>
+                            <div class="grid grid-cols-3 gap-2">
+                                <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-37.png" alt="" class="rounded" style="height: 60px; object-fit: cover;">
+                                <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-38.png" alt="" class="rounded" style="height: 60px; object-fit: cover;">
+                                <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-39.png" alt="" class="rounded" style="height: 60px; object-fit: cover;">
                             </div>
                         </div>
                     </div>
                 </div>
-                
-                <!-- Report 2 -->
-                <div class="report-card">
-                    <div class="report-header">
-                        <div class="report-date">November, 2024</div>
-                        <div class="report-type">Programs & Reports</div>
-                    </div>
-                    
-                    <div class="report-content">
-                        <div class="report-content-with-image">
-                            <div class="report-image">
-                                <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-40.png" alt="Website Launching">
-                            </div>
-                            <div class="report-text">
-                                <h3 class="report-content-title">Website Launching</h3>
-                                <p class="report-by">First Website for a class union in the history of Darul Hidaya Da'wa College, Manoor</p>
-                                <p>
-                                    QUAF launched an official website for its class union, marking a historic milestone as the first-ever website created for a class organization in the history of Darul Hidaya Da'wa College, Manoor.<br>
-                                    The website was officially launched by the Vice Principal, Usthad Junaid Hudawi.
-                                </p>
-                                <div class="report-images">
-                                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-37.png" alt="">
-                                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-38.png" alt="">
-                                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-39.png" alt="">
-                                </div>
+            </div>
+            
+            <!-- Report 3: MALABART -->
+            <div class="report-card">
+                <div class="report-header">
+                    <span>December, 2024</span>
+                    <span>Programs & Reports</span>
+                </div>
+                <div class="report-content">
+                    <div class="md:flex gap-4">
+                        <div class="report-image md:w-48 md:flex-shrink-0">
+                            <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/mask-group-1.png" alt="MALABART">
+                        </div>
+                        <div class="flex-1">
+                            <h3 style="font-family: 'ABeeZee', sans-serif; font-size: 1.1rem; margin-bottom: 0.5rem;">MALABART</h3>
+                            <p style="font-weight: 500; font-size: 0.85rem; margin-bottom: 0.75rem;">Class Artsfest</p>
+                            <p style="font-size: 0.8rem; line-height: 1.6;">27th Batch of Darul Hidaya Da'wa College, class union (QUAF) organized a class Artsfest under the name "MALABART." Inspired by history of Malabar Muslims. The logo was launched by Ustad Abdul Kareem Thangal. 3 Teams, 33 Candidates, 30+ Stage Programs, 20+ Non-stage Programs</p>
+                            <div class="grid grid-cols-3 gap-2 mt-3">
+                                <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-41.png" alt="" class="rounded" style="height: 60px; object-fit: cover;">
+                                <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-42.png" alt="" class="rounded" style="height: 60px; object-fit: cover;">
+                                <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-43.png" alt="" class="rounded" style="height: 60px; object-fit: cover;">
                             </div>
                         </div>
                     </div>
                 </div>
-                
-                <!-- Report 3 -->
-                <div class="report-card">
-                    <div class="report-header">
-                        <div class="report-date">December, 2024</div>
-                        <div class="report-type">Programs & Reports</div>
-                    </div>
-                    
-                    <div class="report-content">
-                        <div class="report-content-with-image">
-                            <div class="report-image">
-                                <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/mask-group-1.png" alt="MALABART">
-                            </div>
-                            <div class="report-text">
-                                <h3 class="report-content-title">MALABART</h3>
-                                <p class="report-by">Class Artsfest</p>
-                                <p>
-                                    27th Batch of Darul Hidaya Da'wa College, class union (QUAF) Qualitative Union for Academic Focus,
-                                    organized a class Artsfest under the name "MALABART." Inspired by history of Malabar
-                                    Muslims.10/11/2024 The logo was launched by Ustad Abdul Kareem Thangal, Three teams and names were
-                                    announced by class teacher Munavvar Hudawi. Coordinators: Ustad Nasik, Ustad Ramees, Ustad Mazin
-                                    Sha.
-                                </p>
+            </div>
+            
+            <!-- Report 4: Career Development Program -->
+            <div class="report-card">
+                <div class="report-header">
+                    <span>March-1-2025</span>
+                    <span>Programs & Reports</span>
+                </div>
+                <div class="report-content">
+                    <div class="md:flex gap-4">
+                        <div class="report-image md:w-48 md:flex-shrink-0">
+                            <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/mask-group-2.png" alt="Career Development">
+                        </div>
+                        <div class="flex-1">
+                            <h3 style="font-family: 'ABeeZee', sans-serif; font-size: 1.1rem; margin-bottom: 0.5rem;">Career Development Program</h3>
+                            <p style="font-size: 0.85rem; margin-bottom: 0.25rem;">March-1 to April-1</p>
+                            <p style="font-weight: 500; font-size: 0.85rem; margin-bottom: 0.75rem;">Ramadan Vocation</p>
+                            <p style="font-size: 0.8rem; line-height: 1.6;">From March 1 to April 1, 2025, the Quaf Organization conducted a Career Development Program aimed at enhancing students' overall skills. The program focused on developing proficiency in four languages—Arabic, Urdu, English, and Malayalam—along with Quran recitation with Tajweed.</p>
+                            <div class="grid grid-cols-4 gap-2 mt-3">
+                                <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-44.png" alt="" class="rounded" style="height: 80px; object-fit: cover;">
+                                <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-45.png" alt="" class="rounded" style="height: 80px; object-fit: cover;">
+                                <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-46.png" alt="" class="rounded" style="height: 80px; object-fit: cover;">
+                                <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-47.png" alt="" class="rounded" style="height: 80px; object-fit: cover;">
                             </div>
                         </div>
                     </div>
                 </div>
-                
-                <div class="text-center mt-5">
-                    <button class="btn btn-primary">See All Schedule</button>
+            </div>
+            
+            <!-- Report 5: KALWAR -->
+            <div class="report-card">
+                <div class="report-header">
+                    <span>December, 2025</span>
+                    <span>Programs & Reports</span>
                 </div>
+                <div class="report-content">
+                    <div class="md:flex gap-4">
+                        <div class="report-image md:w-48 md:flex-shrink-0">
+                            <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/mask-group-3.png" alt="KALWAR">
+                        </div>
+                        <div class="flex-1">
+                            <h3 style="font-family: 'ABeeZee', sans-serif; font-size: 1.1rem; margin-bottom: 0.5rem;">KALWAR</h3>
+                            <p style="font-weight: 500; font-size: 0.85rem; margin-bottom: 0.75rem;">Class Artsfest</p>
+                            <p style="font-size: 0.8rem; line-height: 1.6;">27th Batch of Darul Hidaya Da'wa College, class union (QUAF) organized a class Artsfest under the name "KALWAR." Behind The Teams Name These Names (BURSA, EDIRNE, ISTANBUL) were more important in Islamic history. 3 Teams, 27 Candidates, 30+ Stage Programs, 20+ Non-stage Programs and 10+ Sports</p>
+                            <div class="grid grid-cols-3 gap-2 mt-3">
+                                <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-54.png" alt="" class="rounded" style="height: 60px; object-fit: cover;">
+                                <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-55.png" alt="" class="rounded" style="height: 60px; object-fit: cover;">
+                                <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-56.png" alt="" class="rounded" style="height: 60px; object-fit: cover;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-8">
+                <button class="btn btn-primary">See All Schedule</button>
             </div>
         </div>
     </section>
     
-    <!-- Gallery Preview -->
-    <section class="gallery-preview">
+    <!-- Gallery Preview Section -->
+    <section class="py-16" style="background-color: var(--shadessecondary-15);">
         <div class="container">
-            <div class="gallery-preview-header">
-                <div>
-                    <h2 class="gallery-preview-title">
-                        <span class="blue">40th Batch</span><br>
-                        <span class="white">Darul Huda Islamic University</span>
-                    </h2>
-                </div>
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+                <h2 class="section-title">
+                    <span style="color: #0088ff;">40th Batch</span><br>
+                    <span>Darul Huda Islamic University</span>
+                </h2>
                 <button class="btn btn-outline-dark">Academic Focus</button>
             </div>
             
-            <div class="gallery-preview-grid">
-                <div class="gallery-preview-item">
-                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/text.png" alt="">
+            <div class="gallery-grid">
+                <div class="gallery-item">
+                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/text.png" alt="Gallery">
                 </div>
-                <div class="gallery-preview-item">
-                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/text-1.png" alt="">
+                <div class="gallery-item">
+                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/text-1.png" alt="Gallery">
                 </div>
-                <div class="gallery-preview-item">
-                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/text-2.png" alt="">
-                    <div class="gallery-preview-info">
-                        <div class="gallery-preview-name">Group Photo</div>
-                        <div class="gallery-preview-views">26K VIEWS</div>
+                <div class="gallery-item">
+                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/text-2.png" alt="Gallery">
+                    <div style="position: absolute; bottom: 1rem; left: 1rem; color: white;">
+                        <div style="font-family: 'ABeeZee', sans-serif; font-size: 1rem;">Group Photo</div>
+                        <div style="font-size: 0.65rem; font-weight: 600;">26K VIEWS</div>
                     </div>
                 </div>
-                <div class="gallery-preview-item">
-                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/reel-1.png" alt="">
-                    <div class="gallery-preview-info">
-                        <div class="gallery-preview-name">QUAF</div>
-                        <div class="gallery-preview-views">30K VIEWS</div>
+                <div class="gallery-item">
+                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/reel-1.png" alt="Gallery">
+                    <div style="position: absolute; bottom: 1rem; left: 1rem; color: white;">
+                        <div style="font-family: 'ABeeZee', sans-serif; font-size: 1rem;">QUAF</div>
+                        <div style="font-size: 0.65rem; font-weight: 600;">30K VIEWS</div>
                     </div>
                 </div>
             </div>
@@ -1490,37 +1103,37 @@
     </section>
     
     <!-- Gallery Section -->
-    <section id="gallery" class="gallery-section">
+    <section id="gallery" class="py-16">
         <div class="container">
-            <div class="gallery-header">
-                <h2 class="gallery-title">Check our latest gallery</h2>
-                <p>
+            <div class="text-center mb-8">
+                <h2 class="section-title" style="font-family: 'Clash Display', sans-serif;">Check our latest gallery</h2>
+                <p class="text-sm" style="color: var(--shadesdark-80);">
                     A glimpse into our creative programs in action.<br>
                     Empowering talent through learning and collaboration.
                 </p>
             </div>
             
-            <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/images.svg" alt="Gallery Images" class="gallery-image-grid">
+            <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/images.svg" alt="Gallery" class="w-full rounded-lg mb-4">
             
-            <div class="text-center mt-4">
+            <div class="text-center">
                 <button class="btn btn-primary">View All Gallery</button>
             </div>
         </div>
     </section>
     
-    <!-- CTA Section - Compact Design -->
+    <!-- CTA Section -->
     <section class="cta-section">
         <div class="container">
-            <div class="cta-content">
-                <div class="cta-logo">
-                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/logo3d-1.png" alt="QUAF Logo">
-                </div>
-                <div class="cta-text">
-                    <h2 class="cta-title">Let's join our community</h2>
-                    <p class="cta-description">
+            <div class="flex flex-col md:flex-row items-center gap-6">
+                <div class="flex-1 text-center md:text-left">
+                    <h2 style="font-family: 'ADLaM Display', cursive; font-size: 1.5rem; color: white; margin-bottom: 0.75rem;">Let's join our community</h2>
+                    <p style="color: var(--shadesdark-15); font-size: 0.85rem; margin-bottom: 1rem;">
                         Join our community to participate in our programs and learn more about our education system.
                     </p>
                     <button class="btn btn-secondary">Join now</button>
+                </div>
+                <div class="w-32 h-32 md:w-40 md:h-40 flex items-center justify-center" style="background-color: rgba(255,255,255,0.1); border-radius: 50%;">
+                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/logo3d-1.png" alt="QUAF Logo" class="w-20 h-20 md:w-24 md:h-24">
                 </div>
             </div>
         </div>
@@ -1529,38 +1142,35 @@
     <!-- Footer -->
     <footer id="contact" class="footer">
         <div class="container">
-            <div class="footer-content">
-                <div class="footer-newsletter">
-                    <h2 class="footer-title">Never miss a single news</h2>
-                    <p class="footer-description">
-                        Stay informed with all the latest updates and news about our programs. Never miss a moment of our exciting and innovative gatherings in the world of technology and beyond.
-                    </p>
-                    
-                    <form class="newsletter-form">
-                        <input type="email" placeholder="Enter your email address" class="newsletter-input" required>
-                        <button type="submit" class="btn btn-primary">Subscribe</button>
-                    </form>
+            <div class="text-center mb-8">
+                <h2 class="footer-title">Never miss a single news</h2>
+                <p style="color: var(--shadesdark-15); font-size: 0.85rem; margin-bottom: 1rem; max-width: 600px; margin-left: auto; margin-right: auto;">
+                    Stay informed with all the latest updates and news about our programs. Never miss a moment of our exciting and innovative gatherings.
+                </p>
+                
+                <form class="newsletter-form max-w-md mx-auto">
+                    <input type="email" placeholder="Enter your email address" class="newsletter-input" required>
+                    <button type="submit" class="btn btn-primary">Subscribe</button>
+                </form>
+            </div>
+            
+            <div class="border-t border-gray-600 pt-6">
+                <div class="flex flex-col md:flex-row justify-between items-center gap-4 mb-4">
+                    <div style="font-family: 'ADLaM Display', cursive; font-size: 1.25rem;">QUAF</div>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-whatsapp"></i></a>
+                    </div>
                 </div>
                 
-                <div class="footer-bottom">
-                    <div class="footer-bottom-content">
-                        <div class="footer-logo">QUAF</div>
-                        
-                        <div class="social-links">
-                            <a href="#"><i class="fab fa-instagram"></i></a>
-                            <a href="#"><i class="fab fa-facebook"></i></a>
-                            <a href="#"><i class="fab fa-whatsapp"></i></a>
-                        </div>
-                    </div>
-                    
-                    <div class="footer-links">
-                        <a href="#">Terms & Conditions</a>
-                        <a href="#">Privacy Policy</a>
-                    </div>
-                    
-                    <div class="footer-copyright">
-                        Copyright © QUAF-2026 All Rights Reserved
-                    </div>
+                <div class="flex flex-wrap justify-center gap-4 mb-4 text-sm">
+                    <a href="#" style="color: var(--shadesdark-15);">Terms & Conditions</a>
+                    <a href="#" style="color: var(--shadesdark-15);">Privacy Policy</a>
+                </div>
+                
+                <div class="text-center text-sm" style="color: var(--shadesdark-15);">
+                    Copyright © QUAF-2026 All Rights Reserved
                 </div>
             </div>
         </div>
@@ -1570,46 +1180,17 @@
         // Mobile Menu Toggle
         document.addEventListener('DOMContentLoaded', function() {
             const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-            const mobileMenuClose = document.getElementById('mobileMenuClose');
-            const mobileMenu = document.getElementById('mobileMenu');
             
             if (mobileMenuBtn) {
                 mobileMenuBtn.addEventListener('click', function() {
-                    mobileMenu.classList.add('active');
-                    document.body.style.overflow = 'hidden';
+                    alert('Mobile menu - Feature coming soon!');
                 });
             }
             
-            if (mobileMenuClose) {
-                mobileMenuClose.addEventListener('click', function() {
-                    mobileMenu.classList.remove('active');
-                    document.body.style.overflow = '';
-                });
-            }
-            
-            // Close mobile menu when clicking outside
-            document.addEventListener('click', function(event) {
-                if (mobileMenu && mobileMenuBtn && !mobileMenu.contains(event.target) && !mobileMenuBtn.contains(event.target)) {
-                    mobileMenu.classList.remove('active');
-                    document.body.style.overflow = '';
-                }
-            });
-            
-            // Close mobile menu when clicking a link
-            if (mobileMenu) {
-                mobileMenu.querySelectorAll('a').forEach(link => {
-                    link.addEventListener('click', () => {
-                        mobileMenu.classList.remove('active');
-                        document.body.style.overflow = '';
-                    });
-                });
-            }
-            
-            // Smooth scrolling for anchor links
+            // Smooth scrolling
             document.querySelectorAll('a[href^="#"]').forEach(anchor => {
                 anchor.addEventListener('click', function(e) {
                     e.preventDefault();
-                    
                     const targetId = this.getAttribute('href');
                     if (targetId === '#') return;
                     
@@ -1623,7 +1204,7 @@
                 });
             });
             
-            // Newsletter form submission
+            // Newsletter form
             const newsletterForm = document.querySelector('.newsletter-form');
             if (newsletterForm) {
                 newsletterForm.addEventListener('submit', function(e) {
@@ -1633,13 +1214,11 @@
                     if (email && email.includes('@')) {
                         alert('Thank you for subscribing to QUAF newsletter!');
                         this.reset();
-                    } else {
-                        alert('Please enter a valid email address.');
                     }
                 });
             }
             
-            // Join now button functionality
+            // Join buttons
             document.querySelectorAll('.btn-secondary, .btn-primary').forEach(button => {
                 if (button.textContent.includes('Join now')) {
                     button.addEventListener('click', function() {
