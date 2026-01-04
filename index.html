@@ -4,68 +4,41 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>QUAF - Qualitative Union for Academic Focus</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Abel&family=ABeeZee&family=Alfa+Slab+One&family=ADLaM+Display&family=Inika&family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Abel&family=ABeeZee&family=Alfa+Slab+One&family=ADLaM+Display&family=Inika&family=Manrope:wght@300;400;500;600;700;800&family=Clash+Display:wght@600&display=swap" rel="stylesheet">
     <style>
         /* CSS Variables */
         :root {
-            /* Improved Color Palette */
-            --maindark: #0a0809;
-            --mainprimary: #6a30e5;
-            --mainprimary-light: #8a5ce8;
-            --mainsecondary: #f0b500;
-            --maintertiary: #2a2a2a;
+            --maindark: #0f0b0c;
+            --mainprimary: #7a38fc;
+            --mainsecondary: #febf00;
+            --maintertiary: #fb714c;
             --mainwhite: #ffffff;
             
-            --shadesdark-5: #f5f7fa;
-            --shadesdark-10: #e1e5eb;
-            --shadesdark-15: #ced4da;
-            --shadesdark-30: #949ba3;
-            --shadesdark-40: #6c757d;
-            --shadesdark-60: #495057;
-            --shadesdark-80: #2d343a;
+            --shadesdark-5: #f3f3f3;
+            --shadesdark-10: #e7e7e7;
+            --shadesdark-15: #dbdadb;
+            --shadesdark-30: #b7b6b6;
+            --shadesdark-40: #9f9d9e;
+            --shadesdark-60: #6f6d6d;
+            --shadesdark-80: #3f3c3d;
             
-            --shadesprimary-10: rgba(106, 48, 229, 0.1);
-            --shadessecondary-15: rgba(240, 181, 0, 0.15);
+            --shadesprimary-10: #f2ebff;
+            --shadessecondary-15: #fff5d9;
             
-            /* Font Sizes - Mobile First */
-            --font-xs: 12px;
-            --font-sm: 14px;
-            --font-base: 16px;
-            --font-lg: 18px;
-            --font-xl: 20px;
-            --font-2xl: 24px;
-            --font-3xl: 30px;
-            --font-4xl: 36px;
-            --font-5xl: 48px;
-            --font-6xl: 64px;
-            
-            /* Spacing */
-            --space-xs: 0.25rem;
-            --space-sm: 0.5rem;
-            --space-md: 1rem;
-            --space-lg: 1.5rem;
-            --space-xl: 2rem;
-            --space-2xl: 3rem;
-            --space-3xl: 4rem;
-            --space-4xl: 6rem;
-            
-            /* Border Radius */
-            --radius-sm: 4px;
-            --radius-md: 8px;
-            --radius-lg: 12px;
-            --radius-xl: 16px;
-            --radius-2xl: 24px;
-            
-            /* Shadows */
-            --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
-            --shadow-md: 0 4px 6px rgba(0,0,0,0.07);
-            --shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
-            --shadow-xl: 0 20px 25px rgba(0,0,0,0.15);
+            /* Font Families */
+            --font-manrope: 'Manrope', Helvetica, sans-serif;
+            --font-abel: 'Abel', sans-serif;
+            --font-inika: 'Inika', serif;
+            --font-alfaslab: 'Alfa Slab One', cursive;
+            --font-abeeyzee: 'ABeeZee', sans-serif;
+            --font-adlam: 'ADLaM Display', cursive;
+            --font-clash: 'Clash Display', sans-serif;
         }
         
-        /* Base Styles */
+        /* Reset & Base Styles */
         * {
             margin: 0;
             padding: 0;
@@ -77,8 +50,8 @@
         }
         
         body {
-            font-family: 'Manrope', Helvetica, sans-serif;
-            font-size: var(--font-base);
+            font-family: var(--font-manrope);
+            font-size: 16px;
             line-height: 1.6;
             color: var(--maindark);
             background-color: var(--mainwhite);
@@ -88,33 +61,12 @@
         h1, h2, h3, h4, h5, h6 {
             font-weight: 700;
             line-height: 1.2;
-            margin-bottom: var(--space-md);
-        }
-        
-        h1 {
-            font-size: var(--font-4xl);
-        }
-        
-        h2 {
-            font-size: var(--font-3xl);
-        }
-        
-        h3 {
-            font-size: var(--font-2xl);
-        }
-        
-        p {
-            margin-bottom: var(--space-md);
+            margin-bottom: 1rem;
         }
         
         a {
-            color: var(--mainprimary);
             text-decoration: none;
-            transition: color 0.2s ease;
-        }
-        
-        a:hover {
-            color: var(--mainprimary-light);
+            color: inherit;
         }
         
         img {
@@ -125,61 +77,28 @@
         
         .container {
             width: 100%;
-            max-width: 1280px;
+            max-width: 1440px;
             margin: 0 auto;
-            padding: 0 var(--space-lg);
+            padding: 0 1rem;
         }
         
         section {
-            padding: var(--space-2xl) 0;
-        }
-        
-        /* Utility Classes */
-        .text-center {
-            text-align: center;
-        }
-        
-        .text-primary {
-            color: var(--mainprimary);
-        }
-        
-        .text-secondary {
-            color: var(--mainsecondary);
-        }
-        
-        .text-white {
-            color: var(--mainwhite);
-        }
-        
-        .bg-dark {
-            background-color: var(--maindark);
-        }
-        
-        .bg-primary {
-            background-color: var(--mainprimary);
-        }
-        
-        .bg-secondary {
-            background-color: var(--mainsecondary);
-        }
-        
-        .bg-light {
-            background-color: var(--shadesdark-5);
+            padding: 4rem 0;
         }
         
         .btn {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            padding: var(--space-md) var(--space-xl);
-            border-radius: var(--radius-md);
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
             font-weight: 600;
-            font-size: var(--font-base);
+            font-size: 16px;
             cursor: pointer;
             border: none;
             transition: all 0.3s ease;
-            text-align: center;
             min-height: 44px;
+            text-align: center;
         }
         
         .btn-primary {
@@ -188,9 +107,9 @@
         }
         
         .btn-primary:hover {
-            background-color: var(--mainprimary-light);
+            background-color: #6a30e5;
             transform: translateY(-2px);
-            box-shadow: var(--shadow-lg);
+            box-shadow: 0 10px 20px rgba(122, 56, 252, 0.2);
         }
         
         .btn-secondary {
@@ -201,7 +120,6 @@
         .btn-secondary:hover {
             background-color: #e0a900;
             transform: translateY(-2px);
-            box-shadow: var(--shadow-lg);
         }
         
         .btn-outline {
@@ -211,27 +129,50 @@
         }
         
         .btn-outline:hover {
-            background-color: var(--shadesprimary-10);
+            background-color: rgba(122, 56, 252, 0.1);
         }
         
         /* Hero Section */
         .hero-section {
-            background: linear-gradient(135deg, var(--maindark) 0%, #1a1518 100%);
+            background: linear-gradient(rgba(15, 11, 12, 0.9), rgba(15, 11, 12, 0.9)), 
+                        url('https://c.animaapp.com/mjwngvpjWKAdmV/img/hero-bg.png');
+            background-size: cover;
+            background-position: center;
             color: var(--mainwhite);
-            padding-top: var(--space-lg);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
             position: relative;
             overflow: hidden;
         }
         
-        .hero-bg {
+        .hero-bg-effects {
             position: absolute;
             top: 0;
             left: 0;
-            right: 0;
-            bottom: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
             z-index: 0;
-            background: radial-gradient(circle at 20% 50%, rgba(106, 48, 229, 0.15) 0%, transparent 50%),
-                        radial-gradient(circle at 80% 20%, rgba(240, 181, 0, 0.1) 0%, transparent 40%);
+        }
+        
+        .hero-glow-1 {
+            position: absolute;
+            top: 122px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 624px;
+            height: 625px;
+            opacity: 0.6;
+        }
+        
+        .hero-glow-2 {
+            position: absolute;
+            top: 293px;
+            right: 0;
+            width: 515px;
+            height: 489px;
+            opacity: 0.5;
         }
         
         /* Navigation */
@@ -239,7 +180,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: var(--space-md) 0;
+            padding: 2rem 0;
             position: relative;
             z-index: 10;
         }
@@ -247,141 +188,189 @@
         .logo {
             display: flex;
             align-items: center;
-            gap: var(--space-sm);
-            font-family: 'Abel', sans-serif;
-            font-size: var(--font-2xl);
+            gap: 0.5rem;
+            font-family: var(--font-abel);
+            font-size: 1.5rem;
             font-weight: 700;
-            color: var(--mainwhite);
         }
         
         .logo img {
-            width: 40px;
-            height: 40px;
+            width: 47px;
+            height: 47px;
         }
         
         .nav-links {
             display: none;
-        }
-        
-        .nav-links.active {
-            display: flex;
-            flex-direction: column;
-            position: absolute;
-            top: 100%;
-            left: 0;
-            right: 0;
-            background-color: var(--maindark);
-            padding: var(--space-lg);
-            border-radius: var(--radius-md);
-            box-shadow: var(--shadow-xl);
-            z-index: 100;
+            list-style: none;
+            gap: 3rem;
         }
         
         .nav-links a {
-            color: var(--shadesdark-15);
-            padding: var(--space-md) 0;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-        }
-        
-        .nav-links a:last-child {
-            border-bottom: none;
+            color: var(--shadesdark-30);
+            font-weight: 500;
+            transition: color 0.3s ease;
         }
         
         .nav-links a:hover {
             color: var(--mainwhite);
         }
         
-        .menu-toggle {
+        .nav-links a.active {
+            color: var(--mainwhite);
+        }
+        
+        .mobile-menu-btn {
             background: none;
             border: none;
             color: var(--mainwhite);
-            font-size: var(--font-2xl);
+            font-size: 1.5rem;
             cursor: pointer;
-            width: 44px;
-            height: 44px;
+            z-index: 100;
+        }
+        
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 80%;
+            max-width: 300px;
+            height: 100%;
+            background-color: var(--maindark);
+            padding: 2rem;
+            z-index: 99;
+            transition: right 0.3s ease;
             display: flex;
-            align-items: center;
-            justify-content: center;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        
+        .mobile-menu.active {
+            right: 0;
+        }
+        
+        .mobile-menu a {
+            color: var(--mainwhite);
+            font-size: 1.2rem;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .mobile-menu-close {
+            align-self: flex-end;
+            background: none;
+            border: none;
+            color: var(--mainwhite);
+            font-size: 1.5rem;
+            cursor: pointer;
         }
         
         /* Hero Content */
         .hero-content {
-            padding: var(--space-2xl) 0;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
             position: relative;
             z-index: 1;
+            padding: 2rem 0;
         }
         
         .hero-title {
-            font-family: 'Abel', sans-serif;
-            font-size: var(--font-4xl);
-            margin-bottom: var(--space-lg);
+            font-family: var(--font-abel);
+            font-size: 2.5rem;
             line-height: 1.1;
+            margin-bottom: 1rem;
         }
         
         .hero-subtitle {
             color: var(--shadesdark-15);
-            margin-bottom: var(--space-xl);
-            font-size: var(--font-lg);
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
         }
         
         .hero-buttons {
             display: flex;
-            flex-direction: column;
-            gap: var(--space-md);
-            margin-bottom: var(--space-2xl);
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
         }
         
         .hero-graphics {
+            text-align: center;
             position: relative;
-            max-width: 500px;
-            margin: 0 auto;
+        }
+        
+        .hero-vector-1 {
+            position: absolute;
+            bottom: -2rem;
+            left: -1rem;
+            width: 85px;
+            height: 80px;
+        }
+        
+        .hero-vector-2 {
+            position: absolute;
+            top: 40%;
+            right: -1rem;
+            width: 27px;
+            height: 27px;
+        }
+        
+        .hero-3d-logo {
+            position: absolute;
+            bottom: 0;
+            right: 2rem;
+            width: 164px;
+            z-index: 2;
         }
         
         /* Acronym Banner */
         .acronym-banner {
             background-color: var(--shadessecondary-15);
-            padding: var(--space-lg) 0;
+            padding: 1.5rem 0;
         }
         
         .acronym-items {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            gap: var(--space-lg);
-            font-family: 'Inika', serif;
-            font-size: var(--font-lg);
-            color: var(--maindark);
+            align-items: center;
+            gap: 2rem;
+            font-family: var(--font-inika);
+            font-size: 1.2rem;
+            color: #4f4646;
         }
         
-        .acronym-items span {
+        .acronym-items .bold {
             font-weight: 700;
         }
         
         /* About Section */
         .about-section {
-            background-color: var(--mainwhite);
+            position: relative;
         }
         
         .section-header {
             display: flex;
             flex-direction: column;
-            gap: var(--space-lg);
-            margin-bottom: var(--space-2xl);
+            gap: 2rem;
+            margin-bottom: 4rem;
         }
         
         .section-title {
-            font-family: 'Alfa Slab One', cursive;
+            font-family: var(--font-alfaslab);
+            font-size: 2.5rem;
             color: var(--maindark);
         }
         
         .about-grid {
             display: grid;
             grid-template-columns: 1fr;
-            gap: var(--space-lg);
+            gap: 1.5rem;
         }
         
         .about-card {
-            border-radius: var(--radius-xl);
+            border-radius: 1rem;
             overflow: hidden;
             height: 300px;
             position: relative;
@@ -399,36 +388,97 @@
             left: 0;
             right: 0;
             background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
-            padding: var(--space-lg);
+            padding: 1.5rem;
             color: var(--mainwhite);
+        }
+        
+        .about-bg-shape {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: auto;
+            z-index: -1;
         }
         
         /* Programs Section */
         .programs-section {
-            background: linear-gradient(135deg, var(--maindark) 0%, #2a1f2b 100%);
+            background: url('https://c.animaapp.com/mjwngvpjWKAdmV/img/bg-glow-effect.png');
+            background-size: cover;
+            background-position: center;
             color: var(--mainwhite);
             position: relative;
             overflow: hidden;
         }
         
-        .program-card {
-            background-color: rgba(255, 255, 255, 0.05);
-            border-radius: var(--radius-lg);
-            padding: var(--space-lg);
-            margin-bottom: var(--space-lg);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+        .programs-content {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
         }
         
-        .program-title {
-            font-family: 'ADLaM Display', cursive;
-            color: var(--mainwhite);
-            margin-bottom: var(--space-md);
+        .programs-title {
+            font-family: var(--font-adlam);
+            font-size: 2.5rem;
+            line-height: 1.1;
+        }
+        
+        .programs-list {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+        
+        .program-item {
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--shadesdark-60);
+        }
+        
+        .program-name {
+            font-family: var(--font-adlam);
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
         }
         
         .program-date {
-            color: var(--shadesdark-15);
-            font-weight: 600;
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+        }
+        
+        .program-time {
+            color: var(--shadesdark-40);
+        }
+        
+        .programs-image {
+            position: relative;
+            margin-top: 2rem;
+        }
+        
+        .programs-image-bg {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 75%;
+            background-color: var(--shadessecondary-15);
+            border-radius: 200px 200px 0 0;
+        }
+        
+        .programs-image img {
+            position: relative;
+            z-index: 1;
+            border-radius: 200px 200px 0 0;
+            height: 450px;
+            object-fit: cover;
+        }
+        
+        .programs-graphic {
+            position: absolute;
+            top: 94px;
+            left: 149px;
+            width: 100%;
+            max-width: 1119px;
+            height: auto;
+            z-index: 0;
         }
         
         /* Scholars Section */
@@ -436,213 +486,472 @@
             background-color: var(--shadessecondary-15);
         }
         
+        .scholars-header {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 1.5rem;
+            margin-bottom: 4rem;
+        }
+        
+        .scholars-title {
+            font-family: var(--font-alfaslab);
+            font-size: 2.5rem;
+            color: var(--maindark);
+            position: relative;
+        }
+        
+        .scholars-title-line {
+            position: absolute;
+            top: 95px;
+            left: 265px;
+            width: 220px;
+            height: 2px;
+            background-color: var(--mainsecondary);
+        }
+        
+        .scholars-title-icon {
+            position: absolute;
+            top: 10px;
+            left: 467px;
+            width: 62px;
+            height: 65px;
+        }
+        
         .scholars-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: var(--space-lg);
+            gap: 1.5rem;
         }
         
         .scholar-card {
             background-color: var(--mainwhite);
-            border-radius: var(--radius-lg);
+            border-radius: 1rem;
             overflow: hidden;
-            box-shadow: var(--shadow-md);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
         
         .scholar-card:hover {
             transform: translateY(-5px);
-            box-shadow: var(--shadow-lg);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
         }
         
         .scholar-image {
-            height: 200px;
+            height: 240px;
             width: 100%;
             object-fit: cover;
         }
         
         .scholar-info {
-            padding: var(--space-lg);
+            padding: 1.25rem;
         }
         
         .scholar-name {
-            font-family: 'ABeeZee', sans-serif;
-            font-weight: 600;
-            color: var(--maindark);
-            margin-bottom: var(--space-xs);
+            font-family: var(--font-abeeyzee);
+            font-size: 1.1rem;
+            margin-bottom: 0.25rem;
         }
         
         .scholar-role {
-            font-size: var(--font-sm);
-            color: var(--shadesdark-60);
+            font-size: 0.75rem;
+            color: var(--shadesdark-80);
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
         
         /* Reports Section */
+        .reports-section {
+            position: relative;
+        }
+        
+        .reports-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+        
+        .reports-title {
+            font-family: var(--font-adlam);
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        
         .report-card {
-            background-color: var(--mainwhite);
-            border-radius: var(--radius-lg);
-            overflow: hidden;
-            margin-bottom: var(--space-xl);
-            box-shadow: var(--shadow-md);
+            margin-bottom: 3rem;
         }
         
         .report-header {
             background-color: var(--maindark);
             color: var(--mainwhite);
-            padding: var(--space-lg);
+            padding: 1.5rem;
+            border-radius: 1rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
-            gap: var(--space-md);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .report-date, .report-type {
+            font-family: var(--font-abeeyzee);
+            font-size: 1.3rem;
         }
         
         .report-content {
-            padding: var(--space-lg);
+            background-color: var(--shadessecondary-15);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
         }
         
-        .report-title {
-            font-family: 'ABeeZee', sans-serif;
-            font-size: var(--font-xl);
-            color: var(--maindark);
-            margin-bottom: var(--space-md);
+        .report-title-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .report-content-title {
+            font-family: var(--font-abeeyzee);
+            font-size: 1.5rem;
+        }
+        
+        .report-time {
+            font-family: var(--font-abeeyzee);
+            font-size: 1.5rem;
+        }
+        
+        .report-by {
+            font-weight: 500;
+        }
+        
+        .report-images {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+        
+        .report-images img {
+            width: 100%;
+            height: 74px;
+            object-fit: cover;
+            border-radius: 0.5rem;
+        }
+        
+        .reports-elements {
+            position: absolute;
+            top: 158px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 1172px;
+            height: auto;
+            z-index: -1;
+        }
+        
+        /* Gallery Preview */
+        .gallery-preview {
+            background-color: var(--shadessecondary-15);
+        }
+        
+        .gallery-preview-header {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+        
+        .gallery-preview-title {
+            font-family: var(--font-alfaslab);
+            font-size: 3rem;
+            -webkit-text-stroke: 1px #000000;
+        }
+        
+        .gallery-preview-title .blue {
+            color: #0088ff;
+        }
+        
+        .gallery-preview-title .white {
+            color: var(--mainwhite);
+        }
+        
+        .gallery-preview-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+        
+        .gallery-preview-item {
+            border-radius: 1rem;
+            overflow: hidden;
+            height: 300px;
+            position: relative;
+        }
+        
+        .gallery-preview-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .gallery-preview-info {
+            position: absolute;
+            bottom: 1.25rem;
+            left: 1.25rem;
+            color: var(--mainwhite);
+        }
+        
+        .gallery-preview-name {
+            font-family: var(--font-abeeyzee);
+            font-size: 1.5rem;
+        }
+        
+        .gallery-preview-views {
+            font-size: 0.75rem;
+            color: var(--shadesdark-10);
+            font-weight: 600;
+            text-transform: uppercase;
         }
         
         /* Gallery Section */
         .gallery-section {
-            background-color: var(--mainwhite);
-        }
-        
-        .gallery-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: var(--space-md);
-            margin-bottom: var(--space-xl);
-        }
-        
-        .gallery-item {
-            border-radius: var(--radius-lg);
-            overflow: hidden;
-            height: 200px;
             position: relative;
         }
         
-        .gallery-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.3s ease;
+        .gallery-header {
+            text-align: center;
+            margin-bottom: 4rem;
         }
         
-        .gallery-item:hover img {
-            transform: scale(1.05);
+        .gallery-title {
+            font-family: var(--font-clash);
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .gallery-image-grid {
+            width: 100%;
+            height: auto;
+            margin-bottom: 3rem;
+        }
+        
+        .gallery-floating-image {
+            position: absolute;
+            top: 1121px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 151px;
+            height: auto;
         }
         
         /* CTA Section */
         .cta-section {
-            background: linear-gradient(135deg, var(--mainprimary) 0%, #8a5ce8 100%);
-            color: var(--mainwhite);
-            border-radius: var(--radius-xl);
-            margin: var(--space-2xl);
+            background-color: var(--maindark);
+            border-radius: 1rem;
+            margin: 4rem 1rem;
             position: relative;
             overflow: hidden;
+        }
+        
+        .cta-bg-effect-1 {
+            position: absolute;
+            top: 9.64%;
+            left: 0;
+            width: 28.68%;
+            height: 44.7%;
+            background-color: rgba(254, 191, 0, 0.7);
+            border-radius: 167.78px / 69.28px;
+            filter: blur(185px);
+        }
+        
+        .cta-bg-effect-2 {
+            position: absolute;
+            top: 50%;
+            right: 0;
+            width: 25.14%;
+            height: 39.18%;
+            background-color: rgba(67, 153, 226, 0.7);
+            border-radius: 147.06px / 60.73px;
+            filter: blur(175px);
         }
         
         .cta-content {
             display: flex;
             flex-direction: column;
             align-items: center;
-            text-align: center;
-            padding: var(--space-2xl) var(--space-lg);
+            gap: 2rem;
+            padding: 3rem 1.5rem;
             position: relative;
             z-index: 1;
         }
         
+        .cta-text {
+            text-align: center;
+        }
+        
         .cta-title {
-            font-family: 'ADLaM Display', cursive;
-            margin-bottom: var(--space-md);
+            font-family: var(--font-adlam);
+            font-size: 2rem;
+            color: var(--mainwhite);
+            margin-bottom: 1rem;
+        }
+        
+        .cta-description {
+            color: var(--shadesdark-15);
+            margin-bottom: 1.5rem;
+        }
+        
+        .cta-image {
+            max-width: 298px;
         }
         
         /* Footer */
         .footer {
-            background-color: var(--maindark);
+            background: url('https://c.animaapp.com/mjwngvpjWKAdmV/img/bg.png');
+            background-size: cover;
+            background-position: center;
             color: var(--mainwhite);
-            padding: var(--space-2xl) 0;
+            position: relative;
+            overflow: hidden;
         }
         
         .footer-content {
-            display: flex;
-            flex-direction: column;
-            gap: var(--space-xl);
+            padding: 4rem 0;
+            position: relative;
+            z-index: 1;
         }
         
         .footer-newsletter {
-            background-color: rgba(255, 255, 255, 0.05);
-            border-radius: var(--radius-lg);
-            padding: var(--space-xl);
             text-align: center;
+            margin-bottom: 4rem;
+        }
+        
+        .footer-title {
+            font-family: var(--font-clash);
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .footer-description {
+            color: var(--shadesdark-15);
+            margin-bottom: 2rem;
+            max-width: 730px;
+            margin-left: auto;
+            margin-right: auto;
         }
         
         .newsletter-form {
             display: flex;
             flex-direction: column;
-            gap: var(--space-md);
-            max-width: 500px;
+            gap: 1rem;
+            max-width: 600px;
             margin: 0 auto;
         }
         
         .newsletter-input {
-            padding: var(--space-md);
-            border-radius: var(--radius-md);
+            padding: 1rem;
+            border-radius: 0.5rem;
             border: none;
-            font-size: var(--font-base);
+            font-size: 1rem;
         }
         
-        .footer-links {
+        .footer-bottom {
+            padding-top: 2rem;
+            border-top: 1px solid rgba(111, 109, 109, 0.4);
+        }
+        
+        .footer-bottom-content {
             display: flex;
             flex-direction: column;
-            gap: var(--space-lg);
-            padding-top: var(--space-xl);
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            align-items: center;
+            gap: 1.5rem;
+        }
+        
+        .footer-logo {
+            font-family: var(--font-adlam);
+            font-size: 1.75rem;
         }
         
         .social-links {
             display: flex;
-            gap: var(--space-lg);
-            justify-content: center;
+            gap: 1.5rem;
         }
         
         .social-links a {
             color: var(--mainwhite);
-            font-size: var(--font-xl);
+            font-size: 1.5rem;
         }
         
-        .footer-bottom {
-            text-align: center;
-            padding-top: var(--space-lg);
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        .footer-links {
+            display: flex;
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+        
+        .footer-copyright {
             color: var(--shadesdark-15);
-            font-size: var(--font-sm);
+        }
+        
+        .footer-bg-shape {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 1129px;
+            height: auto;
         }
         
         /* Responsive Styles */
-        @media (min-width: 640px) {
-            h1 {
-                font-size: var(--font-5xl);
+        @media (min-width: 768px) {
+            .hero-title {
+                font-size: 3.5rem;
             }
             
-            h2 {
-                font-size: var(--font-4xl);
-            }
-            
-            .hero-buttons {
-                flex-direction: row;
+            .section-title {
+                font-size: 3rem;
             }
             
             .about-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            
+            .about-card:first-child {
+                grid-column: span 2;
+            }
+            
+            .programs-content {
+                flex-direction: row;
+                align-items: center;
+            }
+            
+            .programs-text {
+                flex: 1;
+            }
+            
+            .programs-image {
+                flex: 1;
+                margin-top: 0;
+            }
+            
+            .scholars-header {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+            }
+            
+            .gallery-preview-header {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+            }
+            
+            .gallery-preview-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
             
@@ -655,192 +964,190 @@
             }
         }
         
-        @media (min-width: 768px) {
+        @media (min-width: 1024px) {
             .container {
-                padding: 0 var(--space-xl);
-            }
-            
-            .menu-toggle {
-                display: none;
+                padding: 0 2rem;
             }
             
             .nav-links {
                 display: flex;
-                align-items: center;
-                gap: var(--space-xl);
             }
             
-            .nav-links a {
-                color: var(--shadesdark-15);
-                padding: 0;
-                border-bottom: none;
-            }
-            
-            .nav-links a:hover {
-                color: var(--mainwhite);
+            .mobile-menu-btn {
+                display: none;
             }
             
             .hero-content {
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-                gap: var(--space-2xl);
+                flex-direction: row;
                 align-items: center;
+                gap: 4rem;
             }
             
-            .hero-buttons {
-                margin-bottom: 0;
+            .hero-text {
+                flex: 1;
             }
             
-            .about-grid {
-                grid-template-columns: repeat(3, 1fr);
+            .hero-graphics {
+                flex: 1;
             }
             
-            .about-card:first-child {
-                grid-column: span 2;
+            .hero-title {
+                font-size: 4rem;
             }
             
-            .scholars-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            
-            .gallery-grid {
-                grid-template-columns: repeat(3, 1fr);
-            }
-            
-            .footer-content {
+            .section-header {
                 flex-direction: row;
                 justify-content: space-between;
                 align-items: flex-start;
             }
             
-            .footer-newsletter {
-                flex: 2;
-                text-align: left;
-            }
-            
-            .footer-links {
+            .section-title {
                 flex: 1;
-                border-top: none;
-                padding-top: 0;
-            }
-        }
-        
-        @media (min-width: 1024px) {
-            section {
-                padding: var(--space-3xl) 0;
             }
             
-            h1 {
-                font-size: var(--font-6xl);
-            }
-            
-            .container {
-                padding: 0 var(--space-2xl);
+            .section-description {
+                flex: 1;
             }
             
             .scholars-grid {
                 grid-template-columns: repeat(4, 1fr);
             }
             
-            .gallery-grid {
+            .gallery-preview-grid {
                 grid-template-columns: repeat(4, 1fr);
+            }
+            
+            .gallery-preview-item {
+                height: 488px;
             }
             
             .cta-content {
                 flex-direction: row;
                 text-align: left;
-                justify-content: space-between;
+                padding: 5rem 3rem;
             }
             
             .cta-text {
+                text-align: left;
                 flex: 1;
             }
             
             .cta-image {
-                flex: 0 0 300px;
+                flex: 0 0 298px;
+            }
+            
+            .footer-bottom-content {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
             }
         }
         
-        /* Animation */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+        @media (min-width: 1280px) {
+            .container {
+                padding: 0 135px;
+            }
+            
+            .hero-title {
+                font-size: 4.5rem;
+            }
+            
+            .section-title {
+                font-size: 3.5rem;
+            }
         }
         
-        .fade-in {
-            animation: fadeIn 0.6s ease-out forwards;
+        /* Utility Classes */
+        .text-center {
+            text-align: center;
         }
         
-        /* Loading Spinner */
-        .loading-spinner {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 2px solid rgba(255,255,255,0.3);
-            border-radius: 50%;
-            border-top-color: var(--mainwhite);
-            animation: spin 1s ease-in-out infinite;
-            margin-right: 8px;
+        .mt-1 { margin-top: 0.25rem; }
+        .mt-2 { margin-top: 0.5rem; }
+        .mt-3 { margin-top: 1rem; }
+        .mt-4 { margin-top: 1.5rem; }
+        .mt-5 { margin-top: 2rem; }
+        
+        .mb-1 { margin-bottom: 0.25rem; }
+        .mb-2 { margin-bottom: 0.5rem; }
+        .mb-3 { margin-bottom: 1rem; }
+        .mb-4 { margin-bottom: 1.5rem; }
+        .mb-5 { margin-bottom: 2rem; }
+        
+        .hidden {
+            display: none !important;
         }
         
-        @keyframes spin {
-            to { transform: rotate(360deg); }
+        .desktop-only {
+            display: none;
         }
         
-        /* Accessibility */
-        .sr-only {
-            position: absolute;
-            width: 1px;
-            height: 1px;
-            padding: 0;
-            margin: -1px;
-            overflow: hidden;
-            clip: rect(0, 0, 0, 0);
-            white-space: nowrap;
-            border: 0;
-        }
-        
-        /* Focus styles */
-        button:focus,
-        input:focus,
-        a:focus {
-            outline: 2px solid var(--mainprimary);
-            outline-offset: 2px;
+        @media (min-width: 1024px) {
+            .desktop-only {
+                display: block;
+            }
+            
+            .mobile-only {
+                display: none;
+            }
         }
     </style>
 </head>
 <body>
     <!-- Hero Section -->
-    <section class="hero-section" id="home">
-        <div class="hero-bg"></div>
+    <section class="hero-section">
+        <div class="hero-bg-effects">
+            <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/glow-effect.svg" alt="" class="hero-glow-1 desktop-only">
+            <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/glow-effect-1.svg" alt="" class="hero-glow-2 desktop-only">
+        </div>
+        
         <div class="container">
             <!-- Navigation -->
             <nav class="navbar">
-                <a href="#home" class="logo">
+                <a href="#" class="logo">
                     <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/logo3d-1.png" alt="QUAF Logo">
                     <span>QUAF</span>
                 </a>
                 
-                <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
-                    ☰
-                </button>
+                <ul class="nav-links">
+                    <li><a href="https://quaf.me/" target="_blank" rel="noopener noreferrer">Home</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#leaders">Leaders</a></li>
+                    <li><a href="#gallery">Gallery</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                    <li><button class="btn btn-outline">Get Started</button></li>
+                </ul>
                 
-                <div class="nav-links" id="navLinks">
-                    <a href="https://quaf.me/" target="_blank" rel="noopener noreferrer">Home</a>
-                    <a href="#about">About</a>
-                    <a href="#leaders">Leaders</a>
-                    <a href="#gallery">Gallery</a>
-                    <a href="#contact">Contact</a>
-                    <button class="btn btn-outline">Get Started</button>
-                </div>
+                <button class="mobile-menu-btn" id="mobileMenuBtn">
+                    <i class="fas fa-bars"></i>
+                </button>
             </nav>
+            
+            <!-- Mobile Menu -->
+            <div class="mobile-menu" id="mobileMenu">
+                <button class="mobile-menu-close" id="mobileMenuClose">
+                    <i class="fas fa-times"></i>
+                </button>
+                <a href="https://quaf.me/" target="_blank" rel="noopener noreferrer">Home</a>
+                <a href="#about">About</a>
+                <a href="#leaders">Leaders</a>
+                <a href="#gallery">Gallery</a>
+                <a href="#contact">Contact</a>
+                <button class="btn btn-outline">Get Started</button>
+            </div>
             
             <!-- Hero Content -->
             <div class="hero-content">
                 <div class="hero-text">
-                    <div class="hero-subtitle">MAY-1-2024</div>
-                    <h1 class="hero-title">Qualitative Union for Academic Focus</h1>
-                    <p class="hero-subtitle">27th batch of Darul Hidaya Da'wa College, Manoor</p>
+                    <div class="mb-4">
+                        <div class="font-bold mb-2">MAY-1-2024</div>
+                        <h1 class="hero-title">
+                            Qualitative Union for<br>Academic Focus
+                        </h1>
+                        <p class="hero-subtitle">
+                            27th batch of Darul Hidaya Da'wa College, Manoor
+                        </p>
+                    </div>
                     
                     <div class="hero-buttons">
                         <button class="btn btn-primary">Join now</button>
@@ -850,41 +1157,50 @@
                 
                 <div class="hero-graphics">
                     <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/graphics.png" alt="QUAF Graphics">
+                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/vector-1.svg" alt="" class="hero-vector-1 desktop-only">
+                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/vector-2.svg" alt="" class="hero-vector-2 desktop-only">
                 </div>
             </div>
+            
+            <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/3d-quaf-logo---high-quality-professional-rendering-removebg-prev.png" alt="3D Logo" class="hero-3d-logo desktop-only">
         </div>
     </section>
-
+    
     <!-- Acronym Banner -->
     <section class="acronym-banner">
         <div class="container">
             <div class="acronym-items">
-                <span>QUAF</span>
-                <div>QUALITATIVE</div>
-                <div>UNION</div>
-                <div>FOR</div>
-                <div>ACADEMIC</div>
-                <div>FOCUS</div>
-                <span>DARUL HIDAYA DA'WA COLLEGE</span>
-                <div>MANOOR</div>
+                <span class="bold">QUAF</span>
+                <span>QUALITATIVE</span>
+                <span>UNION</span>
+                <span>FOR</span>
+                <span>ACADEMIC</span>
+                <span>FOCUS</span>
+                <span class="bold">DARUL HIDAYA DA'WA COLLEGE</span>
+                <span>MANOOR</span>
             </div>
         </div>
     </section>
-
+    
     <!-- About Us Section -->
-    <section class="about-section" id="about">
+    <section id="about" class="about-section">
+        <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/bg-shape.png" alt="" class="about-bg-shape desktop-only">
+        
         <div class="container">
             <div class="section-header">
                 <h2 class="section-title">About Us</h2>
-                <p>"Admitted to Darul Hidaya Da'wa College, Manoor, 27th Batch, QUAF (Qualitative Union for Academic Focus) on <span class="text-primary">May-1 2024.</span>"</p>
+                <p class="section-description">
+                    "Admitted to Darul Hidaya Da'wa College, Manoor, 27th Batch, QUAF (Qualitative Union for Academic Focus) on 
+                    <span style="color: #7a38fc;">May-1 2024."</span>
+                </p>
             </div>
             
             <div class="about-grid">
                 <div class="about-card">
                     <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/rectangle-27.png" alt="Class Group Photo">
                     <div class="about-card-overlay">
-                        <div class="text-sm">MEMORABLE EXPERIENCE</div>
-                        <div class="text-lg">Class Group Photo</div>
+                        <div class="font-bold text-sm">MEMORABLE EXPERIENCE</div>
+                        <div class="font-abeeyzee text-xl">Class Group Photo</div>
                     </div>
                 </div>
                 
@@ -898,43 +1214,60 @@
             </div>
         </div>
     </section>
-
+    
     <!-- Programs Section -->
     <section class="programs-section">
+        <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/graphic.png" alt="" class="programs-graphic desktop-only">
+        
         <div class="container">
-            <div class="section-header">
-                <h2 class="section-title text-white">Programs That Inspire Creativity</h2>
-                <p class="text-white">The public programs designed to enhance skills and creativity.</p>
-            </div>
-            
-            <div class="programs-list">
-                <div class="program-card">
-                    <h3 class="program-title">Miskul Mahabba</h3>
-                    <div class="program-date">October 15, 2024</div>
-                    <p class="text-white">9:00 PM - 10:30 PM</p>
+            <div class="programs-content">
+                <div class="programs-text">
+                    <h2 class="programs-title mb-5">
+                        Programs<br>That Inspire<br>Creativity
+                    </h2>
+                    <p class="mb-5">
+                        The public programs designed to enhance skills and creativity.
+                    </p>
+                    
+                    <div class="programs-list">
+                        <div class="program-item">
+                            <div class="program-name">Miskul Mahabba</div>
+                            <div class="program-date">October 15, 2024</div>
+                            <div class="program-time">9:00 PM - 10:30 PM</div>
+                        </div>
+                        
+                        <div class="program-item">
+                            <div class="program-name">Perunnal Payasam</div>
+                            <div class="program-date">August 17, 2024</div>
+                            <div class="program-time">8:00 PM - 9:00 PM</div>
+                        </div>
+                    </div>
                 </div>
                 
-                <div class="program-card">
-                    <h3 class="program-title">Perunnal Payasam</h3>
-                    <div class="program-date">August 17, 2024</div>
-                    <p class="text-white">8:00 PM - 9:00 PM</p>
+                <div class="programs-image">
+                    <div class="programs-image-bg"></div>
+                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/pexels-fauxels-3184315-1.png" alt="Programs Image">
                 </div>
             </div>
         </div>
     </section>
-
+    
     <!-- Scholars Section -->
-    <section class="scholars-section" id="leaders">
+    <section id="leaders" class="scholars-section">
         <div class="container">
-            <div class="section-header">
-                <h2 class="section-title">Meet the top incredible scholars</h2>
+            <div class="scholars-header">
+                <div class="scholars-title">
+                    Meet the top<br>incredible scholars
+                    <div class="scholars-title-line desktop-only"></div>
+                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/vector.svg" alt="" class="scholars-title-icon desktop-only">
+                </div>
                 <button class="btn btn-primary">View All Scholars</button>
             </div>
             
             <div class="scholars-grid">
                 <!-- Scholar 1 -->
                 <div class="scholar-card">
-                    <img class="scholar-image" src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-5.png" alt="SADHAQATHULLA C">
+                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-5.png" alt="SADHAQATHULLA C" class="scholar-image">
                     <div class="scholar-info">
                         <div class="scholar-name">SADHAQATHULLA C</div>
                         <div class="scholar-role">PRESIDENT</div>
@@ -943,7 +1276,7 @@
                 
                 <!-- Scholar 2 -->
                 <div class="scholar-card">
-                    <img class="scholar-image" src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-1.png" alt="MUHAMMED FAHEEM NP">
+                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-1.png" alt="MUHAMMED FAHEEM NP" class="scholar-image">
                     <div class="scholar-info">
                         <div class="scholar-name">MUHAMMED FAHEEM NP</div>
                         <div class="scholar-role">SECRETARY</div>
@@ -952,7 +1285,7 @@
                 
                 <!-- Scholar 3 -->
                 <div class="scholar-card">
-                    <img class="scholar-image" src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-7.png" alt="SAHL SHAN O">
+                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-7.png" alt="SAHL SHAN O" class="scholar-image">
                     <div class="scholar-info">
                         <div class="scholar-name">SAHL SHAN O</div>
                         <div class="scholar-role">VICE PRESIDENT</div>
@@ -961,204 +1294,261 @@
                 
                 <!-- Scholar 4 -->
                 <div class="scholar-card">
-                    <img class="scholar-image" src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-6.png" alt="MUHAMMED MUSTHAFA SM">
+                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-6.png" alt="MUHAMMED MUSTHAFA SM" class="scholar-image">
                     <div class="scholar-info">
                         <div class="scholar-name">MUHAMMED MUSTHAFA SM</div>
                         <div class="scholar-role">ENTREPRENEUR</div>
                     </div>
                 </div>
                 
-                <!-- Show more scholars with a "Show More" button in real implementation -->
+                <!-- Add more scholars here -->
             </div>
         </div>
     </section>
-
+    
     <!-- Programs & Reports Section -->
     <section class="reports-section">
+        <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/elements.png" alt="" class="reports-elements desktop-only">
+        
         <div class="container">
-            <div class="section-header text-center">
-                <h2 class="section-title">Programs & Reports</h2>
-                <p>Explore the main programs with detailed descriptions, featured highlights, and everything you need to know before getting started.</p>
+            <div class="reports-header">
+                <h2 class="reports-title">Programs & Reports</h2>
+                <p class="text-center max-w-2xl mx-auto">
+                    Explore the main programs with detailed descriptions, featured highlights, and everything you need to know before getting started.
+                </p>
             </div>
             
             <div class="reports-list">
                 <!-- Report 1 -->
                 <div class="report-card">
                     <div class="report-header">
-                        <div>Thursday, July-25-2024</div>
-                        <div>Programs & Reports</div>
+                        <div class="report-date">Thursday, July-25-2024</div>
+                        <div class="report-type">Programs & Reports</div>
                     </div>
+                    
                     <div class="report-content">
-                        <h3 class="report-title">Freshers Meet</h3>
-                        <p><strong>9:00 AM - 4:00 PM</strong></p>
-                        <p><strong>By Darul Huda Islamic University, Chemmad</strong></p>
-                        <p>Tarhib 1446 – Freshers' Grand Meet Up is a welcoming and celebratory event organized by the Centre for Public Education and Training (CPET) and the Office of Guidance and Extension Activities (OGEA) at Darul Huda Islamic University. Designed especially for freshers, the program marks the beginning of a new academic journey by fostering connection, inspiration, and a sense of belonging within the university community.</p>
+                        <div class="report-title-row">
+                            <div class="report-content-title">Freshers Meet</div>
+                            <div class="report-time">9:00 AM - 4:00 PM</div>
+                        </div>
+                        
+                        <p class="report-by">By Darul Huda Islamic University, Chemmad</p>
+                        
+                        <p>
+                            Tarhib 1446 – Freshers' Grand Meet Up is a welcoming and celebratory event organized by the Centre for Public Education and Training (CPET) and the Office of Guidance and Extension Activities (OGEA) at Darul Huda Islamic University. Designed especially for freshers, the program marks the beginning of a new academic journey by fostering connection, inspiration, and a sense of belonging within the university community.
+                        </p>
                     </div>
                 </div>
                 
                 <!-- Report 2 -->
                 <div class="report-card">
                     <div class="report-header">
-                        <div>November, 2024</div>
-                        <div>Programs & Reports</div>
+                        <div class="report-date">November, 2024</div>
+                        <div class="report-type">Programs & Reports</div>
                     </div>
+                    
                     <div class="report-content">
-                        <h3 class="report-title">Website Launching</h3>
-                        <p><strong>First Website for a class union in the history of Darul Hidaya Da'wa College, Manoor</strong></p>
-                        <p>QUAF launched an official website for its class union, marking a historic milestone as the first-ever website created for a class organization in the history of Darul Hidaya Da'wa College, Manoor. The website was officially launched by the Vice Principal, Usthad Junaid Hudawi.</p>
+                        <div class="report-title-row">
+                            <div class="report-content-title">Website Launching</div>
+                        </div>
+                        
+                        <p class="report-by">First Website for a class union in the history of Darul Hidaya Da'wa College, Manoor</p>
+                        
+                        <p>
+                            QUAF launched an official website for its class union, marking a historic milestone as the first-ever website created for a class organization in the history of Darul Hidaya Da'wa College, Manoor.<br>
+                            The website was officially launched by the Vice Principal, Usthad Junaid Hudawi.
+                        </p>
+                        
+                        <div class="report-images">
+                            <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-37.png" alt="">
+                            <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-38.png" alt="">
+                            <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-39.png" alt="">
+                        </div>
                     </div>
                 </div>
-            </div>
-            
-            <div class="text-center">
-                <button class="btn btn-primary">See All Schedule</button>
+                
+                <!-- Continue with other reports -->
+                
+                <div class="text-center">
+                    <button class="btn btn-primary">See All Schedule</button>
+                </div>
             </div>
         </div>
     </section>
-
-    <!-- Gallery Section -->
-    <section class="gallery-section" id="gallery">
+    
+    <!-- Gallery Preview -->
+    <section class="gallery-preview">
         <div class="container">
-            <div class="section-header text-center">
-                <h2 class="section-title">Check our latest gallery</h2>
-                <p>A glimpse into our creative programs in action. Empowering talent through learning and collaboration.</p>
+            <div class="gallery-preview-header">
+                <div>
+                    <h2 class="gallery-preview-title">
+                        <span class="blue">40th Batch</span><br>
+                        <span class="white">Darul Huda Islamic University</span>
+                    </h2>
+                </div>
+                <button class="btn btn-outline" style="border-color: var(--maindark); color: var(--maindark);">Academic Focus</button>
             </div>
             
-            <div class="gallery-grid">
-                <div class="gallery-item">
-                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/text.png" alt="Gallery Image 1">
+            <div class="gallery-preview-grid">
+                <div class="gallery-preview-item">
+                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/text.png" alt="">
                 </div>
-                <div class="gallery-item">
-                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/text-1.png" alt="Gallery Image 2">
+                <div class="gallery-preview-item">
+                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/text-1.png" alt="">
                 </div>
-                <div class="gallery-item">
-                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/text-2.png" alt="Gallery Image 3">
+                <div class="gallery-preview-item">
+                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/text-2.png" alt="">
+                    <div class="gallery-preview-info">
+                        <div class="gallery-preview-name">Group Photo</div>
+                        <div class="gallery-preview-views">26K VIEWS</div>
+                    </div>
                 </div>
-                <div class="gallery-item">
-                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/reel-1.png" alt="Gallery Image 4">
+                <div class="gallery-preview-item">
+                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/reel-1.png" alt="">
+                    <div class="gallery-preview-info">
+                        <div class="gallery-preview-name">QUAF</div>
+                        <div class="gallery-preview-views">30K VIEWS</div>
+                    </div>
                 </div>
             </div>
+        </div>
+    </section>
+    
+    <!-- Gallery Section -->
+    <section id="gallery" class="gallery-section">
+        <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/image-8.png" alt="" class="gallery-floating-image desktop-only">
+        
+        <div class="container">
+            <div class="gallery-header">
+                <h2 class="gallery-title">Check our latest gallery</h2>
+                <p>
+                    A glimpse into our creative programs in action.<br>
+                    Empowering talent through learning and collaboration.
+                </p>
+            </div>
+            
+            <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/images.svg" alt="Gallery Images" class="gallery-image-grid">
             
             <div class="text-center">
                 <button class="btn btn-primary">View All Gallery</button>
             </div>
         </div>
     </section>
-
+    
     <!-- CTA Section -->
     <section class="cta-section">
+        <div class="cta-bg-effect-1"></div>
+        <div class="cta-bg-effect-2"></div>
+        
         <div class="container">
             <div class="cta-content">
                 <div class="cta-text">
                     <h2 class="cta-title">Let's join our community</h2>
-                    <p>Join our community to participate in our programs and learn more about our education system.</p>
+                    <p class="cta-description">
+                        Join our community to participate in our programs and learn more about our education system.
+                    </p>
                     <button class="btn btn-secondary">Join now</button>
                 </div>
-                <div class="cta-image">
-                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/image.png" alt="Community Illustration">
-                </div>
+                <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/image.png" alt="Community Illustration" class="cta-image">
             </div>
         </div>
     </section>
-
+    
     <!-- Footer -->
-    <footer class="footer" id="contact">
+    <footer id="contact" class="footer">
+        <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/bg-shape-1.png" alt="" class="footer-bg-shape desktop-only">
+        
         <div class="container">
             <div class="footer-content">
                 <div class="footer-newsletter">
-                    <h3 class="text-white">Never miss a single news</h3>
-                    <p class="text-white">Stay informed with all the latest updates and news about our programs. Never miss a moment of our exciting and innovative gatherings in the world of technology and beyond.</p>
+                    <h2 class="footer-title">Never miss a single news</h2>
+                    <p class="footer-description">
+                        Stay informed with all the latest updates and news about our programs. Never miss a moment of our exciting and innovative gatherings in the world of technology and beyond.
+                    </p>
                     
                     <form class="newsletter-form">
-                        <input type="email" class="newsletter-input" placeholder="Enter your email address" required>
+                        <input type="email" placeholder="Enter your email address" class="newsletter-input" required>
                         <button type="submit" class="btn btn-primary">Subscribe</button>
                     </form>
                 </div>
                 
-                <div class="footer-links">
-                    <div class="footer-logo">
-                        <div class="logo">
-                            <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/logo3d-1.png" alt="QUAF Logo">
-                            <span>QUAF</span>
+                <div class="footer-bottom">
+                    <div class="footer-bottom-content">
+                        <div class="footer-logo">QUAF</div>
+                        
+                        <div class="social-links">
+                            <a href="#"><img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/vector-3.svg" alt="Instagram"></a>
+                            <a href="#"><img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/facebook.svg" alt="Facebook"></a>
+                            <a href="#"><img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/whatsapp.svg" alt="WhatsApp"></a>
                         </div>
                     </div>
                     
-                    <div class="social-links">
-                        <a href="#" aria-label="Instagram">📷</a>
-                        <a href="#" aria-label="Facebook">📘</a>
-                        <a href="#" aria-label="WhatsApp">💬</a>
-                    </div>
-                    
-                    <div class="footer-menu">
-                        <a href="#">Terms & Conditions</a>
-                        <a href="#">Privacy Policy</a>
+                    <div class="footer-bottom-content mt-4">
+                        <div class="footer-copyright">
+                            Copyright © QUAF-2026 All Rights Reserved
+                        </div>
+                        
+                        <div class="footer-links">
+                            <a href="#">Terms & Conditions</a>
+                            <a href="#">Privacy Policy</a>
+                        </div>
                     </div>
                 </div>
             </div>
-            
-            <div class="footer-bottom">
-                <p>Copyright © QUAF-2026 All Rights Reserved</p>
-            </div>
         </div>
     </footer>
-
+    
     <script>
         // Mobile Menu Toggle
         document.addEventListener('DOMContentLoaded', function() {
-            const menuToggle = document.getElementById('menuToggle');
-            const navLinks = document.getElementById('navLinks');
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            const mobileMenuClose = document.getElementById('mobileMenuClose');
+            const mobileMenu = document.getElementById('mobileMenu');
             
-            if (menuToggle && navLinks) {
-                menuToggle.addEventListener('click', function() {
-                    navLinks.classList.toggle('active');
-                    menuToggle.textContent = navLinks.classList.contains('active') ? '✕' : '☰';
-                });
-                
-                // Close menu when clicking outside
-                document.addEventListener('click', function(event) {
-                    if (!menuToggle.contains(event.target) && !navLinks.contains(event.target)) {
-                        navLinks.classList.remove('active');
-                        menuToggle.textContent = '☰';
-                    }
+            if (mobileMenuBtn) {
+                mobileMenuBtn.addEventListener('click', function() {
+                    mobileMenu.classList.add('active');
+                    document.body.style.overflow = 'hidden';
                 });
             }
+            
+            if (mobileMenuClose) {
+                mobileMenuClose.addEventListener('click', function() {
+                    mobileMenu.classList.remove('active');
+                    document.body.style.overflow = '';
+                });
+            }
+            
+            // Close mobile menu when clicking outside
+            document.addEventListener('click', function(event) {
+                if (!mobileMenu.contains(event.target) && !mobileMenuBtn.contains(event.target)) {
+                    mobileMenu.classList.remove('active');
+                    document.body.style.overflow = '';
+                }
+            });
+            
+            // Close mobile menu when clicking a link
+            mobileMenu.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileMenu.classList.remove('active');
+                    document.body.style.overflow = '';
+                });
+            });
             
             // Smooth scrolling for anchor links
             document.querySelectorAll('a[href^="#"]').forEach(anchor => {
                 anchor.addEventListener('click', function(e) {
                     e.preventDefault();
+                    
                     const targetId = this.getAttribute('href');
                     if (targetId === '#') return;
                     
                     const targetElement = document.querySelector(targetId);
                     if (targetElement) {
-                        // Close mobile menu if open
-                        if (navLinks) {
-                            navLinks.classList.remove('active');
-                            menuToggle.textContent = '☰';
-                        }
-                        
                         window.scrollTo({
                             top: targetElement.offsetTop - 80,
                             behavior: 'smooth'
                         });
-                    }
-                });
-            });
-            
-            // Add loading animation to buttons
-            document.querySelectorAll('.btn').forEach(button => {
-                button.addEventListener('click', function(e) {
-                    if (!this.classList.contains('newsletter-input')) {
-                        const originalText = this.innerHTML;
-                        this.innerHTML = '<span class="loading-spinner"></span>' + originalText;
-                        this.disabled = true;
-                        
-                        // Reset after 1.5 seconds (simulate loading)
-                        setTimeout(() => {
-                            this.innerHTML = originalText;
-                            this.disabled = false;
-                        }, 1500);
                     }
                 });
             });
@@ -1168,37 +1558,16 @@
             if (newsletterForm) {
                 newsletterForm.addEventListener('submit', function(e) {
                     e.preventDefault();
-                    const emailInput = this.querySelector('input[type="email"]');
-                    const email = emailInput.value;
+                    const email = this.querySelector('input[type="email"]').value;
                     
-                    // Simple validation
                     if (email && email.includes('@')) {
                         alert('Thank you for subscribing to QUAF newsletter!');
-                        emailInput.value = '';
+                        this.reset();
                     } else {
                         alert('Please enter a valid email address.');
                     }
                 });
             }
-            
-            // Add fade-in animation to sections on scroll
-            const observerOptions = {
-                threshold: 0.1,
-                rootMargin: '0px 0px -50px 0px'
-            };
-            
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('fade-in');
-                    }
-                });
-            }, observerOptions);
-            
-            // Observe all sections
-            document.querySelectorAll('section').forEach(section => {
-                observer.observe(section);
-            });
         });
     </script>
 </body>
