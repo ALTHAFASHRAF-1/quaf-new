@@ -84,6 +84,8 @@
             font-family: 'Abel', sans-serif;
             font-size: 1.1rem;
             font-weight: 700;
+            text-decoration: none;
+            color: white;
         }
         
         .logo img {
@@ -103,6 +105,7 @@
             font-weight: 500;
             font-size: 13px;
             transition: color 0.3s;
+            text-decoration: none;
         }
         
         .nav-links a:hover {
@@ -116,6 +119,7 @@
             font-size: 1.2rem;
             cursor: pointer;
             display: block;
+            z-index: 100;
         }
         
         /* Hero Content */
@@ -127,11 +131,29 @@
             align-items: center;
             text-align: center;
             padding: 2rem 0;
+            width: 100%;
+        }
+        
+        @media (min-width: 768px) {
+            .hero-content {
+                flex-direction: row;
+                text-align: left;
+                align-items: center;
+                gap: 3rem;
+            }
         }
         
         .hero-text {
             max-width: 800px;
             margin: 0 auto;
+        }
+        
+        @media (min-width: 768px) {
+            .hero-text {
+                flex: 1;
+                margin: 0;
+                text-align: left;
+            }
         }
         
         .hero-title {
@@ -140,6 +162,24 @@
             line-height: 1.1;
             margin-bottom: 0.75rem;
             letter-spacing: -0.5px;
+        }
+        
+        @media (min-width: 640px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+        }
+        
+        @media (min-width: 768px) {
+            .hero-title {
+                font-size: 3rem;
+            }
+        }
+        
+        @media (min-width: 1024px) {
+            .hero-title {
+                font-size: 3.5rem;
+            }
         }
         
         .hero-subtitle {
@@ -151,9 +191,24 @@
             margin-right: auto;
         }
         
+        @media (min-width: 768px) {
+            .hero-subtitle {
+                margin-left: 0;
+                margin-right: 0;
+            }
+        }
+        
         .hero-graphics {
             max-width: 500px;
             margin: 2rem auto 0;
+            width: 100%;
+        }
+        
+        @media (min-width: 768px) {
+            .hero-graphics {
+                flex: 1;
+                margin: 0;
+            }
         }
         
         .hero-graphics img {
@@ -176,6 +231,7 @@
             text-align: center;
             font-family: 'Manrope', sans-serif;
             text-decoration: none;
+            white-space: nowrap;
         }
         
         .btn-primary {
@@ -225,6 +281,7 @@
             padding: 0.6rem 0;
             overflow: hidden;
             position: relative;
+            width: 100%;
         }
         
         .marquee-container {
@@ -262,6 +319,18 @@
             margin-bottom: 1rem;
         }
         
+        @media (min-width: 640px) {
+            .section-title {
+                font-size: 2rem;
+            }
+        }
+        
+        @media (min-width: 1024px) {
+            .section-title {
+                font-size: 2.25rem;
+            }
+        }
+        
         .section-subtitle {
             font-family: 'Manrope', sans-serif;
             font-size: 0.85rem;
@@ -276,16 +345,43 @@
             grid-template-columns: 1fr;
             gap: 1rem;
             margin-top: 2rem;
+            justify-content: center;
+        }
+        
+        @media (min-width: 640px) {
+            .about-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (min-width: 768px) {
+            .about-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            
+            .about-card:first-child {
+                grid-column: span 2;
+                height: 220px;
+            }
         }
         
         .about-card {
             border-radius: 0.75rem;
             overflow: hidden;
             height: 333px;
-            width: 300px;
+            width: 100%;
+            max-width: 300px;
+            margin: 0 auto;
             position: relative;
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
             transition: transform 0.3s ease;
+        }
+        
+        @media (min-width: 640px) {
+            .about-card {
+                max-width: none;
+                margin: 0;
+            }
         }
         
         .about-card:hover {
@@ -309,6 +405,18 @@
             font-size: 1.75rem;
             line-height: 1.1;
             margin-bottom: 1rem;
+        }
+        
+        @media (min-width: 768px) {
+            .programs-title {
+                font-size: 2rem;
+            }
+        }
+        
+        @media (min-width: 1024px) {
+            .programs-title {
+                font-size: 2.25rem;
+            }
         }
         
         .program-item {
@@ -350,7 +458,7 @@
         }
         
         .program-image {
-            height: 200px;
+            height: 250px;
             border-radius: 0.5rem;
             overflow: hidden;
         }
@@ -373,12 +481,31 @@
             margin-top: 2rem;
         }
         
+        @media (min-width: 640px) {
+            .scholars-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        
+        @media (min-width: 768px) {
+            .scholars-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+        
+        @media (min-width: 1024px) {
+            .scholars-grid {
+                grid-template-columns: repeat(6, 1fr);
+            }
+        }
+        
         .scholar-card {
             background-color: var(--mainwhite);
             border-radius: 0.75rem;
             overflow: hidden;
             box-shadow: 0 3px 10px rgba(0,0,0,0.1);
             transition: all 0.3s ease;
+            width: 100%;
         }
         
         .scholar-card:hover {
@@ -423,6 +550,7 @@
             overflow: hidden;
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
             transition: transform 0.3s ease;
+            width: 100%;
         }
         
         .report-card:hover {
@@ -460,7 +588,7 @@
         .report-image {
             flex-shrink: 0;
             width: 100%;
-            height: 100%;
+            height: 200px;
             border-radius: 0.5rem;
             overflow: hidden;
         }
@@ -551,6 +679,7 @@
             position: relative;
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
             transition: transform 0.3s ease;
+            width: 100%;
         }
         
         .gallery-item:hover {
@@ -610,6 +739,13 @@
             position: relative;
             overflow: hidden;
             box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+            width: calc(100% - 2rem);
+        }
+        
+        @media (min-width: 768px) {
+            .cta-section {
+                padding: 4rem;
+            }
         }
         
         .cta-content {
@@ -630,6 +766,12 @@
         
         .cta-text {
             flex: 1;
+        }
+        
+        @media (min-width: 768px) {
+            .cta-text {
+                padding-right: 2rem;
+            }
         }
         
         .cta-title {
@@ -771,6 +913,7 @@
             color: var(--mainwhite);
             font-size: 1rem;
             transition: all 0.3s;
+            text-decoration: none;
         }
         
         .social-links a:hover {
@@ -790,6 +933,7 @@
             color: var(--shadesdark-15);
             font-size: 0.85rem;
             transition: color 0.3s;
+            text-decoration: none;
         }
         
         .footer-links a:hover {
@@ -802,29 +946,55 @@
             text-align: center;
         }
         
-        /* Responsive Design */
-        @media (min-width: 640px) {
-            .hero-title {
-                font-size: 2.5rem;
-            }
-            
-            .hero-subtitle {
-                font-size: 0.9rem;
-            }
-            
-            .section-title {
-                font-size: 2rem;
-            }
-            
-            .about-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            
-            .scholars-grid {
-                grid-template-columns: repeat(3, 1fr);
-            }
+        /* Mobile Menu */
+        .mobile-menu {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--maindark);
+            z-index: 99;
+            padding: 5rem 1rem 2rem;
+            overflow-y: auto;
         }
         
+        .mobile-menu.active {
+            display: block;
+        }
+        
+        .mobile-menu-links {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        
+        .mobile-menu-links a {
+            color: var(--shadesdark-30);
+            font-weight: 500;
+            font-size: 1.1rem;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .mobile-menu-links a:hover {
+            color: var(--mainwhite);
+        }
+        
+        .mobile-menu-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            color: var(--mainwhite);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        /* Responsive Design Fixes */
         @media (min-width: 768px) {
             .nav-links {
                 display: flex;
@@ -833,72 +1003,74 @@
             .mobile-menu-btn {
                 display: none;
             }
-            
-            .hero-content {
-                flex-direction: row;
-                text-align: left;
-                align-items: center;
-                gap: 3rem;
-            }
-            
-            .hero-text {
-                flex: 1;
-                margin: 0;
-                text-align: left;
-            }
-            
-            .hero-subtitle {
-                margin-left: 0;
-                margin-right: 0;
-            }
-            
-            .hero-graphics {
-                flex: 1;
-                margin: 0;
-            }
-            
-            .hero-title {
-                font-size: 3rem;
-            }
-            
-            .about-grid {
-                grid-template-columns: repeat(3, 1fr);
-            }
-            
-            .about-card:first-child {
-                grid-column: span 2;
-                height: 220px;
-            }
-            
-            .scholars-grid {
-                grid-template-columns: repeat(4, 1fr);
-            }
-            
-            .programs-title {
-                font-size: 2rem;
+        }
+        
+        /* Ensure images don't overflow */
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+        
+        /* Fix for marquee on mobile */
+        @media (max-width: 640px) {
+            .marquee-item {
+                font-size: 0.7rem;
+                padding: 0 0.5rem;
             }
         }
         
-        @media (min-width: 1024px) {
-            .hero-title {
-                font-size: 3.5rem;
-            }
-            
-            .section-title {
-                font-size: 2.25rem;
-            }
-            
-            .programs-title {
-                font-size: 2.25rem;
-            }
-            
+        /* Fix for scholar cards on very small screens */
+        @media (max-width: 400px) {
             .scholars-grid {
-                grid-template-columns: repeat(6, 1fr);
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        /* Fix button alignment on mobile */
+        .btn-group {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        @media (min-width: 768px) {
+            .btn-group {
+                justify-content: flex-start;
+            }
+        }
+        
+        /* Fix program images grid */
+        @media (max-width: 400px) {
+            .program-images {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* Fix report images grid */
+        @media (max-width: 500px) {
+            .report-images-grid {
+                grid-template-columns: repeat(2, 1fr);
             }
         }
     </style>
 </head>
 <body>
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <button class="mobile-menu-close" id="mobileMenuClose">
+            <i class="fas fa-times"></i>
+        </button>
+        <ul class="mobile-menu-links">
+            <li><a href="#home" class="mobile-nav-link">Home</a></li>
+            <li><a href="#about" class="mobile-nav-link">About</a></li>
+            <li><a href="#leaders" class="mobile-nav-link">Leaders</a></li>
+            <li><a href="#gallery" class="mobile-nav-link">Gallery</a></li>
+            <li><a href="#contact" class="mobile-nav-link">Contact</a></li>
+            <li><button class="btn btn-outline" style="width: 100%;">Get Started</button></li>
+        </ul>
+    </div>
+    
     <!-- Hero Section -->
     <section class="hero-section">
         <div class="container">
@@ -932,7 +1104,7 @@
                         27th batch of Darul Hidaya Da'wa College, Manoor
                     </p>
                     
-                    <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 1.5rem;">
+                    <div class="btn-group">
                         <button class="btn btn-primary">Join now</button>
                         <button class="btn btn-outline">Subscribe</button>
                     </div>
@@ -1037,7 +1209,7 @@
             </div>
             
             <div class="scholars-grid">
-                <!-- Top 8 scholars displayed (rest would be in the "View All" page) -->
+                <!-- All 36 scholars displayed -->
                 <div class="scholar-card">
                     <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-5.png" alt="SADHAQATHULLA C" class="scholar-image">
                     <div class="scholar-info">
@@ -1102,15 +1274,7 @@
                     </div>
                 </div>
 
-                <!-- Scholar 8 -->
-                <div class="scholar-card">
-                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-4.png" alt="MUHAMMED RABEEH PP" class="scholar-image">
-                    <div class="scholar-info">
-                        <div class="scholar-name">MUHAMMED RABEEH PP</div>
-                        <div class="scholar-role">EXECUTIVE MEMBER</div>
-                    </div>
-                </div>
-                
+                <!-- Continue with all 36 scholars... -->
                 <!-- Scholar 9 -->
                 <div class="scholar-card">
                     <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-8.png" alt="MUHAMMED QASIM MP" class="scholar-image">
@@ -1553,7 +1717,9 @@
                         <div class="gallery-views">26K VIEWS</div>
                     </div>
                 </div>
-                
+                <div class="gallery-item">
+                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/text-2.png" alt="Gallery">
+                </div>
             </div>
         </div>
     </section>
@@ -1639,26 +1805,31 @@
         // Mobile Menu Toggle
         document.addEventListener('DOMContentLoaded', function() {
             const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-            const navLinks = document.querySelector('.nav-links');
+            const mobileMenu = document.getElementById('mobileMenu');
+            const mobileMenuClose = document.getElementById('mobileMenuClose');
+            const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
             
             if (mobileMenuBtn) {
                 mobileMenuBtn.addEventListener('click', function() {
-                    if (navLinks.style.display === 'flex') {
-                        navLinks.style.display = 'none';
-                    } else {
-                        navLinks.style.display = 'flex';
-                        navLinks.style.flexDirection = 'column';
-                        navLinks.style.position = 'absolute';
-                        navLinks.style.top = '100%';
-                        navLinks.style.right = '0';
-                        navLinks.style.backgroundColor = 'var(--maindark)';
-                        navLinks.style.padding = '1rem';
-                        navLinks.style.borderRadius = '0.5rem';
-                        navLinks.style.boxShadow = '0 4px 12px rgba(0,0,0,0.2)';
-                        navLinks.style.zIndex = '100';
-                    }
+                    mobileMenu.classList.add('active');
+                    document.body.style.overflow = 'hidden';
                 });
             }
+            
+            if (mobileMenuClose) {
+                mobileMenuClose.addEventListener('click', function() {
+                    mobileMenu.classList.remove('active');
+                    document.body.style.overflow = '';
+                });
+            }
+            
+            // Close mobile menu when clicking on links
+            mobileNavLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    mobileMenu.classList.remove('active');
+                    document.body.style.overflow = '';
+                });
+            });
             
             // Smooth scrolling
             document.querySelectorAll('a[href^="#"]').forEach(anchor => {
@@ -1673,11 +1844,6 @@
                             top: targetElement.offsetTop - 60,
                             behavior: 'smooth'
                         });
-                        
-                        // Close mobile menu if open
-                        if (navLinks.style.display === 'flex') {
-                            navLinks.style.display = 'none';
-                        }
                     }
                 });
             });
@@ -1709,17 +1875,34 @@
             
             // Close mobile menu when clicking outside
             document.addEventListener('click', function(event) {
-                if (!mobileMenuBtn.contains(event.target) && !navLinks.contains(event.target)) {
-                    navLinks.style.display = 'none';
+                if (mobileMenu.classList.contains('active') && 
+                    !mobileMenu.contains(event.target) && 
+                    !mobileMenuBtn.contains(event.target)) {
+                    mobileMenu.classList.remove('active');
+                    document.body.style.overflow = '';
                 }
             });
             
             // Window resize - reset mobile menu on larger screens
             window.addEventListener('resize', function() {
                 if (window.innerWidth >= 768) {
-                    navLinks.style.display = '';
+                    mobileMenu.classList.remove('active');
+                    document.body.style.overflow = '';
                 }
             });
+            
+            // Fix for hero section height on mobile
+            function adjustHeroHeight() {
+                const heroSection = document.querySelector('.hero-section');
+                if (window.innerWidth < 768) {
+                    heroSection.style.minHeight = '90vh';
+                } else {
+                    heroSection.style.minHeight = '85vh';
+                }
+            }
+            
+            adjustHeroHeight();
+            window.addEventListener('resize', adjustHeroHeight);
         });
     </script>
 </body>
