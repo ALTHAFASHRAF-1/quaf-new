@@ -55,9 +55,9 @@
         
         /* Hero Section */
         .hero-section {
-            background: url('https://quaf.netlify.app/bg.png');
             background-size: cover;
             background-position: center;
+            background-repeat: no-repeat;
             color: var(--mainwhite);
             min-height: 80vh;
             display: flex;
@@ -66,10 +66,17 @@
             text-align: center;
             padding: 2rem 0;
         }
-        
+
+        /* Mobile background */
+        .hero-section {
+         background-image: url('https://quaf.netlify.app/bg1.png');
+        }
+
+        /* Desktop background */
         @media (min-width: 768px) {
-            .hero-section {
-                min-height: 85vh;
+         .hero-section {
+        background-image: url('https://quaf.netlify.app/bg.png');
+        min-height: 95vh;
             }
         }
         
@@ -713,7 +720,7 @@
         
         .cta-title {
             font-family: 'ADLaM Display', cursive;
-            font-size: 0.8rem;
+            font-size: 1.5rem;
             color: white;
             margin-bottom: 0.75rem;
         }
@@ -726,7 +733,7 @@
         
         .cta-description {
             color: var(--shadesdark-15);
-            font-size: 0.5rem;
+            font-size: 1rem;
             margin-bottom: 1.5rem;
             max-width: 400px;
         }
