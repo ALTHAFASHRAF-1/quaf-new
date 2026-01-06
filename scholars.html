@@ -122,45 +122,69 @@
         
         /* Banner Section with Separate Mobile and Desktop Images */
         .banner-section {
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            color: var(--mainwhite);
-            min-height: 40vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding: 2rem 0;
-            position: relative;
-            margin-top: 0; /* Remove any top margin */
+            color: white;
+    padding: 2rem 0;
+    min-height: 25vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
         }
 
         /* Mobile banner - Default */
         .banner-section::before {
             content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: url('https://dqdhiu.netlify.app/mobile-banner.jpg');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            z-index: 1;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('https://dqdhiu.netlify.app/desktop-banner.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    z-index: -2;
         }
+        
+        /* Optional overlay for better text readability */
+.banner-section::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  /*  background: rgba(30, 58, 138, 0.6);  */
+    z-index: -1;
+}
 
         /* Desktop banner */
         @media (min-width: 768px) {
             .banner-section {
-                min-height: 50vh;
+                min-height: 30vh;
             }
             
             .banner-section::before {
                 background-image: url('https://dqdhiu.netlify.app/desktop-banner.jpg');
             }
         }
+        
+        @media (max-width: 1024px) {
+    .banner-section {
+        padding: 2rem 0;
+        min-height: 20vh;
+    }
+    
+    @media (max-width: 768px) {
+    .banner-section {
+        padding: 1.5rem 0;
+        min-height: 18vh;
+    }
+    
+    .banner-section::before {
+        background-image: url('https://dqdhiu.netlify.app/mobile-banner.jpg');
+    }
         
         .banner-overlay {
             position: absolute;
@@ -612,7 +636,7 @@
         </ul>
     </div>
     
-     <!-- Banner Section with Separate Mobile and Desktop Images -->
+    <!-- Banner Section with Separate Mobile and Desktop Images -->
     <section class="banner-section">
         
     </section>
