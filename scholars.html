@@ -1,0 +1,1106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Scholars - QUAF</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Abel&family=ABeeZee&family=Alfa+Slab+One&family=ADLaM+Display&family=Inika:wght@400;700&family=Manrope:wght@300;400;500;600;700;800&family=Clash+Display:wght@600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --maindark: #0f0b0c;
+            --mainprimary: #7a38fc;
+            --mainsecondary: #febf00;
+            --maintertiary: #fb714c;
+            --mainwhite: #ffffff;
+            --shadesdark-5: #f3f3f3;
+            --shadesdark-10: #e7e7e7;
+            --shadesdark-15: #dbdadb;
+            --shadesdark-30: #b7b6b6;
+            --shadesdark-40: #9f9d9e;
+            --shadesdark-60: #6f6d6d;
+            --shadesdark-80: #3f3c3d;
+            --shadesprimary-10: #f2ebff;
+            --shadessecondary-15: #fff5d9;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            font-family: 'Manrope', sans-serif;
+            font-size: 13px;
+            line-height: 1.5;
+            color: var(--maindark);
+            background-color: var(--mainwhite);
+            overflow-x: hidden;
+            padding-top: 80px; /* Add padding to prevent content from hiding under fixed navbar */
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+        
+        /* Navigation - Black Background and Sticky */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background-color: #000000;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .navbar.scrolled {
+            padding: 0.75rem 1rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-family: 'Abel', sans-serif;
+            font-size: 1.7rem;
+            font-weight: 700;
+            text-decoration: none;
+            color: white;
+        }
+        
+        .logo img {
+            width: 50px;
+            height: 50px;
+        }
+        
+        .nav-links {
+            display: none;
+            gap: 1.25rem;
+            align-items: center;
+            list-style: none;
+        }
+        
+        .nav-links a {
+            color: var(--shadesdark-30);
+            font-weight: 500;
+            font-size: 18px;
+            transition: color 0.3s;
+            text-decoration: none;
+        }
+        
+        .nav-links a:hover {
+            color: var(--mainwhite);
+        }
+        
+        .mobile-menu-btn {
+            background: none;
+            border: none;
+            color: var(--mainwhite);
+            font-size: 1.7rem;
+            cursor: pointer;
+            display: block;
+            z-index: 100;
+        }
+        
+        /* Banner Section with Separate Mobile and Desktop Images */
+        .banner-section {
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            color: var(--mainwhite);
+            min-height: 40vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 2rem 0;
+            position: relative;
+            margin-top: 0; /* Remove any top margin */
+        }
+
+        /* Mobile banner - Default */
+        .banner-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('https://dqdhiu.netlify.app/mobile-banner.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            z-index: 1;
+        }
+
+        /* Desktop banner */
+        @media (min-width: 768px) {
+            .banner-section {
+                min-height: 50vh;
+            }
+            
+            .banner-section::before {
+                background-image: url('https://dqdhiu.netlify.app/desktop-banner.jpg');
+            }
+        }
+        
+        .banner-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(15, 11, 12, 0.5);
+            z-index: 2;
+        }
+        
+        .banner-content {
+            position: relative;
+            z-index: 3;
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+        
+        .banner-title {
+            font-family: 'Abel', sans-serif;
+            font-size: 2rem;
+            line-height: 1.1;
+            margin-bottom: 0.75rem;
+            letter-spacing: -0.5px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        
+        @media (min-width: 640px) {
+            .banner-title {
+                font-size: 2.5rem;
+            }
+        }
+        
+        @media (min-width: 768px) {
+            .banner-title {
+                font-size: 3rem;
+            }
+        }
+        
+        @media (min-width: 1024px) {
+            .banner-title {
+                font-size: 3.5rem;
+            }
+        }
+        
+        .banner-subtitle {
+            color: var(--shadesdark-15);
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+        }
+        
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.6rem 1.25rem;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s;
+            text-align: center;
+            font-family: 'Manrope', sans-serif;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+        
+        .btn-primary {
+            background-color: var(--mainprimary);
+            color: var(--mainwhite);
+        }
+        
+        .btn-primary:hover {
+            background-color: #6a30e5;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(122, 56, 252, 0.2);
+        }
+        
+        .btn-secondary {
+            background-color: var(--mainsecondary);
+            color: var(--maindark);
+        }
+        
+        .btn-secondary:hover {
+            background-color: #e0a900;
+            transform: translateY(-2px);
+        }
+        
+        .btn-outline {
+            background-color: transparent;
+            color: var(--mainwhite);
+            border: 1.5px solid var(--mainprimary);
+        }
+        
+        .btn-outline:hover {
+            background-color: rgba(122, 56, 252, 0.1);
+        }
+        
+        .btn-outline-dark {
+            background-color: transparent;
+            color: var(--maindark);
+            border: 1.5px solid var(--maindark);
+        }
+        
+        .btn-outline-dark:hover {
+            background-color: rgba(15, 11, 12, 0.05);
+        }
+        
+        /* Section Common */
+        .section-padding {
+            padding: 4rem 0;
+        }
+        
+        .section-title {
+            font-family: 'Alfa Slab One', cursive;
+            font-size: 1.75rem;
+            line-height: 1.2;
+            margin-bottom: 1rem;
+        }
+        
+        @media (min-width: 640px) {
+            .section-title {
+                font-size: 2rem;
+            }
+        }
+        
+        @media (min-width: 1024px) {
+            .section-title {
+                font-size: 2.25rem;
+            }
+        }
+        
+        .section-subtitle {
+            font-family: 'Manrope', sans-serif;
+            font-size: 1rem;
+            color: var(--shadesdark-60);
+            margin-bottom: 2rem;
+        }
+        
+        /* Scholars Section */
+        .scholars-section {
+            background-color: var(--shadessecondary-15);
+        }
+        
+        .scholars-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        
+        @media (min-width: 640px) {
+            .scholars-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        
+        @media (min-width: 768px) {
+            .scholars-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+        
+        @media (min-width: 1024px) {
+            .scholars-grid {
+                grid-template-columns: repeat(6, 1fr);
+            }
+        }
+        
+        .scholar-card {
+            background-color: var(--mainwhite);
+            border-radius: 0.75rem;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+        
+        .scholar-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+        
+        .scholar-image {
+            height: 140px;
+            width: 100%;
+            object-fit: cover;
+        }
+        
+        .scholar-info {
+            padding: 0.75rem;
+        }
+        
+        .scholar-name {
+            font-family: 'ABeeZee', sans-serif;
+            font-size: 0.8rem;
+            margin-bottom: 0.25rem;
+            line-height: 1.3;
+        }
+        
+        .scholar-role {
+            font-size: 0.65rem;
+            color: var(--shadesdark-80);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        /* Back to Home Button */
+        .back-home {
+            margin-bottom: 2rem;
+            text-align: left;
+        }
+        
+        /* Footer */
+        .footer {
+            background: linear-gradient(135deg, #0a0809 0%, #151522 100%);
+            color: var(--mainwhite);
+        }
+        
+        .footer-content {
+            padding: 3rem 0 2rem;
+        }
+        
+        .footer-title {
+            font-family: 'Clash Display', sans-serif;
+            font-size: 1.75rem;
+            margin-bottom: 0.75rem;
+        }
+        
+        .footer-description {
+            color: var(--shadesdark-15);
+            font-size: 0.85rem;
+            margin-bottom: 1.5rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .newsletter-form {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            max-width: 400px;
+            margin: 0 auto 2rem;
+        }
+        
+        @media (min-width: 640px) {
+            .newsletter-form {
+                flex-direction: row;
+            }
+        }
+        
+        .newsletter-input {
+            padding: 0.6rem 1rem;
+            border-radius: 0.4rem;
+            border: none;
+            font-size: 0.85rem;
+            background-color: rgba(255,255,255,0.1);
+            color: var(--mainwhite);
+            flex: 1;
+        }
+        
+        .newsletter-input::placeholder {
+            color: var(--shadesdark-30);
+        }
+        
+        .footer-bottom {
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(111, 109, 109, 0.4);
+        }
+        
+        .footer-bottom-inner {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+        }
+        
+        @media (min-width: 768px) {
+            .footer-bottom-inner {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+            }
+        }
+        
+        .footer-logo {
+            font-family: 'ADLaM Display', cursive;
+            font-size: 1.25rem;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 0.75rem;
+        }
+        
+        .social-links a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 35px;
+            height: 35px;
+            background-color: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            color: var(--mainwhite);
+            font-size: 1rem;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+        
+        .social-links a:hover {
+            background-color: var(--mainprimary);
+            transform: translateY(-3px);
+        }
+        
+        .footer-links {
+            display: flex;
+            gap: 1.5rem;
+            margin: 1rem 0;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .footer-links a {
+            color: var(--shadesdark-15);
+            font-size: 0.85rem;
+            transition: color 0.3s;
+            text-decoration: none;
+        }
+        
+        .footer-links a:hover {
+            color: var(--mainwhite);
+        }
+        
+        .footer-copyright {
+            color: var(--shadesdark-15);
+            font-size: 0.8rem;
+            text-align: center;
+        }
+        
+        /* Mobile Menu */
+        .mobile-menu {
+            display: none;
+            position: fixed;
+            top: 80px; /* Position below the fixed navbar */
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--maindark);
+            z-index: 99;
+            padding: 2rem 1rem;
+            overflow-y: auto;
+        }
+        
+        .mobile-menu.active {
+            display: block;
+        }
+        
+        .mobile-menu-links {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        
+        .mobile-menu-links a {
+            color: var(--shadesdark-30);
+            font-weight: 500;
+            font-size: 1.1rem;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .mobile-menu-links a:hover {
+            color: var(--mainwhite);
+        }
+        
+        /* Responsive Design Fixes */
+        @media (min-width: 768px) {
+            .nav-links {
+                display: flex;
+            }
+            
+            .mobile-menu-btn {
+                display: none;
+            }
+            
+            body {
+                padding-top: 90px;
+            }
+        }
+        
+        /* Ensure images don't overflow */
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+        
+        /* Fix for scholar cards on very small screens */
+        @media (max-width: 400px) {
+            .scholars-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Fixed Navigation with Black Background -->
+    <nav class="navbar">
+        <div class="container" style="width: 100%; max-width: 100%; display: flex; justify-content: space-between; align-items: center;">
+            <a href="index.html" class="logo">
+                <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/logo3d-1.png" alt="QUAF Logo">
+                <span>QUAF</span>
+            </a>
+            
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="index.html#about">About</a></li>
+                <li><a href="index.html#leaders">Leaders</a></li>
+                <li><a href="index.html#gallery">Gallery</a></li>
+                <li><a href="index.html#contact">Contact</a></li>
+                <li><button class="btn btn-outline">Get Started</button></li>
+            </ul>
+            
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <ul class="mobile-menu-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="index.html#about">About</a></li>
+            <li><a href="index.html#leaders">Leaders</a></li>
+            <li><a href="index.html#gallery">Gallery</a></li>
+            <li><a href="index.html#contact">Contact</a></li>
+            <li><button class="btn btn-outline" style="width: 100%;">Get Started</button></li>
+        </ul>
+    </div>
+    
+    <!-- Banner Section with Separate Mobile and Desktop Images -->
+    <section class="banner-section">
+        <div class="banner-overlay"></div>
+        <div class="banner-content">
+            <div class="banner-text">
+                <h1 class="banner-title">
+                    All Scholars
+                </h1>
+                <p class="banner-subtitle">
+                    Meet all 36 incredible scholars of the 27th batch
+                </p>
+            </div>
+        </div>
+    </section>
+    
+    <!-- All Scholars Section -->
+    <section class="scholars-section section-padding">
+        <div class="container">
+            <div class="back-home">
+                <a href="index.html" class="btn btn-outline-dark">
+                    <i class="fas fa-arrow-left mr-2"></i> Back to Home
+                </a>
+            </div>
+            
+            <div style="display: flex; flex-direction: column; gap: 1.5rem; margin-bottom: 2rem;">
+                <h2 class="section-title">All 36 Scholars</h2>
+                <p class="section-subtitle">
+                    The complete list of all scholars from the Qualitative Union for Academic Focus
+                </p>
+            </div>
+            
+            <div class="scholars-grid">
+                <!-- Scholar 1 -->
+                <div class="scholar-card">
+                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-5.png" alt="SADHAQATHULLA C" class="scholar-image">
+                    <div class="scholar-info">
+                        <div class="scholar-name">SADHAQATHULLA C</div>
+                        <div class="scholar-role">PRESIDENT</div>
+                    </div>
+                </div>
+                
+                <!-- Scholar 2 -->
+                <div class="scholar-card">
+                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-1.png" alt="MUHAMMED FAHEEM NP" class="scholar-image">
+                    <div class="scholar-info">
+                        <div class="scholar-name">MUHAMMED FAHEEM NP</div>
+                        <div class="scholar-role">SECRETARY</div>
+                    </div>
+                </div>
+                
+                <!-- Scholar 3 -->
+                <div class="scholar-card">
+                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-7.png" alt="SAHL SHAN O" class="scholar-image">
+                    <div class="scholar-info">
+                        <div class="scholar-name">SAHL SHAN O</div>
+                        <div class="scholar-role">VICE PRESIDENT</div>
+                    </div>
+                </div>
+                
+                <!-- Scholar 4 -->
+                <div class="scholar-card">
+                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-6.png" alt="MUHAMMED MUSTHAFA SM" class="scholar-image">
+                    <div class="scholar-info">
+                        <div class="scholar-name">MUHAMMED MUSTHAFA SM</div>
+                        <div class="scholar-role">TREASURER</div>
+                    </div>
+                </div>
+                
+                <!-- Scholar 5 -->
+                <div class="scholar-card">
+                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo.png" alt="MUHAMMED ANSHAD VP" class="scholar-image">
+                    <div class="scholar-info">
+                        <div class="scholar-name">MUHAMMED ANSHAD VP</div>
+                        <div class="scholar-role">WORKING SECRETARY</div>
+                    </div>
+                </div>
+                
+                <!-- Scholar 6 -->
+                <div class="scholar-card">
+                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-2.png" alt="MUHAMMED HASHIM KH" class="scholar-image">
+                    <div class="scholar-info">
+                        <div class="scholar-name">MUHAMMED HASHIM KH</div>
+                        <div class="scholar-role">EXECUTIVE MEMBER</div>
+                    </div>
+                </div>
+                
+                <!-- Scholar 7 -->
+                <div class="scholar-card">
+                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-3.png" alt="MUHAMMED ALI M" class="scholar-image">
+                    <div class="scholar-info">
+                        <div class="scholar-name">MUHAMMED ALI M</div>
+                        <div class="scholar-role">PROGRAM DESIGNER</div>
+                    </div>
+                </div>
+                
+                <!-- Scholar 8 -->
+                <div class="scholar-card">
+                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-4.png" alt="MUHAMMED RABEEH PP" class="scholar-image">
+                    <div class="scholar-info">
+                        <div class="scholar-name">MUHAMMED RABEEH PP</div>
+                        <div class="scholar-role">EXECUTIVE MEMBER</div>
+                    </div>
+                </div>
+
+                <!-- Scholar 9 -->
+                <div class="scholar-card">
+                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-8.png" alt="MUHAMMED QASIM MP" class="scholar-image">
+                    <div class="scholar-info">
+                        <div class="scholar-name">MUHAMMED QASIM MP</div>
+                        <div class="scholar-role">EDITORIAL BOARD</div>
+                    </div>
+                </div>
+                
+                <!-- Scholar 10 -->
+                <div class="scholar-card">
+                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-9.png" alt="MUHAMMED SHAFEEQUE T" class="scholar-image">
+                    <div class="scholar-info">
+                        <div class="scholar-name">MUHAMMED SHAFEEQUE T</div>
+                        <div class="scholar-role">EDITORIAL BOARD</div>
+                    </div>
+                </div>
+                
+                <!-- Scholar 11 -->
+                <div class="scholar-card">
+                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-10.png" alt="MUHAMMED HASHIM V" class="scholar-image">
+                    <div class="scholar-info">
+                        <div class="scholar-name">MUHAMMED HASHIM V</div>
+                        <div class="scholar-role">PUBLICATIONS</div>
+                    </div>
+                </div>
+                
+                <!-- Scholar 12 -->
+                <div class="scholar-card">
+                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-11.png" alt="MOHAMMED HADI V" class="scholar-image">
+                    <div class="scholar-info">
+                        <div class="scholar-name">MOHAMMED HADI V</div>
+                        <div class="scholar-role">PUBLICATIONS</div>
+                    </div>
+                </div>
+                
+                <!-- Scholar 13 -->
+                <div class="scholar-card">
+                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-12.png" alt="MUHAMMED HAYYAN VP" class="scholar-image">
+                    <div class="scholar-info">
+                        <div class="scholar-name">MUHAMMED HAYYAN VP</div>
+                        <div class="scholar-role">ARABIC WING</div>
+                    </div>
+                </div>
+                
+                <!-- Scholar 14 -->
+                <div class="scholar-card">
+                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-13.png" alt="HAMDAN CC" class="scholar-image">
+                    <div class="scholar-info">
+                        <div class="scholar-name">HAMDAN CC</div>
+                        <div class="scholar-role">ARABIC WING</div>
+                    </div>
+                </div>
+                
+                <!-- Scholar 15 -->
+                <div class="scholar-card">
+                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-14.png" alt="MUHAMMED SAHL" class="scholar-image">
+                    <div class="scholar-info">
+                        <div class="scholar-name">MUHAMMED SAHL</div>
+                        <div class="scholar-role">URDU WING</div>
+                    </div>
+                </div>
+                
+                <!-- Scholar 16 -->
+                <div class="scholar-card">
+                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-15.png" alt="MUHAMMED RAMEES VP" class="scholar-image">
+                    <div class="scholar-info">
+                        <div class="scholar-name">MUHAMMED RAMEES VP</div>
+                        <div class="scholar-role">URDU WING</div>
+                    </div>
+                </div>
+                
+                <!-- Scholar 17 -->
+                <div class="scholar-card">
+                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-16.png" alt="MUHAMMED YASEEN K" class="scholar-image">
+                    <div class="scholar-info">
+                        <div class="scholar-name">MUHAMMED YASEEN K</div>
+                        <div class="scholar-role">MALAYALAM WING</div>
+                    </div>
+                </div>
+                
+                <!-- Scholar 18 -->
+                <div class="scholar-card">
+                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-17.png" alt="MUHAMMED LASIN KC" class="scholar-image">
+                    <div class="scholar-info">
+                        <div class="scholar-name">MUHAMMED LASIN KC</div>
+                        <div class="scholar-role">MALAYALAM WING</div>
+                    </div>
+                </div>
+                
+                <!-- Scholar 19 -->
+                <div class="scholar-card">
+                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-18.png" alt="MUHAMMED SHAHAL" class="scholar-image">
+                    <div class="scholar-info">
+                        <div class="scholar-name">MUHAMMED SHAHAL</div>
+                        <div class="scholar-role">ENGLISH WING</div>
+                    </div>
+                </div>
+                
+                <!-- Scholar 20 -->
+                <div class="scholar-card">
+                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-19.png" alt="ABDUL HADI" class="scholar-image">
+                    <div class="scholar-info">
+                        <div class="scholar-name">ABDUL HADI</div>
+                        <div class="scholar-role">ENGLISH WING</div>
+                    </div>
+                </div>
+                
+                <!-- Scholar 21 -->
+                <div class="scholar-card">
+                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-20.png" alt="MUHAMMED ZIYAD C" class="scholar-image">
+                    <div class="scholar-info">
+                        <div class="scholar-name">MUHAMMED ZIYAD C</div>
+                        <div class="scholar-role">MEDIA WING</div>
+                    </div>
+                </div>
+                
+                <!-- Scholar 22 -->
+                <div class="scholar-card">
+                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-34.png" alt="ALI RAFI EP" class="scholar-image">
+                    <div class="scholar-info">
+                        <div class="scholar-name">ALI RAFI EP</div>
+                        <div class="scholar-role">MEDIA WING</div>
+                    </div>
+                </div>
+                
+                <!-- Scholar 23 -->
+                <div class="scholar-card">
+                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-21.png" alt="MUHAMMED RASIN KP" class="scholar-image">
+                    <div class="scholar-info">
+                        <div class="scholar-name">MUHAMMED RASIN KP</div>
+                        <div class="scholar-role">SIGMA WING</div>
+                    </div>
+                </div>
+                
+                <!-- Scholar 24 -->
+                <div class="scholar-card">
+                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-29.png" alt="MUHAMMED SHAFIN" class="scholar-image">
+                    <div class="scholar-info">
+                        <div class="scholar-name">MUHAMMED SHAFIN</div>
+                        <div class="scholar-role">SIGMA WING</div>
+                    </div>
+                </div>
+                
+                <!-- Scholar 25 -->
+                <div class="scholar-card">
+                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-30.png" alt="AQIB MUHAMMED KT" class="scholar-image">
+                    <div class="scholar-info">
+                        <div class="scholar-name">AQIB MUHAMMED KT</div>
+                        <div class="scholar-role">ART WING</div>
+                    </div>
+                </div>
+                
+                <!-- Scholar 26 -->
+                <div class="scholar-card">
+                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-31.png" alt="MUHAMMED SINAN CK" class="scholar-image">
+                    <div class="scholar-info">
+                        <div class="scholar-name">MUHAMMED SINAN CK</div>
+                        <div class="scholar-role">ORATION WING</div>
+                    </div>
+                </div>
+                
+                <!-- Scholar 27 -->
+                <div class="scholar-card">
+                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-32.png" alt="HISHAM RAHMATHULLAH O" class="scholar-image">
+                    <div class="scholar-info">
+                        <div class="scholar-name">HISHAM RAHMATHULLAH O</div>
+                        <div class="scholar-role">GK WING</div>
+                    </div>
+                </div>
+                
+                <!-- Scholar 28 -->
+                <div class="scholar-card">
+                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-33.png" alt="MUHAMMED ASLAM" class="scholar-image">
+                    <div class="scholar-info">
+                        <div class="scholar-name">MUHAMMED ASLAM</div>
+                        <div class="scholar-role">GK WING</div>
+                    </div>
+                </div>
+                
+                <!-- Scholar 29 -->
+                <div class="scholar-card">
+                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-22.png" alt="MISHAB PT" class="scholar-image">
+                    <div class="scholar-info">
+                        <div class="scholar-name">MISHAB PT</div>
+                        <div class="scholar-role">LEADER, HIMAYA</div>
+                    </div>
+                </div>
+                
+                <!-- Scholar 30 -->
+                <div class="scholar-card">
+                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-25.png" alt="MUHAMMED SHAFAN A" class="scholar-image">
+                    <div class="scholar-info">
+                        <div class="scholar-name">MUHAMMED SHAFAN A</div>
+                        <div class="scholar-role">MEMBER</div>
+                    </div>
+                </div>
+                
+                <!-- Scholar 31 -->
+                <div class="scholar-card">
+                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-24.png" alt="MUHAMMED RASAL PP" class="scholar-image">
+                    <div class="scholar-info">
+                        <div class="scholar-name">MUHAMMED RASAL PP</div>
+                        <div class="scholar-role">MEMBER</div>
+                    </div>
+                </div>
+                
+                <!-- Scholar 32 -->
+                <div class="scholar-card">
+                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-23.png" alt="MOHAMMED AFRAH N" class="scholar-image">
+                    <div class="scholar-info">
+                        <div class="scholar-name">MOHAMMED AFRAH N</div>
+                        <div class="scholar-role">MEMBER</div>
+                    </div>
+                </div>
+                
+                <!-- Scholar 33 -->
+                <div class="scholar-card">
+                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-26.png" alt="MUHAMMED NASWIH IK" class="scholar-image">
+                    <div class="scholar-info">
+                        <div class="scholar-name">MUHAMMED NASWIH IK</div>
+                        <div class="scholar-role">MEMBER</div>
+                    </div>
+                </div>
+                
+                <!-- Scholar 34 -->
+                <div class="scholar-card">
+                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-27.png" alt="SAIDALAVI SHAMIL MC" class="scholar-image">
+                    <div class="scholar-info">
+                        <div class="scholar-name">SAIDALAVI SHAMIL MC</div>
+                        <div class="scholar-role">MEMBER</div>
+                    </div>
+                </div>
+                
+                <!-- Scholar 35 -->
+                <div class="scholar-card">
+                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-28.png" alt="AMAN ASKAR CT" class="scholar-image">
+                    <div class="scholar-info">
+                        <div class="scholar-name">AMAN ASKAR CT</div>
+                        <div class="scholar-role">MEMBER</div>
+                    </div>
+                </div>
+                
+                <!-- Scholar 36 -->
+                <div class="scholar-card">
+                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-35.png" alt="FARSHAD MR" class="scholar-image">
+                    <div class="scholar-info">
+                        <div class="scholar-name">FARSHAD MR</div>
+                        <div class="scholar-role">MEMBER</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div style="text-align: center; margin-bottom: 3rem;">
+                    <h2 class="footer-title">Never miss a single news</h2>
+                    <p class="footer-description">
+                        Stay informed with all the latest updates and news about our programs. Never miss a moment of our exciting and innovative gatherings in the world of technology and beyond.
+                    </p>
+                    
+                    <form class="newsletter-form" id="newsletterForm">
+                        <input type="email" placeholder="Enter your email address" class="newsletter-input" required>
+                        <button type="submit" class="btn btn-primary">Subscribe</button>
+                    </form>
+                </div>
+                
+                <div class="footer-bottom">
+                    <div class="footer-bottom-inner">
+                        <div class="footer-logo">QUAF</div>
+                        
+                        <div class="social-links">
+                            <a href="#"><i class="fab fa-instagram"></i></a>
+                            <a href="#"><i class="fab fa-facebook"></i></a>
+                            <a href="#"><i class="fab fa-whatsapp"></i></a>
+                        </div>
+                    </div>
+                    
+                    <div class="footer-links">
+                        <a href="#">Terms & Conditions</a>
+                        <a href="#">Privacy Policy</a>
+                    </div>
+                    
+                    <div class="footer-copyright">
+                        Copyright © QUAF-2026 All Rights Reserved
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <script>
+        // Mobile Menu Toggle
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            const mobileMenu = document.getElementById('mobileMenu');
+            const navbar = document.querySelector('.navbar');
+            
+            // Mobile menu toggle
+            if (mobileMenuBtn) {
+                mobileMenuBtn.addEventListener('click', function() {
+                    mobileMenu.classList.toggle('active');
+                    if (mobileMenu.classList.contains('active')) {
+                        document.body.style.overflow = 'hidden';
+                    } else {
+                        document.body.style.overflow = '';
+                    }
+                });
+            }
+            
+            // Close mobile menu when clicking on links
+            document.querySelectorAll('.mobile-menu-links a').forEach(link => {
+                link.addEventListener('click', function() {
+                    mobileMenu.classList.remove('active');
+                    document.body.style.overflow = '';
+                });
+            });
+            
+            // Navbar scroll effect
+            window.addEventListener('scroll', function() {
+                if (window.scrollY > 50) {
+                    navbar.classList.add('scrolled');
+                } else {
+                    navbar.classList.remove('scrolled');
+                }
+            });
+            
+            // Smooth scrolling for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    if (targetId === '#') return;
+                    
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        const navbarHeight = navbar.offsetHeight;
+                        const targetPosition = targetElement.offsetTop - navbarHeight;
+                        
+                        window.scrollTo({
+                            top: targetPosition,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+            
+            // Newsletter form
+            const newsletterForm = document.getElementById('newsletterForm');
+            if (newsletterForm) {
+                newsletterForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const email = this.querySelector('input[type="email"]').value;
+                    
+                    if (email && email.includes('@')) {
+                        alert('Thank you for subscribing to QUAF newsletter!');
+                        this.reset();
+                    } else {
+                        alert('Please enter a valid email address.');
+                    }
+                });
+            }
+            
+            // Close mobile menu when clicking outside
+            document.addEventListener('click', function(event) {
+                if (mobileMenu.classList.contains('active') && 
+                    !mobileMenu.contains(event.target) && 
+                    !mobileMenuBtn.contains(event.target)) {
+                    mobileMenu.classList.remove('active');
+                    document.body.style.overflow = '';
+                }
+            });
+            
+            // Window resize - reset mobile menu on larger screens
+            window.addEventListener('resize', function() {
+                if (window.innerWidth >= 768) {
+                    mobileMenu.classList.remove('active');
+                    document.body.style.overflow = '';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
