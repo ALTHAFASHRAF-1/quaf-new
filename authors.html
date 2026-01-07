@@ -27,7 +27,7 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html { scroll-behavior: smooth; }
         body { font-family: 'Manrope', sans-serif; font-size: 13px; line-height: 1.5; color: var(--maindark); background-color: var(--mainwhite); padding-top: 0; overflow-x: hidden; }
-        .container { width: 100%; max-width: 800px; margin: 0 auto; padding: 0 1rem; } /* Max width 800px for better list readability */
+        .container { width: 100%; max-width: 800px; margin: 0 auto; padding: 0 1rem; } 
         
         /* --- NAVIGATION --- */
         .navbar { display: flex; justify-content: space-between; align-items: center; padding: 1rem; background-color: #000000; position: fixed; top: 0; left: 0; right: 0; z-index: 1000; height: var(--header-height); box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3); transition: all 0.3s ease; }
@@ -177,6 +177,7 @@
             box-shadow: 0 2px 5px rgba(0,0,0,0.05);
             transition: transform 0.2s ease, box-shadow 0.2s ease;
             border: 1px solid #f0f0f0;
+            padding-right: 20px; /* Space for the button */
         }
         
         .author-card:hover {
@@ -204,6 +205,28 @@
             letter-spacing: 0.5px;
         }
 
+        /* --- NEW: RIGHT ALIGNED BLUE PEN ICON --- */
+        .author-link-btn {
+            margin-left: auto; /* Pushes element to the far right */
+            color: #2563eb; /* Blue Color */
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: color 0.3s, transform 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 35px;
+            height: 35px;
+            text-decoration: none;
+            border-radius: 50%;
+        }
+        
+        .author-link-btn:hover {
+            color: #1d4ed8;
+            background-color: #eff6ff;
+            transform: scale(1.1);
+        }
+
         /* Footer */
         .footer { background: linear-gradient(135deg, #0a0809 0%, #151522 100%); color: white; padding: 3rem 0; }
     </style>
@@ -219,7 +242,54 @@
             
             <ul class="nav-links">
                 <li class="nav-item"><a href="index.html" class="nav-link">Home</a></li>
-                
+                <li class="nav-item">
+                    <div class="nav-link">Stories <i class="fas fa-chevron-down"></i></div>
+                    <ul class="dropdown-menu">
+                        <li><a href="stories-series1.html">Series 1</a></li>
+                        <li><a href="stories-series2.html">Series 2</a></li>
+                        <li><a href="stories-series3.html">Series 3</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <div class="nav-link">Poems <i class="fas fa-chevron-down"></i></div>
+                    <ul class="dropdown-menu">
+                        <li><a href="poems-series1.html">Series 1</a></li>
+                        <li><a href="poems-series2.html">Series 2</a></li>
+                        <li><a href="poems-series3.html">Series 3</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <div class="nav-link">Essays <i class="fas fa-chevron-down"></i></div>
+                    <ul class="dropdown-menu">
+                        <li><a href="essays-series1.html">Series 1</a></li>
+                        <li><a href="essays-series2.html">Series 2</a></li>
+                        <li><a href="essays-series3.html">Series 3</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <div class="nav-link">Short Stories <i class="fas fa-chevron-down"></i></div>
+                    <ul class="dropdown-menu">
+                        <li><a href="shortstories-series1.html">Series 1</a></li>
+                        <li><a href="shortstories-series2.html">Series 2</a></li>
+                        <li><a href="shortstories-series3.html">Series 3</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <div class="nav-link">Features <i class="fas fa-chevron-down"></i></div>
+                    <ul class="dropdown-menu">
+                        <li><a href="features-series1.html">Series 1</a></li>
+                        <li><a href="features-series2.html">Series 2</a></li>
+                        <li><a href="features-series3.html">Series 3</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <div class="nav-link">Letters <i class="fas fa-chevron-down"></i></div>
+                    <ul class="dropdown-menu">
+                        <li><a href="letters-series1.html">Series 1</a></li>
+                        <li><a href="letters-series2.html">Series 2</a></li>
+                        <li><a href="letters-series3.html">Series 3</a></li>
+                    </ul>
+                </li>
             </ul>
             
             <button class="mobile-menu-btn" id="mobileMenuBtn">
@@ -231,6 +301,54 @@
     <div class="mobile-menu" id="mobileMenu">
         <ul class="mobile-menu-links">
             <li><a href="index.html" class="mobile-cat-title" style="text-decoration: none;">Home</a></li>
+            <li class="mobile-cat-wrapper">
+                <div class="mobile-cat-title" onclick="toggleMobileSubMenu(this)">Stories <i class="fas fa-chevron-down"></i></div>
+                <div class="mobile-sub-menu">
+                    <a href="stories-series1.html" class="mobile-sub-link">Series 1</a>
+                    <a href="stories-series2.html" class="mobile-sub-link">Series 2</a>
+                    <a href="stories-series3.html" class="mobile-sub-link">Series 3</a>
+                </div>
+            </li>
+            <li class="mobile-cat-wrapper">
+                <div class="mobile-cat-title" onclick="toggleMobileSubMenu(this)">Poems <i class="fas fa-chevron-down"></i></div>
+                <div class="mobile-sub-menu">
+                    <a href="poems-series1.html" class="mobile-sub-link">Series 1</a>
+                    <a href="poems-series2.html" class="mobile-sub-link">Series 2</a>
+                    <a href="poems-series3.html" class="mobile-sub-link">Series 3</a>
+                </div>
+            </li>
+            <li class="mobile-cat-wrapper">
+                <div class="mobile-cat-title" onclick="toggleMobileSubMenu(this)">Essays <i class="fas fa-chevron-down"></i></div>
+                <div class="mobile-sub-menu">
+                    <a href="essays-series1.html" class="mobile-sub-link">Series 1</a>
+                    <a href="essays-series2.html" class="mobile-sub-link">Series 2</a>
+                    <a href="essays-series3.html" class="mobile-sub-link">Series 3</a>
+                </div>
+            </li>
+            <li class="mobile-cat-wrapper">
+                <div class="mobile-cat-title" onclick="toggleMobileSubMenu(this)">Short Stories <i class="fas fa-chevron-down"></i></div>
+                <div class="mobile-sub-menu">
+                    <a href="shortstories-series1.html" class="mobile-sub-link">Series 1</a>
+                    <a href="shortstories-series2.html" class="mobile-sub-link">Series 2</a>
+                    <a href="shortstories-series3.html" class="mobile-sub-link">Series 3</a>
+                </div>
+            </li>
+            <li class="mobile-cat-wrapper">
+                <div class="mobile-cat-title" onclick="toggleMobileSubMenu(this)">Features <i class="fas fa-chevron-down"></i></div>
+                <div class="mobile-sub-menu">
+                    <a href="features-series1.html" class="mobile-sub-link">Series 1</a>
+                    <a href="features-series2.html" class="mobile-sub-link">Series 2</a>
+                    <a href="features-series3.html" class="mobile-sub-link">Series 3</a>
+                </div>
+            </li>
+            <li class="mobile-cat-wrapper">
+                <div class="mobile-cat-title" onclick="toggleMobileSubMenu(this)">Letters <i class="fas fa-chevron-down"></i></div>
+                <div class="mobile-sub-menu">
+                    <a href="letters-series1.html" class="mobile-sub-link">Series 1</a>
+                    <a href="letters-series2.html" class="mobile-sub-link">Series 2</a>
+                    <a href="letters-series3.html" class="mobile-sub-link">Series 3</a>
+                </div>
+            </li>
         </ul>
     </div>
     
@@ -292,6 +410,9 @@
             names.forEach((name, index) => {
                 const id = ids[index];
                 const imgUrl = `${baseUrl}${id}.JPG`;
+                
+                // Generates a unique link for each author. You can replace "author-ID.html" with real links.
+                const profileLink = `author-${id}.html`;
 
                 const item = document.createElement('div');
                 item.className = 'author-card';
@@ -303,6 +424,10 @@
                          alt="${name}"
                          onerror="this.src='${defaultImg}'">
                     <div class="author-name">${name}</div>
+                    
+                    <a href="${profileLink}" class="author-link-btn" title="View Profile">
+                        <i class="fas fa-pen"></i>
+                    </a>
                 `;
                 
                 listContainer.appendChild(item);
@@ -312,7 +437,7 @@
             setupNavbar();
         });
 
-        // --- NAVBAR LOGIC (Same as previous page) ---
+        // --- NAVBAR LOGIC ---
         function setupNavbar() {
             const mobileMenuBtn = document.getElementById('mobileMenuBtn');
             const mobileMenu = document.getElementById('mobileMenu');
