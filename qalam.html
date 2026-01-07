@@ -15,25 +15,47 @@
             --mainprimary: #7a38fc;
             --mainsecondary: #febf00;
             --mainwhite: #ffffff;
+            /* Added Shades for Navbar Compatibility */
+            --shadesdark-5: #f3f3f3;
+            --shadesdark-10: #e7e7e7;
+            --shadesdark-15: #dbdadb;
+            --shadesdark-30: #b7b6b6;
+            --shadesdark-60: #6f6d6d;
+            --shadesdark-80: #3f3c3d;
             --shadessecondary-15: #fff5d9;
             --header-height: 82px;
         }
         
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Manrope', sans-serif; font-size: 13px; line-height: 1.5; color: var(--maindark); background-color: var(--mainwhite); padding-top: 0; }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Manrope', sans-serif; font-size: 13px; line-height: 1.5; color: var(--maindark); background-color: var(--mainwhite); padding-top: 0; overflow-x: hidden; }
         .container { width: 100%; max-width: 1200px; margin: 0 auto; padding: 0 1rem; }
         
-        /* Navigation */
-        .navbar { display: flex; justify-content: space-between; align-items: center; padding: 1rem; background-color: #000000; position: fixed; top: 0; left: 0; right: 0; z-index: 1000; height: var(--header-height); }
+        /* --- NAVIGATION (UPDATED) --- */
+        .navbar { display: flex; justify-content: space-between; align-items: center; padding: 1rem; background-color: #000000; position: fixed; top: 0; left: 0; right: 0; z-index: 1000; height: var(--header-height); box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3); transition: all 0.3s ease; }
+        .navbar.scrolled { box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4); }
         .logo { display: flex; align-items: center; gap: 0.5rem; font-family: 'Abel', sans-serif; font-size: 1.7rem; font-weight: 700; text-decoration: none; color: white; }
         .logo img { width: 50px; height: 50px; }
+        
         .nav-links { display: none; gap: 1.25rem; align-items: center; list-style: none; }
-        .nav-links a { color: #b7b6b6; font-weight: 500; font-size: 18px; text-decoration: none; }
-        .nav-links a:hover { color: white; }
-        .mobile-menu-btn { background: none; border: none; color: white; font-size: 1.7rem; cursor: pointer; display: block; z-index: 100; }
-        @media (min-width: 768px) { .nav-links { display: flex; } .mobile-menu-btn { display: none; } }
+        .nav-links a { color: var(--shadesdark-30); font-weight: 500; font-size: 18px; text-decoration: none; transition: color 0.3s; }
+        .nav-links a:hover { color: var(--mainwhite); }
+        
+        .mobile-menu-btn { background: none; border: none; color: var(--mainwhite); font-size: 1.7rem; cursor: pointer; display: block; z-index: 100; }
+        
+        /* Mobile Menu Overlay */
+        .mobile-menu { display: none; position: fixed; top: var(--header-height); left: 0; right: 0; bottom: 0; background-color: var(--maindark); z-index: 99; padding: 2rem 1rem; overflow-y: auto; }
+        .mobile-menu.active { display: block; }
+        .mobile-menu-links { list-style: none; display: flex; flex-direction: column; gap: 1.5rem; }
+        .mobile-menu-links a { color: var(--shadesdark-30); font-weight: 500; font-size: 1.1rem; text-decoration: none; transition: color 0.3s; }
+        .mobile-menu-links a:hover { color: var(--mainwhite); }
 
-        /* Banner Section */
+        @media (min-width: 768px) { 
+            .nav-links { display: flex; } 
+            .mobile-menu-btn { display: none; } 
+        }
+
+        /* Banner Section with Separate Mobile and Desktop Images */
         .banner-section {
             color: black;
             padding: 3rem 0;
@@ -43,9 +65,11 @@
             justify-content: center;
             position: relative;
             overflow: hidden;
+            /* FIX: Add margin-top exactly equal to header height */
             margin-top: var(--header-height);
         }
 
+        /* Desktop background - Default */
         .banner-section::before {
             content: '';
             position: absolute;
@@ -60,6 +84,7 @@
             z-index: -2;
         }
         
+        /* Optional overlay for better text readability */
         .banner-section::after {
             content: '';
             position: absolute;
@@ -70,6 +95,7 @@
             z-index: -1;
         }
 
+        /* Mobile banner */
         @media (max-width: 767px) {
             .banner-section {
                 padding: 1rem 0;
@@ -81,37 +107,44 @@
             }
         }
         
-        /* Buttons */
-        .btn { display: inline-flex; align-items: center; justify-content: center; padding: 0.6rem 1.25rem; border-radius: 6px; font-weight: 600; cursor: pointer; border: none; transition: all 0.3s; text-decoration: none; }
+        /* --- BUTTONS --- */
+        .btn { display: inline-flex; align-items: center; justify-content: center; padding: 0.6rem 1.25rem; border-radius: 6px; font-weight: 600; cursor: pointer; border: none; transition: all 0.3s; text-decoration: none; font-family: 'Manrope', sans-serif; font-size: 14px; white-space: nowrap; }
         .btn-primary { background-color: var(--mainprimary); color: white; }
+        .btn-primary:hover { background-color: #6a30e5; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(122, 56, 252, 0.2); }
         .btn-outline { background-color: transparent; color: white; border: 1.5px solid var(--mainprimary); }
+        .btn-outline:hover { background-color: rgba(122, 56, 252, 0.1); }
         .btn-outline-dark { background-color: transparent; color: var(--maindark); border: 1.5px solid var(--maindark); }
         .btn-outline-dark:hover { background-color: rgba(15, 11, 12, 0.05); }
 
-        /* Publications Grid */
+        /* --- PUBLICATIONS GRID --- */
         .section-padding { padding: 4rem 0; }
         .publications-section { background-color: var(--shadessecondary-15); }
-        .publications-grid { display: grid; gap: 1.5rem; margin-top: 2rem; grid-template-columns: repeat(2, 1fr); }
+        .publications-grid { display: grid; gap: 1.5rem; margin-top: 2rem; grid-template-columns: repeat(2, 1fr); min-height: 300px; }
         @media (min-width: 1024px) { .publications-grid { grid-template-columns: repeat(4, 1fr); } }
 
-        .publication-card { background-color: white; border-radius: 0.75rem; overflow: hidden; box-shadow: 0 3px 10px rgba(0,0,0,0.1); cursor: pointer; position: relative; }
+        .publication-card { background-color: white; border-radius: 0.75rem; overflow: hidden; box-shadow: 0 3px 10px rgba(0,0,0,0.1); cursor: pointer; position: relative; transition: transform 0.3s ease, box-shadow 0.3s ease; }
+        .publication-card:hover { transform: translateY(-5px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
         .publication-card:hover::after { content: '\f518'; font-family: "Font Awesome 6 Free"; font-weight: 900; position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%); color: white; font-size: 2.5rem; z-index: 2; pointer-events: none; }
         .publication-card:hover .publication-image-container::before { opacity: 0.4; }
         
         .publication-image-container { width: 100%; aspect-ratio: 3 / 4; background-color: #f0f0f0; position: relative; display: flex; justify-content: center; align-items: center; overflow: hidden; }
         .publication-image-container::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: black; opacity: 0; transition: opacity 0.3s; z-index: 1; }
-        .publication-image { width: 100%; height: 100%; object-fit: contain; }
+        .publication-image { width: 100%; height: 100%; object-fit: cover; }
         
         .publication-info { padding: 0.85rem 1rem; border-top: 1px solid #f0f0f0; background-color: white; display: flex; align-items: center; gap: 12px; }
-        .author-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid #e7e7e7; }
-        .author-name { font-weight: 700; font-size: 0.95rem; }
+        .author-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid #e7e7e7; flex-shrink: 0; background-color: #ddd; }
+        .author-name { font-weight: 700; font-size: 0.95rem; line-height: 1.2; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
 
-        /* Lightbox */
+        /* Loader */
+        .loader-container { grid-column: 1 / -1; display: flex; justify-content: center; align-items: center; padding: 3rem; }
+        .loader { border: 4px solid #f3f3f3; border-top: 4px solid var(--mainprimary); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* --- LIGHTBOX & MODALS --- */
         .lightbox { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.92); backdrop-filter: blur(5px); justify-content: center; align-items: center; }
         .lightbox-content { max-width: 90%; max-height: 85vh; border-radius: 4px; box-shadow: 0 0 30px rgba(0,0,0,0.5); animation: zoomIn 0.3s ease; }
         .close-lightbox { position: absolute; top: 25px; right: 25px; color: white; font-size: 40px; cursor: pointer; z-index: 2001; background: rgba(255,255,255,0.1); width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
         
-        /* Submission Modal */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 3000; justify-content: center; align-items: center; backdrop-filter: blur(3px); }
         .modal-content { background: white; width: 95%; max-width: 500px; padding: 2rem; border-radius: 12px; position: relative; max-height: 90vh; overflow-y: auto; }
         .modal-header { font-size: 1.5rem; font-weight: 700; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 10px; color: var(--mainprimary); }
@@ -122,14 +155,14 @@
         .form-textarea { min-height: 120px; resize: vertical; }
         .close-modal { position: absolute; top: 1rem; right: 1rem; font-size: 1.5rem; cursor: pointer; color: #666; }
         
-        /* Success Popup */
         .success-popup { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 2rem; border-radius: 12px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.3); z-index: 4000; max-width: 90%; width: 400px; }
         .success-icon { font-size: 3rem; color: #10B981; margin-bottom: 1rem; }
         
-        /* Control Bar (Back + Write) */
         .control-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
-        
-        /* Footer */
+        .section-title { font-family: 'Alfa Slab One'; font-size: 2rem; }
+        .section-subtitle { color: var(--shadesdark-60); margin-bottom: 2rem; }
+
+        /* --- FOOTER --- */
         .footer { background: linear-gradient(135deg, #0a0809 0%, #151522 100%); color: white; padding: 3rem 0; }
         @keyframes zoomIn { from {transform:scale(0.8); opacity: 0;} to {transform:scale(1); opacity: 1;} }
     </style>
@@ -137,11 +170,12 @@
 <body>
 
     <nav class="navbar">
-        <div class="container" style="display: flex; justify-content: space-between; align-items: center;">
+        <div class="container" style="width: 100%; max-width: 100%; display: flex; justify-content: space-between; align-items: center;">
             <a href="index.html" class="logo">
                 <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/logo3d-1.png" alt="QUAF Logo">
                 <span>QUAF</span>
             </a>
+            
             <ul class="nav-links">
                 <li><a href="index.html">Home</a></li>
                 <li><a href="index.html#about">About</a></li>
@@ -150,9 +184,23 @@
                 <li><a href="index.html#contact">Contact</a></li>
                 <li><button class="btn btn-outline">Get Started</button></li>
             </ul>
-            <button class="mobile-menu-btn" id="mobileMenuBtn"><i class="fas fa-bars"></i></button>
+            
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fas fa-bars"></i>
+            </button>
         </div>
     </nav>
+
+    <div class="mobile-menu" id="mobileMenu">
+        <ul class="mobile-menu-links">
+            <li><a href="index.html" class="mobile-nav-link">Home</a></li>
+            <li><a href="index.html#about" class="mobile-nav-link">About</a></li>
+            <li><a href="scholars.html" class="mobile-nav-link">Scholars</a></li>
+            <li><a href="index.html#gallery" class="mobile-nav-link">Gallery</a></li>
+            <li><a href="index.html#contact" class="mobile-nav-link">Contact</a></li>
+            <li><button class="btn btn-outline" style="width: 100%;">Get Started</button></li>
+        </ul>
+    </div>
     
     <section class="banner-section"></section>
     
@@ -169,46 +217,13 @@
             </div>
             
             <div style="display: flex; flex-direction: column; gap: 1.5rem; margin-bottom: 2rem;">
-                <h2 class="section-title" style="font-family: 'Alfa Slab One'; font-size: 2rem;">Quaf Publications</h2>
+                <h2 class="section-title">Quaf Publications</h2>
                 <p class="section-subtitle">Explore our collection of academic journals, books, and articles published by our esteemed scholars.</p>
             </div>
             
-            <div class="publications-grid">
-                <div class="publication-card" onclick="openLightbox(this)">
-                    <div class="publication-image-container">
-                        <img src="https://m.media-amazon.com/images/I/71CR+0q-s0L._AC_UF1000,1000_QL80_.jpg" class="publication-image">
-                    </div>
-                    <div class="publication-info">
-                        <img src="https://randomuser.me/api/portraits/men/32.jpg" class="author-avatar">
-                        <div class="author-name">Dr. Sadhaqathulla C</div>
-                    </div>
-                </div>
-                <div class="publication-card" onclick="openLightbox(this)">
-                    <div class="publication-image-container">
-                        <img src="https://marketplace.canva.com/EAFaQ8qaArw/1/0/1003w/canva-brown-rusty-mystery-novel-book-cover-hG1QhA7BiBU.jpg" class="publication-image">
-                    </div>
-                    <div class="publication-info">
-                        <img src="https://randomuser.me/api/portraits/men/11.jpg" class="author-avatar">
-                        <div class="author-name">Muhammed Faheem</div>
-                    </div>
-                </div>
-                 <div class="publication-card" onclick="openLightbox(this)">
-                    <div class="publication-image-container">
-                        <img src="https://d1csarkz8obe9u.cloudfront.net/posterpreviews/contemporary-fiction-night-time-book-cover-design-template-1be47835c3058eb42211574e0c4ed8bf_screen.jpg" class="publication-image">
-                    </div>
-                    <div class="publication-info">
-                        <img src="https://randomuser.me/api/portraits/men/45.jpg" class="author-avatar">
-                        <div class="author-name">Sahl Shan O</div>
-                    </div>
-                </div>
-                <div class="publication-card" onclick="openLightbox(this)">
-                    <div class="publication-image-container">
-                        <img src="https://edit.org/images/cat/book-covers-big-2019101610.jpg" class="publication-image">
-                    </div>
-                    <div class="publication-info">
-                        <img src="https://randomuser.me/api/portraits/men/22.jpg" class="author-avatar">
-                        <div class="author-name">Muhammed Musthafa</div>
-                    </div>
+            <div id="publications-container" class="publications-grid">
+                <div class="loader-container">
+                    <div class="loader"></div>
                 </div>
             </div>
         </div>
@@ -281,10 +296,127 @@
     </footer>
 
     <script>
-        // CONFIGURATION - REPLACE THIS!
+        // --- CONFIGURATION ---
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbws4GLhVspkOILj0BHvxmNe9PS03rMp3fIQv0WUsRAKaG29hX76_Y_PPI-TfceH6t4okg/exec'; 
+        const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRrZ86dcAt5IpN7RNOTtoiPnLg07NSHzGbwnh9QUEwFZeOGUxoEUT1lxC4xYRp3B4qTaRR0atw-hX1w/pub?gid=812540248&single=true&output=csv';
 
-        // Submission Modal Logic
+        // --- NAVBAR & MOBILE MENU LOGIC ---
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            const mobileMenu = document.getElementById('mobileMenu');
+            const navbar = document.querySelector('.navbar');
+            const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
+            
+            if (mobileMenuBtn) {
+                mobileMenuBtn.addEventListener('click', function() {
+                    mobileMenu.classList.toggle('active');
+                    if (mobileMenu.classList.contains('active')) {
+                        document.body.style.overflow = 'hidden';
+                        mobileMenuBtn.innerHTML = '<i class="fas fa-times"></i>';
+                    } else {
+                        document.body.style.overflow = '';
+                        mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+                    }
+                });
+            }
+            
+            mobileNavLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    mobileMenu.classList.remove('active');
+                    document.body.style.overflow = '';
+                    mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+                });
+            });
+            
+            window.addEventListener('scroll', function() {
+                if (window.scrollY > 50) {
+                    navbar.classList.add('scrolled');
+                } else {
+                    navbar.classList.remove('scrolled');
+                }
+            });
+
+            // Fetch Data on Load
+            fetchPublications();
+        });
+
+        // --- DYNAMIC CSV FETCHING LOGIC ---
+        async function fetchPublications() {
+            const container = document.getElementById('publications-container');
+            
+            try {
+                const response = await fetch(CSV_URL);
+                const csvText = await response.text();
+                const data = parseCSV(csvText);
+                
+                // Remove loader
+                container.innerHTML = '';
+                
+                if (data.length === 0) {
+                    container.innerHTML = '<p style="grid-column: 1/-1; text-align: center;">No publications found.</p>';
+                    return;
+                }
+
+                // Identify Headers to Map Columns
+                const headers = data[0].map(h => h.trim().toLowerCase());
+                
+                // Heuristic mapping: Find column indices based on probable names
+                // Adjust these keywords if your CSV headers are different
+                const nameIdx = headers.findIndex(h => h.includes('name') || h.includes('author'));
+                const picIdx = headers.findIndex(h => h.includes('profile') || h.includes('pic') || h.includes('avatar'));
+                const pubImgIdx = headers.findIndex(h => h.includes('publication') || h.includes('cover') || h.includes('image'));
+
+                // Skip header row (i=1)
+                for (let i = 1; i < data.length; i++) {
+                    const row = data[i];
+                    // Skip empty rows
+                    if (row.length < 2) continue;
+
+                    const authorName = nameIdx > -1 ? row[nameIdx] : (row[0] || 'Unknown Author');
+                    // Fallback images if cells are empty
+                    const authorPic = (picIdx > -1 && row[picIdx]) ? row[picIdx] : 'https://c.animaapp.com/mjwngvpjWKAdmV/img/logo3d-1.png';
+                    const pubImg = (pubImgIdx > -1 && row[pubImgIdx]) ? row[pubImgIdx] : 'https://placehold.co/300x400?text=No+Cover';
+
+                    const cardHTML = `
+                        <div class="publication-card" onclick="openLightbox(this)">
+                            <div class="publication-image-container">
+                                <img src="${pubImg}" class="publication-image" loading="lazy" alt="${authorName}'s Publication">
+                            </div>
+                            <div class="publication-info">
+                                <img src="${authorPic}" class="author-avatar" loading="lazy" onerror="this.src='https://c.animaapp.com/mjwngvpjWKAdmV/img/logo3d-1.png'">
+                                <div class="author-name">${authorName}</div>
+                            </div>
+                        </div>
+                    `;
+                    container.insertAdjacentHTML('beforeend', cardHTML);
+                }
+
+            } catch (error) {
+                console.error('Error fetching CSV:', error);
+                container.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: red;">Failed to load publications.</p>';
+            }
+        }
+
+        // Simple Robust CSV Parser (Handles quoted commas)
+        function parseCSV(str) {
+            const arr = [];
+            let quote = false;
+            for (let row = 0, col = 0, c = 0; c < str.length; c++) {
+                let cc = str[c], nc = str[c + 1];
+                arr[row] = arr[row] || [];
+                arr[row][col] = arr[row][col] || '';
+                
+                if (cc == '"' && quote && nc == '"') { arr[row][col] += cc; ++c; }
+                else if (cc == '"') { quote = !quote; }
+                else if (cc == ',' && !quote) { ++col; }
+                else if (cc == '\r' && nc == '\n' && !quote) { ++row; col = 0; ++c; }
+                else if (cc == '\n' && !quote) { ++row; col = 0; }
+                else { arr[row][col] += cc; }
+            }
+            return arr;
+        }
+
+        // --- SUBMISSION MODAL LOGIC ---
         const modal = document.getElementById('submissionModal');
         const form = document.getElementById('publicationForm');
         const successPopup = document.getElementById('successPopup');
@@ -308,7 +440,6 @@
         form.addEventListener('submit', function(e) {
             e.preventDefault();
             
-            // Loading State
             submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
             submitBtn.disabled = true;
 
@@ -319,12 +450,10 @@
             const fileInput = document.getElementById('userProfilePic');
             const file = fileInput.files[0];
 
-            // Convert file to Base64
             const reader = new FileReader();
             reader.readAsDataURL(file);
             reader.onload = function() {
-                const base64Data = reader.result; // contains "data:image/jpeg;base64,..."
-
+                const base64Data = reader.result;
                 const formData = new FormData();
                 formData.append('action', 'user_submission');
                 formData.append('name', name);
@@ -335,10 +464,7 @@
                 formData.append('mimeType', file.type);
                 formData.append('fileData', base64Data);
 
-                fetch(SCRIPT_URL, {
-                    method: 'POST',
-                    body: formData
-                })
+                fetch(SCRIPT_URL, { method: 'POST', body: formData })
                 .then(response => response.json())
                 .then(data => {
                     if (data.status === 'success') {
@@ -360,15 +486,15 @@
             };
         });
 
-        // Close modal on outside click
         window.onclick = function(event) {
             if (event.target == modal) closeSubmissionModal();
         }
 
-        // Lightbox Logic (Existing)
+        // --- LIGHTBOX LOGIC ---
         function openLightbox(card) {
             document.getElementById("imageLightbox").style.display = "flex";
-            document.getElementById("lightboxImg").src = card.querySelector('.publication-image').src;
+            const imgParams = card.querySelector('.publication-image').src;
+            document.getElementById("lightboxImg").src = imgParams;
             document.body.style.overflow = "hidden";
         }
         function closeLightbox() {
@@ -377,11 +503,6 @@
         }
         function closeLightboxOnBg(e) { if(e.target.id === "imageLightbox") closeLightbox(); }
         document.addEventListener('keydown', e => { if(e.key === "Escape") closeLightbox(); });
-
-        // Mobile Menu Logic
-        document.getElementById('mobileMenuBtn').addEventListener('click', () => {
-           // Add your mobile menu toggle logic here if needed
-        });
     </script>
 </body>
 </html>
