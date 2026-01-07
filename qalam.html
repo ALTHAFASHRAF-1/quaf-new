@@ -14,574 +14,91 @@
             --maindark: #0f0b0c;
             --mainprimary: #7a38fc;
             --mainsecondary: #febf00;
-            --maintertiary: #fb714c;
             --mainwhite: #ffffff;
-            --shadesdark-5: #f3f3f3;
-            --shadesdark-10: #e7e7e7;
-            --shadesdark-15: #dbdadb;
-            --shadesdark-30: #b7b6b6;
-            --shadesdark-40: #9f9d9e;
-            --shadesdark-60: #6f6d6d;
-            --shadesdark-80: #3f3c3d;
-            --shadesprimary-10: #f2ebff;
             --shadessecondary-15: #fff5d9;
             --header-height: 82px;
         }
         
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        html {
-            scroll-behavior: smooth;
-        }
-        
-        body {
-            font-family: 'Manrope', sans-serif;
-            font-size: 13px;
-            line-height: 1.5;
-            color: var(--maindark);
-            background-color: var(--mainwhite);
-            overflow-x: hidden;
-            padding-top: 0; 
-        }
-        
-        .container {
-            width: 100%;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 1rem;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Manrope', sans-serif; font-size: 13px; line-height: 1.5; color: var(--maindark); background-color: var(--mainwhite); padding-top: 0; }
+        .container { width: 100%; max-width: 1200px; margin: 0 auto; padding: 0 1rem; }
         
         /* Navigation */
-        .navbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1rem;
-            background-color: #000000;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 1000;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-            transition: all 0.3s ease;
-            height: var(--header-height);
-        }
-        
-        .navbar.scrolled {
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
-        }
-        
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-family: 'Abel', sans-serif;
-            font-size: 1.7rem;
-            font-weight: 700;
-            text-decoration: none;
-            color: white;
-        }
-        
-        .logo img {
-            width: 50px;
-            height: 50px;
-        }
-        
-        .nav-links {
-            display: none;
-            gap: 1.25rem;
-            align-items: center;
-            list-style: none;
-        }
-        
-        .nav-links a {
-            color: var(--shadesdark-30);
-            font-weight: 500;
-            font-size: 18px;
-            transition: color 0.3s;
-            text-decoration: none;
-        }
-        
-        .nav-links a:hover {
-            color: var(--mainwhite);
-        }
-        
-        .mobile-menu-btn {
-            background: none;
-            border: none;
-            color: var(--mainwhite);
-            font-size: 1.7rem;
-            cursor: pointer;
-            display: block;
-            z-index: 100;
-        }
-        
-        /* Banner Section */
-        .banner-section {
-            color: black;
-            padding: 3rem 0;
-            min-height: 30vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            overflow: hidden;
-            margin-top: var(--header-height);
-        }
+        .navbar { display: flex; justify-content: space-between; align-items: center; padding: 1rem; background-color: #000000; position: fixed; top: 0; left: 0; right: 0; z-index: 1000; height: var(--header-height); }
+        .logo { display: flex; align-items: center; gap: 0.5rem; font-family: 'Abel', sans-serif; font-size: 1.7rem; font-weight: 700; text-decoration: none; color: white; }
+        .logo img { width: 50px; height: 50px; }
+        .nav-links { display: none; gap: 1.25rem; align-items: center; list-style: none; }
+        .nav-links a { color: #b7b6b6; font-weight: 500; font-size: 18px; text-decoration: none; }
+        .nav-links a:hover { color: white; }
+        .mobile-menu-btn { background: none; border: none; color: white; font-size: 1.7rem; cursor: pointer; display: block; z-index: 100; }
+        @media (min-width: 768px) { .nav-links { display: flex; } .mobile-menu-btn { display: none; } }
 
-        .banner-section::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: url('https://quaf2026.netlify.app/images/desktop-banner.png');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            z-index: -2;
-        }
-        
-        .banner-section::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-        }
+        /* Banner */
+        .banner-section { padding: 3rem 0; min-height: 30vh; margin-top: var(--header-height); position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+        .banner-section::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: url('https://quaf2026.netlify.app/images/desktop-banner.png'); background-size: cover; background-position: center; z-index: -2; }
+        @media (max-width: 767px) { .banner-section::before { background-image: url('https://quaf2026.netlify.app/images/mobile-banner.png'); } }
 
-        @media (max-width: 767px) {
-            .banner-section {
-                padding: 1rem 0;
-                min-height: 20vh;
-            }
-            
-            .banner-section::before {
-                background-image: url('https://quaf2026.netlify.app/images/mobile-banner.png');
-            }
-        }
-        
         /* Buttons */
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0.6rem 1.25rem;
-            border-radius: 6px;
-            font-weight: 600;
-            font-size: 14px;
-            cursor: pointer;
-            border: none;
-            transition: all 0.3s;
-            text-align: center;
-            font-family: 'Manrope', sans-serif;
-            text-decoration: none;
-            white-space: nowrap;
-        }
-        
-        .btn-primary {
-            background-color: var(--mainprimary);
-            color: var(--mainwhite);
-        }
-        
-        .btn-primary:hover {
-            background-color: #6a30e5;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(122, 56, 252, 0.2);
-        }
-        
-        .btn-outline {
-            background-color: transparent;
-            color: var(--mainwhite);
-            border: 1.5px solid var(--mainprimary);
-        }
-        
-        .btn-outline:hover {
-            background-color: rgba(122, 56, 252, 0.1);
-        }
-        
-        .btn-outline-dark {
-            background-color: transparent;
-            color: var(--maindark);
-            border: 1.5px solid var(--maindark);
-        }
-        
-        .btn-outline-dark:hover {
-            background-color: rgba(15, 11, 12, 0.05);
-        }
-        
-        /* Section Common */
-        .section-padding {
-            padding: 4rem 0;
-        }
-        
-        .section-title {
-            font-family: 'Alfa Slab One', cursive;
-            font-size: 1.75rem;
-            line-height: 1.2;
-            margin-bottom: 1rem;
-        }
-        
-        @media (min-width: 640px) {
-            .section-title {
-                font-size: 2rem;
-            }
-        }
-        
-        @media (min-width: 1024px) {
-            .section-title {
-                font-size: 2.25rem;
-            }
-        }
-        
-        .section-subtitle {
-            font-family: 'Manrope', sans-serif;
-            font-size: 1rem;
-            color: var(--shadesdark-60);
-            margin-bottom: 2rem;
-        }
-        
-        /* Publications Section (Based on Scholars Styles) */
-        .publications-section {
-            background-color: var(--shadessecondary-15);
-        }
-        
-        .publications-grid {
-            display: grid;
-            gap: 1.5rem;
-            margin-top: 2rem;
-            /* Default Mobile View: 2 items per row */
-            grid-template-columns: repeat(2, 1fr); 
-        }
-        
-        /* Desktop View (Computer): 4 items per row */
-        @media (min-width: 1024px) {
-            .publications-grid {
-                grid-template-columns: repeat(4, 1fr);
-            }
-        }
-        
-        .publication-card {
-            background-color: var(--mainwhite);
-            border-radius: 0.75rem;
-            overflow: hidden;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-            transition: all 0.3s ease;
-            width: 100%;
-            cursor: pointer;
-            position: relative;
-        }
-        
-        .publication-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-        }
-        
-        .publication-card:hover::after {
-            content: '\f00e'; /* FontAwesome Zoom Icon */
-            font-family: "Font Awesome 6 Free";
-            font-weight: 900;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            color: white;
-            font-size: 2rem;
-            opacity: 1;
-            z-index: 2;
-            pointer-events: none;
-            text-shadow: 0 2px 5px rgba(0,0,0,0.5);
-        }
+        .btn { display: inline-flex; align-items: center; justify-content: center; padding: 0.6rem 1.25rem; border-radius: 6px; font-weight: 600; cursor: pointer; border: none; transition: all 0.3s; text-decoration: none; }
+        .btn-primary { background-color: var(--mainprimary); color: white; }
+        .btn-outline { background-color: transparent; color: white; border: 1.5px solid var(--mainprimary); }
+        .btn-outline-dark { background-color: transparent; color: var(--maindark); border: 1.5px solid var(--maindark); }
+        .btn-outline-dark:hover { background-color: rgba(15, 11, 12, 0.05); }
 
-        .publication-card:hover .publication-image {
-            filter: brightness(0.7);
-        }
+        /* Publications Grid */
+        .section-padding { padding: 4rem 0; }
+        .publications-section { background-color: var(--shadessecondary-15); }
+        .publications-grid { display: grid; gap: 1.5rem; margin-top: 2rem; grid-template-columns: repeat(2, 1fr); }
+        @media (min-width: 1024px) { .publications-grid { grid-template-columns: repeat(4, 1fr); } }
+
+        .publication-card { background-color: white; border-radius: 0.75rem; overflow: hidden; box-shadow: 0 3px 10px rgba(0,0,0,0.1); cursor: pointer; position: relative; }
+        .publication-card:hover::after { content: '\f518'; font-family: "Font Awesome 6 Free"; font-weight: 900; position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%); color: white; font-size: 2.5rem; z-index: 2; pointer-events: none; }
+        .publication-card:hover .publication-image-container::before { opacity: 0.4; }
         
-        .publication-image {
-            height: 250px; /* Taller for publications */
-            width: 100%;
-            object-fit: cover;
-            transition: filter 0.3s ease;
-        }
+        .publication-image-container { width: 100%; aspect-ratio: 3 / 4; background-color: #f0f0f0; position: relative; display: flex; justify-content: center; align-items: center; overflow: hidden; }
+        .publication-image-container::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: black; opacity: 0; transition: opacity 0.3s; z-index: 1; }
+        .publication-image { width: 100%; height: 100%; object-fit: contain; }
+        
+        .publication-info { padding: 0.85rem 1rem; border-top: 1px solid #f0f0f0; background-color: white; display: flex; align-items: center; gap: 12px; }
+        .author-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid #e7e7e7; }
+        .author-name { font-weight: 700; font-size: 0.95rem; }
 
-        .publication-info {
-            padding: 1rem;
-            text-align: center;
-        }
-
-        .publication-title {
-            font-family: 'ABeeZee', sans-serif;
-            font-weight: bold;
-            font-size: 1rem;
-        }
-
-        /* Lightbox / Gallery Zoom Styles */
-        .lightbox {
-            display: none; /* Hidden by default */
-            position: fixed;
-            z-index: 2000; /* Above navbar */
-            padding-top: 50px;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0, 0, 0, 0.9);
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            backdrop-filter: blur(5px);
-        }
-
-        .lightbox-content {
-            margin: auto;
-            display: block;
-            width: auto;
-            max-width: 90%;
-            max-height: 85vh;
-            border-radius: 5px;
-            box-shadow: 0 0 20px rgba(255,255,255,0.1);
-            animation: zoomIn 0.3s ease;
-        }
-
-        @keyframes zoomIn {
-            from {transform:scale(0.8); opacity: 0;}
-            to {transform:scale(1); opacity: 1;}
-        }
-
-        .close-lightbox {
-            position: absolute;
-            top: 25px;
-            right: 35px;
-            color: #f1f1f1;
-            font-size: 40px;
-            font-weight: bold;
-            transition: 0.3s;
-            cursor: pointer;
-            z-index: 2001;
-            background: rgba(0,0,0,0.5);
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .close-lightbox:hover,
-        .close-lightbox:focus {
-            color: var(--mainprimary);
-            text-decoration: none;
-            background: rgba(255,255,255,0.1);
-        }
-
-        /* Back to Home Button */
-        .back-home {
-            margin-bottom: 2rem;
-            text-align: left;
-        }
+        /* Lightbox */
+        .lightbox { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.92); backdrop-filter: blur(5px); justify-content: center; align-items: center; }
+        .lightbox-content { max-width: 90%; max-height: 85vh; border-radius: 4px; box-shadow: 0 0 30px rgba(0,0,0,0.5); animation: zoomIn 0.3s ease; }
+        .close-lightbox { position: absolute; top: 25px; right: 25px; color: white; font-size: 40px; cursor: pointer; z-index: 2001; background: rgba(255,255,255,0.1); width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+        
+        /* Submission Modal */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 3000; justify-content: center; align-items: center; backdrop-filter: blur(3px); }
+        .modal-content { background: white; width: 95%; max-width: 500px; padding: 2rem; border-radius: 12px; position: relative; max-height: 90vh; overflow-y: auto; }
+        .modal-header { font-size: 1.5rem; font-weight: 700; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 10px; color: var(--mainprimary); }
+        .form-group { margin-bottom: 1rem; }
+        .form-label { display: block; margin-bottom: 0.5rem; font-weight: 600; color: #333; }
+        .form-input, .form-select, .form-textarea { width: 100%; padding: 0.75rem; border: 1px solid #ccc; border-radius: 6px; outline: none; transition: border 0.3s; }
+        .form-input:focus { border-color: var(--mainprimary); }
+        .form-textarea { min-height: 120px; resize: vertical; }
+        .close-modal { position: absolute; top: 1rem; right: 1rem; font-size: 1.5rem; cursor: pointer; color: #666; }
+        
+        /* Success Popup */
+        .success-popup { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 2rem; border-radius: 12px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.3); z-index: 4000; max-width: 90%; width: 400px; }
+        .success-icon { font-size: 3rem; color: #10B981; margin-bottom: 1rem; }
+        
+        /* Control Bar (Back + Write) */
+        .control-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
         
         /* Footer */
-        .footer {
-            background: linear-gradient(135deg, #0a0809 0%, #151522 100%);
-            color: var(--mainwhite);
-        }
-        
-        .footer-content {
-            padding: 3rem 0 2rem;
-        }
-        
-        .footer-title {
-            font-family: 'Clash Display', sans-serif;
-            font-size: 1.75rem;
-            margin-bottom: 0.75rem;
-        }
-        
-        .footer-description {
-            color: var(--shadesdark-15);
-            font-size: 0.85rem;
-            margin-bottom: 1.5rem;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        
-        .newsletter-form {
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
-            max-width: 400px;
-            margin: 0 auto 2rem;
-        }
-        
-        @media (min-width: 640px) {
-            .newsletter-form {
-                flex-direction: row;
-            }
-        }
-        
-        .newsletter-input {
-            padding: 0.6rem 1rem;
-            border-radius: 0.4rem;
-            border: none;
-            font-size: 0.85rem;
-            background-color: rgba(255,255,255,0.1);
-            color: var(--mainwhite);
-            flex: 1;
-        }
-        
-        .newsletter-input::placeholder {
-            color: var(--shadesdark-30);
-        }
-        
-        .footer-bottom {
-            padding-top: 1.5rem;
-            border-top: 1px solid rgba(111, 109, 109, 0.4);
-        }
-        
-        .footer-bottom-inner {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 1.5rem;
-        }
-        
-        @media (min-width: 768px) {
-            .footer-bottom-inner {
-                flex-direction: row;
-                justify-content: space-between;
-                align-items: center;
-            }
-        }
-        
-        .footer-logo {
-            font-family: 'ADLaM Display', cursive;
-            font-size: 1.25rem;
-        }
-        
-        .social-links {
-            display: flex;
-            gap: 0.75rem;
-        }
-        
-        .social-links a {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 35px;
-            height: 35px;
-            background-color: rgba(255,255,255,0.1);
-            border-radius: 50%;
-            color: var(--mainwhite);
-            font-size: 1rem;
-            transition: all 0.3s;
-            text-decoration: none;
-        }
-        
-        .social-links a:hover {
-            background-color: var(--mainprimary);
-            transform: translateY(-3px);
-        }
-        
-        .footer-links {
-            display: flex;
-            gap: 1.5rem;
-            margin: 1rem 0;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-        
-        .footer-links a {
-            color: var(--shadesdark-15);
-            font-size: 0.85rem;
-            transition: color 0.3s;
-            text-decoration: none;
-        }
-        
-        .footer-links a:hover {
-            color: var(--mainwhite);
-        }
-        
-        .footer-copyright {
-            color: var(--shadesdark-15);
-            font-size: 0.8rem;
-            text-align: center;
-        }
-        
-        /* Mobile Menu */
-        .mobile-menu {
-            display: none;
-            position: fixed;
-            top: var(--header-height);
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: var(--maindark);
-            z-index: 99;
-            padding: 2rem 1rem;
-            overflow-y: auto;
-        }
-        
-        .mobile-menu.active {
-            display: block;
-        }
-        
-        .mobile-menu-links {
-            list-style: none;
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-        }
-        
-        .mobile-menu-links a {
-            color: var(--shadesdark-30);
-            font-weight: 500;
-            font-size: 1.1rem;
-            text-decoration: none;
-            transition: color 0.3s;
-        }
-        
-        .mobile-menu-links a:hover {
-            color: var(--mainwhite);
-        }
-        
-        /* Responsive Design Fixes */
-        @media (min-width: 768px) {
-            .nav-links {
-                display: flex;
-            }
-            
-            .mobile-menu-btn {
-                display: none;
-            }
-            
-            body {
-                padding-top: 0; 
-            }
-        }
-        
-        img {
-            max-width: 100%;
-            height: auto;
-        }
+        .footer { background: linear-gradient(135deg, #0a0809 0%, #151522 100%); color: white; padding: 3rem 0; }
+        @keyframes zoomIn { from {transform:scale(0.8); opacity: 0;} to {transform:scale(1); opacity: 1;} }
     </style>
 </head>
 <body>
+
     <nav class="navbar">
-        <div class="container" style="width: 100%; max-width: 100%; display: flex; justify-content: space-between; align-items: center;">
+        <div class="container" style="display: flex; justify-content: space-between; align-items: center;">
             <a href="index.html" class="logo">
                 <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/logo3d-1.png" alt="QUAF Logo">
                 <span>QUAF</span>
             </a>
-            
             <ul class="nav-links">
                 <li><a href="index.html">Home</a></li>
                 <li><a href="index.html#about">About</a></li>
@@ -590,302 +107,237 @@
                 <li><a href="index.html#contact">Contact</a></li>
                 <li><button class="btn btn-outline">Get Started</button></li>
             </ul>
-            
-            <button class="mobile-menu-btn" id="mobileMenuBtn">
-                <i class="fas fa-bars"></i>
-            </button>
+            <button class="mobile-menu-btn" id="mobileMenuBtn"><i class="fas fa-bars"></i></button>
         </div>
     </nav>
-
-    <div class="mobile-menu" id="mobileMenu">
-        <ul class="mobile-menu-links">
-            <li><a href="index.html" class="mobile-nav-link">Home</a></li>
-            <li><a href="index.html#about" class="mobile-nav-link">About</a></li>
-            <li><a href="scholars.html" class="mobile-nav-link">Scholars</a></li>
-            <li><a href="index.html#gallery" class="mobile-nav-link">Gallery</a></li>
-            <li><a href="index.html#contact" class="mobile-nav-link">Contact</a></li>
-            <li><button class="btn btn-outline" style="width: 100%;">Get Started</button></li>
-        </ul>
-    </div>
     
-    <section class="banner-section">
-    </section>
+    <section class="banner-section"></section>
     
     <section id="publications" class="publications-section section-padding">
         <div class="container">
-            <div class="back-home">
+            <div class="control-bar">
                 <a href="index.html" class="btn btn-outline-dark">
                     <i class="fas fa-arrow-left" style="margin-right: 8px;"></i> Back to Home
                 </a>
+                
+                <button onclick="openSubmissionModal()" class="btn btn-primary">
+                    <i class="fas fa-pen" style="margin-right: 8px;"></i> Write / Submit
+                </button>
             </div>
             
             <div style="display: flex; flex-direction: column; gap: 1.5rem; margin-bottom: 2rem;">
-                <h2 class="section-title">Quaf Publications</h2>
-                <p class="section-subtitle">
-                    Explore our collection of academic journals, books, and articles published by our esteemed scholars.
-                </p>
+                <h2 class="section-title" style="font-family: 'Alfa Slab One'; font-size: 2rem;">Quaf Publications</h2>
+                <p class="section-subtitle">Explore our collection of academic journals, books, and articles published by our esteemed scholars.</p>
             </div>
             
             <div class="publications-grid">
                 <div class="publication-card" onclick="openLightbox(this)">
-                    <img src="https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?q=80&w=1000&auto=format&fit=crop" alt="The Art of Learning" class="publication-image">
+                    <div class="publication-image-container">
+                        <img src="https://m.media-amazon.com/images/I/71CR+0q-s0L._AC_UF1000,1000_QL80_.jpg" class="publication-image">
+                    </div>
                     <div class="publication-info">
-                        <div class="publication-title">The Art of Learning</div>
+                        <img src="https://randomuser.me/api/portraits/men/32.jpg" class="author-avatar">
+                        <div class="author-name">Dr. Sadhaqathulla C</div>
                     </div>
                 </div>
-
                 <div class="publication-card" onclick="openLightbox(this)">
-                    <img src="https://images.unsplash.com/photo-1589829085413-56de8ae18c73?q=80&w=1000&auto=format&fit=crop" alt="Modern Sciences" class="publication-image">
+                    <div class="publication-image-container">
+                        <img src="https://marketplace.canva.com/EAFaQ8qaArw/1/0/1003w/canva-brown-rusty-mystery-novel-book-cover-hG1QhA7BiBU.jpg" class="publication-image">
+                    </div>
                     <div class="publication-info">
-                        <div class="publication-title">Modern Sciences</div>
+                        <img src="https://randomuser.me/api/portraits/men/11.jpg" class="author-avatar">
+                        <div class="author-name">Muhammed Faheem</div>
                     </div>
                 </div>
-
+                 <div class="publication-card" onclick="openLightbox(this)">
+                    <div class="publication-image-container">
+                        <img src="https://d1csarkz8obe9u.cloudfront.net/posterpreviews/contemporary-fiction-night-time-book-cover-design-template-1be47835c3058eb42211574e0c4ed8bf_screen.jpg" class="publication-image">
+                    </div>
+                    <div class="publication-info">
+                        <img src="https://randomuser.me/api/portraits/men/45.jpg" class="author-avatar">
+                        <div class="author-name">Sahl Shan O</div>
+                    </div>
+                </div>
                 <div class="publication-card" onclick="openLightbox(this)">
-                    <img src="https://images.unsplash.com/photo-1532012197267-da84d127e765?q=80&w=1000&auto=format&fit=crop" alt="Academic Journal" class="publication-image">
+                    <div class="publication-image-container">
+                        <img src="https://edit.org/images/cat/book-covers-big-2019101610.jpg" class="publication-image">
+                    </div>
                     <div class="publication-info">
-                        <div class="publication-title">Academic Journal</div>
+                        <img src="https://randomuser.me/api/portraits/men/22.jpg" class="author-avatar">
+                        <div class="author-name">Muhammed Musthafa</div>
                     </div>
                 </div>
-
-                <div class="publication-card" onclick="openLightbox(this)">
-                    <img src="https://images.unsplash.com/photo-1553729459-efe14ef6055d?q=80&w=1000&auto=format&fit=crop" alt="Historical Perspectives" class="publication-image">
-                    <div class="publication-info">
-                        <div class="publication-title">Historical Perspectives</div>
-                    </div>
-                </div>
-
-                <div class="publication-card" onclick="openLightbox(this)">
-                    <img src="https://images.unsplash.com/photo-1512820790803-83ca734da794?q=80&w=1000&auto=format&fit=crop" alt="Research Methods" class="publication-image">
-                    <div class="publication-info">
-                        <div class="publication-title">Research Methods</div>
-                    </div>
-                </div>
-
-                <div class="publication-card" onclick="openLightbox(this)">
-                    <img src="https://images.unsplash.com/photo-1516979187457-637abb4f9353?q=80&w=1000&auto=format&fit=crop" alt="Literary Review" class="publication-image">
-                    <div class="publication-info">
-                        <div class="publication-title">Literary Review</div>
-                    </div>
-                </div>
-
-                <div class="publication-card" onclick="openLightbox(this)">
-                    <img src="https://images.unsplash.com/photo-1621351183012-e2f9972dd9bf?q=80&w=1000&auto=format&fit=crop" alt="Philosophy Today" class="publication-image">
-                    <div class="publication-info">
-                        <div class="publication-title">Philosophy Today</div>
-                    </div>
-                </div>
-
-                <div class="publication-card" onclick="openLightbox(this)">
-                    <img src="https://images.unsplash.com/photo-1491841550275-ad7854e35ca6?q=80&w=1000&auto=format&fit=crop" alt="Global Studies" class="publication-image">
-                    <div class="publication-info">
-                        <div class="publication-title">Global Studies</div>
-                    </div>
-                </div>
-
-                <div class="publication-card" onclick="openLightbox(this)">
-                    <img src="https://images.unsplash.com/photo-1544947950-fa07a98d237f?q=80&w=1000&auto=format&fit=crop" alt="Cultural Heritage" class="publication-image">
-                    <div class="publication-info">
-                        <div class="publication-title">Cultural Heritage</div>
-                    </div>
-                </div>
-
-                <div class="publication-card" onclick="openLightbox(this)">
-                    <img src="https://images.unsplash.com/photo-1476275466078-bd007cd81754?q=80&w=1000&auto=format&fit=crop" alt="Innovation" class="publication-image">
-                    <div class="publication-info">
-                        <div class="publication-title">Innovation</div>
-                    </div>
-                </div>
-
-                <div class="publication-card" onclick="openLightbox(this)">
-                    <img src="https://images.unsplash.com/photo-1555099962-4199c345e5dd?q=80&w=1000&auto=format&fit=crop" alt="Tech Review" class="publication-image">
-                    <div class="publication-info">
-                        <div class="publication-title">Tech Review</div>
-                    </div>
-                </div>
-
-                <div class="publication-card" onclick="openLightbox(this)">
-                    <img src="https://images.unsplash.com/photo-1585435465945-bef5a93f88a9?q=80&w=1000&auto=format&fit=crop" alt="Annual Report" class="publication-image">
-                    <div class="publication-info">
-                        <div class="publication-title">Annual Report</div>
-                    </div>
-                </div>
-
             </div>
         </div>
     </section>
+
+    <div id="submissionModal" class="modal-overlay">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeSubmissionModal()">&times;</span>
+            <div class="modal-header">
+                <i class="fas fa-paper-plane"></i> Send Publication
+            </div>
+            
+            <form id="publicationForm">
+                <div class="form-group">
+                    <label class="form-label">Full Name</label>
+                    <input type="text" id="userName" class="form-input" placeholder="Enter your name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Gmail Address</label>
+                    <input type="email" id="userEmail" class="form-input" placeholder="Enter your gmail" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Category</label>
+                    <select id="pubCategory" class="form-select" required>
+                        <option value="" disabled selected>Select category</option>
+                        <option value="Poem">Poem</option>
+                        <option value="Story">Story</option>
+                        <option value="Feature">Feature</option>
+                        <option value="Essay">Essay</option>
+                        <option value="Short Story">Short Story</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Write your Publication</label>
+                    <textarea id="pubContent" class="form-textarea" placeholder="Type your content here..." required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Profile Picture (Upload)</label>
+                    <input type="file" id="userProfilePic" class="form-input" accept="image/*" required>
+                </div>
+                
+                <button type="submit" id="submitBtn" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">
+                    Submit Publication <i class="fas fa-paper-plane" style="margin-left: 8px;"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div id="successPopup" class="success-popup">
+        <div class="success-icon"><i class="fas fa-check-circle"></i></div>
+        <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem;">Submission Received!</h3>
+        <p style="color: #666; margin-bottom: 1.5rem;">Your publication reached. Admin will contact you later.</p>
+        <button onclick="closeSuccessPopup()" class="btn btn-primary">Okay</button>
+    </div>
 
     <div id="imageLightbox" class="lightbox" onclick="closeLightboxOnBg(event)">
         <span class="close-lightbox" onclick="closeLightbox()">&times;</span>
         <img class="lightbox-content" id="lightboxImg">
     </div>
-    
-    <footer id="contact" class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <div style="text-align: center; margin-bottom: 3rem;">
-                    <h2 class="footer-title">Never miss a single news</h2>
-                    <p class="footer-description">
-                        Stay informed with all the latest updates and news about our programs. Never miss a moment of our exciting and innovative gatherings in the world of technology and beyond.
-                    </p>
-                    
-                    <form class="newsletter-form" id="newsletterForm">
-                        <input type="email" placeholder="Enter your email address" class="newsletter-input" required>
-                        <button type="submit" class="btn btn-primary">Subscribe</button>
-                    </form>
-                </div>
-                
-                <div class="footer-bottom">
-                    <div class="footer-bottom-inner">
-                        <div class="footer-logo">QUAF</div>
-                        
-                        <div class="social-links">
-                            <a href="#"><i class="fab fa-instagram"></i></a>
-                            <a href="#"><i class="fab fa-facebook"></i></a>
-                            <a href="#"><i class="fab fa-whatsapp"></i></a>
-                        </div>
-                    </div>
-                    
-                    <div class="footer-links">
-                        <a href="#">Terms & Conditions</a>
-                        <a href="#">Privacy Policy</a>
-                    </div>
-                    
-                    <div class="footer-copyright">
-                        Copyright © QUAF-2026 All Rights Reserved
-                    </div>
-                </div>
-            </div>
+
+    <footer class="footer">
+        <div class="container" style="text-align: center;">
+            <div style="font-family: 'ADLaM Display'; font-size: 1.5rem; margin-bottom: 1rem;">QUAF</div>
+            <p style="color: #dbdadb; font-size: 0.8rem;">Copyright © QUAF-2026 All Rights Reserved</p>
         </div>
     </footer>
-    
+
     <script>
-        // Lightbox Functions
-        function openLightbox(cardElement) {
-            var modal = document.getElementById("imageLightbox");
-            var modalImg = document.getElementById("lightboxImg");
-            
-            // Find the image inside the clicked card
-            var imgElement = cardElement.querySelector('img');
-            
-            modal.style.display = "flex";
-            modalImg.src = imgElement.src;
-            
-            // Disable scrolling on body
-            document.body.style.overflow = "hidden";
+        // CONFIGURATION - REPLACE THIS!
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbws4GLhVspkOILj0BHvxmNe9PS03rMp3fIQv0WUsRAKaG29hX76_Y_PPI-TfceH6t4okg/exec'; 
+
+        // Submission Modal Logic
+        const modal = document.getElementById('submissionModal');
+        const form = document.getElementById('publicationForm');
+        const successPopup = document.getElementById('successPopup');
+        const submitBtn = document.getElementById('submitBtn');
+
+        function openSubmissionModal() {
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
         }
 
-        function closeLightbox() {
-            var modal = document.getElementById("imageLightbox");
-            modal.style.display = "none";
+        function closeSubmissionModal() {
+            modal.style.display = 'none';
+            document.body.style.overflow = '';
+        }
+
+        function closeSuccessPopup() {
+            successPopup.style.display = 'none';
+            document.body.style.overflow = '';
+        }
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
             
-            // Re-enable scrolling
-            document.body.style.overflow = "";
-        }
+            // Loading State
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+            submitBtn.disabled = true;
 
-        // Close when clicking outside the image
-        function closeLightboxOnBg(event) {
-            if (event.target.id === "imageLightbox") {
-                closeLightbox();
-            }
-        }
+            const name = document.getElementById('userName').value;
+            const email = document.getElementById('userEmail').value;
+            const category = document.getElementById('pubCategory').value;
+            const content = document.getElementById('pubContent').value;
+            const fileInput = document.getElementById('userProfilePic');
+            const file = fileInput.files[0];
 
-        // Close on Escape key
-        document.addEventListener('keydown', function(event) {
-            if (event.key === "Escape") {
-                closeLightbox();
-            }
+            // Convert file to Base64
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = function() {
+                const base64Data = reader.result; // contains "data:image/jpeg;base64,..."
+
+                const formData = new FormData();
+                formData.append('action', 'user_submission');
+                formData.append('name', name);
+                formData.append('email', email);
+                formData.append('category', category);
+                formData.append('content', content);
+                formData.append('fileName', file.name);
+                formData.append('mimeType', file.type);
+                formData.append('fileData', base64Data);
+
+                fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        closeSubmissionModal();
+                        form.reset();
+                        successPopup.style.display = 'block';
+                    } else {
+                        alert('Error: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    alert('Submission failed. Please try again.');
+                    console.error('Error:', error);
+                })
+                .finally(() => {
+                    submitBtn.innerHTML = 'Submit Publication <i class="fas fa-paper-plane" style="margin-left: 8px;"></i>';
+                    submitBtn.disabled = false;
+                });
+            };
         });
 
-        // Mobile Menu Toggle (Preserved from original)
-        document.addEventListener('DOMContentLoaded', function() {
-            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-            const mobileMenu = document.getElementById('mobileMenu');
-            const navbar = document.querySelector('.navbar');
-            const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
-            
-            // Mobile menu toggle
-            if (mobileMenuBtn) {
-                mobileMenuBtn.addEventListener('click', function() {
-                    mobileMenu.classList.toggle('active');
-                    if (mobileMenu.classList.contains('active')) {
-                        document.body.style.overflow = 'hidden';
-                    } else {
-                        document.body.style.overflow = '';
-                    }
-                });
-            }
-            
-            // Close mobile menu when clicking on links
-            mobileNavLinks.forEach(link => {
-                link.addEventListener('click', function() {
-                    mobileMenu.classList.remove('active');
-                    document.body.style.overflow = '';
-                });
-            });
-            
-            // Navbar scroll effect
-            window.addEventListener('scroll', function() {
-                if (window.scrollY > 50) {
-                    navbar.classList.add('scrolled');
-                } else {
-                    navbar.classList.remove('scrolled');
-                }
-            });
-            
-            // Smooth scrolling for anchor links
-            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-                anchor.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const targetId = this.getAttribute('href');
-                    if (targetId === '#') return;
-                    
-                    const targetElement = document.querySelector(targetId);
-                    if (targetElement) {
-                        const navbarHeight = navbar.offsetHeight;
-                        const targetPosition = targetElement.offsetTop - navbarHeight;
-                        
-                        window.scrollTo({
-                            top: targetPosition,
-                            behavior: 'smooth'
-                        });
-                    }
-                });
-            });
-            
-            // Newsletter form
-            const newsletterForm = document.getElementById('newsletterForm');
-            if (newsletterForm) {
-                newsletterForm.addEventListener('submit', function(e) {
-                    e.preventDefault();
-                    const email = this.querySelector('input[type="email"]').value;
-                    
-                    if (email && email.includes('@')) {
-                        alert('Thank you for subscribing to QUAF newsletter!');
-                        this.reset();
-                    } else {
-                        alert('Please enter a valid email address.');
-                    }
-                });
-            }
-            
-            // Close mobile menu when clicking outside
-            document.addEventListener('click', function(event) {
-                if (mobileMenu.classList.contains('active') && 
-                    !mobileMenu.contains(event.target) && 
-                    !mobileMenuBtn.contains(event.target)) {
-                    mobileMenu.classList.remove('active');
-                    document.body.style.overflow = '';
-                }
-            });
-            
-            // Window resize - reset mobile menu on larger screens
-            window.addEventListener('resize', function() {
-                if (window.innerWidth >= 768) {
-                    mobileMenu.classList.remove('active');
-                    document.body.style.overflow = '';
-                }
-            });
+        // Close modal on outside click
+        window.onclick = function(event) {
+            if (event.target == modal) closeSubmissionModal();
+        }
+
+        // Lightbox Logic (Existing)
+        function openLightbox(card) {
+            document.getElementById("imageLightbox").style.display = "flex";
+            document.getElementById("lightboxImg").src = card.querySelector('.publication-image').src;
+            document.body.style.overflow = "hidden";
+        }
+        function closeLightbox() {
+            document.getElementById("imageLightbox").style.display = "none";
+            document.body.style.overflow = "";
+        }
+        function closeLightboxOnBg(e) { if(e.target.id === "imageLightbox") closeLightbox(); }
+        document.addEventListener('keydown', e => { if(e.key === "Escape") closeLightbox(); });
+
+        // Mobile Menu Logic
+        document.getElementById('mobileMenuBtn').addEventListener('click', () => {
+           // Add your mobile menu toggle logic here if needed
         });
     </script>
 </body>
