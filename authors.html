@@ -292,99 +292,99 @@
     </footer>
 
     <script>
-        // --- DATA ---
-        // Arrays mapped exactly as requested: Names order corresponds to ID order
-        const names = [
-            "MUHAMMED YASEEN K", "MUHAMMED LASIN KC", "MOHAMMED HADI V", "MUHAMMED HAYYAN VP", 
-            "MOHAMMED AFRAH N", "MUHAMMED ZIYAD C", "MUHAMMED SHAHAL", "AQIB MUHAMMED KT", 
-            "FARSHAD MR", "MUHAMMED RABEEH PP", "MUHAMMED SHAFEEQUE T", "MUHAMMED QASIM MP", 
-            "MUHAMMED HASHIM V", "MUHAMMED RASAL PP", "ALI RAFI EP", "MUHAMMED SINAN CK", 
-            "HAMDAN CC", "MUHAMMED ALI M", "MUHAMMED SHAFAN A", "MUHAMMED ANSHAD VP", 
-            "MUHAMMED NASWIH IK", "HISHAM RAHMATHULLAH O", "SAHL SHAN O", "SADHAQATHULLA C", 
-            "MUHAMMED SAHL", "MUHAMMED HASHIM KH", "SAIDALAVI SHAMIL MC", "MISHAB PT", 
-            "MUHAMMED RASIN KP", "MUHAMMED ASLAM", "MUHAMMED MUSTHAFA SM", "MUHAMMED SHAFIN", 
-            "MUHAMMED RAMEES VP", "ABDAUL HADI", "AMAN ASKAR CT", "MUHAMMED FAHEEM NP"
-        ];
+    // --- DATA ---
+    const names = [
+        "MUHAMMED FAHEEM NP", "MUHAMMED YASEEN K", "MUHAMMED LASIN KC", "MOHAMMED HADI V", "MUHAMMED HAYYAN VP", 
+        "MOHAMMED AFRAH N", "MUHAMMED ZIYAD C", "MUHAMMED SHAHAL", "AQIB MUHAMMED KT", 
+        "MUHAMMED RABEEH PP", "MUHAMMED SHAFEEQUE T", "MUHAMMED QASIM MP", 
+        "MUHAMMED HASHIM V", "MUHAMMED RASAL PP", "ALI RAFI EP", "MUHAMMED SINAN CK", 
+        "HAMDAN CC", "MUHAMMED ALI M", "MUHAMMED SHAFAN A", "MUHAMMED ANSHAD VP", 
+        "MUHAMMED NASWIH IK", "HISHAM RAHMATHULLAH O", "SAHL SHAN O", "SADHAQATHULLA C", 
+        "MUHAMMED SAHL", "MUHAMMED HASHIM KH", "SAIDALAVI SHAMIL MC", "MISHAB PT", 
+        "MUHAMMED RASIN KP", "MUHAMMED ASLAM", "MUHAMMED MUSTHAFA SM", "MUHAMMED SHAFIN", 
+        "MUHAMMED RAMEES VP", "ABDAUL HADI"
+    ];
 
-        const ids = [
-            "986", "987", "988", "989", "990", "991", "992", "993", "994", "995", 
-            "996", "997", "998", "999", "1000", "1001", "1002", "1003", "1004", "1005", 
-            "1006", "1008", "1009", "1010", "1011", "1012", "1013", "1014", "1015", "1016", 
-            "1017", "1018", "1019", "1020", "1021", "960"
-        ];
+    const ids = [
+        "960", "986", "987", "988", "989", "990", "991", "992", "993", "995", 
+        "996", "997", "998", "999", "1000", "1001", "1002", "1003", "1004", "1005", 
+        "1006", "1008", "1009", "1010", "1011", "1012", "1013", "1014", "1015", "1016", 
+        "1017", "1018", "1019", "1020" 
+    ];
 
-        // --- RENDER AUTHORS ---
-        document.addEventListener('DOMContentLoaded', function() {
-            const listContainer = document.getElementById('authorsList');
-            const baseUrl = "http://dqdhdc.netlify.app/pic/";
-            const defaultImg = "https://c.animaapp.com/mjwngvpjWKAdmV/img/logo3d-1.png";
+    // --- RENDER AUTHORS ---
+    document.addEventListener('DOMContentLoaded', function() {
+        const listContainer = document.getElementById('authorsList');
+        const baseUrl = "https://quaf2026.netlify.app/pic/";
+        const defaultImg = "https://c.animaapp.com/mjwngvpjWKAdmV/img/logo3d-1.png";
 
-            names.forEach((name, index) => {
-                const id = ids[index];
-                const imgUrl = `${baseUrl}${id}.JPG`;
+        names.forEach((name, index) => {
+            const id = ids[index];
+            const jpgUrl = `${baseUrl}${id}.JPG`;
+            const pngUrl = `${baseUrl}${id}.PNG`;
+            const profileLink = `author-${id}.html`;
+
+            const item = document.createElement('div');
+            item.className = 'author-card';
+            
+            // Logic explanation for onerror:
+            // 1. If JPG fails, change src to PNG.
+            // 2. If PNG is already the src and it fails, change to defaultImg.
+            item.innerHTML = `
+                <img src="${jpgUrl}" 
+                     class="author-img" 
+                     loading="lazy" 
+                     alt="${name}"
+                     onerror="if(this.src.includes('.JPG')){this.src='${pngUrl}';}else{this.src='${defaultImg}';this.onerror=null;}">
+                <div class="author-name">${name}</div>
                 
-                // Generates a unique link for each author. You can replace "author-ID.html" with real links.
-                const profileLink = `author-${id}.html`;
-
-                const item = document.createElement('div');
-                item.className = 'author-card';
-                
-                item.innerHTML = `
-                    <img src="${imgUrl}" 
-                         class="author-img" 
-                         loading="lazy" 
-                         alt="${name}"
-                         onerror="this.src='${defaultImg}'">
-                    <div class="author-name">${name}</div>
-                    
-                    <a href="${profileLink}" class="author-link-btn" title="View Profile">
-                        <i class="fas fa-pen"></i>
-                    </a>
-                `;
-                
-                listContainer.appendChild(item);
-            });
-
-            // Navbar Interactions
-            setupNavbar();
+                <a href="${profileLink}" class="author-link-btn" title="View Profile">
+                    <i class="fas fa-pen"></i>
+                </a>
+            `;
+            
+            listContainer.appendChild(item);
         });
 
-        // --- NAVBAR LOGIC ---
-        function setupNavbar() {
-            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-            const mobileMenu = document.getElementById('mobileMenu');
-            const navbar = document.querySelector('.navbar');
-            
-            if (mobileMenuBtn) {
-                mobileMenuBtn.addEventListener('click', function() {
-                    mobileMenu.classList.toggle('active');
-                    if (mobileMenu.classList.contains('active')) {
-                        document.body.style.overflow = 'hidden';
-                        mobileMenuBtn.innerHTML = '<i class="fas fa-times"></i>';
-                    } else {
-                        document.body.style.overflow = '';
-                        mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
-                    }
-                });
-            }
-            
-            window.addEventListener('scroll', function() {
-                if (window.scrollY > 50) {
-                    navbar.classList.add('scrolled');
+        setupNavbar();
+    });
+
+    // --- NAVBAR LOGIC ---
+    function setupNavbar() {
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const navbar = document.querySelector('.navbar');
+        
+        if (mobileMenuBtn) {
+            mobileMenuBtn.addEventListener('click', function() {
+                mobileMenu.classList.toggle('active');
+                if (mobileMenu.classList.contains('active')) {
+                    document.body.style.overflow = 'hidden';
+                    mobileMenuBtn.innerHTML = '<i class="fas fa-times"></i>';
                 } else {
-                    navbar.classList.remove('scrolled');
+                    document.body.style.overflow = '';
+                    mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
                 }
             });
         }
-
-        // --- MOBILE MENU ACCORDION ---
-        function toggleMobileSubMenu(element) {
-            element.classList.toggle('active');
-            const subMenu = element.nextElementSibling;
-            if (subMenu && subMenu.classList.contains('mobile-sub-menu')) {
-                subMenu.classList.toggle('show');
+        
+        window.addEventListener('scroll', function() {
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
             }
+        });
+    }
+
+    // --- MOBILE MENU ACCORDION ---
+    function toggleMobileSubMenu(element) {
+        element.classList.toggle('active');
+        const subMenu = element.nextElementSibling;
+        if (subMenu && subMenu.classList.contains('mobile-sub-menu')) {
+            subMenu.classList.toggle('show');
         }
-    </script>
+    }
+</script>
 </body>
 </html>
