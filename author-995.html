@@ -205,18 +205,19 @@
         .publications-grid { display: grid; gap: 1.5rem; margin-top: 2rem; grid-template-columns: repeat(2, 1fr); min-height: 300px; }
         @media (min-width: 1024px) { .publications-grid { grid-template-columns: repeat(4, 1fr); } }
 
-        .publication-card { background-color: white; border-radius: 0.75rem; overflow: hidden; box-shadow: 0 3px 10px rgba(0,0,0,0.1); cursor: pointer; position: relative; transition: transform 0.3s ease, box-shadow 0.3s ease; }
+        .publication-card { background-color: transparent; border-radius: 0.75rem; overflow: hidden; box-shadow: 0 3px 10px rgba(0,0,0,0.1); cursor: pointer; position: relative; transition: transform 0.3s ease, box-shadow 0.3s ease; }
         .publication-card:hover { transform: translateY(-5px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
-        .publication-card:hover::after { content: '\f518'; font-family: "Font Awesome 6 Free"; font-weight: 900; position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%); color: white; font-size: 2.5rem; z-index: 2; pointer-events: none; }
+        
+        /* Hover Icon Overlay */
+        .publication-card:hover::after { content: '\f518'; font-family: "Font Awesome 6 Free"; font-weight: 900; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white; font-size: 2.5rem; z-index: 2; pointer-events: none; }
         .publication-card:hover .publication-image-container::before { opacity: 0.4; }
         
+        /* Image Container - takes up full card now */
         .publication-image-container { width: 100%; aspect-ratio: 3 / 4; background-color: #f0f0f0; position: relative; display: flex; justify-content: center; align-items: center; overflow: hidden; }
         .publication-image-container::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: black; opacity: 0; transition: opacity 0.3s; z-index: 1; }
         .publication-image { width: 100%; height: 100%; object-fit: cover; }
         
-        .publication-info { padding: 0.85rem 1rem; border-top: 1px solid #f0f0f0; background-color: white; display: flex; align-items: center; gap: 12px; }
-        .author-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid #e7e7e7; flex-shrink: 0; background-color: #ddd; }
-        .author-name { font-weight: 700; font-size: 0.95rem; line-height: 1.2; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+        /* Removed .publication-info, .author-avatar, .author-name styles */
 
         /* Loader */
         .loader-container { grid-column: 1 / -1; display: flex; justify-content: center; align-items: center; padding: 3rem; }
@@ -448,7 +449,6 @@
                 const headers = data[0].map(h => h.trim().toLowerCase());
                 
                 const nameIdx = headers.findIndex(h => h.includes('name') || h.includes('author'));
-                const picIdx = headers.findIndex(h => h.includes('profile') || h.includes('pic') || h.includes('avatar'));
                 const pubImgIdx = headers.findIndex(h => h.includes('publication') || h.includes('cover') || h.includes('image'));
 
                 // Skip header row (i=1)
@@ -458,18 +458,13 @@
                     if (row.length < 2) continue;
 
                     const authorName = nameIdx > -1 ? row[nameIdx] : (row[0] || 'Unknown Author');
-                    // Fallback images if cells are empty
-                    const authorPic = (picIdx > -1 && row[picIdx]) ? row[picIdx] : 'https://c.animaapp.com/mjwngvpjWKAdmV/img/logo3d-1.png';
                     const pubImg = (pubImgIdx > -1 && row[pubImgIdx]) ? row[pubImgIdx] : 'https://placehold.co/300x400?text=No+Cover';
 
+                    // UPDATED CARD HTML: Removed info div, only image container remains
                     const cardHTML = `
                         <div class="publication-card" onclick="openLightbox(this)">
                             <div class="publication-image-container">
                                 <img src="${pubImg}" class="publication-image" loading="lazy" alt="${authorName}'s Publication">
-                            </div>
-                            <div class="publication-info">
-                                <img src="${authorPic}" class="author-avatar" loading="lazy" onerror="this.src='https://c.animaapp.com/mjwngvpjWKAdmV/img/logo3d-1.png'">
-                                <div class="author-name">${authorName}</div>
                             </div>
                         </div>
                     `;
