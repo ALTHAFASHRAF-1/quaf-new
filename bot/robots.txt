@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://qxb.me/sitemap.xml
