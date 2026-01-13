@@ -1,0 +1,1479 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QUAF Bot - Islamic Learning Platform</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
+            min-height: 100vh;
+        }
+        
+        .enhanced-heading {
+            position: relative;
+            display: inline-block;
+            font-weight: 900;
+            letter-spacing: -0.05em;
+            line-height: 0.9;
+            text-transform: uppercase;
+            font-size: clamp(3rem, 8vw, 7rem);
+            animation: heroGlow 3s ease-in-out infinite alternate;
+            overflow: hidden;
+        }
+        
+        .enhanced-heading .quaf-text {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #ffeaa7, #dda0dd, #ff7675, #fd79a8, #fdcb6e, #6c5ce7);
+            background-size: 1000% 1000%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            color: transparent;
+            animation: gradientShift 3s ease-in-out infinite;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .enhanced-heading .bot-text {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #a8e6cf 50%, #ff9a9e 75%, #fecfef 100%);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            color: transparent;
+            margin-left: 0.2em;
+            position: relative;
+            z-index: 2;
+            animation: botTextShift 7s ease-in-out infinite reverse;
+        }
+        
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            25% { background-position: 100% 25%; }
+            50% { background-position: 50% 100%; }
+            75% { background-position: 25% 0%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        @keyframes botTextShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        @keyframes heroGlow {
+            0% { 
+                transform: scale(1);
+            }
+            100% { 
+                transform: scale(1.02);
+            }
+        }
+        
+        .arabic-verse {
+            font-family: 'Amiri', serif;
+            font-size: 1.8rem;
+            line-height: 1.8;
+            direction: rtl;
+            text-align: center;
+            color: #e2e8f0;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+            margin: 20px 0;
+        }
+        
+        .verse-translation {
+            font-size: 1rem;
+            color: #94a3b8;
+            font-style: italic;
+            margin-top: 10px;
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .gif-showcase {
+            max-width: 800px;
+            width: 100%;
+            height: auto;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+            margin: 0 auto;
+        }
+        
+        .gif-showcase img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 20px;
+        }
+        
+        .feature-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 10px 0;
+            transition: all 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+            font-size: 16px;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
+            color: white;
+        }
+        
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 14px 28px;
+            border-radius: 50px;
+            font-weight: 500;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+            font-size: 16px;
+            white-space: nowrap;
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.4);
+            transform: translateY(-2px);
+            color: white;
+        }
+        
+        .floating-dots {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: -1;
+        }
+        
+        .dot {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(102, 126, 234, 0.5);
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        .dot:nth-child(1) { top: 20%; left: 20%; animation-delay: 0s; }
+        .dot:nth-child(2) { top: 80%; left: 80%; animation-delay: 2s; }
+        .dot:nth-child(3) { top: 40%; left: 70%; animation-delay: 4s; }
+        .dot:nth-child(4) { top: 70%; left: 30%; animation-delay: 1s; }
+        .dot:nth-child(5) { top: 30%; left: 50%; animation-delay: 3s; }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); opacity: 0.5; }
+            50% { transform: translateY(-20px); opacity: 1; }
+        }
+        
+        .zoom-out-animation {
+            opacity: 0;
+            transform: scale(1.2);
+            transition: all 1s ease-out;
+        }
+        
+        .zoom-out-animation.animate {
+            opacity: 1;
+            transform: scale(1);
+        }
+        
+        .stagger-animation {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease-out;
+        }
+        
+        .stagger-animation.animate {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .navigation-menu {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border-radius: 25px;
+            padding: 8px;
+            display: flex;
+            gap: 8px;
+            z-index: 1000;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .nav-btn {
+            background: transparent;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+        
+        .nav-btn.active {
+            background: rgba(102, 126, 234, 0.8);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+        
+        .nav-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .nav-btn.active:hover {
+            background: rgba(102, 126, 234, 0.9);
+        }
+        
+        .speaker-control {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            z-index: 1000;
+        }
+        
+        .speaker-control:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.1);
+        }
+        
+        .speaker-control i {
+            color: white;
+            font-size: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .mobile-menu-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            z-index: 1001;
+        }
+        
+        .mobile-menu-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.1);
+        }
+        
+        .mobile-menu-btn i {
+            color: white;
+            font-size: 20px;
+        }
+        
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            left: -300px;
+            width: 300px;
+            height: 100vh;
+            background: rgba(15, 15, 35, 0.95);
+            backdrop-filter: blur(20px);
+            transition: left 0.3s ease;
+            z-index: 1000;
+            padding: 80px 30px 30px;
+        }
+        
+        .mobile-menu.open {
+            left: 0;
+        }
+        
+        .mobile-menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 999;
+        }
+        
+        .mobile-menu-overlay.open {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .mobile-menu-item {
+            display: block;
+            color: white;
+            text-decoration: none;
+            padding: 15px 0;
+            font-size: 18px;
+            font-weight: 500;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            transition: color 0.3s ease;
+        }
+        
+        .mobile-menu-item:hover {
+            color: #667eea;
+        }
+        
+        .button-container {
+            margin-bottom: 50px;
+        }
+        
+        /* Quran Section Styles - NO GLOWING EFFECTS */
+        .quran-container {
+            font-family: 'Times New Roman', serif;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            min-height: 100vh;
+            direction: rtl;
+            color: #e0e0e0;
+            padding: 80px 20px 20px;
+        }
+        
+        .quran-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+        }
+        
+        .quran-header {
+            text-align: center;
+            margin-bottom: 30px;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .quran-header h1 {
+            color: #4dc0b5;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .quran-header p {
+            color: #b0b0b0;
+            font-size: 1.1em;
+        }
+        
+        .quran-controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        
+        .quran-btn {
+            background: linear-gradient(145deg, #4dc0b5, #3a9b91);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(77, 192, 181, 0.3);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .quran-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(77, 192, 181, 0.5);
+            background: linear-gradient(145deg, #5dd4c7, #4dc0b5);
+        }
+        
+        .quran-btn.secondary {
+            background: linear-gradient(145deg, #6c7b7f, #5a6267);
+            box-shadow: 0 4px 15px rgba(108, 123, 127, 0.3);
+        }
+        
+        .quran-btn.secondary:hover {
+            background: linear-gradient(145deg, #7c8b8f, #6c7b7f);
+            box-shadow: 0 6px 25px rgba(108, 123, 127, 0.5);
+        }
+        
+        .quran-content-area {
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            min-height: 500px;
+            position: relative;
+        }
+        
+        .chapter-title {
+            text-align: center;
+            font-size: 2em;
+            color: #4dc0b5;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: rgba(77, 192, 181, 0.1);
+            border-radius: 10px;
+            border: 2px solid #4dc0b5;
+        }
+        
+        .verse {
+            font-size: 1.5em;
+            line-height: 2.2;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            border-right: 4px solid #4dc0b5;
+            backdrop-filter: blur(5px);
+        }
+        
+        .verse:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateX(-5px);
+            box-shadow: 0 4px 15px rgba(77, 192, 181, 0.2);
+        }
+        
+        .verse-number {
+            display: inline-block;
+            background: linear-gradient(145deg, #4dc0b5, #3a9b91);
+            color: white;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            text-align: center;
+            line-height: 30px;
+            font-size: 0.8em;
+            margin-left: 10px;
+            vertical-align: middle;
+            box-shadow: 0 2px 8px rgba(77, 192, 181, 0.3);
+        }
+        
+        .quran-navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 30px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .chapter-info {
+            text-align: center;
+            font-size: 1.2em;
+            color: #4dc0b5;
+            font-weight: bold;
+        }
+        
+        .quran-zoom-controls {
+            position: fixed;
+            top: 100px;
+            left: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 1000;
+        }
+        
+        .zoom-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(145deg, #e74c3c, #c0392b);
+            color: white;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .zoom-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(231, 76, 60, 0.5);
+        }
+        
+        .quran-fullscreen-btn {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            z-index: 1000;
+        }
+        
+        .search-container {
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        .search-input {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(77, 192, 181, 0.5);
+            border-radius: 25px;
+            padding: 12px 20px;
+            color: #e0e0e0;
+            font-size: 16px;
+            width: 300px;
+            max-width: 90%;
+            text-align: center;
+            direction: rtl;
+        }
+        
+        .search-input::placeholder {
+            color: #888;
+        }
+        
+        .search-input:focus {
+            outline: none;
+            border-color: #4dc0b5;
+            box-shadow: 0 0 10px rgba(77, 192, 181, 0.3);
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 10001;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+        }
+        
+        .modal-content {
+            background: linear-gradient(135deg, #2d2d2d 0%, #3d3d3d 100%);
+            margin: 5% auto;
+            padding: 20px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 80vh;
+            overflow-y: auto;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+        }
+        
+        .close {
+            color: #aaa;
+            float: left;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+        
+        .close:hover {
+            color: #4dc0b5;
+        }
+        
+        .chapter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .chapter-item {
+            padding: 15px;
+            background: rgba(77, 192, 181, 0.1);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(77, 192, 181, 0.2);
+            text-align: center;
+        }
+        
+        .chapter-item:hover {
+            background: rgba(77, 192, 181, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(77, 192, 181, 0.3);
+        }
+        
+        .chapter-item h4 {
+            color: #4dc0b5;
+            margin-bottom: 5px;
+            font-size: 1.2em;
+        }
+        
+        .chapter-item p {
+            color: #b0b0b0;
+            font-size: 0.9em;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #4dc0b5;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        @media (max-width: 768px) {
+            .mobile-menu-btn {
+                display: flex;
+            }
+            
+            .navigation-menu {
+                display: none;
+            }
+            
+            .arabic-verse {
+                font-size: 1.4rem;
+                line-height: 1.6;
+            }
+            
+            .verse-translation {
+                font-size: 0.9rem;
+            }
+            
+            .btn-primary, .btn-secondary {
+                padding: 12px 20px;
+                font-size: 14px;
+                margin: 0 8px;
+            }
+            
+            .quran-btn {
+                padding: 8px 15px;
+                font-size: 14px;
+            }
+            
+            .verse {
+                font-size: 1.2em;
+                padding: 10px;
+            }
+            
+            .quran-zoom-controls,
+            .quran-fullscreen-btn {
+                position: relative;
+                margin: 10px auto;
+            }
+            
+            .button-container {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                gap: 16px;
+                flex-wrap: nowrap;
+                margin-bottom: 60px;
+            }
+            
+            .gif-showcase {
+                max-width: 90%;
+                margin: 0 auto;
+            }
+            
+            .chapter-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .btn-primary, .btn-secondary {
+                padding: 10px 16px;
+                font-size: 13px;
+                margin: 0 6px;
+            }
+            
+            .button-container {
+                gap: 12px;
+            }
+        }
+    </style>
+</head>
+<body class="text-white overflow-x-hidden">
+    <div class="floating-dots">
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+    </div>
+
+    <!-- Navigation Menu -->
+    <div class="navigation-menu">
+        <button class="nav-btn active" onclick="showSection('home')">Home</button>
+        <button class="nav-btn" onclick="showSection('quran')">Quran</button>
+    </div>
+
+    <!-- Mobile Menu Overlay -->
+    <div class="mobile-menu-overlay" id="mobileMenuOverlay"></div>
+    
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <a href="#" class="mobile-menu-item" onclick="showSection('home'); toggleMobileMenu();">Home</a>
+        <a href="#" class="mobile-menu-item" onclick="showSection('quran'); toggleMobileMenu();">Quran</a>
+        <a href="#features" class="mobile-menu-item">Features</a>
+    </div>
+    
+    <!-- Mobile Menu Button -->
+    <div class="mobile-menu-btn" id="mobileMenuBtn">
+        <i class="fas fa-bars"></i>
+    </div>
+
+    <!-- Speaker Control -->
+    <div class="speaker-control" id="speakerControl">
+        <i class="fas fa-volume-mute" id="speakerIcon"></i>
+    </div>
+
+    <!-- Hidden Audio Element -->
+    <audio id="backgroundAudio" loop>
+        <source src="bg.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- HOME SECTION -->
+    <div id="homeSection" class="section">
+        <!-- Hero Section -->
+        <div class="min-h-screen flex items-center justify-center px-4 pt-16" id="home">
+            <div class="max-w-6xl mx-auto text-center">
+                <div class="mb-8">
+                    <h1 class="enhanced-heading mb-6" data-text="QUAF Bot">
+                        <span class="quaf-text">QUAF</span><span class="bot-text">Bot</span>
+                    </h1>
+                    <div class="arabic-verse">
+                        وَنُنَزِّلُ مِنَ الْقُرْآنِ مَا هُوَ شِفَاءٌ وَرَحْمَةٌ لِّلْمُؤْمِنِينَ
+                    </div>
+                    
+                </div>
+
+                <div class="button-container">
+                    <a href="https://t.me/quaf_bot" target="_blank" class="btn-primary">
+                        <i class="fab fa-telegram-plane mr-2"></i>
+                        Join Bot
+                    </a>
+                    <a href="https://t.me/quaf_dhdc" target="_blank" class="btn-secondary">
+                        <i class="fas fa-users mr-2"></i>
+                        Join Community
+                    </a>
+                </div>
+
+                <!-- GIF Showcase -->
+                <div class="flex justify-center">
+                    <div class="gif-showcase zoom-out-animation" id="gifShowcase">
+                        <img src="botgif.gif" alt="QUAF Bot Features Presentation" loading="lazy">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Features Section -->
+        <div class="py-20 px-4" id="features">
+            <div class="max-w-6xl mx-auto">
+
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div class="feature-card stagger-animation">
+                        <div class="text-4xl mb-4">📖</div>
+                        <h3 class="text-xl font-bold mb-3">Digital Library</h3>
+                        <p class="text-gray-300">Complete Qur'an with translations in 45 languages plus classical Islamic texts for comprehensive study.</p>
+                    </div>
+
+                    <div class="feature-card stagger-animation">
+                        <div class="text-4xl mb-4">🎯</div>
+                        <h3 class="text-xl font-bold mb-3">Quiz System</h3>
+                        <p class="text-gray-300">Test your knowledge with 16 different categories and earn certificates for your achievements.</p>
+                    </div>
+
+                    <div class="feature-card stagger-animation">
+                        <div class="text-4xl mb-4">🎵</div>
+                        <h3 class="text-xl font-bold mb-3">Audio & Video Content</h3>
+                        <p class="text-gray-300">Learn proper Tajweed with videos and listen to educational lectures from renowned scholars.</p>
+                    </div>
+
+                    <div class="feature-card stagger-animation">
+                        <div class="text-4xl mb-4">📂</div>
+                        <h3 class="text-xl font-bold mb-3">Study Materials</h3>
+                        <p class="text-gray-300">Access research papers, syllabi, and comprehensive study guides for structured learning.</p>
+                    </div>
+
+                    <div class="feature-card stagger-animation">
+                        <div class="text-4xl mb-4">📱</div>
+                        <h3 class="text-xl font-bold mb-3">Community Hub</h3>
+                        <p class="text-gray-300">Connect with fellow learners through integrated social media links and community channels.</p>
+                    </div>
+
+                    <div class="feature-card stagger-animation">
+                        <div class="text-4xl mb-4">📊</div>
+                        <h3 class="text-xl font-bold mb-3">Progress Tracking</h3>
+                        <p class="text-gray-300">Monitor your learning journey with detailed analytics and progress reports.</p>
+                    </div>
+                </div>
+
+                <div class="text-center mt-16">
+                    <div class="feature-card inline-block">
+                        <h3 class="text-2xl font-bold mb-4">Ready to Start?</h3>
+                        <p class="text-gray-300 mb-6">Begin your Islamic learning journey today with a simple command</p>
+                        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                            <div class="bg-gray-800 px-4 py-2 rounded-lg">
+                                <span class="text-green-400">🚀 Start learning:</span> /start
+                            </div>
+                            <div class="bg-gray-800 px-4 py-2 rounded-lg">
+                                <span class="text-blue-400">📞 Support:</span> Built-in help menu
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- QURAN SECTION -->
+    <div id="quranSection" class="section hidden">
+        <div class="quran-container">
+            <div class="quran-content">
+                <div class="quran-header">
+                    <h1>القرآن الكريم</h1>
+                    <p>Noble Quran - Complete Edition</p>
+                </div>
+
+                <div class="search-container">
+                    <input type="text" class="search-input" id="searchInput" placeholder="ابحث في القرآن..." onkeyup="searchVerses()" />
+                </div>
+
+                <div class="quran-controls">
+                    <button class="quran-btn" onclick="previousChapter()" id="prevBtn">السورة السابقة</button>
+                    <button class="quran-btn" onclick="previousVerse()">الآية السابقة</button>
+                    <button class="quran-btn" onclick="nextVerse()">الآية التالية</button>
+                    <button class="quran-btn" onclick="nextChapter()" id="nextBtn">السورة التالية</button>
+                    <button class="quran-btn secondary" onclick="showChapterSelector()">اختر السورة</button>
+                </div>
+
+                <div class="quran-content-area fade-in" id="content">
+                    <div class="loading" style="margin: 50px auto; display: block;"></div>
+                    <p style="text-align: center; margin-top: 20px; color: #888;">جارٍ تحميل القرآن الكريم...</p>
+                </div>
+
+                <div class="quran-navigation">
+                    <button class="quran-btn" onclick="previousChapter()" id="prevBtnBottom">← السابق</button>
+                    <div class="chapter-info" id="chapterInfo">
+                        <!-- Chapter info will be displayed here -->
+                    </div>
+                    <button class="quran-btn" onclick="nextChapter()" id="nextBtnBottom">التالي →</button>
+                </div>
+            </div>
+
+            
+
+            <!-- Chapter Selection Modal -->
+            <div id="chapterModal" class="modal">
+                <div class="modal-content">
+                    <span class="close" onclick="hideChapterSelector()">&times;</span>
+                    <h2 style="color: #4dc0b5; text-align: center; margin-bottom: 20px;">اختر السورة</h2>
+                    <div class="chapter-grid" id="chapterGrid">
+                        <!-- Chapter list will be populated here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Section management
+        function showSection(sectionName) {
+            // Hide all sections
+            document.getElementById('homeSection').classList.add('hidden');
+            document.getElementById('quranSection').classList.add('hidden');
+            
+            // Update navigation buttons
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+            
+            // Show selected section
+            if (sectionName === 'home') {
+                document.getElementById('homeSection').classList.remove('hidden');
+                document.querySelector('.nav-btn[onclick="showSection(\'home\')"]').classList.add('active');
+                document.documentElement.setAttribute('dir', 'ltr');
+                document.documentElement.setAttribute('lang', 'en');
+            } else if (sectionName === 'quran') {
+                document.getElementById('quranSection').classList.remove('hidden');
+                document.querySelector('.nav-btn[onclick="showSection(\'quran\')"]').classList.add('active');
+                document.documentElement.setAttribute('dir', 'rtl');
+                document.documentElement.setAttribute('lang', 'ar');
+                
+                // Initialize Quran if not already loaded
+                if (!window.quranLoaded) {
+                    loadQuranData();
+                }
+            }
+        }
+
+        // Audio Control
+        const speakerControl = document.getElementById('speakerControl');
+        const speakerIcon = document.getElementById('speakerIcon');
+        const backgroundAudio = document.getElementById('backgroundAudio');
+        let isPlaying = false;
+
+        speakerControl.addEventListener('click', function() {
+            if (isPlaying) {
+                backgroundAudio.pause();
+                speakerIcon.className = 'fas fa-volume-mute';
+                isPlaying = false;
+            } else {
+                backgroundAudio.play().catch(e => console.log('Audio play failed:', e));
+                speakerIcon.className = 'fas fa-volume-up';
+                isPlaying = true;
+            }
+        });
+
+        // Mobile Menu
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
+
+        function toggleMobileMenu() {
+            mobileMenu.classList.toggle('open');
+            mobileMenuOverlay.classList.toggle('open');
+        }
+
+        mobileMenuBtn.addEventListener('click', toggleMobileMenu);
+        mobileMenuOverlay.addEventListener('click', toggleMobileMenu);
+
+        // Scroll animations for home section
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate');
+                }
+            });
+        }, observerOptions);
+
+        // Observe GIF showcase
+        const gifShowcase = document.getElementById('gifShowcase');
+        if (gifShowcase) observer.observe(gifShowcase);
+
+        // Observe feature cards
+        const featureCards = document.querySelectorAll('.feature-card');
+        featureCards.forEach((card, index) => {
+            card.style.transitionDelay = `${index * 0.1}s`;
+            observer.observe(card);
+        });
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Add parallax effect to floating dots
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const dots = document.querySelectorAll('.dot');
+            
+            dots.forEach((dot, index) => {
+                const speed = 0.5 + (index * 0.1);
+                dot.style.transform = `translateY(${scrolled * speed}px)`;
+            });
+        });
+
+        // QURAN FUNCTIONALITY
+        let quranData = {};
+        let chapterNames = {
+            1: "الفاتحة", 2: "البقرة", 3: "آل عمران", 4: "النساء", 5: "المائدة", 6: "الأنعام", 7: "الأعراف", 8: "الأنفال", 9: "التوبة", 10: "يونس",
+            11: "هود", 12: "يوسف", 13: "الرعد", 14: "إبراهيم", 15: "الحجر", 16: "النحل", 17: "الإسراء", 18: "الكهف", 19: "مريم", 20: "طه",
+            21: "الأنبياء", 22: "الحج", 23: "المؤمنون", 24: "النور", 25: "الفرقان", 26: "الشعراء", 27: "النمل", 28: "القصص", 29: "العنكبوت", 30: "الروم",
+            31: "لقمان", 32: "السجدة", 33: "الأحزاب", 34: "سبأ", 35: "فاطر", 36: "يس", 37: "الصافات", 38: "ص", 39: "الزمر", 40: "غافر",
+            41: "فصلت", 42: "الشورى", 43: "الزخرف", 44: "الدخان", 45: "الجاثية", 46: "الأحقاف", 47: "محمد", 48: "الفتح", 49: "الحجرات", 50: "ق",
+            51: "الذاريات", 52: "الطور", 53: "النجم", 54: "القمر", 55: "الرحمن", 56: "الواقعة", 57: "الحديد", 58: "المجادلة", 59: "الحشر", 60: "الممتحنة",
+            61: "الصف", 62: "الجمعة", 63: "المنافقون", 64: "التغابن", 65: "الطلاق", 66: "التحريم", 67: "الملك", 68: "القلم", 69: "الحاقة", 70: "المعارج",
+            71: "نوح", 72: "الجن", 73: "المزمل", 74: "المدثر", 75: "القيامة", 76: "الإنسان", 77: "المرسلات", 78: "النبأ", 79: "النازعات", 80: "عبس",
+            81: "التكوير", 82: "الانفطار", 83: "المطففين", 84: "الانشقاق", 85: "البروج", 86: "الطارق", 87: "الأعلى", 88: "الغاشية", 89: "الفجر", 90: "البلد",
+            91: "الشمس", 92: "الليل", 93: "الضحى", 94: "الشرح", 95: "التين", 96: "العلق", 97: "القدر", 98: "البينة", 99: "الزلزلة", 100: "العاديات",
+            101: "القارعة", 102: "التكاثر", 103: "العصر", 104: "الهمزة", 105: "الفيل", 106: "قريش", 107: "الماعون", 108: "الكوثر", 109: "الكافرون", 110: "النصر",
+            111: "المسد", 112: "الإخلاص", 113: "الفلق", 114: "الناس"
+        };
+
+        // Application state
+        let currentChapter = 1;
+        let currentVerse = 1;
+        let zoomLevel = 100;
+        let isFullscreen = false;
+        let bookmarks = [];
+        let searchResults = [];
+        window.quranLoaded = false;
+
+        // Load Quran data from JSON file
+        async function loadQuranData() {
+            try {
+                const response = await fetch('quran_structured.json');
+                quranData = await response.json();
+                
+                // Convert verse numbers from strings to integers for easier handling
+                Object.keys(quranData).forEach(chapterNum => {
+                    const chapter = quranData[chapterNum];
+                    const newChapter = {};
+                    Object.keys(chapter).forEach(verseNum => {
+                        newChapter[parseInt(verseNum)] = chapter[verseNum];
+                    });
+                    quranData[parseInt(chapterNum)] = newChapter;
+                });
+                
+                window.quranLoaded = true;
+                displayChapter();
+                populateChapterSelector();
+                loadQuranPreferences();
+            } catch (error) {
+                console.error('Error loading Quran data:', error);
+                document.getElementById('content').innerHTML = 
+                    '<p style="text-align: center; font-size: 1.5em; color: #e74c3c;">خطأ في تحميل البيانات</p>';
+            }
+        }
+
+        // Display current chapter
+        function displayChapter() {
+            const content = document.getElementById('content');
+            const chapterInfo = document.getElementById('chapterInfo');
+            
+            if (!quranData[currentChapter]) {
+                content.innerHTML = '<p style="text-align: center; font-size: 1.5em; color: #e74c3c;">السورة غير متوفرة</p>';
+                return;
+            }
+
+            const chapter = quranData[currentChapter];
+            const chapterName = chapterNames[currentChapter] || `سورة ${currentChapter}`;
+            let html = `<div class="chapter-title">${chapterName}</div>`;
+            
+            const verses = Object.keys(chapter).map(v => parseInt(v)).sort((a, b) => a - b);
+            
+            verses.forEach(verseNumber => {
+                const verse = chapter[verseNumber];
+                const isCurrentVerse = verseNumber === currentVerse;
+                const highlightClass = isCurrentVerse ? 'style="background: rgba(77, 192, 181, 0.2); border-color: #4dc0b5; box-shadow: 0 0 15px rgba(77, 192, 181, 0.3);"' : '';
+                
+                html += `
+                    <div class="verse" ${highlightClass} onclick="setCurrentVerse(${verseNumber})">
+                        <span class="verse-number">${verseNumber}</span>
+                        ${verse}
+                    </div>
+                `;
+            });
+
+            content.innerHTML = html;
+            content.className = 'quran-content-area fade-in';
+            
+            // Update chapter info
+            const totalVerses = verses.length;
+            chapterInfo.innerHTML = `سورة ${chapterName} - آية ${currentVerse} من ${totalVerses}`;
+            
+            // Update navigation buttons
+            updateNavigationButtons();
+            
+            // Save current position
+            saveQuranPreferences();
+            
+            // Scroll to current verse if needed
+            scrollToCurrentVerse();
+        }
+
+        // Populate chapter selector modal
+        function populateChapterSelector() {
+            const chapterGrid = document.getElementById('chapterGrid');
+            let html = '';
+            
+            Object.keys(chapterNames).forEach(chapterNum => {
+                const num = parseInt(chapterNum);
+                const name = chapterNames[num];
+                const verseCount = quranData[num] ? Object.keys(quranData[num]).length : 0;
+                
+                html += `
+                    <div class="chapter-item" onclick="goToChapter(${num})">
+                        <h4>${num}. ${name}</h4>
+                        <p>${verseCount} آية</p>
+                    </div>
+                `;
+            });
+            
+            chapterGrid.innerHTML = html;
+        }
+
+        // Show chapter selector modal
+        function showChapterSelector() {
+            document.getElementById('chapterModal').style.display = 'block';
+        }
+
+        // Hide chapter selector modal
+        function hideChapterSelector() {
+            document.getElementById('chapterModal').style.display = 'none';
+        }
+
+        // Go to specific chapter
+        function goToChapter(chapterNumber = null) {
+            if (chapterNumber === null) {
+                const input = prompt('أدخل رقم السورة (1-114):');
+                chapterNumber = parseInt(input);
+            }
+            
+            if (chapterNumber && chapterNumber >= 1 && chapterNumber <= 114 && quranData[chapterNumber]) {
+                currentChapter = chapterNumber;
+                currentVerse = 1;
+                displayChapter();
+                hideChapterSelector();
+            }
+        }
+
+        // Set current verse
+        function setCurrentVerse(verseNumber) {
+            currentVerse = verseNumber;
+            displayChapter();
+        }
+
+        // Navigation functions
+        function nextVerse() {
+            const chapter = quranData[currentChapter];
+            if (chapter) {
+                const verses = Object.keys(chapter).map(v => parseInt(v)).sort((a, b) => a - b);
+                const maxVerse = Math.max(...verses);
+                
+                if (currentVerse < maxVerse) {
+                    currentVerse++;
+                    displayChapter();
+                } else {
+                    nextChapter();
+                }
+            }
+        }
+
+        function previousVerse() {
+            if (currentVerse > 1) {
+                currentVerse--;
+                displayChapter();
+            } else {
+                previousChapter();
+            }
+        }
+
+        function nextChapter() {
+            const chapterNumbers = Object.keys(quranData).map(Number).sort((a, b) => a - b);
+            const currentIndex = chapterNumbers.indexOf(currentChapter);
+            
+            if (currentIndex < chapterNumbers.length - 1) {
+                currentChapter = chapterNumbers[currentIndex + 1];
+                currentVerse = 1;
+                displayChapter();
+            }
+        }
+
+        function previousChapter() {
+            const chapterNumbers = Object.keys(quranData).map(Number).sort((a, b) => a - b);
+            const currentIndex = chapterNumbers.indexOf(currentChapter);
+            
+            if (currentIndex > 0) {
+                currentChapter = chapterNumbers[currentIndex - 1];
+                const chapter = quranData[currentChapter];
+                const verses = Object.keys(chapter).map(v => parseInt(v)).sort((a, b) => a - b);
+                currentVerse = Math.max(...verses);
+                displayChapter();
+            }
+        }
+
+        // Update navigation buttons
+        function updateNavigationButtons() {
+            const chapterNumbers = Object.keys(quranData).map(Number).sort((a, b) => a - b);
+            const currentIndex = chapterNumbers.indexOf(currentChapter);
+            
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const prevBtnBottom = document.getElementById('prevBtnBottom');
+            const nextBtnBottom = document.getElementById('nextBtnBottom');
+            
+            // Disable/enable buttons based on position
+            const isFirstChapter = currentIndex === 0;
+            const isLastChapter = currentIndex === chapterNumbers.length - 1;
+            
+            [prevBtn, prevBtnBottom].forEach(btn => {
+                if (btn) {
+                    btn.style.opacity = isFirstChapter ? '0.5' : '1';
+                    btn.disabled = isFirstChapter;
+                }
+            });
+            
+            [nextBtn, nextBtnBottom].forEach(btn => {
+                if (btn) {
+                    btn.style.opacity = isLastChapter ? '0.5' : '1';
+                    btn.disabled = isLastChapter;
+                }
+            });
+        }
+
+        // Zoom functions
+        function zoomIn() {
+            if (zoomLevel < 200) {
+                zoomLevel += 10;
+                applyZoom();
+            }
+        }
+
+        function zoomOut() {
+            if (zoomLevel > 50) {
+                zoomLevel -= 10;
+                applyZoom();
+            }
+        }
+
+        function resetZoom() {
+            zoomLevel = 100;
+            applyZoom();
+        }
+
+        function applyZoom() {
+            const content = document.getElementById('content');
+            if (content) {
+                content.style.fontSize = `${zoomLevel}%`;
+                saveQuranPreferences();
+            }
+        }
+
+        // Fullscreen functionality
+        function toggleFullscreen() {
+            const quranContainer = document.querySelector('.quran-container');
+            
+            if (!isFullscreen) {
+                quranContainer.style.position = 'fixed';
+                quranContainer.style.top = '0';
+                quranContainer.style.left = '0';
+                quranContainer.style.width = '100vw';
+                quranContainer.style.height = '100vh';
+                quranContainer.style.zIndex = '10000';
+                quranContainer.style.overflow = 'auto';
+                document.getElementById('fullscreenBtn').textContent = '❌';
+                isFullscreen = true;
+            } else {
+                quranContainer.style.position = 'static';
+                quranContainer.style.width = 'auto';
+                quranContainer.style.height = 'auto';
+                quranContainer.style.zIndex = 'auto';
+                document.getElementById('fullscreenBtn').textContent = '📺';
+                isFullscreen = false;
+            }
+            
+            saveQuranPreferences();
+        }
+
+        // Search functionality
+        function searchVerses() {
+            const query = document.getElementById('searchInput').value.trim();
+            
+            if (query.length < 2) {
+                displayChapter();
+                return;
+            }
+            
+            searchResults = [];
+            Object.keys(quranData).forEach(chapterNum => {
+                const chapter = quranData[chapterNum];
+                Object.keys(chapter).forEach(verseNum => {
+                    const verse = chapter[verseNum];
+                    if (verse.includes(query)) {
+                        searchResults.push({
+                            chapter: parseInt(chapterNum),
+                            verse: parseInt(verseNum),
+                            text: verse
+                        });
+                    }
+                });
+            });
+            
+            displaySearchResults(query);
+        }
+
+        function displaySearchResults(query) {
+            const content = document.getElementById('content');
+            const chapterInfo = document.getElementById('chapterInfo');
+            
+            if (searchResults.length === 0) {
+                content.innerHTML = `
+                    <div class="chapter-title">نتائج البحث</div>
+                    <p style="text-align: center; font-size: 1.2em; color: #888; margin: 50px 0;">
+                        لم يتم العثور على نتائج للبحث: "${query}"
+                    </p>
+                `;
+                chapterInfo.innerHTML = 'لا توجد نتائج';
+                return;
+            }
+            
+            let html = `<div class="chapter-title">نتائج البحث: "${query}"</div>`;
+            
+            searchResults.forEach((result, index) => {
+                const chapterName = chapterNames[result.chapter];
+                const highlightedText = result.text.replace(
+                    new RegExp(query, 'g'), 
+                    `<mark style="background: rgba(77, 192, 181, 0.3); color: #4dc0b5; padding: 2px 4px; border-radius: 3px;">${query}</mark>`
+                );
+                
+                html += `
+                    <div class="verse" onclick="goToSearchResult(${result.chapter}, ${result.verse})">
+                        <span class="verse-number">${result.verse}</span>
+                        <small style="color: #4dc0b5; display: block; margin-bottom: 5px;">
+                            سورة ${chapterName} - آية ${result.verse}
+                        </small>
+                        ${highlightedText}
+                    </div>
+                `;
+            });
+            
+            content.innerHTML = html;
+            content.className = 'quran-content-area fade-in';
+            chapterInfo.innerHTML = `${searchResults.length} نتيجة`;
+        }
+
+        function goToSearchResult(chapterNum, verseNum) {
+            currentChapter = chapterNum;
+            currentVerse = verseNum;
+            document.getElementById('searchInput').value = '';
+            displayChapter();
+        }
+
+        // Scroll to current verse
+        function scrollToCurrentVerse() {
+            setTimeout(() => {
+                const verses = document.querySelectorAll('.verse');
+                verses.forEach(verse => {
+                    if (verse.style.background && verse.style.background.includes('rgba(77, 192, 181, 0.2)')) {
+                        verse.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                });
+            }, 100);
+        }
+
+        // Save and load Quran preferences
+        function saveQuranPreferences() {
+            const preferences = {
+                currentChapter,
+                currentVerse,
+                zoomLevel,
+                isFullscreen
+            };
+            localStorage.setItem('quranReaderPrefs', JSON.stringify(preferences));
+        }
+
+        function loadQuranPreferences() {
+            const saved = localStorage.getItem('quranReaderPrefs');
+            if (saved) {
+                const preferences = JSON.parse(saved);
+                currentChapter = preferences.currentChapter || 1;
+                currentVerse = preferences.currentVerse || 1;
+                zoomLevel = preferences.zoomLevel || 100;
+                isFullscreen = preferences.isFullscreen || false;
+                
+                // Apply saved zoom
+                applyZoom();
+                
+                // Apply fullscreen state
+                if (isFullscreen) {
+                    const quranContainer = document.querySelector('.quran-container');
+                    quranContainer.style.position = 'fixed';
+                    quranContainer.style.top = '0';
+                    quranContainer.style.left = '0';
+                    quranContainer.style.width = '100vw';
+                    quranContainer.style.height = '100vh';
+                    quranContainer.style.zIndex = '10000';
+                    quranContainer.style.overflow = 'auto';
+                    document.getElementById('fullscreenBtn').textContent = '❌';
+                }
+            }
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('chapterModal');
+            if (event.target === modal) {
+                hideChapterSelector();
+            }
+        }
+    </script>
+</body>
+</html>
