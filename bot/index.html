@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <!-- Favicon -->
+<link rel="icon" href="logo.png" type="image/png">
+
+<!-- Primary Meta Tags -->
+<title>Quaf Bot</title>
+<meta name="title" content="Quaf Bot">
+<meta name="description" content="Your powerful Telegram bot.">
+
+<!-- Open Graph / Facebook / WhatsApp -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://qxb.me/">
+<meta property="og:title" content="Quaf Bot">
+<meta property="og:description" content="Your powerful Telegram bot.">
+<meta property="og:image" content="https://qxb.me/quafbot.jpg">
+<meta property="og:image:alt" content="Quaf Bot Logo">
+
+<!-- Twitter -->
+<meta property="twitter:card" content="summary_large_image">
+<meta property="twitter:url" content="https://qxb.me/">
+<meta property="twitter:title" content="Quaf Bot">
+<meta property="twitter:description" content="Your powerful Telegram bot.">
+<meta property="twitter:image" content="https://qxb.me/quafbot.jpg">
+
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="text-white overflow-x-hidden">
+<div class="floating-dots">
+<div class="dot"></div>
+<div class="dot"></div>
+<div class="dot"></div> 
+<div class="dot"></div>
+<div class="dot"></div>
+</div>
+
+<!-- Loading Animation -->
+<div id="loadingScreen">
+  <div class="loader-container">
+    <div class="loader-wrapper">
+      <video id="loadingVideo" autoplay loop muted playsinline>
+        <source src="intro.webm" type="video/webm">
+        <source src="intro.mp4" type="video/mp4">
+      </video>
+    </div>
+    <div class="loading-text">بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ</div>
+  </div>
+</div>
+
+<!-- Main Content Container -->
+<div id="mainContent" class="main-content-hidden">
+
+<!-- Navigation Menu -->
+<div class="navigation-menu">
+  <button class="nav-btn" id="homeBtn" onclick="showSection('home')">
+    <i class="fas fa-home"></i>
+  </button>
+  <button class="nav-btn" id="quranBtn" onclick="showSection('quran')">
+    <i class="fas fa-book-open"></i>
+  </button>
+  <button class="nav-btn" id="translationBtn" onclick="showSection('translation')">
+    <i class="fas fa-language"></i>
+  </button>
+  <button class="nav-btn" id="exegesisBtn" onclick="showSection('exegesis')">
+    <i class="fas fa-search"></i>
+  </button>
+  <!-- ADD THIS NEW BUTTON -->
+ <button class="nav-btn" id="profileBtn" onclick="window.open('huda.html', '_blank')">
+  <i class="fas fa-user"></i>
+</button>
+</div>
+
+
+
+<!-- Speaker Control -->
+<div class="speaker-control" id="speakerControl">
+<i class="fas fa-volume-mute" id="speakerIcon"></i>
+</div>
+
+<!-- ADD THIS NEW HAMBURGER MENU BUTTON -->
+<div class="menu-toggle" id="menuToggle">
+  <div class="hamburger-icon">
+    <div class="hamburger-line"></div>
+    <div class="hamburger-line"></div>
+    <div class="hamburger-line"></div>
+  </div>
+</div>
+
+<!-- ADD THIS BACKDROP -->
+<div class="menu-backdrop" id="menuBackdrop"></div>
+
+<!-- Hidden Audio Element -->
+<audio id="backgroundAudio" loop>
+<source src="bg.mp3" type="audio/mpeg">
+</audio>
+
+<!-- HOME SECTION -->
+<div id="homeSection" class="section">
+<!-- Hero Section -->
+<div class="min-h-screen flex items-center justify-center px-4 pt-16" id="home">
+<div class="max-w-6xl mx-auto text-center">
+<div class="mb-8">
+<h1 class="enhanced-heading mb-6" data-text="QUAF Bot">
+<span class="quaf-text">QUAF</span><span class="bot-text">Bot</span>
+</h1>
+<div class="arabic-verse">
+وَنُنَزِّلُ مِنَ الْقُرْآنِ مَا هُوَ شِفَاءٌ وَرَحْمَةٌ لِّلْمُؤْمِنِينَ
+</div>
+
+</div>
+
+<div class="button-container">
+<a href="https://t.me/quaf_bot" target="_blank" class="btn-primary">
+<i class="fab fa-telegram-plane mr-2"></i>
+Join Bot
+</a>
+<a href="https://t.me/quaf_dhdc" target="_blank" class="btn-secondary">
+<i class="fas fa-users mr-2"></i>
+Join Community
+</a>
+</div>
+
+<!-- GIF Showcase -->
+<div class="flex justify-center">
+<div class="gif-showcase zoom-out-animation" id="gifShowcase">
+<img src="bot-gif.gif" alt="QUAF Bot Features Presentation" loading="lazy">
+</div>
+</div>
+</div>
+</div>
+
+<!-- Features Section -->
+<div class="py-20 px-4" id="features">
+<div class="max-w-6xl mx-auto">
+
+<div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+<div class="feature-card stagger-animation">
+<div class="text-4xl mb-4">📖</div>
+<h3 class="text-xl font-bold mb-3">Digital Library</h3>
+<p class="text-gray-300">Complete Qur'an with translations in 45 languages plus classical Islamic texts for comprehensive study.</p>
+</div>
+
+<div class="feature-card stagger-animation">
+<div class="text-4xl mb-4">🎯</div>
+<h3 class="text-xl font-bold mb-3">Quiz System</h3>
+<p class="text-gray-300">Test your knowledge with 16 different categories and earn certificates for your achievements.</p>
+</div>
+
+<div class="feature-card stagger-animation">
+<div class="text-4xl mb-4">🎵</div>
+<h3 class="text-xl font-bold mb-3">Audio & Video Content</h3>
+<p class="text-gray-300">Learn proper Tajweed with videos and listen to educational lectures from renowned scholars.</p>
+</div>
+
+<div class="feature-card stagger-animation">
+<div class="text-4xl mb-4">📂</div>
+<h3 class="text-xl font-bold mb-3">Study Materials</h3>
+<p class="text-gray-300">Access research papers, syllabi, and comprehensive study guides for structured learning.</p>
+</div>
+
+<div class="feature-card stagger-animation">
+<div class="text-4xl mb-4">📱</div>
+<h3 class="text-xl font-bold mb-3">Community Hub</h3>
+<p class="text-gray-300">Connect with fellow learners through integrated social media links and community channels.</p>
+</div>
+
+<div class="feature-card stagger-animation">
+<div class="text-4xl mb-4">📊</div>
+<h3 class="text-xl font-bold mb-3">Progress Tracking</h3>
+<p class="text-gray-300">Monitor your learning journey with detailed analytics and progress reports.</p>
+</div>
+</div>
+
+<div class="text-center mt-16">
+<div class="feature-card inline-block">
+<h3 class="text-2xl font-bold mb-4">Ready to Start?</h3>
+<p class="text-gray-300 mb-6">Begin your Islamic learning journey today with a simple command</p>
+<div class="flex flex-col sm:flex-row gap-4 justify-center">
+<div class="bg-gray-800 px-4 py-2 rounded-lg">
+<span class="text-green-400">🚀 Start learning:</span> /start
+</div>
+<div class="bg-gray-800 px-4 py-2 rounded-lg">
+<span class="text-blue-400">📞 Support:</span> Built-in help menu
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- QURAN SECTION -->
+<div id="quranSection" class="section hidden">
+<div class="quran-container">
+<div class="quran-content">
+<div class="quran-header">
+<h1>القرآن الكريم</h1>
+</div>
+
+<div class="search-container">
+<div style="display: flex; justify-content: center; align-items: center; gap: 10px; flex-wrap: wrap;">
+<input type="text" class="search-input" id="searchInput" placeholder="ابحث في القرآن الكريم..." onkeyup="handleSearchInput(event)" />
+<button class="clear-search-btn" onclick="clearSearch()" id="clearSearchBtn" style="display: none;">مسح البحث</button>
+</div>
+<div id="searchStats" class="search-stats" style="display: none;"></div>
+
+</div>
+</div>
+
+<div class="quran-controls">
+<button class="quran-btn secondary" onclick="showPageSelector()">اختر الصفحة</button>
+<button class="quran-btn secondary" onclick="showChapterSelector()">اختر السورة</button>
+<button class="quran-btn secondary" onclick="showJuzSelector()">اختر الجزء</button>
+</div>
+
+<div class="quran-content-area fade-in" id="content">
+<div class="loading" style="margin: 50px auto; display: block;"></div>
+<p style="text-align: center; margin-top: 20px; color: #888;">جارٍ تحميل القرآن الكريم...</p>
+</div>
+
+<div class="quran-navigation">
+<button class="quran-btn" onclick="previousPage()" id="prevPageBtnBottom">← السابق</button>
+<div class="chapter-info" id="chapterInfo">
+<!-- Page info will be displayed here -->
+</div>
+<button class="quran-btn" onclick="nextPage()" id="nextPageBtnBottom">التالي →</button>
+</div>
+</div>
+
+
+
+<!-- Chapter Selection Modal -->
+<div id="chapterModal" class="modal">
+<div class="modal-content">
+<span class="close" onclick="hideChapterSelector()">&times;</span>
+<h2 style="color: #4dc0b5; text-align: center; margin-bottom: 20px;">اختر السورة</h2>
+<div class="chapter-grid" id="chapterGrid">
+<!-- Chapter list will be populated here -->
+</div>
+</div>
+</div>
+
+<!-- Juz Selection Modal -->
+<div id="juzModal" class="modal">
+<div class="modal-content">
+<span class="close" onclick="hideJuzSelector()">&times;</span>
+<h2 style="color: #4dc0b5; text-align: center; margin-bottom: 20px;">اختر الجزء</h2>
+<div class="chapter-grid" id="juzGrid">
+<!-- Juz list will be populated here -->
+</div>
+</div>
+</div>
+
+<!-- Page Selection Modal -->
+<div id="pageModal" class="modal">
+<div class="modal-content">
+<span class="close" onclick="hidePageSelector()">&times;</span>
+<h2 style="color: #4dc0b5; text-align: center; margin-bottom: 20px;">اختر الصفحة</h2>
+<div style="text-align: center; margin-bottom: 20px;">
+<input type="number" id="pageInput" min="1" max="604" placeholder="رقم الصفحة (1-604)" 
+style="background: rgba(0,0,0,0.3); border: 1px solid #4dc0b5; border-radius: 10px; padding: 10px; color: white; text-align: center; width: 200px;">
+<button class="quran-btn" onclick="goToPageByInput()" style="margin-right: 10px;">اذهب</button>
+</div>
+<div class="chapter-grid" id="pageGrid">
+<!-- Page list will be populated here -->
+</div>
+</div>
+</div> 
+</div> 
+</div>
+
+<!-- TRANSLATION SECTION -->
+<div id="translationSection" class="section hidden">
+<div class="quran-container">
+<div class="quran-content">
+<div class="quran-header">
+<h1>Translations</h1>
+<p>Select Surah and Verse, then choose a language</p>
+</div>
+
+<!-- Translation Controls -->
+<div class="translation-controls">
+<select id="surahSelect" class="translation-select">
+<option value="">Select Surah</option>
+</select>
+<select id="verseSelect" class="translation-select" disabled>
+<option value="">Select Verse</option>
+</select>
+<button class="quran-btn" id="loadTranslationBtn" onclick="loadSelectedTranslation()">Load Translation</button>
+</div>
+
+<!-- Language Buttons Grid -->
+<div class="language-grid" id="languageGrid">
+<!-- Languages will be populated here -->
+</div>
+
+<!-- Translation Reading Box -->
+<div id="translationReadingBox" class="translation-reading-box hidden">
+<div class="translation-header">
+<h3 id="translationTitle"></h3>
+<button class="close-translation" onclick="closeTranslationBox()">×</button>
+</div>
+<div class="translation-content">
+<div class="arabic-verse-display" id="arabicVerseDisplay"></div>
+<div class="translation-text" id="translationText"></div>
+</div>
+</div>
+</div>
+</div>
+</div> 
+
+<!-- EXEGESIS SECTION (ADD THIS ENTIRE SECTION) -->
+<div id="exegesisSection" class="section hidden">
+<div class="quran-container">
+<div class="quran-content">
+<div class="quran-header">
+<h1>Exegesis (Tafsir)</h1>
+</div>
+
+<!-- Exegesis Controls -->
+<div class="translation-controls">
+<select id="exegesisSurahSelect" class="translation-select">
+<option value="">Select Surah</option>
+</select>
+<select id="exegesisVerseSelect" class="translation-select" disabled>
+<option value="">Select Verse</option>
+</select>
+<button class="quran-btn" id="loadExegesisBtn" onclick="loadSelectedExegesis()">Load Exegesis</button>
+</div>
+
+<!-- Exegesis Language Buttons Grid -->
+<div class="language-grid" id="exegesisLanguageGrid">
+<!-- Exegesis options will be populated here -->
+</div>
+
+<!-- Exegesis Reading Box -->
+<div id="exegesisReadingBox" class="translation-reading-box hidden">
+<div class="translation-header">
+<h3 id="exegesisTitle"></h3>
+<button class="close-translation" onclick="closeExegesisBox()">×</button>
+</div>
+<div class="translation-content">
+<div class="arabic-verse-display" id="exegesisArabicVerseDisplay"></div>
+<div class="translation-text" id="exegesisText"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- DOCUMENTS SECTION -->
+<div id="documentsSection" class="section hidden">
+<div class="quran-container">
+<div class="quran-content">
+<div class="quran-header">
+<h1>Documents</h1>
+<p>Download Islamic research papers and academic documents</p>
+</div>
+
+<!-- Documents Header with Search and Filter -->
+<div class="documents-header">
+<select id="categoryDropdown" class="category-dropdown">
+<option value="all">All Categories</option>
+<option value="tajweed">Tajweed</option>
+<option value="uloom">Uloom ul Quran</option>
+<option value="articles">Articles</option>
+</select>
+
+<div class="documents-search-container">
+<input type="text" 
+       id="documentsSearchInput" 
+       class="documents-search-input" 
+       placeholder="Search documents..."
+       onkeyup="searchDocuments(event)">
+</div>
+</div>
+
+<!-- Documents Grid -->
+<div class="documents-grid" id="documentsGrid" dir="ltr">
+<!-- PDF files will be populated here -->
+</div>
+</div>
+</div>
+</div>
+  
+</div>
+<!-- 100% privacy-first analytics -->
+<script async src="https://scripts.simpleanalyticscdn.com/latest.js"></script>  
+<script src="script.js"></script>
+</body>
+</html>
