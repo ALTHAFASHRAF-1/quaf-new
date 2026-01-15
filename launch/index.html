@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QUAF Launching...</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        /* 1. Global Performance Reset */
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+            overflow: hidden;
+            font-family: 'Courier New', Courier, monospace;
+            touch-action: none; 
+        }
+
+        /* 2. Container for Layering */
+        #stage {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* 3. The Video (Bottom Layer - Always Loaded) */
+        #video-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        video {
+            width: 100%;
+            height: auto;
+            max-height: 100vh;
+            display: block;
+            /* GPU HACK: Forces video to its own layer */
+            will-change: transform;
+            transform: translateZ(0); 
+        }
+
+        /* 4. The Landing Image (Top Layer) */
+        #landing-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            
+            /* Optimized Fade Transition */
+            will-change: opacity;
+            transition: opacity 1.2s ease-out;
+            opacity: 1;
+
+            /* Default BG */
+            background-image: url('https://quaf2026.netlify.app/bg.png');
+        }
+
+        @media only screen and (max-width: 768px) {
+            #landing-layer {
+                background-image: url('https://quaf2026.netlify.app/bg1.png');
+            }
+        }
+
+        /* 5. THE EXACT GLOWING BUTTON STYLE YOU REQUESTED */
+        .cyber-button {
+            position: relative;
+            padding: 25px 60px;
+            font-size: 28px;
+            font-weight: 600;
+            color: #fff;
+            background: transparent;
+            text-transform: uppercase;
+            letter-spacing: 6px;
+            border: 3px solid #00f7ff;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 0 15px #00f7ff, inset 0 0 15px #00f7ff;
+            text-shadow: 0 0 10px #00f7ff;
+            transition: 0.2s;
+            overflow: hidden;
+            /* GPU Acceleration */
+            transform: translateZ(0);
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* The Sliding Gradient Effect */
+        .cyber-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 247, 255, 0.4), transparent);
+            transition: 0.5s;
+        }
+
+        .cyber-button:hover::before {
+            left: 100%;
+        }
+
+        .cyber-button:hover {
+            background: rgba(0, 247, 255, 0.1);
+            box-shadow: 0 0 30px #00f7ff, inset 0 0 30px #00f7ff;
+            transform: scale(1.05);
+        }
+
+        .cyber-button:active {
+            transform: scale(0.95);
+            box-shadow: 0 0 5px #00f7ff;
+        }
+
+        /* Utility Class to Hide Landing */
+        .fade-out {
+            opacity: 0 !important;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="stage">
+        
+        <div id="video-layer">
+            <video id="intro-video" playsinline preload="auto">
+                <source src="launch/launch.mp4" type="video/mp4">
+            </video>
+        </div>
+
+        <div id="landing-layer">
+            <button class="cyber-button" id="launch-btn">LAUNCH</button>
+        </div>
+
+    </div>
+
+    <script>
+        // Cache Elements
+        const btn = document.getElementById('launch-btn');
+        const video = document.getElementById('intro-video');
+        const landingLayer = document.getElementById('landing-layer');
+        const targetUrl = "https://quaf2026.netlify.app/";
+
+        // Premium Colors (Gold, Pink, Cyan)
+        const colors = ['#FFD700', '#FF1493', '#00F7FF'];
+
+        // ONE-TIME CLICK EVENT
+        btn.addEventListener('click', async (e) => {
+            
+            // 1. Play Video INSTANTLY (Hidden layer)
+            video.play().catch(() => video.controls = true);
+
+            // 2. Trigger Fullscreen
+            try {
+                if (document.documentElement.requestFullscreen) 
+                    await document.documentElement.requestFullscreen();
+                else if (document.documentElement.webkitRequestFullscreen) 
+                    await document.documentElement.webkitRequestFullscreen();
+            } catch (err) { /* Ignore */ }
+
+            // 3. Fire Particles
+            fireParticles(e);
+
+            // 4. Fade Out Image
+            setTimeout(() => {
+                landingLayer.classList.add('fade-out');
+            }, 50);
+        });
+
+        // OPTIMIZED PARTICLE FUNCTION
+        function fireParticles(e) {
+            const rect = e.target.getBoundingClientRect();
+            const x = (rect.left + (rect.width / 2)) / window.innerWidth;
+            const y = (rect.top + (rect.height / 2)) / window.innerHeight;
+
+            // Burst 1: From Button
+            confetti({
+                particleCount: 80,
+                spread: 90,
+                origin: { x: x, y: y },
+                colors: colors,
+                zIndex: 999,
+                disableForReducedMotion: true,
+                scalar: 1.2
+            });
+
+            // Burst 2: Rain
+            let end = Date.now() + 700;
+            (function frame() {
+                confetti({
+                    particleCount: 2, angle: 60, spread: 55, origin: { x: 0 }, colors: colors, zIndex: 999
+                });
+                confetti({
+                    particleCount: 2, angle: 120, spread: 55, origin: { x: 1 }, colors: colors, zIndex: 999
+                });
+                if (Date.now() < end) requestAnimationFrame(frame);
+            }());
+        }
+
+        // REDIRECT ON END
+        video.addEventListener('ended', () => {
+            if(document.fullscreenElement) {
+                document.exitFullscreen().catch(()=>{});
+            }
+            window.location.href = targetUrl;
+        });
+
+    </script>
+</body>
+</html>
