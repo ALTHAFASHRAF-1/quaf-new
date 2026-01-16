@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Editorial Team - Islamic Insight Journal">
+    <meta name="keywords" content="editorial team, academic journal, Islamic studies, peer review">
+    <meta name="author" content="Islamic Insight Journal">
+     <title>Islamic Insight</title>
+     <link rel="icon" type="image/png" href="logo.png">
+    <!-- CSS Libraries -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+          <style>
+body {
+font-family: 'Inter', sans-serif;
+line-height: 1.6;
+color: #1a202c;
+}
+
+
+
+.academic-title {
+font-family: 'Crimson Text', serif;
+}
+
+.article-content h1, .article-content h2, .article-content h3 {
+font-family: 'Crimson Text', serif;
+font-weight: 600;
+}
+
+.article-content p {
+margin-bottom: 1rem;
+text-align: justify;
+line-height: 1.7;
+}
+
+.article-content h2 {
+margin-top: 2rem;
+margin-bottom: 1rem;
+font-size: 1.5rem;
+color: #2d3748;
+}
+
+.article-content h3 {
+margin-top: 1.5rem;
+margin-bottom: 0.75rem;
+font-size: 1.25rem;
+color: #4a5568;
+}
+
+.citation-box {
+background: #f7fafc;
+border-left: 4px solid #4299e1;
+padding: 1rem;
+margin: 1rem 0;
+font-style: italic;
+}
+
+@media (max-width: 768px) {
+.article-content {
+font-size: 0.95rem;
+}
+
+.article-content h2 {
+font-size: 1.3rem;
+}
+
+.article-content h3 {
+font-size: 1.1rem;
+}
+}
+
+.mobile-menu {
+transition: all 0.3s ease;
+}
+
+.article-card {
+transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.article-card:hover {
+transform: translateY(-2px);
+box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+
+.modal {
+backdrop-filter: blur(4px);
+}
+
+.search-container {
+position: relative;
+}
+
+.search-results {
+position: absolute;
+top: 100%;
+left: 0;
+right: 0;
+background: white;
+border: 1px solid #e2e8f0;
+border-radius: 0.5rem;
+box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+max-height: 400px;
+overflow-y: auto;
+z-index: 50;
+}
+
+.badge {
+display: inline-block;
+padding: 0.25rem 0.75rem;
+border-radius: 9999px;
+font-size: 0.75rem;
+font-weight: 600;
+margin-right: 0.5rem;
+margin-bottom: 0.25rem;
+}
+
+.badge-blue { background: #ebf8ff; color: #2b6cb0; }
+.badge-green { background: #f0fff4; color: #2f855a; }
+.badge-red { background: #fff5f5; color: #c53030; }
+.badge-purple { background: #faf5ff; color: #6b46c1; }
+.badge-yellow { background: #fffaf0; color: #b7791f; }
+
+.pdf-content {
+display: none;
+}
+
+.article-image {
+height: 200px;
+background-size: cover;
+background-position: center;
+border-radius: 8px 8px 0 0;
+}
+
+.featured-article-image {
+width: 100%;
+height: 200px;
+object-fit: cover;
+border-radius: 8px 8px 0 0;
+}
+
+.logo-container {
+display: flex;
+align-items: center;
+gap: 0.75rem;
+}
+
+.logo-image {
+height: 40px;
+width: auto;
+}
+
+.logo-text-container {
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+}
+
+.logo-text {
+line-height: 1;
+margin: 0;
+}
+
+.logo-subtitle {
+font-size: 0.75rem;
+color: #6b7280;
+margin: 0;
+line-height: 1;
+font-weight: 400;
+}
+
+@media (max-width: 768px) {
+.logo-image {
+height: 32px;
+}
+
+.logo-text {
+font-size: 1rem;
+}
+
+.logo-subtitle {
+font-size: 0.65rem;
+}
+}
+
+.dropdown {
+position: relative;
+}
+
+.dropdown-content {
+display: none;
+position: absolute;
+top: 100%;
+right: 0;
+background-color: white;
+min-width: 160px;
+box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+border-radius: 0.5rem;
+z-index: 1000;
+border: 1px solid #e2e8f0;
+}
+
+.dropdown:hover .dropdown-content {
+display: block;
+}
+
+.dropdown-content a {
+color: #374151;
+padding: 12px 16px;
+text-decoration: none;
+display: block;
+transition: background-color 0.2s;
+}
+
+.dropdown-content a:hover {
+background-color: #f3f4f6;
+}
+
+.dropdown-content a:first-child {
+border-radius: 0.5rem 0.5rem 0 0;
+}
+
+.dropdown-content a:last-child {
+border-radius: 0 0 0.5rem 0.5rem;
+}
+
+@media (max-width: 768px) {
+.logo-image {
+height: 32px;
+}
+
+.logo-text {
+font-size: 1rem;
+}
+}
+
+/* Add this to your existing <style> section */
+.current-issue-card {
+transition: all 0.3s ease;
+}
+
+.current-issue-card:hover {
+transform: translateY(-2px);
+box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+}
+
+.journal-cover-container {
+background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+}
+
+@media (max-width: 1024px) {
+.journal-cover-container {
+background: #f8fafc;
+}
+}
+
+.current-issue-image-container {
+    width: 100%;
+    height: 280px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.current-issue-image {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 1024px) {
+    .current-issue-image-container {
+        height: 200px;
+    }
+}        
+
+.current-issue-image-container {
+    width: 100%;
+    height: 280px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.current-issue-image {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 1024px) {
+    .current-issue-image-container {
+        height: 200px;
+    }
+}    
+
+.nav-right {
+    margin-left: auto; 
+}
+
+footer {
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
+    margin-right: calc(-50vw + 50%);
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+}
+
+</style>
+</head>
+
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0"> 
+                        <a href="index.html" class="logo-container">
+                            <img src="logo.png" alt="Islamic Insight Logo" class="logo-image">
+                            <div class="logo-text-container">
+                                <h1 class="logo-text text-xl font-bold text-black-900 academic-title">
+                                    ISLAMIC INSIGHT
+                                </h1>
+                                <p class="logo-subtitle">Journal of Islamic Studies</p>
+                            </div>
+                        </a> 
+                    </div>
+                </div>
+                
+                <!-- Desktop Navigation -->
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-8">
+                        <a href="index.html" class="text-gray-700 hover:text-blue-900 px-3 py-2 text-sm font-medium transition-colors">Home</a>
+                        <a href="all-issues.html" class="text-gray-700 hover:text-blue-900 px-3 py-2 text-sm font-medium transition-colors">All Issues</a>
+                        <div class="dropdown">
+                            <a href="#contact" class="text-gray-700 hover:text-blue-900 px-3 py-2 text-sm font-medium transition-colors cursor-pointer">
+                                Contact <i class="fas fa-chevron-down ml-1 text-xs"></i>
+                            </a>
+                            <div class="dropdown-content">
+                                <a href="#editorial-team">Editorial Team</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Mobile menu button -->
+                <div class="md:hidden">
+                    <button id="mobile-menu-btn" class="text-gray-700 hover:text-blue-900 focus:outline-none">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mobile Navigation -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-200">
+            <div class="px-2 pt-2 pb-3 space-y-1">
+                <a href="index.html" class="block px-3 py-2 text-gray-700 hover:text-blue-900 transition-colors">Home</a>
+                <a href="all-issues.html" class="block px-3 py-2 text-gray-700 hover:text-blue-900 transition-colors">All Issues</a>
+                <a href="#contact" class="block px-3 py-2 text-gray-700 hover:text-blue-900 transition-colors">Contact</a>
+                <a href="#editorial-team" class="block px-3 py-2 pl-6 text-gray-600 hover:text-blue-900 transition-colors">Editorial Team</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Editorial Team Section -->
+    <section id="editorial-team" class="py-12 sm:py-16 lg:py-20 bg-white min-h-screen">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold academic-title text-gray-900 mb-6">
+                    Editorial Team
+                </h2>
+                <div id="loading-indicator" class="hidden">
+                    <div class="loading"></div>
+                    <span class="ml-2 text-gray-600">Loading editorial team data...</span>
+                </div>
+            </div>
+            
+            <!-- Dynamic content will be loaded here -->
+            <div id="editorial-content">
+                <!-- Content will be dynamically generated from Google Sheets -->
+            </div>
+
+            <!-- Error message container -->
+            <div id="error-container" class="hidden">
+                <div class="error-message">
+                    <strong>Error loading editorial team data:</strong>
+                    <p id="error-text"></p>
+                    <p class="mt-2 text-sm">Please check your Google Sheets URL and make sure the sheet is publicly accessible.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div class="col-span-1 md:col-span-2">
+                    <div class="logo-container mb-4">
+                        <img src="logo.png" alt="Islamic Insight Logo" class="logo-image">
+                        <div class="logo-text-container">
+                            <h1 class="logo-text text-white">ISLAMIC INSIGHT</h1>
+                            <p class="logo-subtitle text-gray-300">Journal of Islamic Studies</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-300 mb-4">
+                        <strong>MAILING ADDRESS:</strong><br>
+                        Editor, Islamic Insight Journal of Islamic Studies, Darul Huda Islamic<br>
+                        University, Chemmad, P.B.NO. 3, Tirurangadi (PO), Malappuram (Dt.),<br>
+                        676306 (PIN), Kerala, India.<br><br>
+                        Email: islamicinsight@dhiu.in<br><br>
+                        Website: www.islamicinsight.in
+                    </p>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Quick Links</h3>
+                    <ul class="space-y-2">
+                        <li><a href="index.html" class="text-gray-300 hover:text-white transition-colors">Home</a></li>
+                        <li><a href="index.html#about" class="text-gray-300 hover:text-white transition-colors">About Journal</a></li>
+                        <li><a href="editors.html" class="text-gray-300 hover:text-white transition-colors">Editorial Board</a></li>
+                        <li><a href="index.html#contact" class="text-gray-300 hover:text-white transition-colors">Contact Us</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Connect</h3>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-300 hover:text-white transition-colors">
+                            <i class="fab fa-twitter text-xl"></i>
+                        </a>
+                        <a href="#" class="text-gray-300 hover:text-white transition-colors">
+                            <i class="fab fa-facebook text-xl"></i>
+                        </a>
+                        <a href="#" class="text-gray-300 hover:text-white transition-colors">
+                            <i class="fab fa-linkedin text-xl"></i>
+                        </a>
+                        <a href="#" class="text-gray-300 hover:text-white transition-colors">
+                            <i class="fas fa-envelope text-xl"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-300">
+                <p>&copy; 2024 Islamic Insight Journal. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Configuration - Replace with your Google Sheets CSV URL
+        const GOOGLE_SHEETS_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRT08HjWKTuHMhscLgxLfKNczBPT8qVo7gV_K6GOZgZQRDsrZ29R1rrY5hJte-d3n5amabMnyJ7s380/pub?gid=0&single=true&output=csv';
+
+        // Mobile menu toggle
+        document.getElementById('mobile-menu-btn').addEventListener('click', function() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                    // Close mobile menu if open
+                    document.getElementById('mobile-menu').classList.add('hidden');
+                }
+            });
+        });
+
+        // Function to parse CSV data
+        function parseCSV(text) {
+            const lines = text.split('\n');
+            const result = [];
+            
+            for (let i = 0; i < lines.length; i++) {
+                const line = lines[i].trim();
+                if (line) {
+                    // Simple CSV parsing - handles quoted fields
+                    const fields = [];
+                    let current = '';
+                    let inQuotes = false;
+                    
+                    for (let j = 0; j < line.length; j++) {
+                        const char = line[j];
+                        if (char === '"') {
+                            inQuotes = !inQuotes;
+                        } else if (char === ',' && !inQuotes) {
+                            fields.push(current.trim());
+                            current = '';
+                        } else {
+                            current += char;
+                        }
+                    }
+                    fields.push(current.trim());
+                    
+                    if (fields.length >= 4) {
+                        result.push({
+                            section: fields[0].replace(/"/g, ''),
+                            name: fields[1].replace(/"/g, ''),
+                            title: fields[2].replace(/"/g, ''),
+                            email: fields[3].replace(/"/g, '')
+                        });
+                    }
+                }
+            }
+            return result;
+        }
+
+        // Function to group data by section
+        function groupBySection(data) {
+            const grouped = {};
+            data.forEach(item => {
+                if (!grouped[item.section]) {
+                    grouped[item.section] = [];
+                }
+                grouped[item.section].push(item);
+            });
+            return grouped;
+        }
+
+        // Function to determine grid layout based on section and count
+        function getGridLayout(section, count) {
+            // Editor-in-Chief and Associate Editor usually have fewer people
+            if (section === 'Editor-in-Chief' || section === 'Associate Editor' || section === 'Language Editor') {
+                return 'grid-cols-1 md:grid-cols-1';
+            }
+            // Book Review Editors might have 2 people
+            else if (section === 'Book Review Editors') {
+                return 'grid-cols-1 md:grid-cols-2';
+            }
+            // International Advisory Board and Editorial Board can have many people
+            else {
+                return 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3';
+            }
+        }
+
+        // Function to generate HTML for editorial team
+        function generateEditorialHTML(data) {
+            const grouped = groupBySection(data);
+            let html = '';
+
+            // Define the order of sections
+            const sectionOrder = [
+                'Editor-in-Chief',
+                'Associate Editor',
+                'International Advisory Board',
+                'Editorial Board',
+                'Language Editor',
+                'Book Review Editors'
+            ];
+
+            sectionOrder.forEach(sectionName => {
+                if (grouped[sectionName]) {
+                    const sectionData = grouped[sectionName];
+                    const gridLayout = getGridLayout(sectionName, sectionData.length);
+                    
+                    html += `
+                        <div class="mb-16">
+                            <h3 class="text-2xl font-bold text-gray-800 section-title">${sectionName}</h3>
+                            <div class="grid ${gridLayout} gap-6">
+                    `;
+
+                    sectionData.forEach(person => {
+                        html += `
+                            <div class="editorial-card bg-gray-50 rounded-lg shadow-sm border border-gray-200 p-6">
+                                <div class="flex items-start space-x-4">
+                                    <div class="flex-shrink-0">
+                                    </div>
+                                    <div class="flex-1">
+                                        <p class="text-black-600 text-base mb-2 font-semibold">${person.name}</p>
+                                        <p class="text-gray-700 text-sm">${person.title}</p>
+                                        <p class="text-gray-700 text-sm"><i>${person.email}</i></p>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    });
+
+                    html += `
+                            </div>
+                        </div>
+                    `;
+                }
+            });
+
+            // Add any additional sections not in the predefined order
+            Object.keys(grouped).forEach(sectionName => {
+                if (!sectionOrder.includes(sectionName)) {
+                    const sectionData = grouped[sectionName];
+                    const gridLayout = getGridLayout(sectionName, sectionData.length);
+                    
+                    html += `
+                        <div class="mb-16">
+                            <h3 class="text-2xl font-bold text-gray-800 section-title">${sectionName}</h3>
+                            <div class="grid ${gridLayout} gap-6">
+                    `;
+
+                    sectionData.forEach(person => {
+                        html += `
+                            <div class="editorial-card bg-gray-50 rounded-lg shadow-sm border border-gray-200 p-6">
+                                <div class="flex items-start space-x-4">
+                                    <div class="flex-shrink-0">
+                                    </div>
+                                    <div class="flex-1">
+                                        <p class="text-black-600 text-base mb-2 font-semibold">${person.name}</p>
+                                        <p class="text-gray-700 text-sm">${person.title}</p>
+                                        <p class="text-gray-700 text-sm"><i>${person.email}</i></p>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    });
+
+                    html += `
+                            </div>
+                        </div>
+                    `;
+                }
+            });
+
+            return html;
+        }
+
+        // Function to show loading indicator
+        function showLoading() {
+            document.getElementById('loading-indicator').classList.remove('hidden');
+            document.getElementById('error-container').classList.add('hidden');
+        }
+
+        // Function to hide loading indicator
+        function hideLoading() {
+            document.getElementById('loading-indicator').classList.add('hidden');
+        }
+
+        // Function to show error message
+        function showError(message) {
+            document.getElementById('error-text').textContent = message;
+            document.getElementById('error-container').classList.remove('hidden');
+            hideLoading();
+        }
+
+        // Function to load data from Google Sheets
+        async function loadEditorialData() {
+            if (!GOOGLE_SHEETS_CSV_URL || GOOGLE_SHEETS_CSV_URL === 'YOUR_GOOGLE_SHEETS_CSV_URL_HERE') {
+                showError('Google Sheets URL not configured. Please update the GOOGLE_SHEETS_CSV_URL variable in the script.');
+                return;
+            }
+
+            showLoading();
+            
+            try {
+                const response = await fetch(GOOGLE_SHEETS_CSV_URL);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const csvText = await response.text();
+                const data = parseCSV(csvText);
+                
+                if (data.length === 0) {
+                    throw new Error('No data found in the Google Sheet or incorrect format.');
+                }
+                
+                const html = generateEditorialHTML(data);
+                document.getElementById('editorial-content').innerHTML = html;
+                hideLoading();
+                
+            } catch (error) {
+                console.error('Error loading editorial data:', error);
+                showError(`Failed to load data: ${error.message}`);
+            }
+        }
+
+        // Load data when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            loadEditorialData();
+        });
+
+        // Optional: Refresh data every 5 minutes
+        setInterval(loadEditorialData, 5 * 60 * 1000);
+    </script>
+</body>
+</html>

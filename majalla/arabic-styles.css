@@ -1,0 +1,499 @@
+/* Professional Arabic Journal Styling */
+
+/* Import Professional Arabic Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&family=Scheherazade+New:wght@400;500;600;700&family=Lateef:wght@200;300;400;600;700;800&display=swap');
+
+/* Arabic Font Stack - Professional Journal Quality */
+.arabic-text, .arabic-content {
+    font-family: 'Amiri', 'Scheherazade New', 'Lateef', 'Traditional Arabic', 'Geeza Pro', 'Al Bayan', serif;
+    direction: rtl;
+    text-align: right;
+    line-height: 2.2;
+    font-size: 1.15em;
+    font-weight: 400;
+    word-spacing: 0.1em;
+    letter-spacing: 0;
+}
+
+/* English Content - Professional Journal Styling */
+.english-text, .english-content {
+    font-family: 'Crimson Text', 'Times New Roman', 'Georgia', serif;
+    direction: ltr;
+    text-align: left;
+    line-height: 1.8;
+    font-size: 1.05em;
+    font-weight: 400;
+}
+
+/* Main Article Container Detection */
+.arabic-article {
+    direction: rtl;
+    text-align: right;
+}
+
+.english-article {
+    direction: ltr;
+    text-align: left;
+}
+
+/* ARABIC SPECIFIC STYLES */
+
+/* Arabic Article Title */
+.arabic-article .article-title,
+.arabic-article #article-title {
+    font-family: 'Amiri', 'Scheherazade New', serif;
+    font-weight: 700;
+    font-size: 2.5rem;
+    line-height: 1.5;
+    text-align: center;
+    margin-bottom: 2.5rem;
+    color: #1a202c;
+    direction: rtl;
+}
+
+/* Arabic Main Headers */
+.arabic-article .academic-title {
+    font-family: 'Amiri', 'Scheherazade New', serif;
+    font-weight: 700;
+}
+
+/* Arabic Article Content */
+.arabic-article .article-content {
+    direction: rtl;
+    text-align: right;
+}
+
+.arabic-article .article-content p {
+    font-family: 'Amiri', serif;
+    text-align: justify;
+    line-height: 2.2;
+    font-size: 0.9em;
+    margin-bottom: 1.5rem;
+    direction: rtl;
+    word-spacing: 0.1em;
+}
+
+.arabic-article .article-content h1,
+.arabic-article .article-content h2,
+.arabic-article .article-content h3 {
+    font-family: 'Amiri', 'Scheherazade New', serif;
+    font-weight: 700;
+    text-align: right;
+    direction: rtl;
+    margin: 2.5rem 0 1.5rem 0;
+}
+
+.arabic-article .article-content h1 {
+    font-size: 2.2rem;
+    color: #1a202c;
+    /* REMOVED: border-bottom line */
+    padding-bottom: 0.75rem;
+}
+
+.arabic-article .article-content h2 {
+    font-size: 1.8rem;
+    color: #2d3748;
+    /* REMOVED: border-bottom line */
+    padding-bottom: 0.5rem;
+}
+
+.arabic-article .article-content h3 {
+    font-size: 1.4rem;
+    color: #4a5568;
+}
+
+/* Arabic Abstract - REDUCED FONT SIZE */
+.arabic-article #abstract-content {
+    font-family: 'Amiri', serif;
+    text-align: justify;
+    line-height: 1.8;
+    font-size: 0.95em; /* REDUCED from 1.05em */
+    direction: rtl;
+    border: none !important;
+}
+
+/* Arabic Author Information */
+.arabic-article .author-info {
+    direction: rtl;
+    text-align: right;
+}
+
+.arabic-article .author-info h3 {
+    font-family: 'Amiri', serif;
+    font-weight: 700;
+    text-align: right;
+}
+
+.arabic-article #author-container {
+    direction: rtl;
+    text-align: right;
+}
+
+.arabic-article #author-container p {
+    font-family: 'Amiri', serif;
+    text-align: right;
+}
+
+/* Arabic Metadata - FORCE LTR ALIGNMENT */
+.arabic-article .article-metadata {
+    direction: ltr !important; /* CHANGED: Force LTR */
+    text-align: left !important; /* CHANGED: Force left alignment */
+}
+
+.arabic-article .article-metadata .grid {
+    direction: ltr !important; /* CHANGED: Force LTR */
+}
+
+.arabic-article .article-metadata .font-semibold {
+    font-family: 'Amiri', serif;
+    font-weight: 700;
+}
+
+/* Arabic Keywords */
+.arabic-article .keywords {
+    direction: rtl;
+    justify-content: flex-end;
+}
+
+.arabic-article .keyword-tag {
+    font-family: 'Amiri', serif;
+    direction: rtl;
+}
+
+/* Arabic Special Text Blocks */
+.arabic-article .quranic-verse {
+    font-family: 'Amiri', serif;
+    font-size: 1.4em;
+    font-weight: 500;
+    text-align: center;
+    line-height: 2.5;
+    background: #fff9e6;
+    border-right: 5px solid #d4af37;
+    border-left: none;
+    padding: 2rem;
+    margin: 2rem 0;
+    border-radius: 0 12px 12px 0;
+    direction: rtl;
+}
+
+.arabic-article .quranic-verse::before {
+    content: "﴿";
+    font-size: 1.2em;
+    color: #d4af37;
+    margin-left: 0.5rem;
+}
+
+.arabic-article .quranic-verse::after {
+    content: "﴾";
+    font-size: 1.2em;
+    color: #d4af37;
+    margin-right: 0.5rem;
+}
+
+.arabic-article .hadith-quote {
+    font-family: 'Amiri', serif;
+    font-size: 1.25em;
+    text-align: justify;
+    line-height: 2.3;
+    background: #f0f8f0;
+    border-right: 5px solid #2e8b57;
+    border-left: none;
+    padding: 2rem;
+    margin: 2rem 0;
+    border-radius: 0 12px 12px 0;
+    direction: rtl;
+}
+
+.arabic-article .citation-box {
+    direction: rtl;
+    text-align: right;
+    border-right: 4px solid #4299e1;
+    border-left: none;
+    font-family: 'Amiri', serif;
+    border-radius: 0 8px 8px 0;
+}
+
+/* Arabic Lists */
+.arabic-article ol,
+.arabic-article ul {
+    margin-right: 2rem;
+    margin-left: 0;
+    direction: rtl;
+}
+
+.arabic-article .article-content li {
+    font-family: 'Amiri', serif;
+    margin-bottom: 0.75rem;
+    text-align: right;
+    line-height: 2;
+}
+
+/* ENGLISH SPECIFIC STYLES */
+
+/* English Article Title */
+.english-article .article-title,
+.english-article #article-title {
+    font-family: 'Crimson Text', 'Times New Roman', serif;
+    font-weight: 600;
+    font-size: 2rem !important;
+    line-height: 1.3;
+    text-align: center;
+    margin-bottom: 2rem;
+    color: #1a202c;
+    direction: ltr;
+}
+
+/* English Main Headers */
+.english-article .academic-title {
+    font-family: 'Crimson Text', serif;
+    font-weight: 600;
+}
+
+/* English Article Content */
+.english-article .article-content {
+    direction: ltr;
+    text-align: left;
+}
+
+.english-article .article-content p {
+    font-family: 'Crimson Text', serif;
+    text-align: justify;
+    line-height: 1.8;
+    font-size: 1.05em;
+    margin-bottom: 1rem;
+    direction: ltr;
+}
+
+.english-article .article-content h1,
+.english-article .article-content h2,
+.english-article .article-content h3 {
+    font-family: 'Crimson Text', serif;
+    font-weight: 600;
+    text-align: left;
+    direction: ltr;
+}
+
+/* English Content Headers */
+.english-article .article-content h1 {
+    font-size: 2.2rem;
+    color: #1a202c;
+    margin-top: 2.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.english-article .article-content h2 {
+    font-size: 1.8rem;
+    color: #2d3748;
+    margin-top: 2.2rem;
+    margin-bottom: 1.2rem;
+}
+
+.english-article .article-content h3 {
+    font-size: 1.5rem;
+    color: #4a5568;
+    margin-top: 1.8rem;
+    margin-bottom: 1rem;
+}
+
+/* English Abstract - REDUCED FONT SIZE */
+.english-article #abstract-content {
+    font-family: 'Crimson Text', serif;
+    text-align: justify;
+    line-height: 1.8;
+    font-size: 0.95em; /* REDUCED from 1.05em */
+    direction: ltr;
+}
+
+/* English Author Information */
+.english-article .author-info {
+    direction: ltr;
+    text-align: left;
+}
+
+.english-article .author-info h3 {
+    font-family: 'Crimson Text', serif;
+    font-weight: 600;
+}
+
+.english-article #author-container {
+    direction: ltr;
+    text-align: left;
+}
+
+/* English Metadata */
+.english-article .article-metadata {
+    direction: ltr;
+    text-align: left;
+}
+
+.english-article .article-metadata .font-semibold {
+    font-family: 'Crimson Text', serif;
+    font-weight: 600;
+}
+
+/* English Keywords */
+.english-article .keywords {
+    direction: ltr;
+    justify-content: flex-start;
+}
+
+/* English Special Text Blocks */
+.english-article .quranic-verse {
+    font-family: 'Crimson Text', serif;
+    font-style: italic;
+    font-size: 1.1em;
+    text-align: center;
+    line-height: 1.8;
+    background: #fffbeb;
+    border-left: 4px solid #f59e0b;
+    border-right: none;
+    padding: 1.5rem;
+    margin: 1.5rem 0;
+    border-radius: 8px 0 0 8px;
+    direction: ltr;
+}
+
+.english-article .hadith-quote {
+    font-family: 'Crimson Text', serif;
+    font-style: italic;
+    font-size: 1.05em;
+    text-align: justify;
+    line-height: 1.8;
+    background: #f8fafc;
+    border-left: 4px solid #22c55e;
+    border-right: none;
+    padding: 1.5rem;
+    margin: 1.5rem 0;
+    border-radius: 8px 0 0 8px;
+    direction: ltr;
+}
+
+.english-article .citation-box {
+    direction: ltr;
+    text-align: left;
+    border-left: 4px solid #4299e1;
+    border-right: none;
+    font-family: 'Crimson Text', serif;
+    border-radius: 8px 0 0 8px;
+}
+
+/* GLOBAL MIXED CONTENT DETECTION */
+
+/* Auto-detect and style Arabic text within English articles */
+[lang="ar"], .arabic-text {
+    font-family: 'Amiri', 'Scheherazade New', serif !important;
+    direction: rtl !important;
+    text-align: right !important;
+    line-height: 2.2 !important;
+    font-size: 1.15em !important;
+}
+
+/* Auto-detect and style English text within Arabic articles */
+[lang="en"], .english-text {
+    font-family: 'Crimson Text', 'Times New Roman', serif !important;
+    direction: ltr !important;
+    text-align: left !important;
+    line-height: 1.8 !important;
+    font-size: 1.05em !important;
+}
+
+/* RESPONSIVE DESIGN */
+@media (max-width: 768px) {
+    .arabic-article .article-title,
+    .arabic-article #article-title {
+        font-size: 2rem;
+    }
+    
+    .english-article .article-title,
+    .english-article #article-title {
+        font-size: 2.2rem;
+    }
+
+    .english-article .article-content h1 {
+        font-size: 1.8rem;
+    }
+    
+    .english-article .article-content h2 {
+        font-size: 1.6rem;
+    }
+    
+    .english-article .article-content h3 {
+        font-size: 1.4rem;
+    }
+
+    .arabic-article .article-content p {
+        font-size: 1.1em;
+        line-height: 2;
+    }
+    
+    .english-article .article-content p {
+        font-size: 1rem;
+        line-height: 1.7;
+    }
+
+    /* REDUCED ABSTRACT SIZE FOR MOBILE */
+    .arabic-article #abstract-content,
+    .english-article #abstract-content {
+        font-size: 0.9em;
+    }
+
+    .arabic-article .quranic-verse,
+    .arabic-article .hadith-quote {
+        padding: 1rem;
+        font-size: 1.1em;
+    }
+    
+    .english-article .quranic-verse,
+    .english-article .hadith-quote {
+        padding: 1rem;
+        font-size: 1rem;
+    }
+}
+
+/* NAVIGATION AND UI ELEMENTS */
+/* Keep navigation and UI elements in their original direction */
+.logo-container,
+.pdf-controls,
+footer,
+nav,
+.search-container,
+.mobile-nav-container {
+    direction: ltr !important;
+}
+
+/* Ensure proper alignment for bidirectional content */
+.bidi-content {
+    unicode-bidi: embed;
+}
+
+/* Mixed content support */
+.mixed-content p {
+    unicode-bidi: plaintext;
+    text-align: start;
+}
+
+/* Print styles */
+@media print {
+    .arabic-article .article-content {
+        font-size: 12pt;
+        line-height: 2;
+    }
+    
+    .english-article .article-content {
+        font-size: 11pt;
+        line-height: 1.6;
+    }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .arabic-article .quranic-verse,
+    .english-article .quranic-verse {
+        border-width: 6px;
+    }
+    
+    .arabic-article .hadith-quote,
+    .english-article .hadith-quote {
+        border-width: 6px;
+    }
+}
