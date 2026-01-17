@@ -15,8 +15,6 @@
             --mainprimary: #7a38fc;
             --mainsecondary: #febf00;
             --mainwhite: #ffffff;
-            --shadesdark-5: #f3f3f3;
-            --shadesdark-10: #e7e7e7;
             --shadesdark-60: #6f6d6d;
             --shadessecondary-15: #fff5d9;
             --header-height: 82px;
@@ -70,18 +68,18 @@
             .banner-section::before { background-image: url('https://quaf2026.netlify.app/images/mobile-banner.png'); }
         }
 
-        /* --- ZIG ZAG SHOWCASE STYLES --- */
+        /* --- UNIFIED CARD STYLES --- */
         .showcase-container {
-            max-width: 1200px;
+            max-width: 1100px;
             margin: 0 auto;
-            padding: 4rem 1.5rem;
-            overflow: hidden; /* Prevent horizontal scrollbars from animations */
+            padding: 4rem 1rem;
+            overflow: hidden; 
         }
 
         .control-bar { margin-bottom: 3rem; }
         .btn-outline-dark { 
             display: inline-flex; align-items: center; padding: 0.6rem 1.25rem; 
-            border-radius: 50px; /* Matching the theme */
+            border-radius: 50px; 
             font-weight: 600; text-decoration: none; color: var(--maindark); 
             border: 1.5px solid var(--maindark); transition: 0.3s;
         }
@@ -90,53 +88,42 @@
         .section-title { font-family: 'ADLaM Display', cursive; font-size: 2.5rem; text-align: center; margin-bottom: 1rem; }
         .section-subtitle { text-align: center; color: var(--shadesdark-60); margin-bottom: 4rem; max-width: 600px; margin-left: auto; margin-right: auto; }
 
-        /* THE ROW WRAPPER */
-        .showcase-row {
+        /* THE UNIFIED CARD */
+        .unified-card {
             display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 3rem;
-            margin-bottom: 5rem; /* Space between rows */
-        }
-
-        /* Reverses the order for even rows (Right Video, Left Text) */
-        .showcase-row.reverse {
-            flex-direction: row-reverse;
-        }
-
-        /* THE VIDEO CONTAINER (Pill Shape) */
-        .video-box {
-            flex: 1;
-            position: relative;
-            border-radius: 50px; /* The requested 50% style (Pill) */
+            flex-direction: row; /* Always Row, even on mobile */
+            background-color: var(--shadessecondary-15);
+            border-radius: 50px; /* Strong Pill Shape */
             overflow: hidden;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.08);
+            margin-bottom: 4rem;
+            height: 400px; /* Fixed Height for Desktop */
             transition: transform 0.3s ease;
-            aspect-ratio: 16/9;
-            background: #000;
-        }
-        
-        .video-box:hover {
-            transform: scale(1.02);
-            box-shadow: 0 25px 50px rgba(122, 56, 252, 0.2);
         }
 
-        .video-box iframe {
+        .unified-card:hover { transform: translateY(-5px); }
+
+        /* 50% Width Split */
+        .card-half {
+            width: 50%;
+            height: 100%;
+            position: relative;
+        }
+
+        /* Video Styling */
+        .card-video iframe {
             width: 100%;
             height: 100%;
             border: none;
+            object-fit: cover;
         }
 
-        /* THE TEXT CONTAINER (Pill Shape Background) */
-        .text-box {
-            flex: 1;
-            background-color: var(--shadessecondary-15);
+        /* Text Styling */
+        .card-text {
             padding: 3rem;
-            border-radius: 50px; /* The requested 50% style */
             display: flex;
             flex-direction: column;
             justify-content: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
         }
 
         .video-date {
@@ -160,7 +147,12 @@
         .video-desc {
             color: var(--shadesdark-60);
             font-size: 1rem;
+            line-height: 1.5;
             margin-bottom: 1.5rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 4; /* Limit text lines if too long */
+            -webkit-box-orient: vertical;
+            overflow: hidden;
         }
 
         .action-link {
@@ -172,37 +164,47 @@
             align-items: center;
             gap: 8px;
         }
-        .action-link:hover { text-decoration: underline; }
+
+        /* --- MOBILE ADJUSTMENTS (Keep Side-by-Side) --- */
+        @media (max-width: 768px) {
+            .unified-card {
+                height: 220px; /* Smaller fixed height for mobile */
+                border-radius: 25px; /* Smaller radius for mobile scale */
+                margin-bottom: 2rem;
+            }
+            .card-text {
+                padding: 1rem; /* Much less padding */
+            }
+            .video-date {
+                font-size: 0.6rem;
+                margin-bottom: 0.25rem;
+            }
+            .video-heading {
+                font-size: 0.9rem; /* Much smaller font */
+                margin-bottom: 0.25rem;
+                line-height: 1.1;
+            }
+            .video-desc {
+                font-size: 0.65rem;
+                line-height: 1.3;
+                margin-bottom: 0.5rem;
+                -webkit-line-clamp: 4; 
+            }
+            .action-link {
+                font-size: 0.7rem;
+            }
+            .section-title { font-size: 1.8rem; }
+        }
 
         /* --- ANIMATIONS --- */
         .animate-on-scroll {
             opacity: 0;
-            transition: all 1s cubic-bezier(0.25, 0.46, 0.45, 0.94); /* Smooth easing */
+            transition: all 1s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
-
-        /* Slide In From Left */
-        .slide-left { transform: translateX(-100px); }
-        
-        /* Slide In From Right */
-        .slide-right { transform: translateX(100px); }
-
-        /* Active State (Triggered by JS) */
+        .slide-up { transform: translateY(50px); }
         .animate-on-scroll.active {
             opacity: 1;
-            transform: translateX(0);
-        }
-
-        /* Responsive */
-        @media (max-width: 900px) {
-            .showcase-row, .showcase-row.reverse {
-                flex-direction: column;
-                gap: 2rem;
-            }
-            .section-title { font-size: 1.8rem; }
-            .video-box, .text-box { width: 100%; border-radius: 30px; } /* Slightly smaller radius on mobile */
-            
-            /* Reset transforms on mobile to simply fade up for better UX */
-            .slide-left, .slide-right { transform: translateY(50px); }
+            transform: translateY(0);
         }
 
         .footer { background: linear-gradient(135deg, #0a0809 0%, #151522 100%); color: white; padding: 3rem 0; text-align: center; }
@@ -252,63 +254,59 @@
         <h2 class="section-title">Visual Journey</h2>
         <p class="section-subtitle">Experience the moments that define us. Scroll down to explore our exclusive video reports and event highlights.</p>
 
-        <div class="showcase-row">
-            <div class="video-box animate-on-scroll slide-left">
-                <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="Freshers Meet" allowfullscreen></iframe>
-            </div>
-            
-            <div class="text-box animate-on-scroll slide-right">
+        <div class="unified-card animate-on-scroll slide-up">
+            <div class="card-half card-text">
                 <div class="video-date">July 25, 2024</div>
                 <h3 class="video-heading">Freshers Meet Highlights</h3>
                 <p class="video-desc">
-                    Tarhib 1446 – A grand welcome for the newcomers. Witness the joy, the speeches, and the beginning of a new academic journey at Darul Huda Islamic University.
+                    Tarhib 1446 – A grand welcome for the newcomers. Witness the joy, the speeches, and the beginning of a new academic journey.
                 </p>
-                <a href="#" class="action-link">Watch Full Video <i class="fas fa-play-circle"></i></a>
+                <a href="#" class="action-link">Watch <i class="fas fa-play-circle"></i></a>
+            </div>
+            <div class="card-half card-video">
+                <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ?controls=0" title="Freshers Meet" allowfullscreen></iframe>
             </div>
         </div>
 
-        <div class="showcase-row reverse">
-            <div class="video-box animate-on-scroll slide-right">
-                <iframe src="https://www.youtube.com/embed/lxRwEPvL-mQ" title="Website Launch" allowfullscreen></iframe>
+        <div class="unified-card animate-on-scroll slide-up">
+            <div class="card-half card-video">
+                <iframe src="https://www.youtube.com/embed/lxRwEPvL-mQ?controls=0" title="Website Launch" allowfullscreen></iframe>
             </div>
-
-            <div class="text-box animate-on-scroll slide-left">
+            <div class="card-half card-text">
                 <div class="video-date">November 10, 2024</div>
                 <h3 class="video-heading">Historical Website Launch</h3>
                 <p class="video-desc">
-                    A milestone for QUAF. We became the first class union in Darul Hidaya history to launch an official website. Watch the unveiling by Usthad Junaid Hudawi.
+                    A milestone for QUAF. We became the first class union in Darul Hidaya history to launch an official website.
                 </p>
-                <a href="#" class="action-link">Watch Full Video <i class="fas fa-play-circle"></i></a>
+                <a href="#" class="action-link">Watch <i class="fas fa-play-circle"></i></a>
             </div>
         </div>
 
-        <div class="showcase-row">
-            <div class="video-box animate-on-scroll slide-left">
-                <iframe src="https://www.youtube.com/embed/5qap5aO4i9A" title="Malabart" allowfullscreen></iframe>
-            </div>
-            
-            <div class="text-box animate-on-scroll slide-right">
+        <div class="unified-card animate-on-scroll slide-up">
+            <div class="card-half card-text">
                 <div class="video-date">December 05, 2024</div>
                 <h3 class="video-heading">MALABART Arts Fest</h3>
                 <p class="video-desc">
-                    Celebrating the legacy of Malabar. From the logo launch to the stage performances, relive the excitement of our annual arts festival.
+                    Celebrating the legacy of Malabar. From the logo launch to the stage performances, relive the excitement.
                 </p>
-                <a href="#" class="action-link">Watch Full Video <i class="fas fa-play-circle"></i></a>
+                <a href="#" class="action-link">Watch <i class="fas fa-play-circle"></i></a>
+            </div>
+            <div class="card-half card-video">
+                <iframe src="https://www.youtube.com/embed/5qap5aO4i9A?controls=0" title="Malabart" allowfullscreen></iframe>
             </div>
         </div>
 
-        <div class="showcase-row reverse">
-            <div class="video-box animate-on-scroll slide-right">
-                <iframe src="https://www.youtube.com/embed/tgbNymZ7vqY" title="Career" allowfullscreen></iframe>
+        <div class="unified-card animate-on-scroll slide-up">
+            <div class="card-half card-video">
+                <iframe src="https://www.youtube.com/embed/tgbNymZ7vqY?controls=0" title="Career" allowfullscreen></iframe>
             </div>
-
-            <div class="text-box animate-on-scroll slide-left">
+            <div class="card-half card-text">
                 <div class="video-date">March 01, 2025</div>
                 <h3 class="video-heading">Career Development</h3>
                 <p class="video-desc">
                     Investing in our future. A look back at the intensive language and skills development camp held during the Ramadan vacation.
                 </p>
-                <a href="#" class="action-link">Watch Full Video <i class="fas fa-play-circle"></i></a>
+                <a href="#" class="action-link">Watch <i class="fas fa-play-circle"></i></a>
             </div>
         </div>
 
@@ -349,18 +347,17 @@
                 }
             });
 
-            // --- SCROLL ANIMATION LOGIC (Intersection Observer) ---
+            // --- SCROLL ANIMATION LOGIC ---
             const observerOptions = {
                 root: null,
                 rootMargin: '0px',
-                threshold: 0.2 // Trigger when 20% of the item is visible
+                threshold: 0.15
             };
 
             const observer = new IntersectionObserver((entries, observer) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
                         entry.target.classList.add('active');
-                        // Optional: Stop observing once loaded
                         observer.unobserve(entry.target); 
                     }
                 });
