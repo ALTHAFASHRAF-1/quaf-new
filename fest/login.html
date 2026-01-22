@@ -1,125 +1,257 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - QUAF</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <style>
-        :root { --primary: #7a38fc; --dark: #0f0b0c; }
-        body { font-family: 'Manrope', sans-serif; background: #f3f4f6; }
-        .hidden { display: none; }
-        .nav-shadow { box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        .tab-btn.active { border-bottom: 3px solid var(--primary); color: var(--primary); }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>QUAF Dashboard</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    :root { --primary:#7a38fc; --dark:#0f0b0c; }
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; background:#f3f4f6; }
+    .hidden{display:none;}
+    .nav-shadow{box-shadow:0 2px 10px rgba(0,0,0,0.08);}
+    .tab-btn.active{border-bottom:3px solid var(--primary); color:var(--primary);}
+  </style>
 </head>
+
 <body>
 
-    <div id="loginSection" class="min-h-screen flex items-center justify-center bg-black">
-        <div class="bg-white p-8 rounded-2xl w-full max-w-md">
-            <h2 class="text-2xl font-bold mb-6 text-center">QUAF LOGIN</h2>
-            <input type="text" id="uName" placeholder="User Name" class="w-full p-3 mb-4 border rounded">
-            <input type="password" id="uPswd" placeholder="Password" class="w-full p-3 mb-6 border rounded">
-            <button onclick="handleLogin()" id="loginBtn" class="w-full bg-purple-600 text-white p-3 rounded-lg font-bold">Login</button>
-            <p id="errMsg" class="text-red-500 mt-4 text-center text-sm"></p>
-        </div>
+  <!-- LOGIN -->
+  <div id="loginSection" class="min-h-screen flex items-center justify-center bg-black">
+    <div class="bg-white p-8 rounded-2xl w-full max-w-md">
+      <h2 class="text-2xl font-bold mb-6 text-center">QUAF LOGIN</h2>
+
+      <input type="text" id="uName" placeholder="User Name" class="w-full p-3 mb-4 border rounded">
+      <input type="password" id="uPswd" placeholder="Password" class="w-full p-3 mb-6 border rounded">
+
+      <button onclick="handleLogin()" id="loginBtn"
+        class="w-full bg-purple-600 hover:bg-purple-700 text-white p-3 rounded-lg font-bold">
+        Login
+      </button>
+
+      <p id="errMsg" class="text-red-500 mt-4 text-center text-sm"></p>
+
+      <p class="text-xs text-gray-400 mt-6 leading-relaxed">
+        Tip: make sure Apps Script Web App is deployed as <b>Anyone</b> access.
+      </p>
     </div>
+  </div>
 
-    <div id="dashboard" class="hidden">
-        <nav class="bg-white p-4 nav-shadow flex justify-between items-center sticky top-0">
-            <div class="flex items-center gap-2">
-                <span id="displayUser" class="font-bold text-purple-700"></span>
-                <span id="displayRole" class="text-xs bg-gray-200 px-2 py-1 rounded uppercase"></span>
-            </div>
-            <button onclick="logout()" class="text-red-500 font-bold border border-red-500 px-4 py-1 rounded-full hover:bg-red-50">Logout</button>
-        </nav>
+  <!-- DASHBOARD -->
+  <div id="dashboard" class="hidden">
+    <nav class="bg-white p-4 nav-shadow flex justify-between items-center sticky top-0">
+      <div class="flex items-center gap-2">
+        <span id="displayUser" class="font-bold text-purple-700"></span>
+        <span id="displayRole" class="text-xs bg-gray-200 px-2 py-1 rounded uppercase"></span>
+      </div>
+      <button onclick="logout()"
+        class="text-red-600 font-bold border border-red-400 px-4 py-1 rounded-full hover:bg-red-50">
+        Logout
+      </button>
+    </nav>
 
-        <div class="container mx-auto p-4">
-            <div class="flex gap-4 mb-6 overflow-x-auto pb-2">
-                <button onclick="showTab('programs')" class="tab-btn active px-4 py-2 font-semibold">Programs</button>
-                <button onclick="showTab('schedule')" class="tab-btn px-4 py-2 font-semibold">Schedule</button>
-                <button onclick="showTab('results')" class="tab-btn px-4 py-2 font-semibold">Results</button>
-            </div>
+    <div class="container mx-auto p-4">
+      <div class="flex gap-4 mb-4 overflow-x-auto pb-2">
+        <button class="tab-btn active px-4 py-2 font-semibold" onclick="showTab(event,'programs')">Programs</button>
+        <button class="tab-btn px-4 py-2 font-semibold" onclick="showTab(event,'schedule')">Schedule</button>
+        <button class="tab-btn px-4 py-2 font-semibold" onclick="showTab(event,'results')">Results</button>
+      </div>
 
-            <div id="contentBody" class="grid gap-4">
-                <div id="loadingData" class="text-center py-10">Loading your data...</div>
-                <div id="tableContainer" class="bg-white rounded-xl shadow overflow-hidden"></div>
-            </div>
+      <!-- Leader-only teammate filter -->
+      <div id="leaderTools" class="hidden mb-4">
+        <div class="bg-white rounded-xl shadow p-4 flex flex-col md:flex-row gap-3 md:items-center md:justify-between">
+          <div class="font-semibold text-gray-700">Leader View: Filter by teammate</div>
+          <div class="flex gap-2 items-center">
+            <select id="teammateSelect" class="border rounded px-3 py-2">
+              <option value="__all__">All Teammates</option>
+            </select>
+            <button onclick="applyTeammateFilter()" class="bg-purple-600 text-white px-4 py-2 rounded font-semibold">
+              Apply
+            </button>
+          </div>
         </div>
+      </div>
+
+      <div id="loadingData" class="text-center py-10 text-gray-600">Loading your data...</div>
+      <div id="tableContainer" class="bg-white rounded-xl shadow overflow-hidden"></div>
     </div>
+  </div>
 
 <script>
-    const SCRIPT_URL = "YOUR_DEPLOYED_APPS_SCRIPT_URL"; // PASTE YOUR URL HERE
-    let currentUser = null;
-    let storeData = null;
+  // 1) PASTE YOUR DEPLOYED WEB APP URL HERE
+  const SCRIPT_URL = "PASTE_YOUR_WEB_APP_URL_HERE";
 
-    async function handleLogin() {
-        const name = document.getElementById('uName').value;
-        const pswd = document.getElementById('uPswd').value;
-        const btn = document.getElementById('loginBtn');
-        
-        btn.innerText = "Checking...";
-        
-        try {
-            const resp = await fetch(`${SCRIPT_URL}?action=login&name=${encodeURIComponent(name)}&pswd=${encodeURIComponent(pswd)}`);
-            const result = await resp.json();
+  let currentUser = null;
+  let storeData = null;     // full data from server
+  let filteredUser = "__all__"; // leader filter
 
-            if (result.status === "success") {
-                currentUser = result.user;
-                initDashboard();
-            } else {
-                document.getElementById('errMsg').innerText = result.message;
-            }
-        } catch (e) {
-            document.getElementById('errMsg').innerText = "Connection error.";
-        }
-        btn.innerText = "Login";
+  async function handleLogin() {
+    const name = document.getElementById('uName').value.trim();
+    const pswd = document.getElementById('uPswd').value.trim();
+    const btn = document.getElementById('loginBtn');
+    const err = document.getElementById('errMsg');
+    err.innerText = "";
+
+    if (!name || !pswd) {
+      err.innerText = "Please enter User Name and Password.";
+      return;
     }
 
-    async function initDashboard() {
-        document.getElementById('loginSection').classList.add('hidden');
-        document.getElementById('dashboard').classList.remove('hidden');
-        document.getElementById('displayUser').innerText = currentUser.name;
-        document.getElementById('displayRole').innerText = currentUser.role;
+    btn.disabled = true;
+    btn.innerText = "Checking...";
 
-        // Fetch user data
-        const resp = await fetch(`${SCRIPT_URL}?action=getData&role=${currentUser.role}&name=${currentUser.name}&team=${currentUser.team}`);
-        storeData = await resp.json();
-        showTab('programs');
+    try {
+      const url = `${SCRIPT_URL}?action=login&name=${encodeURIComponent(name)}&pswd=${encodeURIComponent(pswd)}`;
+      const resp = await fetch(url);
+      const result = await resp.json();
+
+      if (result.status === "success") {
+        currentUser = result.user;
+        await initDashboard();
+      } else {
+        err.innerText = result.message || "Login failed.";
+      }
+    } catch (e) {
+      err.innerText = "Connection error. Check Web App deployment access.";
     }
 
-    function showTab(tabName) {
-        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        event?.target?.classList?.add('active');
+    btn.disabled = false;
+    btn.innerText = "Login";
+  }
 
-        const container = document.getElementById('tableContainer');
-        let html = `<table class="w-full text-left border-collapse">`;
-        
-        if (tabName === 'programs') {
-            html += `<tr class="bg-gray-100"><th class="p-3">Program</th><th class="p-3">Category</th>${currentUser.role==='leader'?'<th class="p-3">Teammate</th>':''}</tr>`;
-            storeData.programs.forEach(p => {
-                html += `<tr class="border-t"><td class="p-3 font-bold">${p.name}</td><td class="p-3">${p.cat}</td>${currentUser.role==='leader'?`<td class="p-3 text-blue-600">${p.user}</td>`:''}</tr>`;
-            });
-        } else if (tabName === 'schedule') {
-            html += `<tr class="bg-gray-100"><th class="p-3">Program</th><th class="p-3">Date/Time</th>${currentUser.role==='leader'?'<th class="p-3">Teammate</th>':''}</tr>`;
-            storeData.schedule.forEach(s => {
-                html += `<tr class="border-t"><td class="p-3">${s.name}</td><td class="p-3 text-sm">${s.date} | ${s.time}</td>${currentUser.role==='leader'?`<td class="p-3">${s.user}</td>`:''}</tr>`;
-            });
-        } else if (tabName === 'results') {
-            html += `<tr class="bg-gray-100"><th class="p-3">Program</th><th class="p-3">Result</th>${currentUser.role==='leader'?'<th class="p-3">Teammate</th>':''}</tr>`;
-            storeData.results.forEach(r => {
-                html += `<tr class="border-t"><td class="p-3">${r.name}</td><td class="p-3"><span class="font-bold text-green-600">${r.pos}</span> (${r.grade})</td>${currentUser.role==='leader'?`<td class="p-3">${r.user}</td>`:''}</tr>`;
-            });
-        }
-        
-        html += `</table>`;
-        container.innerHTML = storeData[tabName].length ? html : `<div class="p-10 text-center text-gray-400">No data found</div>`;
-        document.getElementById('loadingData').classList.add('hidden');
+  async function initDashboard() {
+    document.getElementById('loginSection').classList.add('hidden');
+    document.getElementById('dashboard').classList.remove('hidden');
+
+    document.getElementById('displayUser').innerText = currentUser.name;
+    document.getElementById('displayRole').innerText = currentUser.role;
+
+    document.getElementById('loadingData').classList.remove('hidden');
+    document.getElementById('tableContainer').innerHTML = "";
+
+    // fetch user/team data
+    const url = `${SCRIPT_URL}?action=getData&role=${encodeURIComponent(currentUser.role)}&name=${encodeURIComponent(currentUser.name)}&team=${encodeURIComponent(currentUser.team)}`;
+    const resp = await fetch(url);
+    storeData = await resp.json();
+
+    // leader teammate dropdown
+    if (currentUser.role === "leader") {
+      document.getElementById("leaderTools").classList.remove("hidden");
+      const sel = document.getElementById("teammateSelect");
+      sel.innerHTML = `<option value="__all__">All Teammates</option>`;
+      (storeData.teammates || []).forEach(n => {
+        const opt = document.createElement("option");
+        opt.value = n;
+        opt.textContent = n;
+        sel.appendChild(opt);
+      });
+    } else {
+      document.getElementById("leaderTools").classList.add("hidden");
     }
 
-    function logout() {
-        location.reload();
+    showTab(null, 'programs');
+  }
+
+  function applyTeammateFilter() {
+    filteredUser = document.getElementById("teammateSelect").value;
+    // re-render current active tab
+    const active = document.querySelector(".tab-btn.active");
+    const tab = active ? active.textContent.toLowerCase() : "programs";
+    showTab(null, tab);
+  }
+
+  function showTab(ev, tabName) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    if (ev && ev.target) ev.target.classList.add('active');
+    else {
+      // keep current active if user calls internally; otherwise default highlight
+      const map = { programs:0, schedule:1, results:2 };
+      document.querySelectorAll('.tab-btn')[map[tabName]]?.classList.add('active');
     }
+
+    const container = document.getElementById('tableContainer');
+    const loading = document.getElementById('loadingData');
+
+    if (!storeData || !storeData[tabName]) {
+      container.innerHTML = `<div class="p-10 text-center text-gray-400">No data</div>`;
+      loading.classList.add('hidden');
+      return;
+    }
+
+    // leader filter by teammate
+    let rows = storeData[tabName];
+    if (currentUser.role === "leader" && filteredUser !== "__all__") {
+      rows = rows.filter(r => (r.user || "").toString() === filteredUser);
+    }
+
+    let html = `<table class="w-full text-left border-collapse">`;
+
+    if (tabName === 'programs') {
+      html += `<tr class="bg-gray-100">
+        <th class="p-3">Code</th>
+        <th class="p-3">Program</th>
+        <th class="p-3">Category</th>
+        ${currentUser.role==='leader' ? '<th class="p-3">Teammate</th>' : ''}
+      </tr>`;
+
+      rows.forEach(p => {
+        html += `<tr class="border-t">
+          <td class="p-3 text-sm text-gray-600">${p.code ?? ""}</td>
+          <td class="p-3 font-semibold">${p.name ?? ""}</td>
+          <td class="p-3">${p.cat ?? ""}</td>
+          ${currentUser.role==='leader' ? `<td class="p-3 text-blue-600">${p.user ?? ""}</td>` : ''}
+        </tr>`;
+      });
+
+    } else if (tabName === 'schedule') {
+      html += `<tr class="bg-gray-100">
+        <th class="p-3">Program</th>
+        <th class="p-3">Date</th>
+        <th class="p-3">Time</th>
+        ${currentUser.role==='leader' ? '<th class="p-3">Teammate</th>' : ''}
+      </tr>`;
+
+      rows.forEach(s => {
+        html += `<tr class="border-t">
+          <td class="p-3 font-semibold">${s.name ?? ""}</td>
+          <td class="p-3 text-sm">${s.date ?? ""}</td>
+          <td class="p-3 text-sm">${s.time ?? ""}</td>
+          ${currentUser.role==='leader' ? `<td class="p-3">${s.user ?? ""}</td>` : ''}
+        </tr>`;
+      });
+
+    } else if (tabName === 'results') {
+      html += `<tr class="bg-gray-100">
+        <th class="p-3">Program</th>
+        <th class="p-3">Position</th>
+        <th class="p-3">Grade</th>
+        <th class="p-3">Points</th>
+        ${currentUser.role==='leader' ? '<th class="p-3">Teammate</th>' : ''}
+      </tr>`;
+
+      rows.forEach(r => {
+        html += `<tr class="border-t">
+          <td class="p-3 font-semibold">${r.name ?? ""}</td>
+          <td class="p-3"><span class="font-bold text-green-600">${r.pos ?? ""}</span></td>
+          <td class="p-3">${r.grade ?? ""}</td>
+          <td class="p-3">${r.pts ?? ""}</td>
+          ${currentUser.role==='leader' ? `<td class="p-3 text-blue-600">${r.user ?? ""}</td>` : ''}
+        </tr>`;
+      });
+    }
+
+    html += `</table>`;
+
+    container.innerHTML = rows.length
+      ? html
+      : `<div class="p-10 text-center text-gray-400">No data found</div>`;
+
+    loading.classList.add('hidden');
+  }
+
+  function logout() {
+    location.reload();
+  }
 </script>
 </body>
 </html>
