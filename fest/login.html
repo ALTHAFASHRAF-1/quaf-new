@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - QUAF</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        body { background-color: #0f0b0c; font-family: 'Manrope', sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; }
+        .login-card { background: white; padding: 2.5rem; border-radius: 15px; width: 100%; max-width: 400px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
+        .btn-primary { background-color: #7a38fc; width: 100%; color: white; padding: 0.75rem; border-radius: 8px; font-weight: 700; margin-top: 1rem; }
+        .loading { display: none; color: #7a38fc; font-weight: bold; margin-top: 10px; text-align: center; }
+    </style>
+</head>
+<body>
+
+<div class="login-card">
+    <div class="text-center mb-6">
+        <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/logo3d-1.png" alt="Logo" class="w-16 mx-auto mb-2">
+        <h2 class="text-2xl font-bold text-gray-800">User Login</h2>
+    </div>
+
+    <form id="loginForm">
+        <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2">Name</label>
+            <input type="text" id="username" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" placeholder="Enter your name" required>
+        </div>
+        <div class="mb-6">
+            <label class="block text-gray-700 text-sm font-bold mb-2">Password</label>
+            <input type="password" id="password" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" placeholder="••••••••" required>
+        </div>
+        <button type="submit" class="btn-primary">Sign In</button>
+    </form>
+    
+    <div id="loader" class="loading">Verifying credentials...</div>
+    <div id="message" class="mt-4 text-center text-red-500 text-sm"></div>
+</div>
+
+<script>
+    // REPLACE THIS URL with your deployed Google Web App URL
+    const WEB_APP_URL = "YOUR_GOOGLE_SCRIPT_WEB_APP_URL_HERE";
+
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const name = document.getElementById('username').value;
+        const pswd = document.getElementById('password').value;
+        const loader = document.getElementById('loader');
+        const message = document.getElementById('message');
+
+        loader.style.display = 'block';
+        message.innerText = '';
+
+        fetch(WEB_APP_URL, {
+            method: 'POST',
+            mode: 'no-cors', // Needed for Apps Script
+            cache: 'no-cache',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name: name, pswd: pswd })
+        })
+        .then(() => {
+            // Because of no-cors, we can't easily read the JSON response. 
+            // Better approach: Use a Redirect or simple success message.
+            alert("Login Request Sent! (Note: Redirect logic works best with a GET request or advanced Apps Script setup)");
+            loader.style.display = 'none';
+        })
+        .catch(err => {
+            message.innerText = "Error connecting to server.";
+            loader.style.display = 'none';
+        });
+    });
+</script>
+
+</body>
+</html>
