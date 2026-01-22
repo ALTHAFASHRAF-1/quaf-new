@@ -3,15 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QUAF - Dashboard</title>
+    <title>QUAF - Competition Management System</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
     <style>
         :root { 
             --primary: #7a38fc; 
             --secondary: #9d5cff;
             --dark: #0f0b0c; 
             --light: #f8f9fa;
+            --admin: #10b981;
+            --leader: #3b82f6;
+            --member: #8b5cf6;
         }
         body { 
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -29,7 +33,7 @@
             box-shadow: 0 4px 12px rgba(122, 56, 252, 0.3);
         }
         .card {
-            background: rgba(255, 255, 255, 0.95);
+            background: rgba(255, 255, 255, 0.98);
             border-radius: 16px;
             box-shadow: 0 8px 32px rgba(0,0,0,0.1);
             backdrop-filter: blur(10px);
@@ -43,6 +47,21 @@
         .btn-primary:hover {
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(122, 56, 252, 0.4);
+        }
+        .btn-admin {
+            background: linear-gradient(135deg, var(--admin), #34d399);
+            color: white;
+        }
+        .btn-admin:hover {
+            background: linear-gradient(135deg, #0da271, #10b981);
+        }
+        .btn-leader {
+            background: linear-gradient(135deg, var(--leader), #60a5fa);
+            color: white;
+        }
+        .btn-member {
+            background: linear-gradient(135deg, var(--member), #a78bfa);
+            color: white;
         }
         .form-input {
             border: 2px solid #e2e8f0;
@@ -58,13 +77,61 @@
             font-size: 12px;
             font-weight: 600;
         }
+        .badge-admin {
+            background: linear-gradient(135deg, #a7f3d0, #6ee7b7);
+            color: #065f46;
+        }
         .badge-leader {
-            background: linear-gradient(135deg, #ff9a9e, #fad0c4);
-            color: #d50000;
+            background: linear-gradient(135deg, #bfdbfe, #93c5fd);
+            color: #1e40af;
         }
         .badge-member {
-            background: linear-gradient(135deg, #a1c4fd, #c2e9fb);
-            color: #01579b;
+            background: linear-gradient(135deg, #ddd6fe, #c4b5fd);
+            color: #5b21b6;
+        }
+        .dataTables_wrapper {
+            padding: 0 !important;
+        }
+        .dataTables_filter input {
+            border: 2px solid #e2e8f0 !important;
+            border-radius: 8px !important;
+            padding: 8px 12px !important;
+        }
+        .dataTables_length select {
+            border: 2px solid #e2e8f0 !important;
+            border-radius: 8px !important;
+            padding: 4px 8px !important;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            backdrop-filter: blur(4px);
+        }
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 0;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            animation: modalSlide 0.3s ease-out;
+        }
+        @keyframes modalSlide {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
         }
         .animate-pulse {
             animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
@@ -72,6 +139,34 @@
         @keyframes pulse {
             0%, 100% { opacity: 1; }
             50% { opacity: 0.5; }
+        }
+        .sidebar {
+            width: 260px;
+            transition: all 0.3s ease;
+        }
+        @media (max-width: 768px) {
+            .sidebar {
+                position: fixed;
+                left: -260px;
+                z-index: 100;
+                height: 100vh;
+            }
+            .sidebar.active {
+                left: 0;
+            }
+            .sidebar-overlay {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0,0,0,0.5);
+                z-index: 99;
+            }
+            .sidebar-overlay.active {
+                display: block;
+            }
         }
     </style>
 </head>
@@ -110,59 +205,148 @@
             <div class="mt-8 pt-6 border-t border-gray-200">
                 <p class="text-center text-gray-500 text-sm">
                     <i class="fas fa-info-circle mr-2"></i>
-                    Contact admin for login credentials
+                    Use your credentials to login
                 </p>
             </div>
         </div>
     </div>
 
-    <!-- Dashboard Section -->
+    <!-- Dashboard Container -->
     <div id="dashboard" class="hidden min-h-screen">
-        <!-- Navigation -->
-        <nav class="nav-shadow bg-white/80 p-4 flex justify-between items-center sticky top-0 z-50">
-            <div class="flex items-center gap-3">
-                <div class="flex items-center gap-2">
+        <!-- Sidebar Overlay for Mobile -->
+        <div id="sidebarOverlay" class="sidebar-overlay" onclick="toggleSidebar()"></div>
+        
+        <!-- Sidebar -->
+        <div id="sidebar" class="sidebar bg-white border-r border-gray-200 fixed top-0 left-0 h-full shadow-lg">
+            <div class="p-6 border-b border-gray-100">
+                <div class="flex items-center gap-3 mb-6">
                     <div class="p-2 rounded-lg bg-gradient-to-r from-purple-100 to-indigo-100">
                         <i class="fas fa-trophy text-purple-600"></i>
                     </div>
                     <div>
-                        <span id="displayUser" class="font-bold text-gray-800 block"></span>
-                        <span id="displayRole" class="text-xs badge"></span>
+                        <h1 class="font-bold text-gray-800 text-lg">QUAF CMS</h1>
+                        <div class="flex items-center gap-2 mt-1">
+                            <span id="displayUser" class="text-sm font-medium text-gray-600"></span>
+                            <span id="displayRole" class="text-xs badge"></span>
+                        </div>
                     </div>
                 </div>
-                <span class="text-gray-400 mx-2">•</span>
-                <span id="displayTeam" class="text-sm text-gray-600 font-medium"></span>
+                <div class="text-sm text-gray-600 mb-2">
+                    <i class="fas fa-users mr-2"></i>
+                    <span id="displayTeam">Team: Loading...</span>
+                </div>
+                <button onclick="toggleSidebar()" class="md:hidden absolute top-4 right-4 text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
             </div>
-            <button onclick="logout()" 
-                    class="flex items-center gap-2 text-red-600 font-semibold border border-red-200 px-4 py-2 rounded-full hover:bg-red-50 transition-colors">
-                <i class="fas fa-sign-out-alt"></i>
-                Logout
-            </button>
-        </nav>
+            
+            <!-- Admin Navigation -->
+            <div id="adminNav" class="hidden p-4">
+                <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Admin Controls</h3>
+                <nav class="space-y-1">
+                    <a href="#" onclick="showAdminTab('users')" class="admin-tab-btn flex items-center gap-3 px-3 py-2 text-gray-700 hover:bg-purple-50 rounded-lg transition-colors">
+                        <i class="fas fa-users w-5"></i>
+                        <span>Users Management</span>
+                    </a>
+                    <a href="#" onclick="showAdminTab('programs')" class="admin-tab-btn flex items-center gap-3 px-3 py-2 text-gray-700 hover:bg-purple-50 rounded-lg transition-colors">
+                        <i class="fas fa-list-alt w-5"></i>
+                        <span>Programs</span>
+                    </a>
+                    <a href="#" onclick="showAdminTab('registration')" class="admin-tab-btn flex items-center gap-3 px-3 py-2 text-gray-700 hover:bg-purple-50 rounded-lg transition-colors">
+                        <i class="fas fa-clipboard-list w-5"></i>
+                        <span>Registration</span>
+                    </a>
+                    <a href="#" onclick="showAdminTab('schedule')" class="admin-tab-btn flex items-center gap-3 px-3 py-2 text-gray-700 hover:bg-purple-50 rounded-lg transition-colors">
+                        <i class="fas fa-calendar-alt w-5"></i>
+                        <span>Schedule</span>
+                    </a>
+                    <a href="#" onclick="showAdminTab('results')" class="admin-tab-btn flex items-center gap-3 px-3 py-2 text-gray-700 hover:bg-purple-50 rounded-lg transition-colors">
+                        <i class="fas fa-chart-line w-5"></i>
+                        <span>Results</span>
+                    </a>
+                </nav>
+            </div>
+            
+            <!-- Leader Navigation -->
+            <div id="leaderNav" class="hidden p-4">
+                <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Leader Dashboard</h3>
+                <nav class="space-y-1">
+                    <a href="#" onclick="showTab('team')" class="tab-btn flex items-center gap-3 px-3 py-2 text-gray-700 hover:bg-purple-50 rounded-lg transition-colors">
+                        <i class="fas fa-users w-5"></i>
+                        <span>Team Members</span>
+                    </a>
+                    <a href="#" onclick="showTab('programs')" class="tab-btn flex items-center gap-3 px-3 py-2 text-gray-700 hover:bg-purple-50 rounded-lg transition-colors">
+                        <i class="fas fa-list-alt w-5"></i>
+                        <span>Programs</span>
+                    </a>
+                    <a href="#" onclick="showTab('registration')" class="tab-btn flex items-center gap-3 px-3 py-2 text-gray-700 hover:bg-purple-50 rounded-lg transition-colors">
+                        <i class="fas fa-user-plus w-5"></i>
+                        <span>Registration</span>
+                    </a>
+                    <a href="#" onclick="showTab('schedule')" class="tab-btn flex items-center gap-3 px-3 py-2 text-gray-700 hover:bg-purple-50 rounded-lg transition-colors">
+                        <i class="fas fa-calendar-alt w-5"></i>
+                        <span>Schedule</span>
+                    </a>
+                    <a href="#" onclick="showTab('results')" class="tab-btn flex items-center gap-3 px-3 py-2 text-gray-700 hover:bg-purple-50 rounded-lg transition-colors">
+                        <i class="fas fa-trophy w-5"></i>
+                        <span>Results</span>
+                    </a>
+                </nav>
+            </div>
+            
+            <!-- Member Navigation -->
+            <div id="memberNav" class="hidden p-4">
+                <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Dashboard</h3>
+                <nav class="space-y-1">
+                    <a href="#" onclick="showTab('programs')" class="tab-btn flex items-center gap-3 px-3 py-2 text-gray-700 hover:bg-purple-50 rounded-lg transition-colors">
+                        <i class="fas fa-list-alt w-5"></i>
+                        <span>Programs</span>
+                    </a>
+                    <a href="#" onclick="showTab('schedule')" class="tab-btn flex items-center gap-3 px-3 py-2 text-gray-700 hover:bg-purple-50 rounded-lg transition-colors">
+                        <i class="fas fa-calendar-alt w-5"></i>
+                        <span>Schedule</span>
+                    </a>
+                    <a href="#" onclick="showTab('results')" class="tab-btn flex items-center gap-3 px-3 py-2 text-gray-700 hover:bg-purple-50 rounded-lg transition-colors">
+                        <i class="fas fa-trophy w-5"></i>
+                        <span>Results</span>
+                    </a>
+                </nav>
+            </div>
+            
+            <div class="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-200">
+                <button onclick="logout()" class="flex items-center justify-center gap-2 w-full text-red-600 font-semibold border border-red-200 px-4 py-3 rounded-lg hover:bg-red-50 transition-colors">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Logout
+                </button>
+            </div>
+        </div>
 
         <!-- Main Content -->
-        <div class="container mx-auto p-4 md:p-6">
-            <!-- Tabs -->
-            <div class="flex gap-2 mb-6 overflow-x-auto pb-4">
-                <button onclick="showTab('programs')" 
-                        class="tab-btn active px-5 py-3 font-semibold rounded-lg transition-all whitespace-nowrap">
-                    <i class="fas fa-list-alt mr-2"></i>
-                    Programs
-                </button>
-                <button onclick="showTab('schedule')" 
-                        class="tab-btn px-5 py-3 font-semibold rounded-lg transition-all whitespace-nowrap">
-                    <i class="fas fa-calendar-alt mr-2"></i>
-                    Schedule
-                </button>
-                <button onclick="showTab('results')" 
-                        class="tab-btn px-5 py-3 font-semibold rounded-lg transition-all whitespace-nowrap">
-                    <i class="fas fa-chart-line mr-2"></i>
-                    Results
-                </button>
-            </div>
+        <div class="md:ml-64">
+            <!-- Top Navigation -->
+            <nav class="nav-shadow bg-white p-4 flex justify-between items-center sticky top-0 z-50">
+                <div class="flex items-center gap-4">
+                    <button onclick="toggleSidebar()" class="md:hidden text-gray-600 hover:text-gray-800">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                    <h2 id="currentPage" class="text-xl font-bold text-gray-800">Dashboard</h2>
+                </div>
+                <div class="flex items-center gap-4">
+                    <div class="hidden md:flex items-center gap-2 bg-gray-50 px-3 py-2 rounded-full">
+                        <div class="w-8 h-8 rounded-full bg-gradient-to-r from-purple-100 to-indigo-100 flex items-center justify-center">
+                            <i class="fas fa-user text-purple-600 text-sm"></i>
+                        </div>
+                        <div>
+                            <div id="displayUserSmall" class="text-sm font-medium text-gray-700"></div>
+                            <div id="displayRoleSmall" class="text-xs text-gray-500"></div>
+                        </div>
+                    </div>
+                </div>
+            </nav>
 
             <!-- Content Area -->
-            <div id="contentBody">
+            <div class="p-4 md:p-6">
+                <!-- Loading State -->
                 <div id="loadingData" class="text-center py-16">
                     <div class="animate-pulse">
                         <i class="fas fa-spinner fa-spin text-4xl text-purple-500 mb-4"></i>
@@ -170,145 +354,463 @@
                     </div>
                 </div>
                 
-                <!-- Programs Tab Content -->
-                <div id="programsContent" class="hidden">
-                    <!-- Add Program Form (Leader only) -->
-                    <div id="addProgramForm" class="hidden mb-6">
-                        <div class="card p-6">
-                            <h3 class="text-lg font-bold text-gray-800 mb-4">
-                                <i class="fas fa-plus-circle mr-2 text-green-500"></i>
-                                Add Program for Team Member
-                            </h3>
-                            <div class="grid md:grid-cols-3 gap-4">
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-2">Team Member</label>
-                                    <select id="memberSelect" class="form-input w-full p-3 rounded-lg">
-                                        <option value="">Select Member</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-2">Program</label>
-                                    <select id="programSelect" class="form-input w-full p-3 rounded-lg">
-                                        <option value="">Select Program</option>
-                                    </select>
-                                </div>
-                                <div class="flex items-end">
-                                    <button onclick="addProgram()" 
-                                            class="btn-primary w-full p-3 rounded-lg font-semibold">
+                <!-- Admin Content -->
+                <div id="adminContent" class="hidden">
+                    <!-- Users Management -->
+                    <div id="usersContent" class="hidden">
+                        <div class="card mb-6">
+                            <div class="p-6 border-b border-gray-100">
+                                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                                    <div>
+                                        <h3 class="text-xl font-bold text-gray-800">
+                                            <i class="fas fa-users mr-2 text-green-500"></i>
+                                            Users Management
+                                        </h3>
+                                        <p class="text-gray-600 text-sm mt-1">Manage all system users</p>
+                                    </div>
+                                    <button onclick="showAddUserModal()" 
+                                            class="btn-admin px-4 py-3 rounded-lg font-semibold whitespace-nowrap">
                                         <i class="fas fa-plus mr-2"></i>
-                                        Add Program
+                                        Add New User
                                     </button>
                                 </div>
                             </div>
-                            <p id="addProgramMsg" class="mt-3 text-sm"></p>
+                            <div class="p-4">
+                                <table id="usersTable" class="display w-full">
+                                    <thead>
+                                        <tr>
+                                            <th>SL.No</th>
+                                            <th>Name</th>
+                                            <th>Role</th>
+                                            <th>Team</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- Users will be loaded via DataTable -->
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
 
-                    <!-- Programs Table -->
-                    <div class="card overflow-hidden">
-                        <div class="p-6 border-b border-gray-100">
-                            <h3 class="text-xl font-bold text-gray-800">
-                                <i class="fas fa-list-ol mr-2 text-purple-500"></i>
-                                Registered Programs
-                            </h3>
-                            <p class="text-gray-600 text-sm mt-1">
-                                <span id="programCount">0</span> programs found
-                            </p>
+                    <!-- Programs Management -->
+                    <div id="programsAdminContent" class="hidden">
+                        <div class="card mb-6">
+                            <div class="p-6 border-b border-gray-100">
+                                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                                    <div>
+                                        <h3 class="text-xl font-bold text-gray-800">
+                                            <i class="fas fa-list-alt mr-2 text-blue-500"></i>
+                                            Programs Management
+                                        </h3>
+                                        <p class="text-gray-600 text-sm mt-1">Manage competition programs</p>
+                                    </div>
+                                    <button onclick="showAddProgramModal()" 
+                                            class="btn-admin px-4 py-3 rounded-lg font-semibold whitespace-nowrap">
+                                        <i class="fas fa-plus mr-2"></i>
+                                        Add New Program
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="p-4">
+                                <table id="programsAdminTable" class="display w-full">
+                                    <thead>
+                                        <tr>
+                                            <th>Code</th>
+                                            <th>Program Name</th>
+                                            <th>Category</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- Programs will be loaded via DataTable -->
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
-                        <div class="overflow-x-auto">
-                            <table class="w-full">
-                                <thead class="bg-gray-50">
-                                    <tr>
-                                        <th class="p-4 text-left font-semibold text-gray-700">Program</th>
-                                        <th class="p-4 text-left font-semibold text-gray-700">Category</th>
-                                        <th id="programUserHeader" class="p-4 text-left font-semibold text-gray-700 hidden">Teammate</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="programsTableBody">
-                                    <!-- Programs will be loaded here -->
-                                </tbody>
-                            </table>
+                    </div>
+
+                    <!-- Registration Management -->
+                    <div id="registrationAdminContent" class="hidden">
+                        <div class="card mb-6">
+                            <div class="p-6 border-b border-gray-100">
+                                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                                    <div>
+                                        <h3 class="text-xl font-bold text-gray-800">
+                                            <i class="fas fa-clipboard-list mr-2 text-purple-500"></i>
+                                            Registration Management
+                                        </h3>
+                                        <p class="text-gray-600 text-sm mt-1">Manage all registrations</p>
+                                    </div>
+                                    <button onclick="showAddRegistrationModal()" 
+                                            class="btn-admin px-4 py-3 rounded-lg font-semibold whitespace-nowrap">
+                                        <i class="fas fa-plus mr-2"></i>
+                                        Add New Registration
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="p-4">
+                                <table id="registrationAdminTable" class="display w-full">
+                                    <thead>
+                                        <tr>
+                                            <th>Code</th>
+                                            <th>Program Name</th>
+                                            <th>Category</th>
+                                            <th>SL.No</th>
+                                            <th>Name</th>
+                                            <th>Team</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- Registrations will be loaded via DataTable -->
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
-                        <div id="noPrograms" class="hidden p-10 text-center">
-                            <i class="fas fa-clipboard-list text-4xl text-gray-300 mb-4"></i>
-                            <p class="text-gray-500">No programs registered yet</p>
+                    </div>
+
+                    <!-- Schedule Management -->
+                    <div id="scheduleAdminContent" class="hidden">
+                        <div class="card mb-6">
+                            <div class="p-6 border-b border-gray-100">
+                                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                                    <div>
+                                        <h3 class="text-xl font-bold text-gray-800">
+                                            <i class="fas fa-calendar-alt mr-2 text-yellow-500"></i>
+                                            Schedule Management
+                                        </h3>
+                                        <p class="text-gray-600 text-sm mt-1">Manage competition schedule</p>
+                                    </div>
+                                    <button onclick="showAddScheduleModal()" 
+                                            class="btn-admin px-4 py-3 rounded-lg font-semibold whitespace-nowrap">
+                                        <i class="fas fa-plus mr-2"></i>
+                                        Add New Schedule
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="p-4">
+                                <table id="scheduleAdminTable" class="display w-full">
+                                    <thead>
+                                        <tr>
+                                            <th>Code</th>
+                                            <th>Program Name</th>
+                                            <th>Category</th>
+                                            <th>SL.No</th>
+                                            <th>Name</th>
+                                            <th>Team</th>
+                                            <th>Date</th>
+                                            <th>Time</th>
+                                            <th>Venue</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- Schedule will be loaded via DataTable -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Results Management -->
+                    <div id="resultsAdminContent" class="hidden">
+                        <div class="card mb-6">
+                            <div class="p-6 border-b border-gray-100">
+                                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                                    <div>
+                                        <h3 class="text-xl font-bold text-gray-800">
+                                            <i class="fas fa-trophy mr-2 text-red-500"></i>
+                                            Results Management
+                                        </h3>
+                                        <p class="text-gray-600 text-sm mt-1">Manage competition results</p>
+                                    </div>
+                                    <button onclick="showAddResultModal()" 
+                                            class="btn-admin px-4 py-3 rounded-lg font-semibold whitespace-nowrap">
+                                        <i class="fas fa-plus mr-2"></i>
+                                        Add New Result
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="p-4">
+                                <table id="resultsAdminTable" class="display w-full">
+                                    <thead>
+                                        <tr>
+                                            <th>Code</th>
+                                            <th>Program Name</th>
+                                            <th>Category</th>
+                                            <th>SL.No</th>
+                                            <th>Name</th>
+                                            <th>Team</th>
+                                            <th>Position</th>
+                                            <th>Grade</th>
+                                            <th>Points</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- Results will be loaded via DataTable -->
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Schedule Tab Content -->
-                <div id="scheduleContent" class="hidden">
-                    <div class="card overflow-hidden">
-                        <div class="p-6 border-b border-gray-100">
-                            <h3 class="text-xl font-bold text-gray-800">
-                                <i class="fas fa-calendar mr-2 text-blue-500"></i>
-                                Competition Schedule
-                            </h3>
-                            <p class="text-gray-600 text-sm mt-1">
-                                <span id="scheduleCount">0</span> scheduled events
-                            </p>
+                <!-- Leader Content -->
+                <div id="leaderContent" class="hidden">
+                    <!-- Team Members -->
+                    <div id="teamContent" class="hidden">
+                        <div class="card mb-6">
+                            <div class="p-6 border-b border-gray-100">
+                                <h3 class="text-xl font-bold text-gray-800">
+                                    <i class="fas fa-users mr-2 text-blue-500"></i>
+                                    Team Members
+                                </h3>
+                                <p class="text-gray-600 text-sm mt-1">View your team members</p>
+                            </div>
+                            <div class="p-4">
+                                <table id="teamTable" class="w-full">
+                                    <thead class="bg-gray-50">
+                                        <tr>
+                                            <th class="p-3 text-left font-semibold text-gray-700">SL.No</th>
+                                            <th class="p-3 text-left font-semibold text-gray-700">Name</th>
+                                            <th class="p-3 text-left font-semibold text-gray-700">Role</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="teamTableBody">
+                                        <!-- Team members will be loaded here -->
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
-                        <div class="overflow-x-auto">
-                            <table class="w-full">
-                                <thead class="bg-gray-50">
-                                    <tr>
-                                        <th class="p-4 text-left font-semibold text-gray-700">Program</th>
-                                        <th class="p-4 text-left font-semibold text-gray-700">Date & Time</th>
-                                        <th class="p-4 text-left font-semibold text-gray-700">Venue</th>
-                                        <th id="scheduleUserHeader" class="p-4 text-left font-semibold text-gray-700 hidden">Teammate</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="scheduleTableBody">
-                                    <!-- Schedule will be loaded here -->
-                                </tbody>
-                            </table>
+                    </div>
+
+                    <!-- Programs for Leader -->
+                    <div id="programsLeaderContent" class="hidden">
+                        <div class="card mb-6">
+                            <div class="p-6 border-b border-gray-100">
+                                <h3 class="text-xl font-bold text-gray-800">
+                                    <i class="fas fa-list-alt mr-2 text-purple-500"></i>
+                                    All Programs
+                                </h3>
+                                <p class="text-gray-600 text-sm mt-1">View all available programs</p>
+                            </div>
+                            <div class="p-4">
+                                <table id="programsLeaderTable" class="w-full">
+                                    <thead class="bg-gray-50">
+                                        <tr>
+                                            <th class="p-3 text-left font-semibold text-gray-700">Code</th>
+                                            <th class="p-3 text-left font-semibold text-gray-700">Program Name</th>
+                                            <th class="p-3 text-left font-semibold text-gray-700">Category</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="programsLeaderTableBody">
+                                        <!-- Programs will be loaded here -->
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
-                        <div id="noSchedule" class="hidden p-10 text-center">
-                            <i class="fas fa-calendar-times text-4xl text-gray-300 mb-4"></i>
-                            <p class="text-gray-500">No schedule available yet</p>
+                    </div>
+
+                    <!-- Registration for Leader -->
+                    <div id="registrationLeaderContent" class="hidden">
+                        <div class="card mb-6">
+                            <div class="p-6 border-b border-gray-100">
+                                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                                    <div>
+                                        <h3 class="text-xl font-bold text-gray-800">
+                                            <i class="fas fa-clipboard-list mr-2 text-green-500"></i>
+                                            Team Registrations
+                                        </h3>
+                                        <p class="text-gray-600 text-sm mt-1">Manage team registrations</p>
+                                    </div>
+                                    <button onclick="showLeaderRegistrationModal()" 
+                                            class="btn-leader px-4 py-3 rounded-lg font-semibold whitespace-nowrap">
+                                        <i class="fas fa-plus mr-2"></i>
+                                        Add Registration
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="p-4">
+                                <table id="registrationLeaderTable" class="w-full">
+                                    <thead class="bg-gray-50">
+                                        <tr>
+                                            <th class="p-3 text-left font-semibold text-gray-700">Code</th>
+                                            <th class="p-3 text-left font-semibold text-gray-700">Program Name</th>
+                                            <th class="p-3 text-left font-semibold text-gray-700">Category</th>
+                                            <th class="p-3 text-left font-semibold text-gray-700">SL.No</th>
+                                            <th class="p-3 text-left font-semibold text-gray-700">Name</th>
+                                            <th class="p-3 text-left font-semibold text-gray-700">Team</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="registrationLeaderTableBody">
+                                        <!-- Registrations will be loaded here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Schedule for Leader -->
+                    <div id="scheduleLeaderContent" class="hidden">
+                        <div class="card mb-6">
+                            <div class="p-6 border-b border-gray-100">
+                                <h3 class="text-xl font-bold text-gray-800">
+                                    <i class="fas fa-calendar-alt mr-2 text-yellow-500"></i>
+                                    Team Schedule
+                                </h3>
+                                <p class="text-gray-600 text-sm mt-1">View team competition schedule</p>
+                            </div>
+                            <div class="p-4">
+                                <table id="scheduleLeaderTable" class="w-full">
+                                    <thead class="bg-gray-50">
+                                        <tr>
+                                            <th class="p-3 text-left font-semibold text-gray-700">Code</th>
+                                            <th class="p-3 text-left font-semibold text-gray-700">Program Name</th>
+                                            <th class="p-3 text-left font-semibold text-gray-700">Category</th>
+                                            <th class="p-3 text-left font-semibold text-gray-700">Name</th>
+                                            <th class="p-3 text-left font-semibold text-gray-700">Date</th>
+                                            <th class="p-3 text-left font-semibold text-gray-700">Time</th>
+                                            <th class="p-3 text-left font-semibold text-gray-700">Venue</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="scheduleLeaderTableBody">
+                                        <!-- Schedule will be loaded here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Results for Leader -->
+                    <div id="resultsLeaderContent" class="hidden">
+                        <div class="card mb-6">
+                            <div class="p-6 border-b border-gray-100">
+                                <h3 class="text-xl font-bold text-gray-800">
+                                    <i class="fas fa-trophy mr-2 text-red-500"></i>
+                                    Competition Results
+                                </h3>
+                                <p class="text-gray-600 text-sm mt-1">View competition results with team points</p>
+                            </div>
+                            <div class="p-4">
+                                <table id="resultsLeaderTable" class="w-full mb-6">
+                                    <thead class="bg-gray-50">
+                                        <tr>
+                                            <th class="p-3 text-left font-semibold text-gray-700">Code</th>
+                                            <th class="p-3 text-left font-semibold text-gray-700">Program Name</th>
+                                            <th class="p-3 text-left font-semibold text-gray-700">Category</th>
+                                            <th class="p-3 text-left font-semibold text-gray-700">Name</th>
+                                            <th class="p-3 text-left font-semibold text-gray-700">Position</th>
+                                            <th class="p-3 text-left font-semibold text-gray-700">Grade</th>
+                                            <th class="p-3 text-left font-semibold text-gray-700">Points</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="resultsLeaderTableBody">
+                                        <!-- Results will be loaded here -->
+                                    </tbody>
+                                </table>
+                                
+                                <!-- Team Points Summary -->
+                                <div class="mt-8">
+                                    <h4 class="text-lg font-bold text-gray-800 mb-4">
+                                        <i class="fas fa-chart-bar mr-2"></i>
+                                        Team Points Summary
+                                    </h4>
+                                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                                        <!-- Team points will be loaded here -->
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Results Tab Content -->
-                <div id="resultsContent" class="hidden">
-                    <div class="card overflow-hidden">
-                        <div class="p-6 border-b border-gray-100">
-                            <h3 class="text-xl font-bold text-gray-800">
-                                <i class="fas fa-trophy mr-2 text-yellow-500"></i>
-                                Competition Results
-                            </h3>
-                            <p class="text-gray-600 text-sm mt-1">
-                                <span id="resultsCount">0</span> results recorded
-                            </p>
+                <!-- Member Content -->
+                <div id="memberContent" class="hidden">
+                    <!-- Programs for Member -->
+                    <div id="programsMemberContent" class="hidden">
+                        <div class="card mb-6">
+                            <div class="p-6 border-b border-gray-100">
+                                <h3 class="text-xl font-bold text-gray-800">
+                                    <i class="fas fa-list-alt mr-2 text-purple-500"></i>
+                                    My Programs
+                                </h3>
+                                <p class="text-gray-600 text-sm mt-1">View your registered programs</p>
+                            </div>
+                            <div class="p-4">
+                                <table id="programsMemberTable" class="w-full">
+                                    <thead class="bg-gray-50">
+                                        <tr>
+                                            <th class="p-3 text-left font-semibold text-gray-700">Code</th>
+                                            <th class="p-3 text-left font-semibold text-gray-700">Program Name</th>
+                                            <th class="p-3 text-left font-semibold text-gray-700">Category</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="programsMemberTableBody">
+                                        <!-- Programs will be loaded here -->
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
-                        <div class="overflow-x-auto">
-                            <table class="w-full">
-                                <thead class="bg-gray-50">
-                                    <tr>
-                                        <th class="p-4 text-left font-semibold text-gray-700">Program</th>
-                                        <th class="p-4 text-left font-semibold text-gray-700">Result</th>
-                                        <th id="resultsUserHeader" class="p-4 text-left font-semibold text-gray-700 hidden">Teammate</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="resultsTableBody">
-                                    <!-- Results will be loaded here -->
-                                </tbody>
-                                <tfoot id="resultsFooter" class="hidden">
-                                    <tr class="bg-gradient-to-r from-green-50 to-emerald-50">
-                                        <td colspan="2" class="p-4 text-right font-bold text-gray-800">
-                                            Team Grand Total Points:
-                                        </td>
-                                        <td class="p-4 font-bold text-green-600 text-xl">
-                                            <span id="grandTotalPoints">0</span>
-                                        </td>
-                                    </tr>
-                                </tfoot>
-                            </table>
+                    </div>
+
+                    <!-- Schedule for Member -->
+                    <div id="scheduleMemberContent" class="hidden">
+                        <div class="card mb-6">
+                            <div class="p-6 border-b border-gray-100">
+                                <h3 class="text-xl font-bold text-gray-800">
+                                    <i class="fas fa-calendar-alt mr-2 text-yellow-500"></i>
+                                    My Schedule
+                                </h3>
+                                <p class="text-gray-600 text-sm mt-1">View your competition schedule</p>
+                            </div>
+                            <div class="p-4">
+                                <table id="scheduleMemberTable" class="w-full">
+                                    <thead class="bg-gray-50">
+                                        <tr>
+                                            <th class="p-3 text-left font-semibold text-gray-700">Program Name</th>
+                                            <th class="p-3 text-left font-semibold text-gray-700">Category</th>
+                                            <th class="p-3 text-left font-semibold text-gray-700">Date</th>
+                                            <th class="p-3 text-left font-semibold text-gray-700">Time</th>
+                                            <th class="p-3 text-left font-semibold text-gray-700">Venue</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="scheduleMemberTableBody">
+                                        <!-- Schedule will be loaded here -->
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
-                        <div id="noResults" class="hidden p-10 text-center">
-                            <i class="fas fa-chart-bar text-4xl text-gray-300 mb-4"></i>
-                            <p class="text-gray-500">No results available yet</p>
+                    </div>
+
+                    <!-- Results for Member -->
+                    <div id="resultsMemberContent" class="hidden">
+                        <div class="card mb-6">
+                            <div class="p-6 border-b border-gray-100">
+                                <h3 class="text-xl font-bold text-gray-800">
+                                    <i class="fas fa-trophy mr-2 text-red-500"></i>
+                                    My Results
+                                </h3>
+                                <p class="text-gray-600 text-sm mt-1">View your competition results</p>
+                            </div>
+                            <div class="p-4">
+                                <table id="resultsMemberTable" class="w-full">
+                                    <thead class="bg-gray-50">
+                                        <tr>
+                                            <th class="p-3 text-left font-semibold text-gray-700">Program Name</th>
+                                            <th class="p-3 text-left font-semibold text-gray-700">Category</th>
+                                            <th class="p-3 text-left font-semibold text-gray-700">Position</th>
+                                            <th class="p-3 text-left font-semibold text-gray-700">Grade</th>
+                                            <th class="p-3 text-left font-semibold text-gray-700">Points</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="resultsMemberTableBody">
+                                        <!-- Results will be loaded here -->
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -316,15 +818,380 @@
         </div>
     </div>
 
+    <!-- Modals -->
+    <!-- Add User Modal -->
+    <div id="addUserModal" class="modal">
+        <div class="modal-content">
+            <div class="p-6 border-b border-gray-200">
+                <h3 class="text-xl font-bold text-gray-800">Add New User</h3>
+                <button onclick="closeModal('addUserModal')" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="p-6">
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">SL.No</label>
+                        <input type="number" id="userSlNo" class="form-input w-full p-3 rounded-lg" placeholder="Enter serial number">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Name</label>
+                        <input type="text" id="userName" class="form-input w-full p-3 rounded-lg" placeholder="Enter full name">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Role</label>
+                        <select id="userRole" class="form-input w-full p-3 rounded-lg">
+                            <option value="admin">Admin</option>
+                            <option value="leader">Leader</option>
+                            <option value="member">Member</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Password</label>
+                        <input type="password" id="userPassword" class="form-input w-full p-3 rounded-lg" placeholder="Enter password">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Team</label>
+                        <input type="text" id="userTeam" class="form-input w-full p-3 rounded-lg" placeholder="Enter team name">
+                    </div>
+                </div>
+            </div>
+            <div class="p-6 border-t border-gray-200 flex justify-end gap-3">
+                <button onclick="closeModal('addUserModal')" class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50">
+                    Cancel
+                </button>
+                <button onclick="saveUser()" class="btn-admin px-4 py-2 rounded-lg font-semibold">
+                    Save User
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Program Modal -->
+    <div id="addProgramModal" class="modal">
+        <div class="modal-content">
+            <div class="p-6 border-b border-gray-200">
+                <h3 class="text-xl font-bold text-gray-800">Add New Program</h3>
+                <button onclick="closeModal('addProgramModal')" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="p-6">
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Code</label>
+                        <input type="text" id="programCode" class="form-input w-full p-3 rounded-lg" placeholder="Enter program code">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Program Name</label>
+                        <input type="text" id="programName" class="form-input w-full p-3 rounded-lg" placeholder="Enter program name">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Category</label>
+                        <input type="text" id="programCategory" class="form-input w-full p-3 rounded-lg" placeholder="Enter category">
+                    </div>
+                </div>
+            </div>
+            <div class="p-6 border-t border-gray-200 flex justify-end gap-3">
+                <button onclick="closeModal('addProgramModal')" class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50">
+                    Cancel
+                </button>
+                <button onclick="saveProgram()" class="btn-admin px-4 py-2 rounded-lg font-semibold">
+                    Save Program
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Registration Modal -->
+    <div id="addRegistrationModal" class="modal">
+        <div class="modal-content">
+            <div class="p-6 border-b border-gray-200">
+                <h3 class="text-xl font-bold text-gray-800">Add New Registration</h3>
+                <button onclick="closeModal('addRegistrationModal')" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="p-6">
+                <div class="space-y-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Code</label>
+                            <input type="text" id="regCode" class="form-input w-full p-3 rounded-lg" placeholder="Enter code">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Program Name</label>
+                            <input type="text" id="regProgramName" class="form-input w-full p-3 rounded-lg" placeholder="Enter program name">
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Category</label>
+                            <input type="text" id="regCategory" class="form-input w-full p-3 rounded-lg" placeholder="Enter category">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">SL.No</label>
+                            <input type="number" id="regSlNo" class="form-input w-full p-3 rounded-lg" placeholder="Enter SL.No">
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Name</label>
+                            <input type="text" id="regName" class="form-input w-full p-3 rounded-lg" placeholder="Enter name">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Team</label>
+                            <input type="text" id="regTeam" class="form-input w-full p-3 rounded-lg" placeholder="Enter team">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="p-6 border-t border-gray-200 flex justify-end gap-3">
+                <button onclick="closeModal('addRegistrationModal')" class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50">
+                    Cancel
+                </button>
+                <button onclick="saveRegistration()" class="btn-admin px-4 py-2 rounded-lg font-semibold">
+                    Save Registration
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Schedule Modal -->
+    <div id="addScheduleModal" class="modal">
+        <div class="modal-content">
+            <div class="p-6 border-b border-gray-200">
+                <h3 class="text-xl font-bold text-gray-800">Add New Schedule</h3>
+                <button onclick="closeModal('addScheduleModal')" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="p-6">
+                <div class="space-y-4">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Code</label>
+                            <input type="text" id="scheduleCode" class="form-input w-full p-3 rounded-lg">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Program Name</label>
+                            <input type="text" id="scheduleProgramName" class="form-input w-full p-3 rounded-lg">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Category</label>
+                            <input type="text" id="scheduleCategory" class="form-input w-full p-3 rounded-lg">
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">SL.No</label>
+                            <input type="number" id="scheduleSlNo" class="form-input w-full p-3 rounded-lg">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Name</label>
+                            <input type="text" id="scheduleName" class="form-input w-full p-3 rounded-lg">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Team</label>
+                            <input type="text" id="scheduleTeam" class="form-input w-full p-3 rounded-lg">
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Date</label>
+                            <input type="date" id="scheduleDate" class="form-input w-full p-3 rounded-lg">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Time</label>
+                            <input type="time" id="scheduleTime" class="form-input w-full p-3 rounded-lg">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Venue</label>
+                            <input type="text" id="scheduleVenue" class="form-input w-full p-3 rounded-lg">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="p-6 border-t border-gray-200 flex justify-end gap-3">
+                <button onclick="closeModal('addScheduleModal')" class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50">
+                    Cancel
+                </button>
+                <button onclick="saveSchedule()" class="btn-admin px-4 py-2 rounded-lg font-semibold">
+                    Save Schedule
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Result Modal -->
+    <div id="addResultModal" class="modal">
+        <div class="modal-content">
+            <div class="p-6 border-b border-gray-200">
+                <h3 class="text-xl font-bold text-gray-800">Add New Result</h3>
+                <button onclick="closeModal('addResultModal')" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="p-6">
+                <div class="space-y-4">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Code</label>
+                            <input type="text" id="resultCode" class="form-input w-full p-3 rounded-lg">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Program Name</label>
+                            <input type="text" id="resultProgramName" class="form-input w-full p-3 rounded-lg">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Category</label>
+                            <input type="text" id="resultCategory" class="form-input w-full p-3 rounded-lg">
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">SL.No</label>
+                            <input type="number" id="resultSlNo" class="form-input w-full p-3 rounded-lg">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Name</label>
+                            <input type="text" id="resultName" class="form-input w-full p-3 rounded-lg">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Team</label>
+                            <input type="text" id="resultTeam" class="form-input w-full p-3 rounded-lg">
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Position</label>
+                            <select id="resultPosition" class="form-input w-full p-3 rounded-lg">
+                                <option value="1st">1st</option>
+                                <option value="2nd">2nd</option>
+                                <option value="3rd">3rd</option>
+                                <option value="4th">4th</option>
+                                <option value="5th">5th</option>
+                                <option value="Participated">Participated</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Grade</label>
+                            <select id="resultGrade" class="form-input w-full p-3 rounded-lg">
+                                <option value="A+">A+</option>
+                                <option value="A">A</option>
+                                <option value="B+">B+</option>
+                                <option value="B">B</option>
+                                <option value="C">C</option>
+                                <option value="D">D</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Points</label>
+                            <input type="number" id="resultPoints" class="form-input w-full p-3 rounded-lg">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="p-6 border-t border-gray-200 flex justify-end gap-3">
+                <button onclick="closeModal('addResultModal')" class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50">
+                    Cancel
+                </button>
+                <button onclick="saveResult()" class="btn-admin px-4 py-2 rounded-lg font-semibold">
+                    Save Result
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Leader Registration Modal -->
+    <div id="leaderRegistrationModal" class="modal">
+        <div class="modal-content">
+            <div class="p-6 border-b border-gray-200">
+                <h3 class="text-xl font-bold text-gray-800">Register Team Member</h3>
+                <button onclick="closeModal('leaderRegistrationModal')" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="p-6">
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Select Team Member</label>
+                        <select id="leaderMemberSelect" class="form-input w-full p-3 rounded-lg">
+                            <option value="">Select Member</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Select Program</label>
+                        <select id="leaderProgramSelect" class="form-input w-full p-3 rounded-lg" onchange="autoFillProgramDetails()">
+                            <option value="">Select Program</option>
+                        </select>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4 p-4 bg-gray-50 rounded-lg">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Program Code</label>
+                            <input type="text" id="autoProgramCode" class="form-input w-full p-3 rounded-lg bg-white" readonly>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Category</label>
+                            <input type="text" id="autoProgramCategory" class="form-input w-full p-3 rounded-lg bg-white" readonly>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="p-6 border-t border-gray-200 flex justify-end gap-3">
+                <button onclick="closeModal('leaderRegistrationModal')" class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50">
+                    Cancel
+                </button>
+                <button onclick="saveLeaderRegistration()" class="btn-leader px-4 py-2 rounded-lg font-semibold">
+                    Register
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Modal -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <div class="p-6 border-b border-gray-200">
+                <h3 class="text-xl font-bold text-gray-800" id="editModalTitle">Edit Record</h3>
+                <button onclick="closeModal('editModal')" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="p-6">
+                <div id="editFormContent">
+                    <!-- Edit form will be loaded here -->
+                </div>
+            </div>
+            <div class="p-6 border-t border-gray-200 flex justify-end gap-3">
+                <button onclick="closeModal('editModal')" class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50">
+                    Cancel
+                </button>
+                <button onclick="updateRecord()" class="btn-admin px-4 py-2 rounded-lg font-semibold">
+                    Update
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script>
         // Configuration
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz1nMbQMlyQRIQq_-H2EHndyOhoJOcnQnSAECElkZLamHqFuMxJGH7ytRszW7tYj4Q/exec"; // Replace with your Web App URL
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzgxc2jRswG0OqphOnnufTb8nkVFHmgoJslyPyS3LLXTaiumC91BZiit_JoC1reCl4zkw/exec";
         
         // Global variables
         let currentUser = null;
-        let storeData = null;
+        let userDataTable = null;
+        let programsDataTable = null;
+        let registrationDataTable = null;
+        let scheduleDataTable = null;
+        let resultsDataTable = null;
         let availablePrograms = [];
         let teamMembers = [];
+        let allPrograms = [];
+        let currentEditType = null;
+        let currentEditId = null;
 
         // Login Handler
         async function handleLogin() {
@@ -375,363 +1242,1088 @@
             
             // Update user info
             document.getElementById('displayUser').innerText = currentUser.name;
+            document.getElementById('displayUserSmall').innerText = currentUser.name;
             document.getElementById('displayTeam').innerText = `Team: ${currentUser.team}`;
             
             // Update role badge
             const roleElement = document.getElementById('displayRole');
-            roleElement.innerText = currentUser.role.toUpperCase();
-            roleElement.classList.add(currentUser.role === 'leader' ? 'badge-leader' : 'badge-member');
+            const roleSmallElement = document.getElementById('displayRoleSmall');
             
-            // Load data
-            await loadDashboardData();
+            let roleClass = '';
+            let roleText = '';
             
-            // Show default tab
-            showTab('programs');
-        }
-
-        // Load all dashboard data
-        async function loadDashboardData() {
-            try {
-                // Load main data
-                const resp = await fetch(`${SCRIPT_URL}?action=getData&role=${currentUser.role}&name=${encodeURIComponent(currentUser.name)}&team=${encodeURIComponent(currentUser.team)}`);
-                storeData = await resp.json();
-                
-                // Load additional data for leader
-                if (currentUser.role === 'leader') {
-                    await loadLeaderData();
-                }
-            } catch (error) {
-                console.error('Error loading data:', error);
-                alert('Error loading dashboard data. Please refresh.');
+            switch(currentUser.role) {
+                case 'admin':
+                    roleClass = 'badge-admin';
+                    roleText = 'ADMIN';
+                    roleSmallElement.innerText = 'Administrator';
+                    break;
+                case 'leader':
+                    roleClass = 'badge-leader';
+                    roleText = 'LEADER';
+                    roleSmallElement.innerText = 'Team Leader';
+                    break;
+                case 'member':
+                    roleClass = 'badge-member';
+                    roleText = 'MEMBER';
+                    roleSmallElement.innerText = 'Team Member';
+                    break;
             }
-        }
-
-        // Load additional data for leader
-        async function loadLeaderData() {
-            try {
-                // Load available programs
-                const progResp = await fetch(`${SCRIPT_URL}?action=getProgramsList`);
-                const progData = await progResp.json();
-                if (progData.status === "success") {
-                    availablePrograms = progData.programs;
-                }
-                
-                // Load team members
-                const teamResp = await fetch(`${SCRIPT_URL}?action=getTeamMembers&team=${encodeURIComponent(currentUser.team)}`);
-                const teamData = await teamResp.json();
-                if (teamData.status === "success") {
-                    teamMembers = teamData.members;
-                }
-            } catch (error) {
-                console.error('Error loading leader data:', error);
-            }
-        }
-
-        // Tab Navigation
-        function showTab(tabName) {
-            // Update active tab button
-            document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            event.target.classList.add('active');
             
-            // Hide all content sections
-            ['programsContent', 'scheduleContent', 'resultsContent'].forEach(id => {
+            roleElement.innerText = roleText;
+            roleElement.className = 'badge ' + roleClass;
+            
+            // Show appropriate navigation
+            document.getElementById('adminNav').classList.add('hidden');
+            document.getElementById('leaderNav').classList.add('hidden');
+            document.getElementById('memberNav').classList.add('hidden');
+            document.getElementById('adminContent').classList.add('hidden');
+            document.getElementById('leaderContent').classList.add('hidden');
+            document.getElementById('memberContent').classList.add('hidden');
+            
+            // Load data based on role
+            if (currentUser.role === 'admin') {
+                document.getElementById('adminNav').classList.remove('hidden');
+                document.getElementById('adminContent').classList.remove('hidden');
+                showAdminTab('users');
+                await loadAdminData();
+            } else if (currentUser.role === 'leader') {
+                document.getElementById('leaderNav').classList.remove('hidden');
+                document.getElementById('leaderContent').classList.remove('hidden');
+                showTab('team');
+                await loadLeaderData();
+            } else if (currentUser.role === 'member') {
+                document.getElementById('memberNav').classList.remove('hidden');
+                document.getElementById('memberContent').classList.remove('hidden');
+                showTab('programs');
+                await loadMemberData();
+            }
+            
+            // Hide loading
+            document.getElementById('loadingData').classList.add('hidden');
+        }
+
+        // Toggle sidebar for mobile
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+        }
+
+        // Admin Tab Navigation
+        function showAdminTab(tabName) {
+            // Update page title
+            const titles = {
+                'users': 'Users Management',
+                'programs': 'Programs Management',
+                'registration': 'Registration Management',
+                'schedule': 'Schedule Management',
+                'results': 'Results Management'
+            };
+            document.getElementById('currentPage').innerText = titles[tabName] || 'Dashboard';
+            
+            // Hide all admin content
+            ['usersContent', 'programsAdminContent', 'registrationAdminContent', 'scheduleAdminContent', 'resultsAdminContent'].forEach(id => {
                 document.getElementById(id).classList.add('hidden');
             });
             
             // Show selected content
             document.getElementById(`${tabName}Content`).classList.remove('hidden');
             
-            // Render the content
-            renderTabContent(tabName);
+            // Update active nav link
+            document.querySelectorAll('.admin-tab-btn').forEach(btn => {
+                btn.classList.remove('bg-purple-50', 'text-purple-700');
+            });
+            event.target.classList.add('bg-purple-50', 'text-purple-700');
         }
 
-        // Render tab content
-        function renderTabContent(tabName) {
-            document.getElementById('loadingData').classList.add('hidden');
+        // Leader/Member Tab Navigation
+        function showTab(tabName) {
+            // Update page title
+            const titles = {
+                'team': 'Team Members',
+                'programs': 'Programs',
+                'registration': 'Registration',
+                'schedule': 'Schedule',
+                'results': 'Results'
+            };
+            document.getElementById('currentPage').innerText = titles[tabName] || 'Dashboard';
             
-            if (!storeData) return;
-            
-            switch(tabName) {
-                case 'programs':
-                    renderPrograms();
-                    break;
-                case 'schedule':
-                    renderSchedule();
-                    break;
-                case 'results':
-                    renderResults();
-                    break;
-            }
-        }
-
-        // Render Programs
-        function renderPrograms() {
-            const programs = storeData.programs || [];
-            const tableBody = document.getElementById('programsTableBody');
-            const noPrograms = document.getElementById('noPrograms');
-            const programCount = document.getElementById('programCount');
-            const programUserHeader = document.getElementById('programUserHeader');
-            
-            programCount.innerText = programs.length;
-            
-            // Show/hide teammate column for leader
             if (currentUser.role === 'leader') {
-                programUserHeader.classList.remove('hidden');
-            } else {
-                programUserHeader.classList.add('hidden');
+                // Hide all leader content
+                ['teamContent', 'programsLeaderContent', 'registrationLeaderContent', 'scheduleLeaderContent', 'resultsLeaderContent'].forEach(id => {
+                    document.getElementById(id).classList.add('hidden');
+                });
+                
+                // Show selected content
+                document.getElementById(`${tabName}LeaderContent`).classList.remove('hidden');
+            } else if (currentUser.role === 'member') {
+                // Hide all member content
+                ['programsMemberContent', 'scheduleMemberContent', 'resultsMemberContent'].forEach(id => {
+                    document.getElementById(id).classList.add('hidden');
+                });
+                
+                // Show selected content
+                document.getElementById(`${tabName}MemberContent`).classList.remove('hidden');
             }
             
-            if (programs.length === 0) {
-                tableBody.innerHTML = '';
-                noPrograms.classList.remove('hidden');
-                return;
+            // Update active nav link
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('bg-purple-50', 'text-purple-700');
+            });
+            event.target.classList.add('bg-purple-50', 'text-purple-700');
+        }
+
+        // Load Admin Data
+        async function loadAdminData() {
+            try {
+                // Load users data
+                const usersResp = await fetch(`${SCRIPT_URL}?action=getAllUsers`);
+                const usersData = await usersResp.json();
+                
+                if (usersData.status === "success") {
+                    initUsersTable(usersData.users);
+                }
+                
+                // Load programs data
+                const programsResp = await fetch(`${SCRIPT_URL}?action=getAllPrograms`);
+                const programsData = await programsResp.json();
+                
+                if (programsData.status === "success") {
+                    initProgramsTable(programsData.programs);
+                }
+                
+                // Load registration data
+                const regResp = await fetch(`${SCRIPT_URL}?action=getAllRegistration`);
+                const regData = await regResp.json();
+                
+                if (regData.status === "success") {
+                    initRegistrationTable(regData.registration);
+                }
+                
+                // Load schedule data
+                const scheduleResp = await fetch(`${SCRIPT_URL}?action=getAllSchedule`);
+                const scheduleData = await scheduleResp.json();
+                
+                if (scheduleData.status === "success") {
+                    initScheduleTable(scheduleData.schedule);
+                }
+                
+                // Load results data
+                const resultsResp = await fetch(`${SCRIPT_URL}?action=getAllResults`);
+                const resultsData = await resultsResp.json();
+                
+                if (resultsData.status === "success") {
+                    initResultsTable(resultsData.results);
+                }
+                
+            } catch (error) {
+                console.error('Error loading admin data:', error);
+                alert('Error loading dashboard data. Please refresh.');
+            }
+        }
+
+        // Load Leader Data
+        async function loadLeaderData() {
+            try {
+                // Load team members
+                const teamResp = await fetch(`${SCRIPT_URL}?action=getTeamMembers&team=${encodeURIComponent(currentUser.team)}`);
+                const teamData = await teamResp.json();
+                
+                if (teamData.status === "success") {
+                    teamMembers = teamData.members;
+                    renderTeamMembers();
+                }
+                
+                // Load all programs
+                const programsResp = await fetch(`${SCRIPT_URL}?action=getAllPrograms`);
+                const programsData = await programsResp.json();
+                
+                if (programsData.status === "success") {
+                    allPrograms = programsData.programs;
+                    renderAllPrograms();
+                }
+                
+                // Load team registration
+                const regResp = await fetch(`${SCRIPT_URL}?action=getTeamRegistration&team=${encodeURIComponent(currentUser.team)}`);
+                const regData = await regResp.json();
+                
+                if (regData.status === "success") {
+                    renderTeamRegistration(regData.registration);
+                }
+                
+                // Load team schedule
+                const scheduleResp = await fetch(`${SCRIPT_URL}?action=getTeamSchedule&team=${encodeURIComponent(currentUser.team)}`);
+                const scheduleData = await scheduleResp.json();
+                
+                if (scheduleData.status === "success") {
+                    renderTeamSchedule(scheduleData.schedule);
+                }
+                
+                // Load team results and points
+                const resultsResp = await fetch(`${SCRIPT_URL}?action=getTeamResultsWithPoints&team=${encodeURIComponent(currentUser.team)}`);
+                const resultsData = await resultsResp.json();
+                
+                if (resultsData.status === "success") {
+                    renderTeamResults(resultsData.results);
+                    renderTeamPoints(resultsData.teamPoints);
+                }
+                
+            } catch (error) {
+                console.error('Error loading leader data:', error);
+                alert('Error loading dashboard data. Please refresh.');
+            }
+        }
+
+        // Load Member Data
+        async function loadMemberData() {
+            try {
+                // Load member programs
+                const programsResp = await fetch(`${SCRIPT_URL}?action=getMemberPrograms&name=${encodeURIComponent(currentUser.name)}`);
+                const programsData = await programsResp.json();
+                
+                if (programsData.status === "success") {
+                    renderMemberPrograms(programsData.programs);
+                }
+                
+                // Load member schedule
+                const scheduleResp = await fetch(`${SCRIPT_URL}?action=getMemberSchedule&name=${encodeURIComponent(currentUser.name)}`);
+                const scheduleData = await scheduleResp.json();
+                
+                if (scheduleData.status === "success") {
+                    renderMemberSchedule(scheduleData.schedule);
+                }
+                
+                // Load member results
+                const resultsResp = await fetch(`${SCRIPT_URL}?action=getMemberResults&name=${encodeURIComponent(currentUser.name)}`);
+                const resultsData = await resultsResp.json();
+                
+                if (resultsData.status === "success") {
+                    renderMemberResults(resultsData.results);
+                }
+                
+            } catch (error) {
+                console.error('Error loading member data:', error);
+                alert('Error loading dashboard data. Please refresh.');
+            }
+        }
+
+        // Initialize DataTables
+        function initUsersTable(users) {
+            if (userDataTable) {
+                userDataTable.destroy();
             }
             
-            noPrograms.classList.add('hidden');
+            userDataTable = $('#usersTable').DataTable({
+                data: users,
+                columns: [
+                    { data: 'sl_no' },
+                    { data: 'name' },
+                    { 
+                        data: 'role',
+                        render: function(data) {
+                            const roleClass = data === 'admin' ? 'badge-admin' : 
+                                            data === 'leader' ? 'badge-leader' : 'badge-member';
+                            return `<span class="badge ${roleClass}">${data.toUpperCase()}</span>`;
+                        }
+                    },
+                    { data: 'team' },
+                    {
+                        data: null,
+                        render: function(data) {
+                            return `
+                                <div class="flex gap-2">
+                                    <button onclick="editUser('${data.sl_no}')" class="text-blue-600 hover:text-blue-800">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button onclick="deleteUser('${data.sl_no}', '${data.name}')" class="text-red-600 hover:text-red-800">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            `;
+                        }
+                    }
+                ],
+                pageLength: 10,
+                responsive: true,
+                language: {
+                    search: "Search users:"
+                }
+            });
+        }
+
+        function initProgramsTable(programs) {
+            if (programsDataTable) {
+                programsDataTable.destroy();
+            }
+            
+            programsDataTable = $('#programsAdminTable').DataTable({
+                data: programs,
+                columns: [
+                    { data: 'code' },
+                    { data: 'name' },
+                    { 
+                        data: 'category',
+                        render: function(data) {
+                            return `<span class="px-3 py-1 rounded-full bg-blue-100 text-blue-800 text-sm">${data}</span>`;
+                        }
+                    },
+                    {
+                        data: null,
+                        render: function(data) {
+                            return `
+                                <div class="flex gap-2">
+                                    <button onclick="editProgram('${data.code}')" class="text-blue-600 hover:text-blue-800">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button onclick="deleteProgram('${data.code}', '${data.name}')" class="text-red-600 hover:text-red-800">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            `;
+                        }
+                    }
+                ],
+                pageLength: 10,
+                responsive: true
+            });
+        }
+
+        function initRegistrationTable(registration) {
+            if (registrationDataTable) {
+                registrationDataTable.destroy();
+            }
+            
+            registrationDataTable = $('#registrationAdminTable').DataTable({
+                data: registration,
+                columns: [
+                    { data: 'code' },
+                    { data: 'program_name' },
+                    { data: 'category' },
+                    { data: 'sl_no' },
+                    { data: 'name' },
+                    { data: 'team' },
+                    {
+                        data: null,
+                        render: function(data) {
+                            return `
+                                <div class="flex gap-2">
+                                    <button onclick="editRegistration('${data.id}')" class="text-blue-600 hover:text-blue-800">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button onclick="deleteRegistration('${data.id}', '${data.name}')" class="text-red-600 hover:text-red-800">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            `;
+                        }
+                    }
+                ],
+                pageLength: 10,
+                responsive: true
+            });
+        }
+
+        function initScheduleTable(schedule) {
+            if (scheduleDataTable) {
+                scheduleDataTable.destroy();
+            }
+            
+            scheduleDataTable = $('#scheduleAdminTable').DataTable({
+                data: schedule,
+                columns: [
+                    { data: 'code' },
+                    { data: 'program_name' },
+                    { data: 'category' },
+                    { data: 'sl_no' },
+                    { data: 'name' },
+                    { data: 'team' },
+                    { data: 'date' },
+                    { data: 'time' },
+                    { data: 'venue' },
+                    {
+                        data: null,
+                        render: function(data) {
+                            return `
+                                <div class="flex gap-2">
+                                    <button onclick="editSchedule('${data.id}')" class="text-blue-600 hover:text-blue-800">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button onclick="deleteSchedule('${data.id}', '${data.name}')" class="text-red-600 hover:text-red-800">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            `;
+                        }
+                    }
+                ],
+                pageLength: 10,
+                responsive: true
+            });
+        }
+
+        function initResultsTable(results) {
+            if (resultsDataTable) {
+                resultsDataTable.destroy();
+            }
+            
+            resultsDataTable = $('#resultsAdminTable').DataTable({
+                data: results,
+                columns: [
+                    { data: 'code' },
+                    { data: 'program_name' },
+                    { data: 'category' },
+                    { data: 'sl_no' },
+                    { data: 'name' },
+                    { data: 'team' },
+                    { 
+                        data: 'position',
+                        render: function(data) {
+                            const color = data === '1st' ? 'text-yellow-600' : 
+                                        data === '2nd' ? 'text-gray-600' : 
+                                        data === '3rd' ? 'text-orange-600' : 'text-gray-800';
+                            return `<span class="font-bold ${color}">${data}</span>`;
+                        }
+                    },
+                    { data: 'grade' },
+                    { 
+                        data: 'points',
+                        render: function(data) {
+                            return `<span class="font-bold text-green-600">${data}</span>`;
+                        }
+                    },
+                    {
+                        data: null,
+                        render: function(data) {
+                            return `
+                                <div class="flex gap-2">
+                                    <button onclick="editResult('${data.id}')" class="text-blue-600 hover:text-blue-800">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button onclick="deleteResult('${data.id}', '${data.name}')" class="text-red-600 hover:text-red-800">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            `;
+                        }
+                    }
+                ],
+                pageLength: 10,
+                responsive: true
+            });
+        }
+
+        // Render functions for Leader
+        function renderTeamMembers() {
+            const tableBody = document.getElementById('teamTableBody');
             tableBody.innerHTML = '';
             
-            programs.forEach((program, index) => {
+            teamMembers.forEach(member => {
                 const row = document.createElement('tr');
-                row.className = index % 2 === 0 ? 'bg-white' : 'bg-gray-50';
+                row.className = 'hover:bg-gray-50';
                 row.innerHTML = `
-                    <td class="p-4">
-                        <div class="font-semibold text-gray-800">${program.name}</div>
-                        <div class="text-sm text-gray-500">${program.code}</div>
-                    </td>
-                    <td class="p-4">
-                        <span class="inline-block px-3 py-1 rounded-full bg-blue-100 text-blue-800 text-sm font-medium">
-                            ${program.cat}
+                    <td class="p-3">${member.sl_no}</td>
+                    <td class="p-3 font-medium text-gray-800">${member.name}</td>
+                    <td class="p-3">
+                        <span class="px-3 py-1 rounded-full bg-purple-100 text-purple-800 text-sm">
+                            ${member.role}
                         </span>
                     </td>
-                    ${currentUser.role === 'leader' ? `
-                    <td class="p-4">
-                        <div class="flex items-center gap-2">
-                            <i class="fas fa-user text-gray-400"></i>
-                            <span class="font-medium text-gray-700">${program.user}</span>
-                        </div>
-                    </td>` : ''}
                 `;
                 tableBody.appendChild(row);
             });
-            
-            // Show add program form for leader
-            const addProgramForm = document.getElementById('addProgramForm');
-            if (currentUser.role === 'leader') {
-                addProgramForm.classList.remove('hidden');
-                populateAddProgramForm();
-            } else {
-                addProgramForm.classList.add('hidden');
-            }
         }
 
-        // Render Schedule
-        function renderSchedule() {
-            const schedule = storeData.schedule || [];
-            const tableBody = document.getElementById('scheduleTableBody');
-            const noSchedule = document.getElementById('noSchedule');
-            const scheduleCount = document.getElementById('scheduleCount');
-            const scheduleUserHeader = document.getElementById('scheduleUserHeader');
-            
-            scheduleCount.innerText = schedule.length;
-            
-            // Show/hide teammate column for leader
-            if (currentUser.role === 'leader') {
-                scheduleUserHeader.classList.remove('hidden');
-            } else {
-                scheduleUserHeader.classList.add('hidden');
-            }
-            
-            if (schedule.length === 0) {
-                tableBody.innerHTML = '';
-                noSchedule.classList.remove('hidden');
-                return;
-            }
-            
-            noSchedule.classList.add('hidden');
+        function renderAllPrograms() {
+            const tableBody = document.getElementById('programsLeaderTableBody');
             tableBody.innerHTML = '';
             
-            schedule.forEach((item, index) => {
+            allPrograms.forEach(program => {
                 const row = document.createElement('tr');
-                row.className = index % 2 === 0 ? 'bg-white' : 'bg-gray-50';
+                row.className = 'hover:bg-gray-50';
                 row.innerHTML = `
-                    <td class="p-4">
-                        <div class="font-semibold text-gray-800">${item.name}</div>
-                        <div class="text-sm text-gray-500">${item.cat}</div>
+                    <td class="p-3 font-mono text-gray-700">${program.code}</td>
+                    <td class="p-3 font-medium text-gray-800">${program.name}</td>
+                    <td class="p-3">
+                        <span class="px-3 py-1 rounded-full bg-blue-100 text-blue-800 text-sm">
+                            ${program.category}
+                        </span>
                     </td>
-                    <td class="p-4">
-                        <div class="font-medium text-gray-800">${item.date}</div>
-                        <div class="text-sm text-gray-600">
-                            <i class="far fa-clock mr-1"></i>${item.time}
-                        </div>
-                    </td>
-                    <td class="p-4">
-                        <div class="text-gray-700">
-                            <i class="fas fa-map-marker-alt mr-2 text-red-400"></i>
-                            ${item.venue}
-                        </div>
-                    </td>
-                    ${currentUser.role === 'leader' ? `
-                    <td class="p-4">
-                        <div class="flex items-center gap-2">
-                            <i class="fas fa-user text-gray-400"></i>
-                            <span class="font-medium text-gray-700">${item.user}</span>
-                        </div>
-                    </td>` : ''}
                 `;
                 tableBody.appendChild(row);
             });
         }
 
-        // Render Results
-        function renderResults() {
-            const results = storeData.results || [];
-            const tableBody = document.getElementById('resultsTableBody');
-            const noResults = document.getElementById('noResults');
-            const resultsCount = document.getElementById('resultsCount');
-            const resultsUserHeader = document.getElementById('resultsUserHeader');
-            const resultsFooter = document.getElementById('resultsFooter');
-            
-            resultsCount.innerText = results.length;
-            
-            // Show/hide teammate column and footer for leader
-            if (currentUser.role === 'leader') {
-                resultsUserHeader.classList.remove('hidden');
-                resultsFooter.classList.remove('hidden');
-                document.getElementById('grandTotalPoints').innerText = storeData.grandTotalPoints || 0;
-            } else {
-                resultsUserHeader.classList.add('hidden');
-                resultsFooter.classList.add('hidden');
-            }
-            
-            if (results.length === 0) {
-                tableBody.innerHTML = '';
-                noResults.classList.remove('hidden');
-                return;
-            }
-            
-            noResults.classList.add('hidden');
+        function renderTeamRegistration(registration) {
+            const tableBody = document.getElementById('registrationLeaderTableBody');
             tableBody.innerHTML = '';
             
-            results.forEach((result, index) => {
+            registration.forEach(reg => {
                 const row = document.createElement('tr');
-                row.className = index % 2 === 0 ? 'bg-white' : 'bg-gray-50';
-                
-                // Determine position color
-                let positionColor = 'text-gray-800';
-                if (result.pos === '1st') positionColor = 'text-yellow-600';
-                else if (result.pos === '2nd') positionColor = 'text-gray-600';
-                else if (result.pos === '3rd') positionColor = 'text-orange-600';
-                
+                row.className = 'hover:bg-gray-50';
                 row.innerHTML = `
-                    <td class="p-4">
-                        <div class="font-semibold text-gray-800">${result.name}</div>
-                        <div class="text-sm text-gray-500">${result.cat}</div>
+                    <td class="p-3 font-mono text-gray-700">${reg.code}</td>
+                    <td class="p-3 font-medium text-gray-800">${reg.program_name}</td>
+                    <td class="p-3">
+                        <span class="px-3 py-1 rounded-full bg-green-100 text-green-800 text-sm">
+                            ${reg.category}
+                        </span>
                     </td>
-                    <td class="p-4">
-                        <div class="flex items-center gap-4">
-                            <div>
-                                <div class="font-bold ${positionColor}">${result.pos}</div>
-                                <div class="text-sm text-gray-600">${result.grade}</div>
-                            </div>
-                            <div class="ml-auto">
-                                <div class="text-lg font-bold text-green-600">${result.pts}</div>
-                                <div class="text-xs text-gray-500">points</div>
-                            </div>
-                        </div>
+                    <td class="p-3">${reg.sl_no}</td>
+                    <td class="p-3">${reg.name}</td>
+                    <td class="p-3">
+                        <span class="px-3 py-1 rounded-full bg-gray-100 text-gray-800 text-sm">
+                            ${reg.team}
+                        </span>
                     </td>
-                    ${currentUser.role === 'leader' ? `
-                    <td class="p-4">
-                        <div class="flex items-center gap-2">
-                            <i class="fas fa-user text-gray-400"></i>
-                            <span class="font-medium text-gray-700">${result.user}</span>
-                        </div>
-                    </td>` : ''}
                 `;
                 tableBody.appendChild(row);
             });
         }
 
-        // Populate Add Program Form (Leader only)
-        function populateAddProgramForm() {
-            const memberSelect = document.getElementById('memberSelect');
-            const programSelect = document.getElementById('programSelect');
+        function renderTeamSchedule(schedule) {
+            const tableBody = document.getElementById('scheduleLeaderTableBody');
+            tableBody.innerHTML = '';
             
-            // Clear existing options
+            schedule.forEach(item => {
+                const row = document.createElement('tr');
+                row.className = 'hover:bg-gray-50';
+                row.innerHTML = `
+                    <td class="p-3 font-mono text-gray-700">${item.code}</td>
+                    <td class="p-3 font-medium text-gray-800">${item.program_name}</td>
+                    <td class="p-3">
+                        <span class="px-3 py-1 rounded-full bg-yellow-100 text-yellow-800 text-sm">
+                            ${item.category}
+                        </span>
+                    </td>
+                    <td class="p-3">${item.name}</td>
+                    <td class="p-3">${item.date}</td>
+                    <td class="p-3">${item.time}</td>
+                    <td class="p-3">${item.venue}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        function renderTeamResults(results) {
+            const tableBody = document.getElementById('resultsLeaderTableBody');
+            tableBody.innerHTML = '';
+            
+            results.forEach(result => {
+                const row = document.createElement('tr');
+                row.className = 'hover:bg-gray-50';
+                row.innerHTML = `
+                    <td class="p-3 font-mono text-gray-700">${result.code}</td>
+                    <td class="p-3 font-medium text-gray-800">${result.program_name}</td>
+                    <td class="p-3">
+                        <span class="px-3 py-1 rounded-full bg-red-100 text-red-800 text-sm">
+                            ${result.category}
+                        </span>
+                    </td>
+                    <td class="p-3">${result.name}</td>
+                    <td class="p-3 font-bold">${result.position}</td>
+                    <td class="p-3">${result.grade}</td>
+                    <td class="p-3 font-bold text-green-600">${result.points}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        function renderTeamPoints(teamPoints) {
+            const container = document.querySelector('#resultsLeaderContent .grid');
+            container.innerHTML = '';
+            
+            teamPoints.forEach(team => {
+                const card = document.createElement('div');
+                card.className = 'bg-white rounded-lg shadow p-4';
+                card.innerHTML = `
+                    <div class="flex items-center justify-between mb-2">
+                        <h5 class="font-bold text-gray-800">${team.team}</h5>
+                        <span class="text-sm px-2 py-1 rounded-full ${team.team === currentUser.team ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}">
+                            ${team.team === currentUser.team ? 'Your Team' : ''}
+                        </span>
+                    </div>
+                    <div class="text-3xl font-bold text-green-600">${team.total_points}</div>
+                    <div class="text-sm text-gray-500 mt-1">Total Points</div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // Render functions for Member
+        function renderMemberPrograms(programs) {
+            const tableBody = document.getElementById('programsMemberTableBody');
+            tableBody.innerHTML = '';
+            
+            programs.forEach(program => {
+                const row = document.createElement('tr');
+                row.className = 'hover:bg-gray-50';
+                row.innerHTML = `
+                    <td class="p-3 font-mono text-gray-700">${program.code}</td>
+                    <td class="p-3 font-medium text-gray-800">${program.name}</td>
+                    <td class="p-3">
+                        <span class="px-3 py-1 rounded-full bg-blue-100 text-blue-800 text-sm">
+                            ${program.category}
+                        </span>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        function renderMemberSchedule(schedule) {
+            const tableBody = document.getElementById('scheduleMemberTableBody');
+            tableBody.innerHTML = '';
+            
+            schedule.forEach(item => {
+                const row = document.createElement('tr');
+                row.className = 'hover:bg-gray-50';
+                row.innerHTML = `
+                    <td class="p-3 font-medium text-gray-800">${item.program_name}</td>
+                    <td class="p-3">
+                        <span class="px-3 py-1 rounded-full bg-yellow-100 text-yellow-800 text-sm">
+                            ${item.category}
+                        </span>
+                    </td>
+                    <td class="p-3">${item.date}</td>
+                    <td class="p-3">${item.time}</td>
+                    <td class="p-3">${item.venue}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        function renderMemberResults(results) {
+            const tableBody = document.getElementById('resultsMemberTableBody');
+            tableBody.innerHTML = '';
+            
+            results.forEach(result => {
+                const row = document.createElement('tr');
+                row.className = 'hover:bg-gray-50';
+                row.innerHTML = `
+                    <td class="p-3 font-medium text-gray-800">${result.program_name}</td>
+                    <td class="p-3">
+                        <span class="px-3 py-1 rounded-full bg-red-100 text-red-800 text-sm">
+                            ${result.category}
+                        </span>
+                    </td>
+                    <td class="p-3 font-bold">${result.position}</td>
+                    <td class="p-3">${result.grade}</td>
+                    <td class="p-3 font-bold text-green-600">${result.points}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Modal Functions
+        function showAddUserModal() {
+            document.getElementById('addUserModal').style.display = 'block';
+        }
+
+        function showAddProgramModal() {
+            document.getElementById('addProgramModal').style.display = 'block';
+        }
+
+        function showAddRegistrationModal() {
+            document.getElementById('addRegistrationModal').style.display = 'block';
+        }
+
+        function showAddScheduleModal() {
+            document.getElementById('addScheduleModal').style.display = 'block';
+        }
+
+        function showAddResultModal() {
+            document.getElementById('addResultModal').style.display = 'block';
+        }
+
+        function showLeaderRegistrationModal() {
+            const memberSelect = document.getElementById('leaderMemberSelect');
+            const programSelect = document.getElementById('leaderProgramSelect');
+            
+            // Clear and populate member select
             memberSelect.innerHTML = '<option value="">Select Member</option>';
-            programSelect.innerHTML = '<option value="">Select Program</option>';
-            
-            // Populate members
             teamMembers.forEach(member => {
-                const option = document.createElement('option');
-                option.value = member.name;
-                option.textContent = member.name;
-                memberSelect.appendChild(option);
+                if (member.role === 'member') {
+                    const option = document.createElement('option');
+                    option.value = member.name;
+                    option.textContent = member.name;
+                    memberSelect.appendChild(option);
+                }
             });
             
-            // Populate programs
-            availablePrograms.forEach(program => {
+            // Clear and populate program select
+            programSelect.innerHTML = '<option value="">Select Program</option>';
+            allPrograms.forEach(program => {
                 const option = document.createElement('option');
-                option.value = program.code;
+                option.value = program.name;
                 option.textContent = `${program.name} (${program.category})`;
+                option.setAttribute('data-code', program.code);
+                option.setAttribute('data-category', program.category);
                 programSelect.appendChild(option);
             });
+            
+            document.getElementById('leaderRegistrationModal').style.display = 'block';
         }
 
-        // Add Program (Leader only)
-        async function addProgram() {
-            const memberSelect = document.getElementById('memberSelect');
-            const programSelect = document.getElementById('programSelect');
-            const messageElement = document.getElementById('addProgramMsg');
+        function autoFillProgramDetails() {
+            const programSelect = document.getElementById('leaderProgramSelect');
+            const selectedOption = programSelect.options[programSelect.selectedIndex];
             
-            const member = memberSelect.value;
-            const programCode = programSelect.value;
+            if (selectedOption.value) {
+                document.getElementById('autoProgramCode').value = selectedOption.getAttribute('data-code');
+                document.getElementById('autoProgramCategory').value = selectedOption.getAttribute('data-category');
+            }
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        // Save Functions
+        async function saveUser() {
+            const userData = {
+                sl_no: document.getElementById('userSlNo').value,
+                name: document.getElementById('userName').value,
+                role: document.getElementById('userRole').value,
+                password: document.getElementById('userPassword').value,
+                team: document.getElementById('userTeam').value
+            };
             
-            if (!member || !programCode) {
-                messageElement.innerHTML = '<span class="text-red-500">Please select both member and program</span>';
+            if (!userData.sl_no || !userData.name || !userData.role || !userData.password) {
+                alert('Please fill in all required fields');
                 return;
             }
             
             try {
-                messageElement.innerHTML = '<span class="text-blue-500"><i class="fas fa-spinner fa-spin mr-2"></i>Adding program...</span>';
+                const response = await fetch(`${SCRIPT_URL}?action=addUser`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(userData)
+                });
                 
-                const response = await fetch(`${SCRIPT_URL}?action=addProgram&member=${encodeURIComponent(member)}&programCode=${encodeURIComponent(programCode)}&team=${encodeURIComponent(currentUser.team)}`);
                 const result = await response.json();
                 
                 if (result.status === "success") {
-                    messageElement.innerHTML = '<span class="text-green-500"><i class="fas fa-check-circle mr-2"></i>Program added successfully!</span>';
-                    
-                    // Clear selections
-                    memberSelect.value = '';
-                    programSelect.value = '';
-                    
-                    // Reload data and refresh display
-                    await loadDashboardData();
-                    renderPrograms();
-                    
-                    // Clear success message after 3 seconds
-                    setTimeout(() => {
-                        messageElement.innerHTML = '';
-                    }, 3000);
+                    alert('User added successfully!');
+                    closeModal('addUserModal');
+                    loadAdminData(); // Refresh the table
                 } else {
-                    messageElement.innerHTML = `<span class="text-red-500">${result.message}</span>`;
+                    alert('Error: ' + result.message);
                 }
             } catch (error) {
-                messageElement.innerHTML = '<span class="text-red-500">Error adding program. Please try again.</span>';
-                console.error('Add program error:', error);
+                console.error('Error saving user:', error);
+                alert('Error saving user. Please try again.');
             }
+        }
+
+        async function saveProgram() {
+            const programData = {
+                code: document.getElementById('programCode').value,
+                name: document.getElementById('programName').value,
+                category: document.getElementById('programCategory').value
+            };
+            
+            if (!programData.code || !programData.name || !programData.category) {
+                alert('Please fill in all fields');
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${SCRIPT_URL}?action=addProgram`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(programData)
+                });
+                
+                const result = await response.json();
+                
+                if (result.status === "success") {
+                    alert('Program added successfully!');
+                    closeModal('addProgramModal');
+                    loadAdminData();
+                } else {
+                    alert('Error: ' + result.message);
+                }
+            } catch (error) {
+                console.error('Error saving program:', error);
+                alert('Error saving program. Please try again.');
+            }
+        }
+
+        async function saveRegistration() {
+            const regData = {
+                code: document.getElementById('regCode').value,
+                program_name: document.getElementById('regProgramName').value,
+                category: document.getElementById('regCategory').value,
+                sl_no: document.getElementById('regSlNo').value,
+                name: document.getElementById('regName').value,
+                team: document.getElementById('regTeam').value
+            };
+            
+            if (!regData.code || !regData.program_name || !regData.category || !regData.sl_no || !regData.name || !regData.team) {
+                alert('Please fill in all fields');
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${SCRIPT_URL}?action=addRegistration`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(regData)
+                });
+                
+                const result = await response.json();
+                
+                if (result.status === "success") {
+                    alert('Registration added successfully!');
+                    closeModal('addRegistrationModal');
+                    loadAdminData();
+                } else {
+                    alert('Error: ' + result.message);
+                }
+            } catch (error) {
+                console.error('Error saving registration:', error);
+                alert('Error saving registration. Please try again.');
+            }
+        }
+
+        async function saveSchedule() {
+            const scheduleData = {
+                code: document.getElementById('scheduleCode').value,
+                program_name: document.getElementById('scheduleProgramName').value,
+                category: document.getElementById('scheduleCategory').value,
+                sl_no: document.getElementById('scheduleSlNo').value,
+                name: document.getElementById('scheduleName').value,
+                team: document.getElementById('scheduleTeam').value,
+                date: document.getElementById('scheduleDate').value,
+                time: document.getElementById('scheduleTime').value,
+                venue: document.getElementById('scheduleVenue').value
+            };
+            
+            if (!scheduleData.code || !scheduleData.program_name || !scheduleData.category || !scheduleData.sl_no || !scheduleData.name || !scheduleData.team || !scheduleData.date || !scheduleData.time || !scheduleData.venue) {
+                alert('Please fill in all fields');
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${SCRIPT_URL}?action=addSchedule`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(scheduleData)
+                });
+                
+                const result = await response.json();
+                
+                if (result.status === "success") {
+                    alert('Schedule added successfully!');
+                    closeModal('addScheduleModal');
+                    loadAdminData();
+                } else {
+                    alert('Error: ' + result.message);
+                }
+            } catch (error) {
+                console.error('Error saving schedule:', error);
+                alert('Error saving schedule. Please try again.');
+            }
+        }
+
+        async function saveResult() {
+            const resultData = {
+                code: document.getElementById('resultCode').value,
+                program_name: document.getElementById('resultProgramName').value,
+                category: document.getElementById('resultCategory').value,
+                sl_no: document.getElementById('resultSlNo').value,
+                name: document.getElementById('resultName').value,
+                team: document.getElementById('resultTeam').value,
+                position: document.getElementById('resultPosition').value,
+                grade: document.getElementById('resultGrade').value,
+                points: document.getElementById('resultPoints').value
+            };
+            
+            if (!resultData.code || !resultData.program_name || !resultData.category || !resultData.sl_no || !resultData.name || !resultData.team || !resultData.position || !resultData.points) {
+                alert('Please fill in all required fields');
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${SCRIPT_URL}?action=addResult`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(resultData)
+                });
+                
+                const result = await response.json();
+                
+                if (result.status === "success") {
+                    alert('Result added successfully!');
+                    closeModal('addResultModal');
+                    loadAdminData();
+                } else {
+                    alert('Error: ' + result.message);
+                }
+            } catch (error) {
+                console.error('Error saving result:', error);
+                alert('Error saving result. Please try again.');
+            }
+        }
+
+        async function saveLeaderRegistration() {
+            const memberSelect = document.getElementById('leaderMemberSelect');
+            const programSelect = document.getElementById('leaderProgramSelect');
+            
+            const memberName = memberSelect.value;
+            const programName = programSelect.value;
+            const programCode = document.getElementById('autoProgramCode').value;
+            const programCategory = document.getElementById('autoProgramCategory').value;
+            
+            if (!memberName || !programName) {
+                alert('Please select both member and program');
+                return;
+            }
+            
+            // Find member details
+            const member = teamMembers.find(m => m.name === memberName);
+            if (!member) {
+                alert('Member not found');
+                return;
+            }
+            
+            const regData = {
+                code: programCode,
+                program_name: programName,
+                category: programCategory,
+                sl_no: member.sl_no,
+                name: memberName,
+                team: currentUser.team
+            };
+            
+            try {
+                const response = await fetch(`${SCRIPT_URL}?action=addRegistration`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(regData)
+                });
+                
+                const result = await response.json();
+                
+                if (result.status === "success") {
+                    alert('Registration added successfully!');
+                    closeModal('leaderRegistrationModal');
+                    loadLeaderData();
+                } else {
+                    alert('Error: ' + result.message);
+                }
+            } catch (error) {
+                console.error('Error saving registration:', error);
+                alert('Error saving registration. Please try again.');
+            }
+        }
+
+        // Edit Functions
+        async function editUser(slNo) {
+            try {
+                const response = await fetch(`${SCRIPT_URL}?action=getUser&sl_no=${slNo}`);
+                const result = await response.json();
+                
+                if (result.status === "success") {
+                    const user = result.user;
+                    currentEditType = 'user';
+                    currentEditId = slNo;
+                    
+                    const formContent = `
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">SL.No</label>
+                                <input type="number" id="editUserSlNo" value="${user.sl_no}" class="form-input w-full p-3 rounded-lg">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Name</label>
+                                <input type="text" id="editUserName" value="${user.name}" class="form-input w-full p-3 rounded-lg">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Role</label>
+                                <select id="editUserRole" class="form-input w-full p-3 rounded-lg">
+                                    <option value="admin" ${user.role === 'admin' ? 'selected' : ''}>Admin</option>
+                                    <option value="leader" ${user.role === 'leader' ? 'selected' : ''}>Leader</option>
+                                    <option value="member" ${user.role === 'member' ? 'selected' : ''}>Member</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Password</label>
+                                <input type="password" id="editUserPassword" placeholder="Leave blank to keep current" class="form-input w-full p-3 rounded-lg">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Team</label>
+                                <input type="text" id="editUserTeam" value="${user.team}" class="form-input w-full p-3 rounded-lg">
+                            </div>
+                        </div>
+                    `;
+                    
+                    document.getElementById('editModalTitle').innerText = 'Edit User';
+                    document.getElementById('editFormContent').innerHTML = formContent;
+                    document.getElementById('editModal').style.display = 'block';
+                }
+            } catch (error) {
+                console.error('Error loading user:', error);
+                alert('Error loading user data');
+            }
+        }
+
+        // Delete Functions
+        async function deleteUser(slNo, userName) {
+            if (confirm(`Are you sure you want to delete user: ${userName}?`)) {
+                try {
+                    const response = await fetch(`${SCRIPT_URL}?action=deleteUser&sl_no=${slNo}`);
+                    const result = await response.json();
+                    
+                    if (result.status === "success") {
+                        alert('User deleted successfully!');
+                        loadAdminData();
+                    } else {
+                        alert('Error: ' + result.message);
+                    }
+                } catch (error) {
+                    console.error('Error deleting user:', error);
+                    alert('Error deleting user');
+                }
+            }
+        }
+
+        // Update Record
+        async function updateRecord() {
+            // Implementation for update
+            alert('Update functionality to be implemented');
+            closeModal('editModal');
         }
 
         // Logout
         function logout() {
             if (confirm("Are you sure you want to logout?")) {
                 currentUser = null;
-                storeData = null;
                 document.getElementById('dashboard').classList.add('hidden');
                 document.getElementById('loginSection').classList.remove('hidden');
                 document.getElementById('uPswd').value = '';
                 document.getElementById('errMsg').innerText = '';
+                
+                // Reset DataTables
+                if (userDataTable) userDataTable.destroy();
+                if (programsDataTable) programsDataTable.destroy();
+                if (registrationDataTable) registrationDataTable.destroy();
+                if (scheduleDataTable) scheduleDataTable.destroy();
+                if (resultsDataTable) resultsDataTable.destroy();
             }
         }
 
@@ -741,6 +2333,13 @@
                 handleLogin();
             }
         });
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.style.display = 'none';
+            }
+        };
     </script>
 </body>
 </html>
