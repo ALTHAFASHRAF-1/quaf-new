@@ -103,6 +103,11 @@
 </div>
 
 <script>
+  window.addEventListener("load", () => {
+  // If hosted inside Apps Script, this is the same origin endpoint:
+  document.getElementById("webapp").value = window.location.origin + window.location.pathname;
+});
+
   let payload = null;
   let currentSheet = null;
   let selected = { sheet:null, row:null, col:null, isFormula:false };
