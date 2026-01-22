@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scholars - QUAF</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Abel&family=Manrope:wght@400;700&family=Alfa+Slab+One&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --maindark: #0f0b0c;
+            --mainprimary: #7a38fc;
+            --header-height: 82px;
+            --shadesdark-30: #b7b6b6;
+        }
+        
+        body { font-family: 'Manrope', sans-serif; background-color: #ffffff; margin: 0; }
+        .container { width: 100%; max-width: 1200px; margin: 0 auto; padding: 0 1rem; }
+
+        /* --- NAVIGATION --- */
+        .navbar { display: flex; align-items: center; background-color: #000000; position: fixed; top: 0; left: 0; right: 0; z-index: 1000; height: var(--header-height); }
+        .logo { display: flex; align-items: center; gap: 0.5rem; font-family: 'Abel', sans-serif; font-size: 1.7rem; color: white; text-decoration: none; }
+        .logo img { width: 50px; height: 50px; }
+        
+        .nav-links { display: none; gap: 1.5rem; list-style: none; margin-left: auto; align-items: center; }
+        .nav-link { color: var(--shadesdark-30); text-decoration: none; font-weight: 500; transition: 0.3s; }
+        .nav-link:hover { color: white; }
+
+        .btn-login {
+            background-color: var(--mainprimary);
+            color: white;
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 700;
+            text-decoration: none;
+            margin-left: 1.5rem;
+            transition: transform 0.2s;
+        }
+        .btn-login:hover { transform: scale(1.05); background-color: #622ad4; }
+
+        /* Banner Section */
+        .banner-section {
+            margin-top: var(--header-height);
+            min-height: 30vh;
+            background-image: url('https://quaf2026.netlify.app/images/desktop-banner.png');
+            background-size: cover;
+            background-position: center;
+        }
+
+        @media (max-width: 767px) {
+            .banner-section { min-height: 20vh; background-image: url('https://quaf2026.netlify.app/images/mobile-banner.png'); }
+            .nav-links { display: none; }
+        }
+        @media (min-width: 1024px) { .nav-links { display: flex; } }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="container flex justify-between items-center">
+            <a href="index.html" class="logo">
+                <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/logo3d-1.png" alt="Logo">
+                <span>QUAF</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="qalam.html" class="nav-link">Qalam</a></li>
+                <li><a href="scholars.html" class="nav-link">Scholars</a></li>
+                <li><a href="login.html" class="btn-login">Login</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="banner-section"></section>
+
+    <div class="py-20 text-center">
+        <h2 class="text-2xl font-bold">Welcome to QUAF</h2>
+        <p class="text-gray-500">Please login to access the fest dashboard.</p>
+    </div>
+
+</body>
+</html>
