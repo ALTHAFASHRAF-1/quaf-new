@@ -3,73 +3,123 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - QUAF</title>
+    <title>Dashboard - QUAF</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <style>
-        body { background-color: #0f0b0c; font-family: 'Manrope', sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; }
-        .login-card { background: white; padding: 2.5rem; border-radius: 15px; width: 100%; max-width: 400px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
-        .btn-primary { background-color: #7a38fc; width: 100%; color: white; padding: 0.75rem; border-radius: 8px; font-weight: 700; margin-top: 1rem; }
-        .loading { display: none; color: #7a38fc; font-weight: bold; margin-top: 10px; text-align: center; }
+        :root { --primary: #7a38fc; --dark: #0f0b0c; }
+        body { font-family: 'Manrope', sans-serif; background: #f3f4f6; }
+        .hidden { display: none; }
+        .nav-shadow { box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .tab-btn.active { border-bottom: 3px solid var(--primary); color: var(--primary); }
     </style>
 </head>
 <body>
 
-<div class="login-card">
-    <div class="text-center mb-6">
-        <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/logo3d-1.png" alt="Logo" class="w-16 mx-auto mb-2">
-        <h2 class="text-2xl font-bold text-gray-800">User Login</h2>
+    <div id="loginSection" class="min-h-screen flex items-center justify-center bg-black">
+        <div class="bg-white p-8 rounded-2xl w-full max-w-md">
+            <h2 class="text-2xl font-bold mb-6 text-center">QUAF LOGIN</h2>
+            <input type="text" id="uName" placeholder="User Name" class="w-full p-3 mb-4 border rounded">
+            <input type="password" id="uPswd" placeholder="Password" class="w-full p-3 mb-6 border rounded">
+            <button onclick="handleLogin()" id="loginBtn" class="w-full bg-purple-600 text-white p-3 rounded-lg font-bold">Login</button>
+            <p id="errMsg" class="text-red-500 mt-4 text-center text-sm"></p>
+        </div>
     </div>
 
-    <form id="loginForm">
-        <div class="mb-4">
-            <label class="block text-gray-700 text-sm font-bold mb-2">Name</label>
-            <input type="text" id="username" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" placeholder="Enter your name" required>
+    <div id="dashboard" class="hidden">
+        <nav class="bg-white p-4 nav-shadow flex justify-between items-center sticky top-0">
+            <div class="flex items-center gap-2">
+                <span id="displayUser" class="font-bold text-purple-700"></span>
+                <span id="displayRole" class="text-xs bg-gray-200 px-2 py-1 rounded uppercase"></span>
+            </div>
+            <button onclick="logout()" class="text-red-500 font-bold border border-red-500 px-4 py-1 rounded-full hover:bg-red-50">Logout</button>
+        </nav>
+
+        <div class="container mx-auto p-4">
+            <div class="flex gap-4 mb-6 overflow-x-auto pb-2">
+                <button onclick="showTab('programs')" class="tab-btn active px-4 py-2 font-semibold">Programs</button>
+                <button onclick="showTab('schedule')" class="tab-btn px-4 py-2 font-semibold">Schedule</button>
+                <button onclick="showTab('results')" class="tab-btn px-4 py-2 font-semibold">Results</button>
+            </div>
+
+            <div id="contentBody" class="grid gap-4">
+                <div id="loadingData" class="text-center py-10">Loading your data...</div>
+                <div id="tableContainer" class="bg-white rounded-xl shadow overflow-hidden"></div>
+            </div>
         </div>
-        <div class="mb-6">
-            <label class="block text-gray-700 text-sm font-bold mb-2">Password</label>
-            <input type="password" id="password" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" placeholder="••••••••" required>
-        </div>
-        <button type="submit" class="btn-primary">Sign In</button>
-    </form>
-    
-    <div id="loader" class="loading">Verifying credentials...</div>
-    <div id="message" class="mt-4 text-center text-red-500 text-sm"></div>
-</div>
+    </div>
 
 <script>
-    // REPLACE THIS URL with your deployed Google Web App URL
-    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzrIqgOlrH27X6N3wV2pkxeqG_xAdqX9IkPOl0s6_3NBQP_cexEFgl6mCZKelabT01aoQ/exec";
+    const SCRIPT_URL = "YOUR_DEPLOYED_APPS_SCRIPT_URL"; // PASTE YOUR URL HERE
+    let currentUser = null;
+    let storeData = null;
 
-    document.getElementById('loginForm').addEventListener('submit', function(e) {
-        e.preventDefault();
+    async function handleLogin() {
+        const name = document.getElementById('uName').value;
+        const pswd = document.getElementById('uPswd').value;
+        const btn = document.getElementById('loginBtn');
         
-        const name = document.getElementById('username').value;
-        const pswd = document.getElementById('password').value;
-        const loader = document.getElementById('loader');
-        const message = document.getElementById('message');
+        btn.innerText = "Checking...";
+        
+        try {
+            const resp = await fetch(`${SCRIPT_URL}?action=login&name=${encodeURIComponent(name)}&pswd=${encodeURIComponent(pswd)}`);
+            const result = await resp.json();
 
-        loader.style.display = 'block';
-        message.innerText = '';
+            if (result.status === "success") {
+                currentUser = result.user;
+                initDashboard();
+            } else {
+                document.getElementById('errMsg').innerText = result.message;
+            }
+        } catch (e) {
+            document.getElementById('errMsg').innerText = "Connection error.";
+        }
+        btn.innerText = "Login";
+    }
 
-        fetch(WEB_APP_URL, {
-            method: 'POST',
-            mode: 'no-cors', // Needed for Apps Script
-            cache: 'no-cache',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name: name, pswd: pswd })
-        })
-        .then(() => {
-            // Because of no-cors, we can't easily read the JSON response. 
-            // Better approach: Use a Redirect or simple success message.
-            alert("Login Request Sent! (Note: Redirect logic works best with a GET request or advanced Apps Script setup)");
-            loader.style.display = 'none';
-        })
-        .catch(err => {
-            message.innerText = "Error connecting to server.";
-            loader.style.display = 'none';
-        });
-    });
+    async function initDashboard() {
+        document.getElementById('loginSection').classList.add('hidden');
+        document.getElementById('dashboard').classList.remove('hidden');
+        document.getElementById('displayUser').innerText = currentUser.name;
+        document.getElementById('displayRole').innerText = currentUser.role;
+
+        // Fetch user data
+        const resp = await fetch(`${SCRIPT_URL}?action=getData&role=${currentUser.role}&name=${currentUser.name}&team=${currentUser.team}`);
+        storeData = await resp.json();
+        showTab('programs');
+    }
+
+    function showTab(tabName) {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        event?.target?.classList?.add('active');
+
+        const container = document.getElementById('tableContainer');
+        let html = `<table class="w-full text-left border-collapse">`;
+        
+        if (tabName === 'programs') {
+            html += `<tr class="bg-gray-100"><th class="p-3">Program</th><th class="p-3">Category</th>${currentUser.role==='leader'?'<th class="p-3">Teammate</th>':''}</tr>`;
+            storeData.programs.forEach(p => {
+                html += `<tr class="border-t"><td class="p-3 font-bold">${p.name}</td><td class="p-3">${p.cat}</td>${currentUser.role==='leader'?`<td class="p-3 text-blue-600">${p.user}</td>`:''}</tr>`;
+            });
+        } else if (tabName === 'schedule') {
+            html += `<tr class="bg-gray-100"><th class="p-3">Program</th><th class="p-3">Date/Time</th>${currentUser.role==='leader'?'<th class="p-3">Teammate</th>':''}</tr>`;
+            storeData.schedule.forEach(s => {
+                html += `<tr class="border-t"><td class="p-3">${s.name}</td><td class="p-3 text-sm">${s.date} | ${s.time}</td>${currentUser.role==='leader'?`<td class="p-3">${s.user}</td>`:''}</tr>`;
+            });
+        } else if (tabName === 'results') {
+            html += `<tr class="bg-gray-100"><th class="p-3">Program</th><th class="p-3">Result</th>${currentUser.role==='leader'?'<th class="p-3">Teammate</th>':''}</tr>`;
+            storeData.results.forEach(r => {
+                html += `<tr class="border-t"><td class="p-3">${r.name}</td><td class="p-3"><span class="font-bold text-green-600">${r.pos}</span> (${r.grade})</td>${currentUser.role==='leader'?`<td class="p-3">${r.user}</td>`:''}</tr>`;
+            });
+        }
+        
+        html += `</table>`;
+        container.innerHTML = storeData[tabName].length ? html : `<div class="p-10 text-center text-gray-400">No data found</div>`;
+        document.getElementById('loadingData').classList.add('hidden');
+    }
+
+    function logout() {
+        location.reload();
+    }
 </script>
-
 </body>
 </html>
