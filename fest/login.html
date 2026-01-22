@@ -1,257 +1,746 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>QUAF Dashboard</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-  <style>
-    :root { --primary:#7a38fc; --dark:#0f0b0c; }
-    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; background:#f3f4f6; }
-    .hidden{display:none;}
-    .nav-shadow{box-shadow:0 2px 10px rgba(0,0,0,0.08);}
-    .tab-btn.active{border-bottom:3px solid var(--primary); color:var(--primary);}
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QUAF - Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { 
+            --primary: #7a38fc; 
+            --secondary: #9d5cff;
+            --dark: #0f0b0c; 
+            --light: #f8f9fa;
+        }
+        body { 
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .hidden { display: none !important; }
+        .nav-shadow { 
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            backdrop-filter: blur(10px);
+        }
+        .tab-btn.active { 
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            box-shadow: 0 4px 12px rgba(122, 56, 252, 0.3);
+        }
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(122, 56, 252, 0.4);
+        }
+        .form-input {
+            border: 2px solid #e2e8f0;
+            transition: all 0.3s ease;
+        }
+        .form-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(122, 56, 252, 0.1);
+        }
+        .badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .badge-leader {
+            background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+            color: #d50000;
+        }
+        .badge-member {
+            background: linear-gradient(135deg, #a1c4fd, #c2e9fb);
+            color: #01579b;
+        }
+        .animate-pulse {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+    </style>
 </head>
-
-<body>
-
-  <!-- LOGIN -->
-  <div id="loginSection" class="min-h-screen flex items-center justify-center bg-black">
-    <div class="bg-white p-8 rounded-2xl w-full max-w-md">
-      <h2 class="text-2xl font-bold mb-6 text-center">QUAF LOGIN</h2>
-
-      <input type="text" id="uName" placeholder="User Name" class="w-full p-3 mb-4 border rounded">
-      <input type="password" id="uPswd" placeholder="Password" class="w-full p-3 mb-6 border rounded">
-
-      <button onclick="handleLogin()" id="loginBtn"
-        class="w-full bg-purple-600 hover:bg-purple-700 text-white p-3 rounded-lg font-bold">
-        Login
-      </button>
-
-      <p id="errMsg" class="text-red-500 mt-4 text-center text-sm"></p>
-
-      <p class="text-xs text-gray-400 mt-6 leading-relaxed">
-        Tip: make sure Apps Script Web App is deployed as <b>Anyone</b> access.
-      </p>
-    </div>
-  </div>
-
-  <!-- DASHBOARD -->
-  <div id="dashboard" class="hidden">
-    <nav class="bg-white p-4 nav-shadow flex justify-between items-center sticky top-0">
-      <div class="flex items-center gap-2">
-        <span id="displayUser" class="font-bold text-purple-700"></span>
-        <span id="displayRole" class="text-xs bg-gray-200 px-2 py-1 rounded uppercase"></span>
-      </div>
-      <button onclick="logout()"
-        class="text-red-600 font-bold border border-red-400 px-4 py-1 rounded-full hover:bg-red-50">
-        Logout
-      </button>
-    </nav>
-
-    <div class="container mx-auto p-4">
-      <div class="flex gap-4 mb-4 overflow-x-auto pb-2">
-        <button class="tab-btn active px-4 py-2 font-semibold" onclick="showTab(event,'programs')">Programs</button>
-        <button class="tab-btn px-4 py-2 font-semibold" onclick="showTab(event,'schedule')">Schedule</button>
-        <button class="tab-btn px-4 py-2 font-semibold" onclick="showTab(event,'results')">Results</button>
-      </div>
-
-      <!-- Leader-only teammate filter -->
-      <div id="leaderTools" class="hidden mb-4">
-        <div class="bg-white rounded-xl shadow p-4 flex flex-col md:flex-row gap-3 md:items-center md:justify-between">
-          <div class="font-semibold text-gray-700">Leader View: Filter by teammate</div>
-          <div class="flex gap-2 items-center">
-            <select id="teammateSelect" class="border rounded px-3 py-2">
-              <option value="__all__">All Teammates</option>
-            </select>
-            <button onclick="applyTeammateFilter()" class="bg-purple-600 text-white px-4 py-2 rounded font-semibold">
-              Apply
-            </button>
-          </div>
+<body class="bg-gray-50">
+    <!-- Login Section -->
+    <div id="loginSection" class="min-h-screen flex items-center justify-center p-4">
+        <div class="card p-8 w-full max-w-md">
+            <div class="text-center mb-8">
+                <div class="inline-block p-3 rounded-full bg-gradient-to-r from-purple-100 to-indigo-100 mb-4">
+                    <i class="fas fa-trophy text-4xl text-purple-600"></i>
+                </div>
+                <h1 class="text-3xl font-bold text-gray-800 mb-2">QUAF</h1>
+                <p class="text-gray-600">Competition Management System</p>
+            </div>
+            
+            <h2 class="text-2xl font-bold mb-6 text-gray-800 text-center">Welcome Back</h2>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Username</label>
+                    <input type="text" id="uName" placeholder="Enter your username" 
+                           class="form-input w-full p-3 rounded-lg">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Password</label>
+                    <input type="password" id="uPswd" placeholder="Enter your password" 
+                           class="form-input w-full p-3 rounded-lg">
+                </div>
+                <button onclick="handleLogin()" id="loginBtn" 
+                        class="btn-primary w-full p-3 rounded-lg font-bold text-lg mt-6">
+                    <span id="loginText">Sign In</span>
+                    <i id="loginSpinner" class="fas fa-spinner fa-spin ml-2 hidden"></i>
+                </button>
+                <p id="errMsg" class="text-red-500 mt-4 text-center text-sm"></p>
+            </div>
+            
+            <div class="mt-8 pt-6 border-t border-gray-200">
+                <p class="text-center text-gray-500 text-sm">
+                    <i class="fas fa-info-circle mr-2"></i>
+                    Contact admin for login credentials
+                </p>
+            </div>
         </div>
-      </div>
-
-      <div id="loadingData" class="text-center py-10 text-gray-600">Loading your data...</div>
-      <div id="tableContainer" class="bg-white rounded-xl shadow overflow-hidden"></div>
     </div>
-  </div>
 
-<script>
-  // 1) PASTE YOUR DEPLOYED WEB APP URL HERE
-  const SCRIPT_URL = "PASTE_YOUR_WEB_APP_URL_HERE";
+    <!-- Dashboard Section -->
+    <div id="dashboard" class="hidden min-h-screen">
+        <!-- Navigation -->
+        <nav class="nav-shadow bg-white/80 p-4 flex justify-between items-center sticky top-0 z-50">
+            <div class="flex items-center gap-3">
+                <div class="flex items-center gap-2">
+                    <div class="p-2 rounded-lg bg-gradient-to-r from-purple-100 to-indigo-100">
+                        <i class="fas fa-trophy text-purple-600"></i>
+                    </div>
+                    <div>
+                        <span id="displayUser" class="font-bold text-gray-800 block"></span>
+                        <span id="displayRole" class="text-xs badge"></span>
+                    </div>
+                </div>
+                <span class="text-gray-400 mx-2">•</span>
+                <span id="displayTeam" class="text-sm text-gray-600 font-medium"></span>
+            </div>
+            <button onclick="logout()" 
+                    class="flex items-center gap-2 text-red-600 font-semibold border border-red-200 px-4 py-2 rounded-full hover:bg-red-50 transition-colors">
+                <i class="fas fa-sign-out-alt"></i>
+                Logout
+            </button>
+        </nav>
 
-  let currentUser = null;
-  let storeData = null;     // full data from server
-  let filteredUser = "__all__"; // leader filter
+        <!-- Main Content -->
+        <div class="container mx-auto p-4 md:p-6">
+            <!-- Tabs -->
+            <div class="flex gap-2 mb-6 overflow-x-auto pb-4">
+                <button onclick="showTab('programs')" 
+                        class="tab-btn active px-5 py-3 font-semibold rounded-lg transition-all whitespace-nowrap">
+                    <i class="fas fa-list-alt mr-2"></i>
+                    Programs
+                </button>
+                <button onclick="showTab('schedule')" 
+                        class="tab-btn px-5 py-3 font-semibold rounded-lg transition-all whitespace-nowrap">
+                    <i class="fas fa-calendar-alt mr-2"></i>
+                    Schedule
+                </button>
+                <button onclick="showTab('results')" 
+                        class="tab-btn px-5 py-3 font-semibold rounded-lg transition-all whitespace-nowrap">
+                    <i class="fas fa-chart-line mr-2"></i>
+                    Results
+                </button>
+            </div>
 
-  async function handleLogin() {
-    const name = document.getElementById('uName').value.trim();
-    const pswd = document.getElementById('uPswd').value.trim();
-    const btn = document.getElementById('loginBtn');
-    const err = document.getElementById('errMsg');
-    err.innerText = "";
+            <!-- Content Area -->
+            <div id="contentBody">
+                <div id="loadingData" class="text-center py-16">
+                    <div class="animate-pulse">
+                        <i class="fas fa-spinner fa-spin text-4xl text-purple-500 mb-4"></i>
+                        <p class="text-gray-600">Loading your dashboard...</p>
+                    </div>
+                </div>
+                
+                <!-- Programs Tab Content -->
+                <div id="programsContent" class="hidden">
+                    <!-- Add Program Form (Leader only) -->
+                    <div id="addProgramForm" class="hidden mb-6">
+                        <div class="card p-6">
+                            <h3 class="text-lg font-bold text-gray-800 mb-4">
+                                <i class="fas fa-plus-circle mr-2 text-green-500"></i>
+                                Add Program for Team Member
+                            </h3>
+                            <div class="grid md:grid-cols-3 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Team Member</label>
+                                    <select id="memberSelect" class="form-input w-full p-3 rounded-lg">
+                                        <option value="">Select Member</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Program</label>
+                                    <select id="programSelect" class="form-input w-full p-3 rounded-lg">
+                                        <option value="">Select Program</option>
+                                    </select>
+                                </div>
+                                <div class="flex items-end">
+                                    <button onclick="addProgram()" 
+                                            class="btn-primary w-full p-3 rounded-lg font-semibold">
+                                        <i class="fas fa-plus mr-2"></i>
+                                        Add Program
+                                    </button>
+                                </div>
+                            </div>
+                            <p id="addProgramMsg" class="mt-3 text-sm"></p>
+                        </div>
+                    </div>
 
-    if (!name || !pswd) {
-      err.innerText = "Please enter User Name and Password.";
-      return;
-    }
+                    <!-- Programs Table -->
+                    <div class="card overflow-hidden">
+                        <div class="p-6 border-b border-gray-100">
+                            <h3 class="text-xl font-bold text-gray-800">
+                                <i class="fas fa-list-ol mr-2 text-purple-500"></i>
+                                Registered Programs
+                            </h3>
+                            <p class="text-gray-600 text-sm mt-1">
+                                <span id="programCount">0</span> programs found
+                            </p>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th class="p-4 text-left font-semibold text-gray-700">Program</th>
+                                        <th class="p-4 text-left font-semibold text-gray-700">Category</th>
+                                        <th id="programUserHeader" class="p-4 text-left font-semibold text-gray-700 hidden">Teammate</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="programsTableBody">
+                                    <!-- Programs will be loaded here -->
+                                </tbody>
+                            </table>
+                        </div>
+                        <div id="noPrograms" class="hidden p-10 text-center">
+                            <i class="fas fa-clipboard-list text-4xl text-gray-300 mb-4"></i>
+                            <p class="text-gray-500">No programs registered yet</p>
+                        </div>
+                    </div>
+                </div>
 
-    btn.disabled = true;
-    btn.innerText = "Checking...";
+                <!-- Schedule Tab Content -->
+                <div id="scheduleContent" class="hidden">
+                    <div class="card overflow-hidden">
+                        <div class="p-6 border-b border-gray-100">
+                            <h3 class="text-xl font-bold text-gray-800">
+                                <i class="fas fa-calendar mr-2 text-blue-500"></i>
+                                Competition Schedule
+                            </h3>
+                            <p class="text-gray-600 text-sm mt-1">
+                                <span id="scheduleCount">0</span> scheduled events
+                            </p>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th class="p-4 text-left font-semibold text-gray-700">Program</th>
+                                        <th class="p-4 text-left font-semibold text-gray-700">Date & Time</th>
+                                        <th class="p-4 text-left font-semibold text-gray-700">Venue</th>
+                                        <th id="scheduleUserHeader" class="p-4 text-left font-semibold text-gray-700 hidden">Teammate</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="scheduleTableBody">
+                                    <!-- Schedule will be loaded here -->
+                                </tbody>
+                            </table>
+                        </div>
+                        <div id="noSchedule" class="hidden p-10 text-center">
+                            <i class="fas fa-calendar-times text-4xl text-gray-300 mb-4"></i>
+                            <p class="text-gray-500">No schedule available yet</p>
+                        </div>
+                    </div>
+                </div>
 
-    try {
-      const url = `${SCRIPT_URL}?action=login&name=${encodeURIComponent(name)}&pswd=${encodeURIComponent(pswd)}`;
-      const resp = await fetch(url);
-      const result = await resp.json();
+                <!-- Results Tab Content -->
+                <div id="resultsContent" class="hidden">
+                    <div class="card overflow-hidden">
+                        <div class="p-6 border-b border-gray-100">
+                            <h3 class="text-xl font-bold text-gray-800">
+                                <i class="fas fa-trophy mr-2 text-yellow-500"></i>
+                                Competition Results
+                            </h3>
+                            <p class="text-gray-600 text-sm mt-1">
+                                <span id="resultsCount">0</span> results recorded
+                            </p>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th class="p-4 text-left font-semibold text-gray-700">Program</th>
+                                        <th class="p-4 text-left font-semibold text-gray-700">Result</th>
+                                        <th id="resultsUserHeader" class="p-4 text-left font-semibold text-gray-700 hidden">Teammate</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="resultsTableBody">
+                                    <!-- Results will be loaded here -->
+                                </tbody>
+                                <tfoot id="resultsFooter" class="hidden">
+                                    <tr class="bg-gradient-to-r from-green-50 to-emerald-50">
+                                        <td colspan="2" class="p-4 text-right font-bold text-gray-800">
+                                            Team Grand Total Points:
+                                        </td>
+                                        <td class="p-4 font-bold text-green-600 text-xl">
+                                            <span id="grandTotalPoints">0</span>
+                                        </td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                        <div id="noResults" class="hidden p-10 text-center">
+                            <i class="fas fa-chart-bar text-4xl text-gray-300 mb-4"></i>
+                            <p class="text-gray-500">No results available yet</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-      if (result.status === "success") {
-        currentUser = result.user;
-        await initDashboard();
-      } else {
-        err.innerText = result.message || "Login failed.";
-      }
-    } catch (e) {
-      err.innerText = "Connection error. Check Web App deployment access.";
-    }
+    <script>
+        // Configuration
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz1nMbQMlyQRIQq_-H2EHndyOhoJOcnQnSAECElkZLamHqFuMxJGH7ytRszW7tYj4Q/exec"; // Replace with your Web App URL
+        
+        // Global variables
+        let currentUser = null;
+        let storeData = null;
+        let availablePrograms = [];
+        let teamMembers = [];
 
-    btn.disabled = false;
-    btn.innerText = "Login";
-  }
+        // Login Handler
+        async function handleLogin() {
+            const name = document.getElementById('uName').value.trim();
+            const pswd = document.getElementById('uPswd').value;
+            const loginBtn = document.getElementById('loginBtn');
+            const loginText = document.getElementById('loginText');
+            const loginSpinner = document.getElementById('loginSpinner');
+            const errMsg = document.getElementById('errMsg');
+            
+            if (!name || !pswd) {
+                errMsg.innerText = "Please enter both username and password";
+                return;
+            }
+            
+            // Show loading state
+            loginText.innerText = "Authenticating...";
+            loginSpinner.classList.remove('hidden');
+            loginBtn.disabled = true;
+            errMsg.innerText = "";
+            
+            try {
+                const resp = await fetch(`${SCRIPT_URL}?action=login&name=${encodeURIComponent(name)}&pswd=${encodeURIComponent(pswd)}`);
+                const result = await resp.json();
+                
+                if (result.status === "success") {
+                    currentUser = result.user;
+                    await initDashboard();
+                } else {
+                    errMsg.innerText = result.message || "Invalid credentials";
+                }
+            } catch (error) {
+                errMsg.innerText = "Connection error. Please try again.";
+                console.error('Login error:', error);
+            } finally {
+                // Reset button state
+                loginText.innerText = "Sign In";
+                loginSpinner.classList.add('hidden');
+                loginBtn.disabled = false;
+            }
+        }
 
-  async function initDashboard() {
-    document.getElementById('loginSection').classList.add('hidden');
-    document.getElementById('dashboard').classList.remove('hidden');
+        // Initialize Dashboard
+        async function initDashboard() {
+            // Hide login, show dashboard
+            document.getElementById('loginSection').classList.add('hidden');
+            document.getElementById('dashboard').classList.remove('hidden');
+            
+            // Update user info
+            document.getElementById('displayUser').innerText = currentUser.name;
+            document.getElementById('displayTeam').innerText = `Team: ${currentUser.team}`;
+            
+            // Update role badge
+            const roleElement = document.getElementById('displayRole');
+            roleElement.innerText = currentUser.role.toUpperCase();
+            roleElement.classList.add(currentUser.role === 'leader' ? 'badge-leader' : 'badge-member');
+            
+            // Load data
+            await loadDashboardData();
+            
+            // Show default tab
+            showTab('programs');
+        }
 
-    document.getElementById('displayUser').innerText = currentUser.name;
-    document.getElementById('displayRole').innerText = currentUser.role;
+        // Load all dashboard data
+        async function loadDashboardData() {
+            try {
+                // Load main data
+                const resp = await fetch(`${SCRIPT_URL}?action=getData&role=${currentUser.role}&name=${encodeURIComponent(currentUser.name)}&team=${encodeURIComponent(currentUser.team)}`);
+                storeData = await resp.json();
+                
+                // Load additional data for leader
+                if (currentUser.role === 'leader') {
+                    await loadLeaderData();
+                }
+            } catch (error) {
+                console.error('Error loading data:', error);
+                alert('Error loading dashboard data. Please refresh.');
+            }
+        }
 
-    document.getElementById('loadingData').classList.remove('hidden');
-    document.getElementById('tableContainer').innerHTML = "";
+        // Load additional data for leader
+        async function loadLeaderData() {
+            try {
+                // Load available programs
+                const progResp = await fetch(`${SCRIPT_URL}?action=getProgramsList`);
+                const progData = await progResp.json();
+                if (progData.status === "success") {
+                    availablePrograms = progData.programs;
+                }
+                
+                // Load team members
+                const teamResp = await fetch(`${SCRIPT_URL}?action=getTeamMembers&team=${encodeURIComponent(currentUser.team)}`);
+                const teamData = await teamResp.json();
+                if (teamData.status === "success") {
+                    teamMembers = teamData.members;
+                }
+            } catch (error) {
+                console.error('Error loading leader data:', error);
+            }
+        }
 
-    // fetch user/team data
-    const url = `${SCRIPT_URL}?action=getData&role=${encodeURIComponent(currentUser.role)}&name=${encodeURIComponent(currentUser.name)}&team=${encodeURIComponent(currentUser.team)}`;
-    const resp = await fetch(url);
-    storeData = await resp.json();
+        // Tab Navigation
+        function showTab(tabName) {
+            // Update active tab button
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Hide all content sections
+            ['programsContent', 'scheduleContent', 'resultsContent'].forEach(id => {
+                document.getElementById(id).classList.add('hidden');
+            });
+            
+            // Show selected content
+            document.getElementById(`${tabName}Content`).classList.remove('hidden');
+            
+            // Render the content
+            renderTabContent(tabName);
+        }
 
-    // leader teammate dropdown
-    if (currentUser.role === "leader") {
-      document.getElementById("leaderTools").classList.remove("hidden");
-      const sel = document.getElementById("teammateSelect");
-      sel.innerHTML = `<option value="__all__">All Teammates</option>`;
-      (storeData.teammates || []).forEach(n => {
-        const opt = document.createElement("option");
-        opt.value = n;
-        opt.textContent = n;
-        sel.appendChild(opt);
-      });
-    } else {
-      document.getElementById("leaderTools").classList.add("hidden");
-    }
+        // Render tab content
+        function renderTabContent(tabName) {
+            document.getElementById('loadingData').classList.add('hidden');
+            
+            if (!storeData) return;
+            
+            switch(tabName) {
+                case 'programs':
+                    renderPrograms();
+                    break;
+                case 'schedule':
+                    renderSchedule();
+                    break;
+                case 'results':
+                    renderResults();
+                    break;
+            }
+        }
 
-    showTab(null, 'programs');
-  }
+        // Render Programs
+        function renderPrograms() {
+            const programs = storeData.programs || [];
+            const tableBody = document.getElementById('programsTableBody');
+            const noPrograms = document.getElementById('noPrograms');
+            const programCount = document.getElementById('programCount');
+            const programUserHeader = document.getElementById('programUserHeader');
+            
+            programCount.innerText = programs.length;
+            
+            // Show/hide teammate column for leader
+            if (currentUser.role === 'leader') {
+                programUserHeader.classList.remove('hidden');
+            } else {
+                programUserHeader.classList.add('hidden');
+            }
+            
+            if (programs.length === 0) {
+                tableBody.innerHTML = '';
+                noPrograms.classList.remove('hidden');
+                return;
+            }
+            
+            noPrograms.classList.add('hidden');
+            tableBody.innerHTML = '';
+            
+            programs.forEach((program, index) => {
+                const row = document.createElement('tr');
+                row.className = index % 2 === 0 ? 'bg-white' : 'bg-gray-50';
+                row.innerHTML = `
+                    <td class="p-4">
+                        <div class="font-semibold text-gray-800">${program.name}</div>
+                        <div class="text-sm text-gray-500">${program.code}</div>
+                    </td>
+                    <td class="p-4">
+                        <span class="inline-block px-3 py-1 rounded-full bg-blue-100 text-blue-800 text-sm font-medium">
+                            ${program.cat}
+                        </span>
+                    </td>
+                    ${currentUser.role === 'leader' ? `
+                    <td class="p-4">
+                        <div class="flex items-center gap-2">
+                            <i class="fas fa-user text-gray-400"></i>
+                            <span class="font-medium text-gray-700">${program.user}</span>
+                        </div>
+                    </td>` : ''}
+                `;
+                tableBody.appendChild(row);
+            });
+            
+            // Show add program form for leader
+            const addProgramForm = document.getElementById('addProgramForm');
+            if (currentUser.role === 'leader') {
+                addProgramForm.classList.remove('hidden');
+                populateAddProgramForm();
+            } else {
+                addProgramForm.classList.add('hidden');
+            }
+        }
 
-  function applyTeammateFilter() {
-    filteredUser = document.getElementById("teammateSelect").value;
-    // re-render current active tab
-    const active = document.querySelector(".tab-btn.active");
-    const tab = active ? active.textContent.toLowerCase() : "programs";
-    showTab(null, tab);
-  }
+        // Render Schedule
+        function renderSchedule() {
+            const schedule = storeData.schedule || [];
+            const tableBody = document.getElementById('scheduleTableBody');
+            const noSchedule = document.getElementById('noSchedule');
+            const scheduleCount = document.getElementById('scheduleCount');
+            const scheduleUserHeader = document.getElementById('scheduleUserHeader');
+            
+            scheduleCount.innerText = schedule.length;
+            
+            // Show/hide teammate column for leader
+            if (currentUser.role === 'leader') {
+                scheduleUserHeader.classList.remove('hidden');
+            } else {
+                scheduleUserHeader.classList.add('hidden');
+            }
+            
+            if (schedule.length === 0) {
+                tableBody.innerHTML = '';
+                noSchedule.classList.remove('hidden');
+                return;
+            }
+            
+            noSchedule.classList.add('hidden');
+            tableBody.innerHTML = '';
+            
+            schedule.forEach((item, index) => {
+                const row = document.createElement('tr');
+                row.className = index % 2 === 0 ? 'bg-white' : 'bg-gray-50';
+                row.innerHTML = `
+                    <td class="p-4">
+                        <div class="font-semibold text-gray-800">${item.name}</div>
+                        <div class="text-sm text-gray-500">${item.cat}</div>
+                    </td>
+                    <td class="p-4">
+                        <div class="font-medium text-gray-800">${item.date}</div>
+                        <div class="text-sm text-gray-600">
+                            <i class="far fa-clock mr-1"></i>${item.time}
+                        </div>
+                    </td>
+                    <td class="p-4">
+                        <div class="text-gray-700">
+                            <i class="fas fa-map-marker-alt mr-2 text-red-400"></i>
+                            ${item.venue}
+                        </div>
+                    </td>
+                    ${currentUser.role === 'leader' ? `
+                    <td class="p-4">
+                        <div class="flex items-center gap-2">
+                            <i class="fas fa-user text-gray-400"></i>
+                            <span class="font-medium text-gray-700">${item.user}</span>
+                        </div>
+                    </td>` : ''}
+                `;
+                tableBody.appendChild(row);
+            });
+        }
 
-  function showTab(ev, tabName) {
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-    if (ev && ev.target) ev.target.classList.add('active');
-    else {
-      // keep current active if user calls internally; otherwise default highlight
-      const map = { programs:0, schedule:1, results:2 };
-      document.querySelectorAll('.tab-btn')[map[tabName]]?.classList.add('active');
-    }
+        // Render Results
+        function renderResults() {
+            const results = storeData.results || [];
+            const tableBody = document.getElementById('resultsTableBody');
+            const noResults = document.getElementById('noResults');
+            const resultsCount = document.getElementById('resultsCount');
+            const resultsUserHeader = document.getElementById('resultsUserHeader');
+            const resultsFooter = document.getElementById('resultsFooter');
+            
+            resultsCount.innerText = results.length;
+            
+            // Show/hide teammate column and footer for leader
+            if (currentUser.role === 'leader') {
+                resultsUserHeader.classList.remove('hidden');
+                resultsFooter.classList.remove('hidden');
+                document.getElementById('grandTotalPoints').innerText = storeData.grandTotalPoints || 0;
+            } else {
+                resultsUserHeader.classList.add('hidden');
+                resultsFooter.classList.add('hidden');
+            }
+            
+            if (results.length === 0) {
+                tableBody.innerHTML = '';
+                noResults.classList.remove('hidden');
+                return;
+            }
+            
+            noResults.classList.add('hidden');
+            tableBody.innerHTML = '';
+            
+            results.forEach((result, index) => {
+                const row = document.createElement('tr');
+                row.className = index % 2 === 0 ? 'bg-white' : 'bg-gray-50';
+                
+                // Determine position color
+                let positionColor = 'text-gray-800';
+                if (result.pos === '1st') positionColor = 'text-yellow-600';
+                else if (result.pos === '2nd') positionColor = 'text-gray-600';
+                else if (result.pos === '3rd') positionColor = 'text-orange-600';
+                
+                row.innerHTML = `
+                    <td class="p-4">
+                        <div class="font-semibold text-gray-800">${result.name}</div>
+                        <div class="text-sm text-gray-500">${result.cat}</div>
+                    </td>
+                    <td class="p-4">
+                        <div class="flex items-center gap-4">
+                            <div>
+                                <div class="font-bold ${positionColor}">${result.pos}</div>
+                                <div class="text-sm text-gray-600">${result.grade}</div>
+                            </div>
+                            <div class="ml-auto">
+                                <div class="text-lg font-bold text-green-600">${result.pts}</div>
+                                <div class="text-xs text-gray-500">points</div>
+                            </div>
+                        </div>
+                    </td>
+                    ${currentUser.role === 'leader' ? `
+                    <td class="p-4">
+                        <div class="flex items-center gap-2">
+                            <i class="fas fa-user text-gray-400"></i>
+                            <span class="font-medium text-gray-700">${result.user}</span>
+                        </div>
+                    </td>` : ''}
+                `;
+                tableBody.appendChild(row);
+            });
+        }
 
-    const container = document.getElementById('tableContainer');
-    const loading = document.getElementById('loadingData');
+        // Populate Add Program Form (Leader only)
+        function populateAddProgramForm() {
+            const memberSelect = document.getElementById('memberSelect');
+            const programSelect = document.getElementById('programSelect');
+            
+            // Clear existing options
+            memberSelect.innerHTML = '<option value="">Select Member</option>';
+            programSelect.innerHTML = '<option value="">Select Program</option>';
+            
+            // Populate members
+            teamMembers.forEach(member => {
+                const option = document.createElement('option');
+                option.value = member.name;
+                option.textContent = member.name;
+                memberSelect.appendChild(option);
+            });
+            
+            // Populate programs
+            availablePrograms.forEach(program => {
+                const option = document.createElement('option');
+                option.value = program.code;
+                option.textContent = `${program.name} (${program.category})`;
+                programSelect.appendChild(option);
+            });
+        }
 
-    if (!storeData || !storeData[tabName]) {
-      container.innerHTML = `<div class="p-10 text-center text-gray-400">No data</div>`;
-      loading.classList.add('hidden');
-      return;
-    }
+        // Add Program (Leader only)
+        async function addProgram() {
+            const memberSelect = document.getElementById('memberSelect');
+            const programSelect = document.getElementById('programSelect');
+            const messageElement = document.getElementById('addProgramMsg');
+            
+            const member = memberSelect.value;
+            const programCode = programSelect.value;
+            
+            if (!member || !programCode) {
+                messageElement.innerHTML = '<span class="text-red-500">Please select both member and program</span>';
+                return;
+            }
+            
+            try {
+                messageElement.innerHTML = '<span class="text-blue-500"><i class="fas fa-spinner fa-spin mr-2"></i>Adding program...</span>';
+                
+                const response = await fetch(`${SCRIPT_URL}?action=addProgram&member=${encodeURIComponent(member)}&programCode=${encodeURIComponent(programCode)}&team=${encodeURIComponent(currentUser.team)}`);
+                const result = await response.json();
+                
+                if (result.status === "success") {
+                    messageElement.innerHTML = '<span class="text-green-500"><i class="fas fa-check-circle mr-2"></i>Program added successfully!</span>';
+                    
+                    // Clear selections
+                    memberSelect.value = '';
+                    programSelect.value = '';
+                    
+                    // Reload data and refresh display
+                    await loadDashboardData();
+                    renderPrograms();
+                    
+                    // Clear success message after 3 seconds
+                    setTimeout(() => {
+                        messageElement.innerHTML = '';
+                    }, 3000);
+                } else {
+                    messageElement.innerHTML = `<span class="text-red-500">${result.message}</span>`;
+                }
+            } catch (error) {
+                messageElement.innerHTML = '<span class="text-red-500">Error adding program. Please try again.</span>';
+                console.error('Add program error:', error);
+            }
+        }
 
-    // leader filter by teammate
-    let rows = storeData[tabName];
-    if (currentUser.role === "leader" && filteredUser !== "__all__") {
-      rows = rows.filter(r => (r.user || "").toString() === filteredUser);
-    }
+        // Logout
+        function logout() {
+            if (confirm("Are you sure you want to logout?")) {
+                currentUser = null;
+                storeData = null;
+                document.getElementById('dashboard').classList.add('hidden');
+                document.getElementById('loginSection').classList.remove('hidden');
+                document.getElementById('uPswd').value = '';
+                document.getElementById('errMsg').innerText = '';
+            }
+        }
 
-    let html = `<table class="w-full text-left border-collapse">`;
-
-    if (tabName === 'programs') {
-      html += `<tr class="bg-gray-100">
-        <th class="p-3">Code</th>
-        <th class="p-3">Program</th>
-        <th class="p-3">Category</th>
-        ${currentUser.role==='leader' ? '<th class="p-3">Teammate</th>' : ''}
-      </tr>`;
-
-      rows.forEach(p => {
-        html += `<tr class="border-t">
-          <td class="p-3 text-sm text-gray-600">${p.code ?? ""}</td>
-          <td class="p-3 font-semibold">${p.name ?? ""}</td>
-          <td class="p-3">${p.cat ?? ""}</td>
-          ${currentUser.role==='leader' ? `<td class="p-3 text-blue-600">${p.user ?? ""}</td>` : ''}
-        </tr>`;
-      });
-
-    } else if (tabName === 'schedule') {
-      html += `<tr class="bg-gray-100">
-        <th class="p-3">Program</th>
-        <th class="p-3">Date</th>
-        <th class="p-3">Time</th>
-        ${currentUser.role==='leader' ? '<th class="p-3">Teammate</th>' : ''}
-      </tr>`;
-
-      rows.forEach(s => {
-        html += `<tr class="border-t">
-          <td class="p-3 font-semibold">${s.name ?? ""}</td>
-          <td class="p-3 text-sm">${s.date ?? ""}</td>
-          <td class="p-3 text-sm">${s.time ?? ""}</td>
-          ${currentUser.role==='leader' ? `<td class="p-3">${s.user ?? ""}</td>` : ''}
-        </tr>`;
-      });
-
-    } else if (tabName === 'results') {
-      html += `<tr class="bg-gray-100">
-        <th class="p-3">Program</th>
-        <th class="p-3">Position</th>
-        <th class="p-3">Grade</th>
-        <th class="p-3">Points</th>
-        ${currentUser.role==='leader' ? '<th class="p-3">Teammate</th>' : ''}
-      </tr>`;
-
-      rows.forEach(r => {
-        html += `<tr class="border-t">
-          <td class="p-3 font-semibold">${r.name ?? ""}</td>
-          <td class="p-3"><span class="font-bold text-green-600">${r.pos ?? ""}</span></td>
-          <td class="p-3">${r.grade ?? ""}</td>
-          <td class="p-3">${r.pts ?? ""}</td>
-          ${currentUser.role==='leader' ? `<td class="p-3 text-blue-600">${r.user ?? ""}</td>` : ''}
-        </tr>`;
-      });
-    }
-
-    html += `</table>`;
-
-    container.innerHTML = rows.length
-      ? html
-      : `<div class="p-10 text-center text-gray-400">No data found</div>`;
-
-    loading.classList.add('hidden');
-  }
-
-  function logout() {
-    location.reload();
-  }
-</script>
+        // Enter key support for login
+        document.getElementById('uPswd').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                handleLogin();
+            }
+        });
+    </script>
 </body>
 </html>
