@@ -17,11 +17,40 @@
             --leader: #3b82f6;
             --member: #8b5cf6;
         }
-        body { 
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        
+        /* New background design */
+        .login-bg {
+            background: linear-gradient(135deg, 
+                rgba(102, 126, 234, 0.95) 0%, 
+                rgba(118, 75, 162, 0.95) 100%),
+                url('https://images.unsplash.com/photo-1514525253161-7a46d19cd819?ixlib=rb-1.2.1&auto=format&fit=crop&w=2000&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
             min-height: 100vh;
         }
+        
+        .dashboard-bg {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            min-height: 100vh;
+        }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+        }
+        
+        .glass-sidebar {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-right: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
         .hidden { display: none !important; }
         .nav-shadow { 
             box-shadow: 0 4px 20px rgba(0,0,0,0.08);
@@ -33,11 +62,10 @@
             box-shadow: 0 4px 12px rgba(122, 56, 252, 0.3);
         }
         .card {
-            background: rgba(255, 255, 255, 0.98);
+            background: white;
             border-radius: 16px;
             box-shadow: 0 8px 32px rgba(0,0,0,0.1);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.2);
+            border: 1px solid rgba(0,0,0,0.05);
         }
         .btn-primary {
             background: linear-gradient(135deg, var(--primary), var(--secondary));
@@ -66,10 +94,12 @@
         .form-input {
             border: 2px solid #e2e8f0;
             transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.9);
         }
         .form-input:focus {
             border-color: var(--primary);
             box-shadow: 0 0 0 3px rgba(122, 56, 252, 0.1);
+            background: white;
         }
         .badge {
             padding: 4px 12px;
@@ -168,38 +198,89 @@
                 display: block;
             }
         }
+        
+        /* New animation for login */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .floating-logo {
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, var(--secondary), var(--primary));
+        }
     </style>
 </head>
-<body class="bg-gray-50">
+<body class="login-bg">
+    <!-- Debug Console (Hidden by default) -->
+    <div id="debugConsole" class="fixed bottom-4 left-4 bg-black bg-opacity-80 text-white p-4 rounded-lg text-sm max-w-xs hidden z-50">
+        <div class="flex justify-between items-center mb-2">
+            <span class="font-bold">Debug Console</span>
+            <button onclick="toggleDebug()" class="text-gray-300 hover:text-white">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div id="debugLog" class="overflow-auto max-h-32"></div>
+    </div>
+    
     <!-- Login Section -->
     <div id="loginSection" class="min-h-screen flex items-center justify-center p-4">
-        <div class="card p-8 w-full max-w-md">
+        <div class="glass-card p-8 w-full max-w-md">
             <div class="text-center mb-8">
-                <div class="inline-block p-3 rounded-full bg-gradient-to-r from-purple-100 to-indigo-100 mb-4">
-                    <i class="fas fa-trophy text-4xl text-purple-600"></i>
+                <div class="inline-block p-4 rounded-full bg-gradient-to-r from-purple-100 to-indigo-100 mb-4 floating-logo">
+                    <img src="https://quaf2026.netlify.app/images/logo.png" 
+                         alt="QUAF Logo" 
+                         class="w-20 h-20 object-contain">
                 </div>
-                <h1 class="text-3xl font-bold text-gray-800 mb-2">QUAF</h1>
+                <h1 class="text-3xl font-bold text-gray-800 mb-2">QUAF CMS</h1>
                 <p class="text-gray-600">Competition Management System</p>
             </div>
             
             <h2 class="text-2xl font-bold mb-6 text-gray-800 text-center">Welcome Back</h2>
             <div class="space-y-4">
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Username</label>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        <i class="fas fa-user mr-2"></i>Username
+                    </label>
                     <input type="text" id="uName" placeholder="Enter your username" 
                            class="form-input w-full p-3 rounded-lg">
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Password</label>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        <i class="fas fa-lock mr-2"></i>Password
+                    </label>
                     <input type="password" id="uPswd" placeholder="Enter your password" 
                            class="form-input w-full p-3 rounded-lg">
                 </div>
                 <button onclick="handleLogin()" id="loginBtn" 
-                        class="btn-primary w-full p-3 rounded-lg font-bold text-lg mt-6">
+                        class="btn-primary w-full p-3 rounded-lg font-bold text-lg mt-6 flex items-center justify-center">
                     <span id="loginText">Sign In</span>
                     <i id="loginSpinner" class="fas fa-spinner fa-spin ml-2 hidden"></i>
                 </button>
                 <p id="errMsg" class="text-red-500 mt-4 text-center text-sm"></p>
+                
+                <!-- Debug button -->
+                <button onclick="toggleDebug()" class="text-xs text-gray-400 hover:text-gray-600 mt-4">
+                    <i class="fas fa-bug mr-1"></i>Debug Console
+                </button>
             </div>
             
             <div class="mt-8 pt-6 border-t border-gray-200">
@@ -212,16 +293,18 @@
     </div>
 
     <!-- Dashboard Container -->
-    <div id="dashboard" class="hidden min-h-screen">
+    <div id="dashboard" class="hidden min-h-screen dashboard-bg">
         <!-- Sidebar Overlay for Mobile -->
         <div id="sidebarOverlay" class="sidebar-overlay" onclick="toggleSidebar()"></div>
         
         <!-- Sidebar -->
-        <div id="sidebar" class="sidebar bg-white border-r border-gray-200 fixed top-0 left-0 h-full shadow-lg">
+        <div id="sidebar" class="sidebar glass-sidebar fixed top-0 left-0 h-full shadow-lg">
             <div class="p-6 border-b border-gray-100">
                 <div class="flex items-center gap-3 mb-6">
                     <div class="p-2 rounded-lg bg-gradient-to-r from-purple-100 to-indigo-100">
-                        <i class="fas fa-trophy text-purple-600"></i>
+                        <img src="https://quaf2026.netlify.app/images/logo.png" 
+                             alt="QUAF Logo" 
+                             class="w-8 h-8 object-contain">
                     </div>
                     <div>
                         <h1 class="font-bold text-gray-800 text-lg">QUAF CMS</h1>
@@ -334,7 +417,9 @@
                 <div class="flex items-center gap-4">
                     <div class="hidden md:flex items-center gap-2 bg-gray-50 px-3 py-2 rounded-full">
                         <div class="w-8 h-8 rounded-full bg-gradient-to-r from-purple-100 to-indigo-100 flex items-center justify-center">
-                            <i class="fas fa-user text-purple-600 text-sm"></i>
+                            <img src="https://quaf2026.netlify.app/images/logo.png" 
+                                 alt="QUAF Logo" 
+                                 class="w-6 h-6 object-contain">
                         </div>
                         <div>
                             <div id="displayUserSmall" class="text-sm font-medium text-gray-700"></div>
@@ -376,20 +461,22 @@
                                 </div>
                             </div>
                             <div class="p-4">
-                                <table id="usersTable" class="display w-full">
-                                    <thead>
-                                        <tr>
-                                            <th>SL.No</th>
-                                            <th>Name</th>
-                                            <th>Role</th>
-                                            <th>Team</th>
-                                            <th>Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <!-- Users will be loaded via DataTable -->
-                                    </tbody>
-                                </table>
+                                <div class="overflow-x-auto">
+                                    <table id="usersTable" class="display w-full">
+                                        <thead>
+                                            <tr>
+                                                <th>SL.No</th>
+                                                <th>Name</th>
+                                                <th>Role</th>
+                                                <th>Team</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <!-- Users will be loaded via DataTable -->
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -414,19 +501,21 @@
                                 </div>
                             </div>
                             <div class="p-4">
-                                <table id="programsAdminTable" class="display w-full">
-                                    <thead>
-                                        <tr>
-                                            <th>Code</th>
-                                            <th>Program Name</th>
-                                            <th>Category</th>
-                                            <th>Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <!-- Programs will be loaded via DataTable -->
-                                    </tbody>
-                                </table>
+                                <div class="overflow-x-auto">
+                                    <table id="programsAdminTable" class="display w-full">
+                                        <thead>
+                                            <tr>
+                                                <th>Code</th>
+                                                <th>Program Name</th>
+                                                <th>Category</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <!-- Programs will be loaded via DataTable -->
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -451,22 +540,24 @@
                                 </div>
                             </div>
                             <div class="p-4">
-                                <table id="registrationAdminTable" class="display w-full">
-                                    <thead>
-                                        <tr>
-                                            <th>Code</th>
-                                            <th>Program Name</th>
-                                            <th>Category</th>
-                                            <th>SL.No</th>
-                                            <th>Name</th>
-                                            <th>Team</th>
-                                            <th>Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <!-- Registrations will be loaded via DataTable -->
-                                    </tbody>
-                                </table>
+                                <div class="overflow-x-auto">
+                                    <table id="registrationAdminTable" class="display w-full">
+                                        <thead>
+                                            <tr>
+                                                <th>Code</th>
+                                                <th>Program Name</th>
+                                                <th>Category</th>
+                                                <th>SL.No</th>
+                                                <th>Name</th>
+                                                <th>Team</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <!-- Registrations will be loaded via DataTable -->
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -491,25 +582,27 @@
                                 </div>
                             </div>
                             <div class="p-4">
-                                <table id="scheduleAdminTable" class="display w-full">
-                                    <thead>
-                                        <tr>
-                                            <th>Code</th>
-                                            <th>Program Name</th>
-                                            <th>Category</th>
-                                            <th>SL.No</th>
-                                            <th>Name</th>
-                                            <th>Team</th>
-                                            <th>Date</th>
-                                            <th>Time</th>
-                                            <th>Venue</th>
-                                            <th>Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <!-- Schedule will be loaded via DataTable -->
-                                    </tbody>
-                                </table>
+                                <div class="overflow-x-auto">
+                                    <table id="scheduleAdminTable" class="display w-full">
+                                        <thead>
+                                            <tr>
+                                                <th>Code</th>
+                                                <th>Program Name</th>
+                                                <th>Category</th>
+                                                <th>SL.No</th>
+                                                <th>Name</th>
+                                                <th>Team</th>
+                                                <th>Date</th>
+                                                <th>Time</th>
+                                                <th>Venue</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <!-- Schedule will be loaded via DataTable -->
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -534,25 +627,27 @@
                                 </div>
                             </div>
                             <div class="p-4">
-                                <table id="resultsAdminTable" class="display w-full">
-                                    <thead>
-                                        <tr>
-                                            <th>Code</th>
-                                            <th>Program Name</th>
-                                            <th>Category</th>
-                                            <th>SL.No</th>
-                                            <th>Name</th>
-                                            <th>Team</th>
-                                            <th>Position</th>
-                                            <th>Grade</th>
-                                            <th>Points</th>
-                                            <th>Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <!-- Results will be loaded via DataTable -->
-                                    </tbody>
-                                </table>
+                                <div class="overflow-x-auto">
+                                    <table id="resultsAdminTable" class="display w-full">
+                                        <thead>
+                                            <tr>
+                                                <th>Code</th>
+                                                <th>Program Name</th>
+                                                <th>Category</th>
+                                                <th>SL.No</th>
+                                                <th>Name</th>
+                                                <th>Team</th>
+                                                <th>Position</th>
+                                                <th>Grade</th>
+                                                <th>Points</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <!-- Results will be loaded via DataTable -->
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -571,18 +666,20 @@
                                 <p class="text-gray-600 text-sm mt-1">View your team members</p>
                             </div>
                             <div class="p-4">
-                                <table id="teamTable" class="w-full">
-                                    <thead class="bg-gray-50">
-                                        <tr>
-                                            <th class="p-3 text-left font-semibold text-gray-700">SL.No</th>
-                                            <th class="p-3 text-left font-semibold text-gray-700">Name</th>
-                                            <th class="p-3 text-left font-semibold text-gray-700">Role</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="teamTableBody">
-                                        <!-- Team members will be loaded here -->
-                                    </tbody>
-                                </table>
+                                <div class="overflow-x-auto">
+                                    <table id="teamTable" class="w-full">
+                                        <thead class="bg-gray-50">
+                                            <tr>
+                                                <th class="p-3 text-left font-semibold text-gray-700">SL.No</th>
+                                                <th class="p-3 text-left font-semibold text-gray-700">Name</th>
+                                                <th class="p-3 text-left font-semibold text-gray-700">Role</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="teamTableBody">
+                                            <!-- Team members will be loaded here -->
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -598,18 +695,20 @@
                                 <p class="text-gray-600 text-sm mt-1">View all available programs</p>
                             </div>
                             <div class="p-4">
-                                <table id="programsLeaderTable" class="w-full">
-                                    <thead class="bg-gray-50">
-                                        <tr>
-                                            <th class="p-3 text-left font-semibold text-gray-700">Code</th>
-                                            <th class="p-3 text-left font-semibold text-gray-700">Program Name</th>
-                                            <th class="p-3 text-left font-semibold text-gray-700">Category</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="programsLeaderTableBody">
-                                        <!-- Programs will be loaded here -->
-                                    </tbody>
-                                </table>
+                                <div class="overflow-x-auto">
+                                    <table id="programsLeaderTable" class="w-full">
+                                        <thead class="bg-gray-50">
+                                            <tr>
+                                                <th class="p-3 text-left font-semibold text-gray-700">Code</th>
+                                                <th class="p-3 text-left font-semibold text-gray-700">Program Name</th>
+                                                <th class="p-3 text-left font-semibold text-gray-700">Category</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="programsLeaderTableBody">
+                                            <!-- Programs will be loaded here -->
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -634,21 +733,23 @@
                                 </div>
                             </div>
                             <div class="p-4">
-                                <table id="registrationLeaderTable" class="w-full">
-                                    <thead class="bg-gray-50">
-                                        <tr>
-                                            <th class="p-3 text-left font-semibold text-gray-700">Code</th>
-                                            <th class="p-3 text-left font-semibold text-gray-700">Program Name</th>
-                                            <th class="p-3 text-left font-semibold text-gray-700">Category</th>
-                                            <th class="p-3 text-left font-semibold text-gray-700">SL.No</th>
-                                            <th class="p-3 text-left font-semibold text-gray-700">Name</th>
-                                            <th class="p-3 text-left font-semibold text-gray-700">Team</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="registrationLeaderTableBody">
-                                        <!-- Registrations will be loaded here -->
-                                    </tbody>
-                                </table>
+                                <div class="overflow-x-auto">
+                                    <table id="registrationLeaderTable" class="w-full">
+                                        <thead class="bg-gray-50">
+                                            <tr>
+                                                <th class="p-3 text-left font-semibold text-gray-700">Code</th>
+                                                <th class="p-3 text-left font-semibold text-gray-700">Program Name</th>
+                                                <th class="p-3 text-left font-semibold text-gray-700">Category</th>
+                                                <th class="p-3 text-left font-semibold text-gray-700">SL.No</th>
+                                                <th class="p-3 text-left font-semibold text-gray-700">Name</th>
+                                                <th class="p-3 text-left font-semibold text-gray-700">Team</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="registrationLeaderTableBody">
+                                            <!-- Registrations will be loaded here -->
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -664,22 +765,24 @@
                                 <p class="text-gray-600 text-sm mt-1">View team competition schedule</p>
                             </div>
                             <div class="p-4">
-                                <table id="scheduleLeaderTable" class="w-full">
-                                    <thead class="bg-gray-50">
-                                        <tr>
-                                            <th class="p-3 text-left font-semibold text-gray-700">Code</th>
-                                            <th class="p-3 text-left font-semibold text-gray-700">Program Name</th>
-                                            <th class="p-3 text-left font-semibold text-gray-700">Category</th>
-                                            <th class="p-3 text-left font-semibold text-gray-700">Name</th>
-                                            <th class="p-3 text-left font-semibold text-gray-700">Date</th>
-                                            <th class="p-3 text-left font-semibold text-gray-700">Time</th>
-                                            <th class="p-3 text-left font-semibold text-gray-700">Venue</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="scheduleLeaderTableBody">
-                                        <!-- Schedule will be loaded here -->
-                                    </tbody>
-                                </table>
+                                <div class="overflow-x-auto">
+                                    <table id="scheduleLeaderTable" class="w-full">
+                                        <thead class="bg-gray-50">
+                                            <tr>
+                                                <th class="p-3 text-left font-semibold text-gray-700">Code</th>
+                                                <th class="p-3 text-left font-semibold text-gray-700">Program Name</th>
+                                                <th class="p-3 text-left font-semibold text-gray-700">Category</th>
+                                                <th class="p-3 text-left font-semibold text-gray-700">Name</th>
+                                                <th class="p-3 text-left font-semibold text-gray-700">Date</th>
+                                                <th class="p-3 text-left font-semibold text-gray-700">Time</th>
+                                                <th class="p-3 text-left font-semibold text-gray-700">Venue</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="scheduleLeaderTableBody">
+                                            <!-- Schedule will be loaded here -->
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -695,31 +798,33 @@
                                 <p class="text-gray-600 text-sm mt-1">View competition results with team points</p>
                             </div>
                             <div class="p-4">
-                                <table id="resultsLeaderTable" class="w-full mb-6">
-                                    <thead class="bg-gray-50">
-                                        <tr>
-                                            <th class="p-3 text-left font-semibold text-gray-700">Code</th>
-                                            <th class="p-3 text-left font-semibold text-gray-700">Program Name</th>
-                                            <th class="p-3 text-left font-semibold text-gray-700">Category</th>
-                                            <th class="p-3 text-left font-semibold text-gray-700">Name</th>
-                                            <th class="p-3 text-left font-semibold text-gray-700">Position</th>
-                                            <th class="p-3 text-left font-semibold text-gray-700">Grade</th>
-                                            <th class="p-3 text-left font-semibold text-gray-700">Points</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="resultsLeaderTableBody">
-                                        <!-- Results will be loaded here -->
-                                    </tbody>
-                                </table>
-                                
-                                <!-- Team Points Summary -->
-                                <div class="mt-8">
-                                    <h4 class="text-lg font-bold text-gray-800 mb-4">
-                                        <i class="fas fa-chart-bar mr-2"></i>
-                                        Team Points Summary
-                                    </h4>
-                                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                                        <!-- Team points will be loaded here -->
+                                <div class="overflow-x-auto">
+                                    <table id="resultsLeaderTable" class="w-full mb-6">
+                                        <thead class="bg-gray-50">
+                                            <tr>
+                                                <th class="p-3 text-left font-semibold text-gray-700">Code</th>
+                                                <th class="p-3 text-left font-semibold text-gray-700">Program Name</th>
+                                                <th class="p-3 text-left font-semibold text-gray-700">Category</th>
+                                                <th class="p-3 text-left font-semibold text-gray-700">Name</th>
+                                                <th class="p-3 text-left font-semibold text-gray-700">Position</th>
+                                                <th class="p-3 text-left font-semibold text-gray-700">Grade</th>
+                                                <th class="p-3 text-left font-semibold text-gray-700">Points</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="resultsLeaderTableBody">
+                                            <!-- Results will be loaded here -->
+                                        </tbody>
+                                    </table>
+                                    
+                                    <!-- Team Points Summary -->
+                                    <div class="mt-8">
+                                        <h4 class="text-lg font-bold text-gray-800 mb-4">
+                                            <i class="fas fa-chart-bar mr-2"></i>
+                                            Team Points Summary
+                                        </h4>
+                                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4" id="teamPointsContainer">
+                                            <!-- Team points will be loaded here -->
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -740,18 +845,20 @@
                                 <p class="text-gray-600 text-sm mt-1">View your registered programs</p>
                             </div>
                             <div class="p-4">
-                                <table id="programsMemberTable" class="w-full">
-                                    <thead class="bg-gray-50">
-                                        <tr>
-                                            <th class="p-3 text-left font-semibold text-gray-700">Code</th>
-                                            <th class="p-3 text-left font-semibold text-gray-700">Program Name</th>
-                                            <th class="p-3 text-left font-semibold text-gray-700">Category</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="programsMemberTableBody">
-                                        <!-- Programs will be loaded here -->
-                                    </tbody>
-                                </table>
+                                <div class="overflow-x-auto">
+                                    <table id="programsMemberTable" class="w-full">
+                                        <thead class="bg-gray-50">
+                                            <tr>
+                                                <th class="p-3 text-left font-semibold text-gray-700">Code</th>
+                                                <th class="p-3 text-left font-semibold text-gray-700">Program Name</th>
+                                                <th class="p-3 text-left font-semibold text-gray-700">Category</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="programsMemberTableBody">
+                                            <!-- Programs will be loaded here -->
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -767,20 +874,22 @@
                                 <p class="text-gray-600 text-sm mt-1">View your competition schedule</p>
                             </div>
                             <div class="p-4">
-                                <table id="scheduleMemberTable" class="w-full">
-                                    <thead class="bg-gray-50">
-                                        <tr>
-                                            <th class="p-3 text-left font-semibold text-gray-700">Program Name</th>
-                                            <th class="p-3 text-left font-semibold text-gray-700">Category</th>
-                                            <th class="p-3 text-left font-semibold text-gray-700">Date</th>
-                                            <th class="p-3 text-left font-semibold text-gray-700">Time</th>
-                                            <th class="p-3 text-left font-semibold text-gray-700">Venue</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="scheduleMemberTableBody">
-                                        <!-- Schedule will be loaded here -->
-                                    </tbody>
-                                </table>
+                                <div class="overflow-x-auto">
+                                    <table id="scheduleMemberTable" class="w-full">
+                                        <thead class="bg-gray-50">
+                                            <tr>
+                                                <th class="p-3 text-left font-semibold text-gray-700">Program Name</th>
+                                                <th class="p-3 text-left font-semibold text-gray-700">Category</th>
+                                                <th class="p-3 text-left font-semibold text-gray-700">Date</th>
+                                                <th class="p-3 text-left font-semibold text-gray-700">Time</th>
+                                                <th class="p-3 text-left font-semibold text-gray-700">Venue</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="scheduleMemberTableBody">
+                                            <!-- Schedule will be loaded here -->
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -796,20 +905,22 @@
                                 <p class="text-gray-600 text-sm mt-1">View your competition results</p>
                             </div>
                             <div class="p-4">
-                                <table id="resultsMemberTable" class="w-full">
-                                    <thead class="bg-gray-50">
-                                        <tr>
-                                            <th class="p-3 text-left font-semibold text-gray-700">Program Name</th>
-                                            <th class="p-3 text-left font-semibold text-gray-700">Category</th>
-                                            <th class="p-3 text-left font-semibold text-gray-700">Position</th>
-                                            <th class="p-3 text-left font-semibold text-gray-700">Grade</th>
-                                            <th class="p-3 text-left font-semibold text-gray-700">Points</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="resultsMemberTableBody">
-                                        <!-- Results will be loaded here -->
-                                    </tbody>
-                                </table>
+                                <div class="overflow-x-auto">
+                                    <table id="resultsMemberTable" class="w-full">
+                                        <thead class="bg-gray-50">
+                                            <tr>
+                                                <th class="p-3 text-left font-semibold text-gray-700">Program Name</th>
+                                                <th class="p-3 text-left font-semibold text-gray-700">Category</th>
+                                                <th class="p-3 text-left font-semibold text-gray-700">Position</th>
+                                                <th class="p-3 text-left font-semibold text-gray-700">Grade</th>
+                                                <th class="p-3 text-left font-semibold text-gray-700">Points</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="resultsMemberTableBody">
+                                            <!-- Results will be loaded here -->
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
