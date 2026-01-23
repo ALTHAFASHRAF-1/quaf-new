@@ -49,9 +49,10 @@ async function testConnection() {
         const testUrl = `${SCRIPT_URL}?action=login&name=test&pswd=test`;
         debugLog(`Testing URL: ${testUrl}`);
         
-        const response = await fetch(testUrl, { mode: 'no-cors' });
-        debugLog('Connection test completed');
-        return true;
+        // Use a simpler fetch without CORS for testing
+        const response = await fetch(testUrl);
+        debugLog(`Connection test response status: ${response.status}`);
+        return response.status === 200;
     } catch (error) {
         debugLog(`Connection test failed: ${error.message}`, 'error');
         return false;
@@ -81,29 +82,14 @@ async function handleLogin() {
     debugLog(`Attempting login for user: ${name}`);
     
     try {
-        // First test the connection
-        const isConnected = await testConnection();
-        if (!isConnected) {
-            throw new Error('Cannot connect to server. Please check your internet connection.');
-        }
-        
         debugLog(`Calling login API...`);
         
-        // Create URL with proper encoding
+        // Create URL with proper encoding - USE /exec NOT /dev
         const loginUrl = `${SCRIPT_URL}?action=login&name=${encodeURIComponent(name)}&pswd=${encodeURIComponent(pswd)}`;
         debugLog(`Login URL: ${loginUrl}`);
         
-        // Add timeout to fetch
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 10000);
-        
-        const response = await fetch(loginUrl, {
-            signal: controller.signal,
-            mode: 'cors',
-            cache: 'no-cache'
-        });
-        
-        clearTimeout(timeoutId);
+        // Use a simple fetch without complex options
+        const response = await fetch(loginUrl);
         
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
@@ -121,14 +107,14 @@ async function handleLogin() {
             debugLog(`Login failed: ${result.message}`, 'error');
         }
     } catch (error) {
-        if (error.name === 'AbortError') {
-            errMsg.innerText = "Connection timeout. Please try again.";
-            debugLog('Login timeout error', 'error');
-        } else if (error.name === 'TypeError' && error.message.includes('Failed to fetch')) {
-            errMsg.innerText = "Cannot connect to server. Please check: 1) Your internet connection, 2) Google Apps Script URL, 3) Script deployment settings.";
+        if (error.name === 'TypeError' && error.message.includes('Failed to fetch')) {
+            errMsg.innerText = `Connection error. Please check: 
+            1. Google Apps Script deployment settings
+            2. URL is correct: ${SCRIPT_URL}
+            3. Script is deployed as "Web App" with "Anyone, even anonymous" access`;
             debugLog('Network error - Failed to fetch', 'error');
         } else {
-            errMsg.innerText = `Connection error: ${error.message}`;
+            errMsg.innerText = `Error: ${error.message}`;
             debugLog(`Login error: ${error.message}`, 'error');
         }
         console.error('Login error details:', error);
@@ -212,8 +198,6 @@ async function initDashboard() {
     debugLog('Dashboard initialized successfully');
 }
 
-// Rest of the functions remain the same as the previous version...
-
 // Toggle sidebar for mobile
 function toggleSidebar() {
     const sidebar = document.getElementById('sidebar');
@@ -293,15 +277,6 @@ function showTab(tabName) {
 // Load Admin Data with single API call
 async function loadAdminData() {
     try {
-        const cacheKey = `admin_dashboard_${currentUser.sl_no}`;
-        const cachedData = dataCache.get(cacheKey);
-        
-        if (cachedData && (Date.now() - cachedData.timestamp) < CACHE_DURATION) {
-            debugLog('Using cached admin data');
-            processAdminData(cachedData.data);
-            return;
-        }
-        
         debugLog('Fetching admin data from API...');
         
         // Single API call for all admin data
@@ -311,12 +286,6 @@ async function loadAdminData() {
         debugLog(`Admin data response status: ${result.status}`);
         
         if (result.status === "success") {
-            // Cache the data
-            dataCache.set(cacheKey, {
-                data: result.dashboard,
-                timestamp: Date.now()
-            });
-            
             debugLog(`Admin data loaded: Users: ${result.dashboard.users.length}, Programs: ${result.dashboard.programs.length}`);
             processAdminData(result.dashboard);
         } else {
@@ -345,15 +314,6 @@ function processAdminData(dashboard) {
 // Load Leader Data with single API call
 async function loadLeaderData() {
     try {
-        const cacheKey = `leader_dashboard_${currentUser.team}`;
-        const cachedData = dataCache.get(cacheKey);
-        
-        if (cachedData && (Date.now() - cachedData.timestamp) < CACHE_DURATION) {
-            debugLog('Using cached leader data');
-            processLeaderData(cachedData.data);
-            return;
-        }
-        
         debugLog(`Fetching leader data for team: ${currentUser.team}`);
         
         const response = await fetch(`${SCRIPT_URL}?action=getLeaderDashboard&team=${encodeURIComponent(currentUser.team)}`);
@@ -362,11 +322,6 @@ async function loadLeaderData() {
         debugLog(`Leader data response status: ${result.status}`);
         
         if (result.status === "success") {
-            dataCache.set(cacheKey, {
-                data: result.dashboard,
-                timestamp: Date.now()
-            });
-            
             debugLog(`Leader data loaded: Team members: ${result.dashboard.teamMembers.length}, Programs: ${result.dashboard.allPrograms.length}`);
             processLeaderData(result.dashboard);
         } else {
@@ -398,15 +353,6 @@ function processLeaderData(dashboard) {
 // Load Member Data with single API call
 async function loadMemberData() {
     try {
-        const cacheKey = `member_dashboard_${currentUser.name}`;
-        const cachedData = dataCache.get(cacheKey);
-        
-        if (cachedData && (Date.now() - cachedData.timestamp) < CACHE_DURATION) {
-            debugLog('Using cached member data');
-            processMemberData(cachedData.data);
-            return;
-        }
-        
         debugLog(`Fetching member data for: ${currentUser.name}`);
         
         const response = await fetch(`${SCRIPT_URL}?action=getMemberDashboard&name=${encodeURIComponent(currentUser.name)}`);
@@ -415,11 +361,6 @@ async function loadMemberData() {
         debugLog(`Member data response status: ${result.status}`);
         
         if (result.status === "success") {
-            dataCache.set(cacheKey, {
-                data: result.dashboard,
-                timestamp: Date.now()
-            });
-            
             debugLog(`Member data loaded: Programs: ${result.dashboard.memberPrograms.length}`);
             processMemberData(result.dashboard);
         } else {
@@ -1137,7 +1078,6 @@ async function saveUser() {
         if (result.status === "success") {
             alert('User added successfully!');
             closeModal('addUserModal');
-            clearCache();
             if (currentUser.role === 'admin') {
                 loadAdminData();
             }
@@ -1200,7 +1140,6 @@ window.onclick = function(event) {
 
 // Add refresh button functionality
 document.addEventListener('DOMContentLoaded', function() {
-    // Check if we're already logged in (for page refresh)
     debugLog('Page loaded');
     
     // Add refresh button
