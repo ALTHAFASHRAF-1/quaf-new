@@ -1,4 +1,4 @@
-// Configuration
+// Configuration - IMPORTANT: Update this URL with your actual Google Apps Script URL
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwFvQZzbaJZKczthsqt0qwYPuIzfliWcf6wKbYZh27VxcrIHjM_wIwuyfMvomAPSQMxqQ/exec";
 
 // Global variables
@@ -42,7 +42,23 @@ function toggleDebug() {
     debugConsole.classList.toggle('hidden');
 }
 
-// Login Handler with timeout
+// Test Google Apps Script connection
+async function testConnection() {
+    try {
+        debugLog('Testing connection to Google Apps Script...');
+        const testUrl = `${SCRIPT_URL}?action=login&name=test&pswd=test`;
+        debugLog(`Testing URL: ${testUrl}`);
+        
+        const response = await fetch(testUrl, { mode: 'no-cors' });
+        debugLog('Connection test completed');
+        return true;
+    } catch (error) {
+        debugLog(`Connection test failed: ${error.message}`, 'error');
+        return false;
+    }
+}
+
+// Login Handler with improved error handling
 async function handleLogin() {
     const name = document.getElementById('uName').value.trim();
     const pswd = document.getElementById('uPswd').value;
@@ -65,19 +81,35 @@ async function handleLogin() {
     debugLog(`Attempting login for user: ${name}`);
     
     try {
+        // First test the connection
+        const isConnected = await testConnection();
+        if (!isConnected) {
+            throw new Error('Cannot connect to server. Please check your internet connection.');
+        }
+        
+        debugLog(`Calling login API...`);
+        
+        // Create URL with proper encoding
+        const loginUrl = `${SCRIPT_URL}?action=login&name=${encodeURIComponent(name)}&pswd=${encodeURIComponent(pswd)}`;
+        debugLog(`Login URL: ${loginUrl}`);
+        
         // Add timeout to fetch
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 15000);
+        const timeoutId = setTimeout(() => controller.abort(), 10000);
         
-        debugLog(`Calling API: ${SCRIPT_URL}?action=login&name=${encodeURIComponent(name)}`);
-        
-        const resp = await fetch(`${SCRIPT_URL}?action=login&name=${encodeURIComponent(name)}&pswd=${encodeURIComponent(pswd)}`, {
-            signal: controller.signal
+        const response = await fetch(loginUrl, {
+            signal: controller.signal,
+            mode: 'cors',
+            cache: 'no-cache'
         });
         
         clearTimeout(timeoutId);
         
-        const result = await resp.json();
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const result = await response.json();
         debugLog(`Login response: ${JSON.stringify(result)}`);
         
         if (result.status === "success") {
@@ -92,11 +124,14 @@ async function handleLogin() {
         if (error.name === 'AbortError') {
             errMsg.innerText = "Connection timeout. Please try again.";
             debugLog('Login timeout error', 'error');
+        } else if (error.name === 'TypeError' && error.message.includes('Failed to fetch')) {
+            errMsg.innerText = "Cannot connect to server. Please check: 1) Your internet connection, 2) Google Apps Script URL, 3) Script deployment settings.";
+            debugLog('Network error - Failed to fetch', 'error');
         } else {
-            errMsg.innerText = "Connection error. Please try again.";
+            errMsg.innerText = `Connection error: ${error.message}`;
             debugLog(`Login error: ${error.message}`, 'error');
         }
-        console.error('Login error:', error);
+        console.error('Login error details:', error);
     } finally {
         // Reset button state
         loginText.innerText = "Sign In";
@@ -176,6 +211,8 @@ async function initDashboard() {
     document.getElementById('loadingData').classList.add('hidden');
     debugLog('Dashboard initialized successfully');
 }
+
+// Rest of the functions remain the same as the previous version...
 
 // Toggle sidebar for mobile
 function toggleSidebar() {
@@ -1112,9 +1149,6 @@ async function saveUser() {
         alert('Error saving user. Please try again.');
     }
 }
-
-// Similar save functions for other entities...
-// [All other save functions remain the same as your original code, just add debugLog calls]
 
 // Clear cache function
 function clearCache() {
