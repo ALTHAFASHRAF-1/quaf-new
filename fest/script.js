@@ -1,5 +1,6 @@
-// Configuration - IMPORTANT: Update this URL with your actual Google Apps Script URL
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwFvQZzbaJZKczthsqt0qwYPuIzfliWcf6wKbYZh27VxcrIHjM_wIwuyfMvomAPSQMxqQ/exec";
+// Configuration - IMPORTANT: Update this with your deployed Google Apps Script URL
+// The URL should look like: https://script.google.com/macros/s/.../exec
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwR0ddUAlm5nBeg5M2YMFpCSBRegCUz_evTn85kSLf6_08wEcwk_FJFemBfgFyjKaVCVg/exec";
 
 // Global variables
 let currentUser = null;
@@ -10,12 +11,6 @@ let scheduleDataTable = null;
 let resultsDataTable = null;
 let allPrograms = [];
 let teamMembers = [];
-let currentEditType = null;
-let currentEditId = null;
-
-// Cache for data
-const dataCache = new Map();
-const CACHE_DURATION = 30000; // 30 seconds
 
 // Debug logging function
 function debugLog(message, type = 'info') {
@@ -42,24 +37,7 @@ function toggleDebug() {
     debugConsole.classList.toggle('hidden');
 }
 
-// Test Google Apps Script connection
-async function testConnection() {
-    try {
-        debugLog('Testing connection to Google Apps Script...');
-        const testUrl = `${SCRIPT_URL}?action=login&name=test&pswd=test`;
-        debugLog(`Testing URL: ${testUrl}`);
-        
-        // Use a simpler fetch without CORS for testing
-        const response = await fetch(testUrl);
-        debugLog(`Connection test response status: ${response.status}`);
-        return response.status === 200;
-    } catch (error) {
-        debugLog(`Connection test failed: ${error.message}`, 'error');
-        return false;
-    }
-}
-
-// Login Handler with improved error handling
+// Enhanced login handler with better error handling
 async function handleLogin() {
     const name = document.getElementById('uName').value.trim();
     const pswd = document.getElementById('uPswd').value;
@@ -82,13 +60,14 @@ async function handleLogin() {
     debugLog(`Attempting login for user: ${name}`);
     
     try {
-        debugLog(`Calling login API...`);
+        // Test connection first
+        debugLog('Testing connection to Google Apps Script...');
         
-        // Create URL with proper encoding - USE /exec NOT /dev
+        // IMPORTANT: Use the correct parameter format
         const loginUrl = `${SCRIPT_URL}?action=login&name=${encodeURIComponent(name)}&pswd=${encodeURIComponent(pswd)}`;
         debugLog(`Login URL: ${loginUrl}`);
         
-        // Use a simple fetch without complex options
+        // Use fetch with proper error handling
         const response = await fetch(loginUrl);
         
         if (!response.ok) {
@@ -96,33 +75,62 @@ async function handleLogin() {
         }
         
         const result = await response.json();
-        debugLog(`Login response: ${JSON.stringify(result)}`);
+        debugLog(`Login response received`, 'success');
         
         if (result.status === "success") {
             currentUser = result.user;
-            debugLog(`Login successful. User: ${currentUser.name}, Role: ${currentUser.role}`);
+            debugLog(`Login successful. User: ${currentUser.name}, Role: ${currentUser.role}`, 'success');
             await initDashboard();
         } else {
             errMsg.innerText = result.message || "Invalid credentials";
             debugLog(`Login failed: ${result.message}`, 'error');
         }
     } catch (error) {
+        debugLog(`Login error: ${error.message}`, 'error');
+        console.error('Login error details:', error);
+        
+        // More specific error messages
         if (error.name === 'TypeError' && error.message.includes('Failed to fetch')) {
-            errMsg.innerText = `Connection error. Please check: 
-            1. Google Apps Script deployment settings
-            2. URL is correct: ${SCRIPT_URL}
-            3. Script is deployed as "Web App" with "Anyone, even anonymous" access`;
-            debugLog('Network error - Failed to fetch', 'error');
+            errMsg.innerHTML = `
+                <div class="text-left">
+                    <p class="font-semibold">Connection Failed!</p>
+                    <p class="text-sm mt-1">Please check:</p>
+                    <ul class="text-sm list-disc pl-4 mt-1">
+                        <li>Google Apps Script is deployed as Web App</li>
+                        <li>Deployment access is set to "Anyone"</li>
+                        <li>Your URL is correct: ${SCRIPT_URL.substring(0, 50)}...</li>
+                    </ul>
+                </div>
+            `;
         } else {
             errMsg.innerText = `Error: ${error.message}`;
-            debugLog(`Login error: ${error.message}`, 'error');
         }
-        console.error('Login error details:', error);
     } finally {
         // Reset button state
         loginText.innerText = "Sign In";
         loginSpinner.classList.add('hidden');
         loginBtn.disabled = false;
+    }
+}
+
+// Test connection function
+async function testConnection() {
+    try {
+        debugLog('Testing connection...');
+        const testUrl = `${SCRIPT_URL}?action=test`;
+        const response = await fetch(testUrl);
+        const result = await response.json();
+        
+        if (result.status === "success") {
+            debugLog('Connection test successful!', 'success');
+            return true;
+        } else {
+            debugLog(`Connection test failed: ${result.message}`, 'error');
+            return false;
+        }
+    } catch (error) {
+        debugLog(`Connection test error: ${error.message}`, 'error');
+        return false;
     }
 }
 
@@ -195,7 +203,7 @@ async function initDashboard() {
     
     // Hide loading
     document.getElementById('loadingData').classList.add('hidden');
-    debugLog('Dashboard initialized successfully');
+    debugLog('Dashboard initialized successfully', 'success');
 }
 
 // Toggle sidebar for mobile
@@ -227,12 +235,6 @@ function showAdminTab(tabName) {
     
     // Show selected content
     document.getElementById(`${tabName}Content`).classList.remove('hidden');
-    
-    // Update active nav link
-    document.querySelectorAll('.admin-tab-btn').forEach(btn => {
-        btn.classList.remove('bg-purple-50', 'text-purple-700');
-    });
-    event.target.classList.add('bg-purple-50', 'text-purple-700');
 }
 
 // Leader/Member Tab Navigation
@@ -266,27 +268,18 @@ function showTab(tabName) {
         // Show selected content
         document.getElementById(`${tabName}MemberContent`).classList.remove('hidden');
     }
-    
-    // Update active nav link
-    document.querySelectorAll('.tab-btn').forEach(btn => {
-        btn.classList.remove('bg-purple-50', 'text-purple-700');
-    });
-    event.target.classList.add('bg-purple-50', 'text-purple-700');
 }
 
-// Load Admin Data with single API call
+// Load Admin Data
 async function loadAdminData() {
     try {
         debugLog('Fetching admin data from API...');
         
-        // Single API call for all admin data
         const response = await fetch(`${SCRIPT_URL}?action=getAdminDashboard`);
         const result = await response.json();
         
-        debugLog(`Admin data response status: ${result.status}`);
-        
         if (result.status === "success") {
-            debugLog(`Admin data loaded: Users: ${result.dashboard.users.length}, Programs: ${result.dashboard.programs.length}`);
+            debugLog(`Admin data loaded successfully`, 'success');
             processAdminData(result.dashboard);
         } else {
             debugLog(`Failed to load admin data: ${result.message}`, 'error');
@@ -308,10 +301,10 @@ function processAdminData(dashboard) {
     initScheduleTable(dashboard.schedule);
     initResultsTable(dashboard.results);
     
-    debugLog('Admin data processing complete');
+    debugLog('Admin data processing complete', 'success');
 }
 
-// Load Leader Data with single API call
+// Load Leader Data
 async function loadLeaderData() {
     try {
         debugLog(`Fetching leader data for team: ${currentUser.team}`);
@@ -319,10 +312,8 @@ async function loadLeaderData() {
         const response = await fetch(`${SCRIPT_URL}?action=getLeaderDashboard&team=${encodeURIComponent(currentUser.team)}`);
         const result = await response.json();
         
-        debugLog(`Leader data response status: ${result.status}`);
-        
         if (result.status === "success") {
-            debugLog(`Leader data loaded: Team members: ${result.dashboard.teamMembers.length}, Programs: ${result.dashboard.allPrograms.length}`);
+            debugLog(`Leader data loaded successfully`, 'success');
             processLeaderData(result.dashboard);
         } else {
             debugLog(`Failed to load leader data: ${result.message}`, 'error');
@@ -347,10 +338,10 @@ function processLeaderData(dashboard) {
     renderTeamResults(dashboard.teamResults || []);
     renderTeamPoints(dashboard.teamPoints || []);
     
-    debugLog('Leader data processing complete');
+    debugLog('Leader data processing complete', 'success');
 }
 
-// Load Member Data with single API call
+// Load Member Data
 async function loadMemberData() {
     try {
         debugLog(`Fetching member data for: ${currentUser.name}`);
@@ -358,10 +349,8 @@ async function loadMemberData() {
         const response = await fetch(`${SCRIPT_URL}?action=getMemberDashboard&name=${encodeURIComponent(currentUser.name)}`);
         const result = await response.json();
         
-        debugLog(`Member data response status: ${result.status}`);
-        
         if (result.status === "success") {
-            debugLog(`Member data loaded: Programs: ${result.dashboard.memberPrograms.length}`);
+            debugLog(`Member data loaded successfully`, 'success');
             processMemberData(result.dashboard);
         } else {
             debugLog(`Failed to load member data: ${result.message}`, 'error');
@@ -380,13 +369,11 @@ function processMemberData(dashboard) {
     renderMemberSchedule(dashboard.memberSchedule || []);
     renderMemberResults(dashboard.memberResults || []);
     
-    debugLog('Member data processing complete');
+    debugLog('Member data processing complete', 'success');
 }
 
-// Optimized DataTables initialization
+// DataTables initialization
 function initUsersTable(users) {
-    debugLog(`Initializing users table with ${users.length} records`);
-    
     if (userDataTable) {
         userDataTable.destroy();
     }
@@ -421,13 +408,13 @@ function initUsersTable(users) {
             { data: 'team' },
             {
                 data: null,
-                render: function(data) {
+                render: function() {
                     return `
                         <div class="flex gap-2">
-                            <button onclick="editUser('${data.sl_no}')" class="text-blue-600 hover:text-blue-800 p-1">
+                            <button class="text-blue-600 hover:text-blue-800 p-1">
                                 <i class="fas fa-edit"></i>
                             </button>
-                            <button onclick="deleteUser('${data.sl_no}', '${data.name}')" class="text-red-600 hover:text-red-800 p-1">
+                            <button class="text-red-600 hover:text-red-800 p-1">
                                 <i class="fas fa-trash"></i>
                             </button>
                         </div>
@@ -436,18 +423,11 @@ function initUsersTable(users) {
             }
         ],
         pageLength: 10,
-        responsive: true,
-        deferRender: true,
-        processing: true,
-        language: {
-            search: "Search users:"
-        }
+        responsive: true
     });
 }
 
 function initProgramsTable(programs) {
-    debugLog(`Initializing programs table with ${programs.length} records`);
-    
     if (programsDataTable) {
         programsDataTable.destroy();
     }
@@ -479,13 +459,13 @@ function initProgramsTable(programs) {
             },
             {
                 data: null,
-                render: function(data) {
+                render: function() {
                     return `
                         <div class="flex gap-2">
-                            <button onclick="editProgram('${data.code}')" class="text-blue-600 hover:text-blue-800 p-1">
+                            <button class="text-blue-600 hover:text-blue-800 p-1">
                                 <i class="fas fa-edit"></i>
                             </button>
-                            <button onclick="deleteProgram('${data.code}', '${data.name}')" class="text-red-600 hover:text-red-800 p-1">
+                            <button class="text-red-600 hover:text-red-800 p-1">
                                 <i class="fas fa-trash"></i>
                             </button>
                         </div>
@@ -494,30 +474,13 @@ function initProgramsTable(programs) {
             }
         ],
         pageLength: 10,
-        responsive: true,
-        deferRender: true
+        responsive: true
     });
 }
 
 function initRegistrationTable(registration) {
-    debugLog(`Initializing registration table with ${registration.length} records`);
-    
     if (registrationDataTable) {
         registrationDataTable.destroy();
-    }
-    
-    if (registration.length === 0) {
-        document.getElementById('registrationAdminTable').innerHTML = `
-            <tbody>
-                <tr>
-                    <td colspan="7" class="text-center p-8 text-gray-500">
-                        <i class="fas fa-clipboard-list text-3xl mb-2"></i>
-                        <p>No registrations found</p>
-                    </td>
-                </tr>
-            </tbody>
-        `;
-        return;
     }
     
     registrationDataTable = $('#registrationAdminTable').DataTable({
@@ -531,13 +494,13 @@ function initRegistrationTable(registration) {
             { data: 'team' },
             {
                 data: null,
-                render: function(data) {
+                render: function() {
                     return `
                         <div class="flex gap-2">
-                            <button onclick="editRegistration('${data.id}')" class="text-blue-600 hover:text-blue-800 p-1">
+                            <button class="text-blue-600 hover:text-blue-800 p-1">
                                 <i class="fas fa-edit"></i>
                             </button>
-                            <button onclick="deleteRegistration('${data.id}', '${data.name}')" class="text-red-600 hover:text-red-800 p-1">
+                            <button class="text-red-600 hover:text-red-800 p-1">
                                 <i class="fas fa-trash"></i>
                             </button>
                         </div>
@@ -546,30 +509,13 @@ function initRegistrationTable(registration) {
             }
         ],
         pageLength: 10,
-        responsive: true,
-        deferRender: true
+        responsive: true
     });
 }
 
 function initScheduleTable(schedule) {
-    debugLog(`Initializing schedule table with ${schedule.length} records`);
-    
     if (scheduleDataTable) {
         scheduleDataTable.destroy();
-    }
-    
-    if (schedule.length === 0) {
-        document.getElementById('scheduleAdminTable').innerHTML = `
-            <tbody>
-                <tr>
-                    <td colspan="10" class="text-center p-8 text-gray-500">
-                        <i class="fas fa-calendar-alt text-3xl mb-2"></i>
-                        <p>No schedule found</p>
-                    </td>
-                </tr>
-            </tbody>
-        `;
-        return;
     }
     
     scheduleDataTable = $('#scheduleAdminTable').DataTable({
@@ -586,13 +532,13 @@ function initScheduleTable(schedule) {
             { data: 'venue' },
             {
                 data: null,
-                render: function(data) {
+                render: function() {
                     return `
                         <div class="flex gap-2">
-                            <button onclick="editSchedule('${data.id}')" class="text-blue-600 hover:text-blue-800 p-1">
+                            <button class="text-blue-600 hover:text-blue-800 p-1">
                                 <i class="fas fa-edit"></i>
                             </button>
-                            <button onclick="deleteSchedule('${data.id}', '${data.name}')" class="text-red-600 hover:text-red-800 p-1">
+                            <button class="text-red-600 hover:text-red-800 p-1">
                                 <i class="fas fa-trash"></i>
                             </button>
                         </div>
@@ -601,30 +547,13 @@ function initScheduleTable(schedule) {
             }
         ],
         pageLength: 10,
-        responsive: true,
-        deferRender: true
+        responsive: true
     });
 }
 
 function initResultsTable(results) {
-    debugLog(`Initializing results table with ${results.length} records`);
-    
     if (resultsDataTable) {
         resultsDataTable.destroy();
-    }
-    
-    if (results.length === 0) {
-        document.getElementById('resultsAdminTable').innerHTML = `
-            <tbody>
-                <tr>
-                    <td colspan="10" class="text-center p-8 text-gray-500">
-                        <i class="fas fa-trophy text-3xl mb-2"></i>
-                        <p>No results found</p>
-                    </td>
-                </tr>
-            </tbody>
-        `;
-        return;
     }
     
     resultsDataTable = $('#resultsAdminTable').DataTable({
@@ -654,13 +583,13 @@ function initResultsTable(results) {
             },
             {
                 data: null,
-                render: function(data) {
+                render: function() {
                     return `
                         <div class="flex gap-2">
-                            <button onclick="editResult('${data.id}')" class="text-blue-600 hover:text-blue-800 p-1">
+                            <button class="text-blue-600 hover:text-blue-800 p-1">
                                 <i class="fas fa-edit"></i>
                             </button>
-                            <button onclick="deleteResult('${data.id}', '${data.name}')" class="text-red-600 hover:text-red-800 p-1">
+                            <button class="text-red-600 hover:text-red-800 p-1">
                                 <i class="fas fa-trash"></i>
                             </button>
                         </div>
@@ -669,8 +598,7 @@ function initResultsTable(results) {
             }
         ],
         pageLength: 10,
-        responsive: true,
-        deferRender: true
+        responsive: true
     });
 }
 
@@ -782,18 +710,6 @@ function renderTeamSchedule(schedule) {
     const tableBody = document.getElementById('scheduleLeaderTableBody');
     tableBody.innerHTML = '';
     
-    if (schedule.length === 0) {
-        tableBody.innerHTML = `
-            <tr>
-                <td colspan="7" class="text-center p-8 text-gray-500">
-                    <i class="fas fa-calendar-alt text-3xl mb-2"></i>
-                    <p>No schedule found</p>
-                </td>
-            </tr>
-        `;
-        return;
-    }
-    
     schedule.forEach(item => {
         const row = document.createElement('tr');
         row.className = 'hover:bg-gray-50';
@@ -817,18 +733,6 @@ function renderTeamSchedule(schedule) {
 function renderTeamResults(results) {
     const tableBody = document.getElementById('resultsLeaderTableBody');
     tableBody.innerHTML = '';
-    
-    if (results.length === 0) {
-        tableBody.innerHTML = `
-            <tr>
-                <td colspan="7" class="text-center p-8 text-gray-500">
-                    <i class="fas fa-trophy text-3xl mb-2"></i>
-                    <p>No results found</p>
-                </td>
-            </tr>
-        `;
-        return;
-    }
     
     results.forEach(result => {
         const row = document.createElement('tr');
@@ -854,16 +758,6 @@ function renderTeamPoints(teamPoints) {
     const container = document.getElementById('teamPointsContainer');
     container.innerHTML = '';
     
-    if (teamPoints.length === 0) {
-        container.innerHTML = `
-            <div class="col-span-full text-center p-8 text-gray-500">
-                <i class="fas fa-chart-bar text-3xl mb-2"></i>
-                <p>No team points data available</p>
-            </div>
-        `;
-        return;
-    }
-    
     teamPoints.forEach(team => {
         const card = document.createElement('div');
         card.className = 'bg-white rounded-lg shadow p-4';
@@ -886,18 +780,6 @@ function renderMemberPrograms(programs) {
     const tableBody = document.getElementById('programsMemberTableBody');
     tableBody.innerHTML = '';
     
-    if (programs.length === 0) {
-        tableBody.innerHTML = `
-            <tr>
-                <td colspan="3" class="text-center p-8 text-gray-500">
-                    <i class="fas fa-list-alt text-3xl mb-2"></i>
-                    <p>No programs found</p>
-                </td>
-            </tr>
-        `;
-        return;
-    }
-    
     programs.forEach(program => {
         const row = document.createElement('tr');
         row.className = 'hover:bg-gray-50';
@@ -917,18 +799,6 @@ function renderMemberPrograms(programs) {
 function renderMemberSchedule(schedule) {
     const tableBody = document.getElementById('scheduleMemberTableBody');
     tableBody.innerHTML = '';
-    
-    if (schedule.length === 0) {
-        tableBody.innerHTML = `
-            <tr>
-                <td colspan="5" class="text-center p-8 text-gray-500">
-                    <i class="fas fa-calendar-alt text-3xl mb-2"></i>
-                    <p>No schedule found</p>
-                </td>
-            </tr>
-        `;
-        return;
-    }
     
     schedule.forEach(item => {
         const row = document.createElement('tr');
@@ -951,18 +821,6 @@ function renderMemberSchedule(schedule) {
 function renderMemberResults(results) {
     const tableBody = document.getElementById('resultsMemberTableBody');
     tableBody.innerHTML = '';
-    
-    if (results.length === 0) {
-        tableBody.innerHTML = `
-            <tr>
-                <td colspan="5" class="text-center p-8 text-gray-500">
-                    <i class="fas fa-trophy text-3xl mb-2"></i>
-                    <p>No results found</p>
-                </td>
-            </tr>
-        `;
-        return;
-    }
     
     results.forEach(result => {
         const row = document.createElement('tr');
@@ -1003,50 +861,11 @@ function showAddResultModal() {
     document.getElementById('addResultModal').style.display = 'block';
 }
 
-function showLeaderRegistrationModal() {
-    const memberSelect = document.getElementById('leaderMemberSelect');
-    const programSelect = document.getElementById('leaderProgramSelect');
-    
-    // Clear and populate member select
-    memberSelect.innerHTML = '<option value="">Select Member</option>';
-    teamMembers.forEach(member => {
-        if (member.role === 'member') {
-            const option = document.createElement('option');
-            option.value = member.name;
-            option.textContent = member.name;
-            memberSelect.appendChild(option);
-        }
-    });
-    
-    // Clear and populate program select
-    programSelect.innerHTML = '<option value="">Select Program</option>';
-    allPrograms.forEach(program => {
-        const option = document.createElement('option');
-        option.value = program.name;
-        option.textContent = `${program.name} (${program.category})`;
-        option.setAttribute('data-code', program.code);
-        option.setAttribute('data-category', program.category);
-        programSelect.appendChild(option);
-    });
-    
-    document.getElementById('leaderRegistrationModal').style.display = 'block';
-}
-
-function autoFillProgramDetails() {
-    const programSelect = document.getElementById('leaderProgramSelect');
-    const selectedOption = programSelect.options[programSelect.selectedIndex];
-    
-    if (selectedOption.value) {
-        document.getElementById('autoProgramCode').value = selectedOption.getAttribute('data-code');
-        document.getElementById('autoProgramCategory').value = selectedOption.getAttribute('data-category');
-    }
-}
-
 function closeModal(modalId) {
     document.getElementById(modalId).style.display = 'none';
 }
 
-// Save Functions with improved error handling
+// Save Functions
 async function saveUser() {
     const userData = {
         sl_no: document.getElementById('userSlNo').value,
@@ -1073,14 +892,11 @@ async function saveUser() {
         });
         
         const result = await response.json();
-        debugLog(`Save user response: ${JSON.stringify(result)}`);
         
         if (result.status === "success") {
             alert('User added successfully!');
             closeModal('addUserModal');
-            if (currentUser.role === 'admin') {
-                loadAdminData();
-            }
+            loadAdminData();
         } else {
             alert('Error: ' + result.message);
         }
@@ -1088,12 +904,6 @@ async function saveUser() {
         debugLog(`Error saving user: ${error.message}`, 'error');
         alert('Error saving user. Please try again.');
     }
-}
-
-// Clear cache function
-function clearCache() {
-    dataCache.clear();
-    debugLog('Cache cleared');
 }
 
 // Show error function
@@ -1107,11 +917,6 @@ function logout() {
     if (confirm("Are you sure you want to logout?")) {
         debugLog('Logging out...');
         currentUser = null;
-        clearCache();
-        document.getElementById('dashboard').classList.add('hidden');
-        document.getElementById('loginSection').classList.remove('hidden');
-        document.getElementById('uPswd').value = '';
-        document.getElementById('errMsg').innerText = '';
         
         // Reset DataTables
         if (userDataTable) userDataTable.destroy();
@@ -1120,7 +925,12 @@ function logout() {
         if (scheduleDataTable) scheduleDataTable.destroy();
         if (resultsDataTable) resultsDataTable.destroy();
         
-        debugLog('Logged out successfully');
+        document.getElementById('dashboard').classList.add('hidden');
+        document.getElementById('loginSection').classList.remove('hidden');
+        document.getElementById('uPswd').value = '';
+        document.getElementById('errMsg').innerText = '';
+        
+        debugLog('Logged out successfully', 'success');
     }
 }
 
@@ -1138,31 +948,8 @@ window.onclick = function(event) {
     }
 };
 
-// Add refresh button functionality
+// Initialize on page load
 document.addEventListener('DOMContentLoaded', function() {
     debugLog('Page loaded');
-    
-    // Add refresh button
-    const refreshBtn = document.createElement('button');
-    refreshBtn.innerHTML = '<i class="fas fa-sync-alt"></i>';
-    refreshBtn.className = 'fixed bottom-4 right-4 bg-purple-600 text-white p-3 rounded-full shadow-lg hover:bg-purple-700 transition-colors z-40';
-    refreshBtn.title = 'Refresh Data';
-    refreshBtn.onclick = function() {
-        debugLog('Manual refresh triggered');
-        clearCache();
-        if (currentUser) {
-            if (currentUser.role === 'admin') {
-                loadAdminData();
-            } else if (currentUser.role === 'leader') {
-                loadLeaderData();
-            } else if (currentUser.role === 'member') {
-                loadMemberData();
-            }
-            alert('Data refreshed!');
-        }
-    };
-    document.body.appendChild(refreshBtn);
+    toggleDebug(); // Show debug console by default for troubleshooting
 });
-
-// Initialize debug console
-toggleDebug();
