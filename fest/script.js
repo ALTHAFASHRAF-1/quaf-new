@@ -1,5 +1,5 @@
-// Configuration - UPDATE THIS WITH YOUR DEPLOYED URL
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyBZOXlOpcUcdpE02Yzpo6-rluIV8lLBYX5GfnGPgfh2DUaU3pp4duqkZCqY1xkdGs6hA/exec";
+// Configuration - UPDATE THIS URL with your actual Google Apps Script URL
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzZJjCp7yNHJscAyKVuwXs19S_Qn3GIkYI-ViC5AO4ryRCxzr0bsduCJHjTGRYCWNVt7g/exec"; // Replace with your actual deployed URL
 
 // Global variables
 let currentUser = null;
@@ -10,16 +10,12 @@ let scheduleDataTable = null;
 let resultsDataTable = null;
 let allPrograms = [];
 let teamMembers = [];
-
-// Cache for data
-const dataCache = new Map();
-const CACHE_DURATION = 30000; // 30 seconds
+let currentEditType = null;
+let currentEditId = null;
 
 // Debug logging function
 function debugLog(message, type = 'info') {
     const debugLog = document.getElementById('debugLog');
-    if (!debugLog) return;
-    
     const timestamp = new Date().toLocaleTimeString();
     const color = type === 'error' ? 'text-red-400' : type === 'success' ? 'text-green-400' : 'text-blue-400';
     
@@ -39,12 +35,55 @@ function debugLog(message, type = 'info') {
 
 function toggleDebug() {
     const debugConsole = document.getElementById('debugConsole');
-    if (debugConsole) {
-        debugConsole.classList.toggle('hidden');
+    debugConsole.classList.toggle('hidden');
+}
+
+// Test Google Apps Script connection
+async function testConnection() {
+    try {
+        debugLog('Testing connection to Google Apps Script...');
+        const testUrl = `${SCRIPT_URL}?action=test&timestamp=${Date.now()}`;
+        
+        const response = await fetch(testUrl, {
+            method: 'GET',
+            mode: 'no-cors' // Important for testing
+        });
+        
+        debugLog(`Connection test completed`);
+        return true;
+    } catch (error) {
+        debugLog(`Connection test failed: ${error.message}`, 'error');
+        return false;
     }
 }
 
-// Login Handler with CORS-safe implementation
+// Enhanced fetch function with error handling
+async function safeFetch(url, options = {}) {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+    
+    try {
+        const response = await fetch(url, {
+            ...options,
+            signal: controller.signal,
+            mode: 'cors',
+            cache: 'no-cache'
+        });
+        
+        clearTimeout(timeoutId);
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        return response;
+    } catch (error) {
+        clearTimeout(timeoutId);
+        throw error;
+    }
+}
+
+// Login Handler
 async function handleLogin() {
     const name = document.getElementById('uName').value.trim();
     const pswd = document.getElementById('uPswd').value;
@@ -67,122 +106,58 @@ async function handleLogin() {
     debugLog(`Attempting login for user: ${name}`);
     
     try {
-        // Use JSONP approach for CORS
-        const callbackName = 'loginCallback' + Date.now();
-        const script = document.createElement('script');
+        // Test connection first
+        const isConnected = await testConnection();
+        if (!isConnected) {
+            throw new Error('Cannot connect to server. Please check your internet connection.');
+        }
         
-        window[callbackName] = function(response) {
-            debugLog(`Login response received: ${JSON.stringify(response)}`);
-            
-            if (response.status === "success") {
-                currentUser = response.user;
-                debugLog(`Login successful. User: ${currentUser.name}, Role: ${currentUser.role}`);
-                initDashboard();
-            } else {
-                errMsg.innerText = response.message || "Invalid credentials";
-                debugLog(`Login failed: ${response.message}`, 'error');
-            }
-            
-            // Clean up
-            document.head.removeChild(script);
-            delete window[callbackName];
-            
-            // Reset button state
-            loginText.innerText = "Sign In";
-            loginSpinner.classList.add('hidden');
-            loginBtn.disabled = false;
-        };
+        debugLog('Connection test passed, attempting login...');
         
-        // Create script tag with callback
-        script.src = `${SCRIPT_URL}?action=login&name=${encodeURIComponent(name)}&pswd=${encodeURIComponent(pswd)}&callback=${callbackName}`;
-        script.onerror = function() {
-            errMsg.innerText = "Connection error. Please check your internet connection and try again.";
-            debugLog('Script loading failed - possible CORS issue', 'error');
-            
-            document.head.removeChild(script);
-            delete window[callbackName];
-            
-            // Reset button state
-            loginText.innerText = "Sign In";
-            loginSpinner.classList.add('hidden');
-            loginBtn.disabled = false;
-        };
+        // Create login URL - using GET method (simpler for GAS)
+        const loginUrl = `${SCRIPT_URL}?action=login&name=${encodeURIComponent(name)}&pswd=${encodeURIComponent(pswd)}&timestamp=${Date.now()}`;
+        debugLog(`Login URL: ${loginUrl.substring(0, 100)}...`);
         
-        document.head.appendChild(script);
+        const response = await safeFetch(loginUrl);
+        const result = await response.json();
         
+        debugLog(`Login response received: ${JSON.stringify(result)}`);
+        
+        if (result.status === "success") {
+            currentUser = result.user;
+            debugLog(`Login successful. User: ${currentUser.name}, Role: ${currentUser.role}`);
+            await initDashboard();
+        } else {
+            errMsg.innerText = result.message || "Invalid credentials";
+            debugLog(`Login failed: ${result.message}`, 'error');
+        }
     } catch (error) {
-        debugLog(`Login error: ${error.message}`, 'error');
-        errMsg.innerText = `Error: ${error.message}`;
-        
+        if (error.name === 'AbortError') {
+            errMsg.innerText = "Request timeout. Please try again.";
+            debugLog('Request timeout', 'error');
+        } else if (error.name === 'TypeError' && error.message.includes('Failed to fetch')) {
+            errMsg.innerHTML = `
+                <div class="text-left">
+                    <p class="font-semibold mb-2">Connection Error:</p>
+                    <ol class="list-decimal list-inside text-sm space-y-1">
+                        <li>Make sure your Google Apps Script is deployed as "Web App"</li>
+                        <li>Set deployment permissions to "Anyone" (or "Anyone with Google account")</li>
+                        <li>Copy the correct deployment URL ending with /exec</li>
+                        <li>Current URL: ${SCRIPT_URL}</li>
+                    </ol>
+                </div>
+            `;
+            debugLog('Network error - Failed to fetch. Check GAS deployment.', 'error');
+        } else {
+            errMsg.innerText = `Error: ${error.message}`;
+            debugLog(`Login error: ${error.message}`, 'error');
+        }
+        console.error('Login error details:', error);
+    } finally {
         // Reset button state
         loginText.innerText = "Sign In";
         loginSpinner.classList.add('hidden');
         loginBtn.disabled = false;
-    }
-}
-
-// Alternative approach using fetch with proper error handling
-async function handleLoginFetch() {
-    const name = document.getElementById('uName').value.trim();
-    const pswd = document.getElementById('uPswd').value;
-    
-    if (!name || !pswd) {
-        document.getElementById('errMsg').innerText = "Please enter both username and password";
-        return;
-    }
-    
-    try {
-        // Try with fetch first
-        const response = await fetch(`${SCRIPT_URL}?action=login&name=${encodeURIComponent(name)}&pswd=${encodeURIComponent(pswd)}`, {
-            method: 'GET',
-            mode: 'no-cors',
-            headers: {
-                'Content-Type': 'application/json',
-            }
-        });
-        
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        
-        // Since it's no-cors, we can't read the response directly
-        // We'll use a timeout and then load test data
-        setTimeout(() => {
-            // For testing purposes, create a mock response
-            const mockResponse = {
-                status: "success",
-                user: {
-                    name: name,
-                    role: "admin",
-                    team: "Test Team"
-                }
-            };
-            
-            currentUser = mockResponse.user;
-            debugLog(`Login successful (mock). User: ${currentUser.name}, Role: ${currentUser.role}`);
-            initDashboard();
-        }, 1000);
-        
-    } catch (error) {
-        debugLog(`Using backup login method`, 'info');
-        // Fallback to JSONP method
-        handleLogin();
-    }
-}
-
-// Test connection function
-async function testConnection() {
-    try {
-        const response = await fetch(`${SCRIPT_URL}?action=test`, {
-            method: 'GET',
-            mode: 'no-cors'
-        });
-        
-        debugLog('Connection test completed');
-        return true;
-    } catch (error) {
-        debugLog(`Connection test failed: ${error.message}`, 'error');
-        return false;
     }
 }
 
@@ -236,21 +211,26 @@ async function initDashboard() {
     document.getElementById('memberContent').classList.add('hidden');
     
     // Load data based on role
-    if (currentUser.role === 'admin') {
-        document.getElementById('adminNav').classList.remove('hidden');
-        document.getElementById('adminContent').classList.remove('hidden');
-        showAdminTab('users');
-        await loadAdminData();
-    } else if (currentUser.role === 'leader') {
-        document.getElementById('leaderNav').classList.remove('hidden');
-        document.getElementById('leaderContent').classList.remove('hidden');
-        showTab('team');
-        await loadLeaderData();
-    } else if (currentUser.role === 'member') {
-        document.getElementById('memberNav').classList.remove('hidden');
-        document.getElementById('memberContent').classList.remove('hidden');
-        showTab('programs');
-        await loadMemberData();
+    try {
+        if (currentUser.role === 'admin') {
+            document.getElementById('adminNav').classList.remove('hidden');
+            document.getElementById('adminContent').classList.remove('hidden');
+            showAdminTab('users');
+            await loadAdminData();
+        } else if (currentUser.role === 'leader') {
+            document.getElementById('leaderNav').classList.remove('hidden');
+            document.getElementById('leaderContent').classList.remove('hidden');
+            showTab('team');
+            await loadLeaderData();
+        } else if (currentUser.role === 'member') {
+            document.getElementById('memberNav').classList.remove('hidden');
+            document.getElementById('memberContent').classList.remove('hidden');
+            showTab('programs');
+            await loadMemberData();
+        }
+    } catch (error) {
+        debugLog(`Error loading dashboard data: ${error.message}`, 'error');
+        alert('Error loading dashboard data. Please refresh the page.');
     }
     
     // Hide loading
@@ -258,105 +238,109 @@ async function initDashboard() {
     debugLog('Dashboard initialized successfully');
 }
 
-// Load data functions for different roles
+// Toggle sidebar for mobile
+function toggleSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebarOverlay');
+    sidebar.classList.toggle('active');
+    overlay.classList.toggle('active');
+}
+
+// Admin Tab Navigation
+function showAdminTab(tabName) {
+    debugLog(`Showing admin tab: ${tabName}`);
+    
+    // Update page title
+    const titles = {
+        'users': 'Users Management',
+        'programs': 'Programs Management',
+        'registration': 'Registration Management',
+        'schedule': 'Schedule Management',
+        'results': 'Results Management'
+    };
+    document.getElementById('currentPage').innerText = titles[tabName] || 'Dashboard';
+    
+    // Hide all admin content
+    ['usersContent', 'programsAdminContent', 'registrationAdminContent', 'scheduleAdminContent', 'resultsAdminContent'].forEach(id => {
+        document.getElementById(id).classList.add('hidden');
+    });
+    
+    // Show selected content
+    document.getElementById(`${tabName}Content`).classList.remove('hidden');
+    
+    // Update active nav link
+    document.querySelectorAll('.admin-tab-btn').forEach(btn => {
+        btn.classList.remove('bg-purple-50', 'text-purple-700');
+    });
+    event.target.classList.add('bg-purple-50', 'text-purple-700');
+}
+
+// Leader/Member Tab Navigation
+function showTab(tabName) {
+    debugLog(`Showing tab: ${tabName} for ${currentUser.role}`);
+    
+    // Update page title
+    const titles = {
+        'team': 'Team Members',
+        'programs': 'Programs',
+        'registration': 'Registration',
+        'schedule': 'Schedule',
+        'results': 'Results'
+    };
+    document.getElementById('currentPage').innerText = titles[tabName] || 'Dashboard';
+    
+    if (currentUser.role === 'leader') {
+        // Hide all leader content
+        ['teamContent', 'programsLeaderContent', 'registrationLeaderContent', 'scheduleLeaderContent', 'resultsLeaderContent'].forEach(id => {
+            document.getElementById(id).classList.add('hidden');
+        });
+        
+        // Show selected content
+        document.getElementById(`${tabName}LeaderContent`).classList.remove('hidden');
+    } else if (currentUser.role === 'member') {
+        // Hide all member content
+        ['programsMemberContent', 'scheduleMemberContent', 'resultsMemberContent'].forEach(id => {
+            document.getElementById(id).classList.add('hidden');
+        });
+        
+        // Show selected content
+        document.getElementById(`${tabName}MemberContent`).classList.remove('hidden');
+    }
+    
+    // Update active nav link
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('bg-purple-50', 'text-purple-700');
+    });
+    event.target.classList.add('bg-purple-50', 'text-purple-700');
+}
+
+// Load Admin Data
 async function loadAdminData() {
     try {
         debugLog('Fetching admin data from API...');
         
-        // Use JSONP for admin data
-        const callbackName = 'adminCallback' + Date.now();
-        const script = document.createElement('script');
+        const response = await safeFetch(`${SCRIPT_URL}?action=getAdminDashboard&timestamp=${Date.now()}`);
+        const result = await response.json();
         
-        window[callbackName] = function(response) {
-            if (response.status === "success") {
-                debugLog(`Admin data loaded`);
-                processAdminData(response.dashboard);
-            } else {
-                debugLog(`Failed to load admin data: ${response.message}`, 'error');
-                showError('Failed to load dashboard data: ' + response.message);
-            }
-            
-            document.head.removeChild(script);
-            delete window[callbackName];
-        };
+        debugLog(`Admin data response status: ${result.status}`);
         
-        script.src = `${SCRIPT_URL}?action=getAdminDashboard&callback=${callbackName}`;
-        script.onerror = function() {
-            debugLog('Admin data loading failed', 'error');
-            document.head.removeChild(script);
-            delete window[callbackName];
-        };
-        
-        document.head.appendChild(script);
-        
+        if (result.status === "success") {
+            debugLog(`Admin data loaded: Users: ${result.dashboard.users.length}, Programs: ${result.dashboard.programs.length}`);
+            processAdminData(result.dashboard);
+        } else {
+            debugLog(`Failed to load admin data: ${result.message}`, 'error');
+            showError('Failed to load dashboard data: ' + result.message);
+        }
     } catch (error) {
         debugLog(`Error loading admin data: ${error.message}`, 'error');
         showError('Error loading dashboard data. Please refresh.');
     }
 }
 
-async function loadLeaderData() {
-    try {
-        debugLog(`Fetching leader data for team: ${currentUser.team}`);
-        
-        const callbackName = 'leaderCallback' + Date.now();
-        const script = document.createElement('script');
-        
-        window[callbackName] = function(response) {
-            if (response.status === "success") {
-                debugLog(`Leader data loaded`);
-                processLeaderData(response.dashboard);
-            } else {
-                debugLog(`Failed to load leader data: ${response.message}`, 'error');
-                showError('Failed to load dashboard data: ' + response.message);
-            }
-            
-            document.head.removeChild(script);
-            delete window[callbackName];
-        };
-        
-        script.src = `${SCRIPT_URL}?action=getLeaderDashboard&team=${encodeURIComponent(currentUser.team)}&callback=${callbackName}`;
-        document.head.appendChild(script);
-        
-    } catch (error) {
-        debugLog(`Error loading leader data: ${error.message}`, 'error');
-        showError('Error loading dashboard data. Please refresh.');
-    }
-}
-
-async function loadMemberData() {
-    try {
-        debugLog(`Fetching member data for: ${currentUser.name}`);
-        
-        const callbackName = 'memberCallback' + Date.now();
-        const script = document.createElement('script');
-        
-        window[callbackName] = function(response) {
-            if (response.status === "success") {
-                debugLog(`Member data loaded`);
-                processMemberData(response.dashboard);
-            } else {
-                debugLog(`Failed to load member data: ${response.message}`, 'error');
-                showError('Failed to load dashboard data: ' + response.message);
-            }
-            
-            document.head.removeChild(script);
-            delete window[callbackName];
-        };
-        
-        script.src = `${SCRIPT_URL}?action=getMemberDashboard&name=${encodeURIComponent(currentUser.name)}&callback=${callbackName}`;
-        document.head.appendChild(script);
-        
-    } catch (error) {
-        debugLog(`Error loading member data: ${error.message}`, 'error');
-        showError('Error loading dashboard data. Please refresh.');
-    }
-}
-
-// Data processing functions
 function processAdminData(dashboard) {
     debugLog('Processing admin data...');
     
+    // Initialize all tables
     initUsersTable(dashboard.users);
     initProgramsTable(dashboard.programs);
     initRegistrationTable(dashboard.registration);
@@ -364,6 +348,29 @@ function processAdminData(dashboard) {
     initResultsTable(dashboard.results);
     
     debugLog('Admin data processing complete');
+}
+
+// Load Leader Data
+async function loadLeaderData() {
+    try {
+        debugLog(`Fetching leader data for team: ${currentUser.team}`);
+        
+        const response = await safeFetch(`${SCRIPT_URL}?action=getLeaderDashboard&team=${encodeURIComponent(currentUser.team)}&timestamp=${Date.now()}`);
+        const result = await response.json();
+        
+        debugLog(`Leader data response status: ${result.status}`);
+        
+        if (result.status === "success") {
+            debugLog(`Leader data loaded: Team members: ${result.dashboard.teamMembers.length}, Programs: ${result.dashboard.allPrograms.length}`);
+            processLeaderData(result.dashboard);
+        } else {
+            debugLog(`Failed to load leader data: ${result.message}`, 'error');
+            showError('Failed to load dashboard data: ' + result.message);
+        }
+    } catch (error) {
+        debugLog(`Error loading leader data: ${error.message}`, 'error');
+        showError('Error loading dashboard data. Please refresh.');
+    }
 }
 
 function processLeaderData(dashboard) {
@@ -382,6 +389,29 @@ function processLeaderData(dashboard) {
     debugLog('Leader data processing complete');
 }
 
+// Load Member Data
+async function loadMemberData() {
+    try {
+        debugLog(`Fetching member data for: ${currentUser.name}`);
+        
+        const response = await safeFetch(`${SCRIPT_URL}?action=getMemberDashboard&name=${encodeURIComponent(currentUser.name)}&timestamp=${Date.now()}`);
+        const result = await response.json();
+        
+        debugLog(`Member data response status: ${result.status}`);
+        
+        if (result.status === "success") {
+            debugLog(`Member data loaded: Programs: ${result.dashboard.memberPrograms.length}`);
+            processMemberData(result.dashboard);
+        } else {
+            debugLog(`Failed to load member data: ${result.message}`, 'error');
+            showError('Failed to load dashboard data: ' + result.message);
+        }
+    } catch (error) {
+        debugLog(`Error loading member data: ${error.message}`, 'error');
+        showError('Error loading dashboard data. Please refresh.');
+    }
+}
+
 function processMemberData(dashboard) {
     debugLog('Processing member data...');
     
@@ -392,54 +422,142 @@ function processMemberData(dashboard) {
     debugLog('Member data processing complete');
 }
 
-// Rest of your existing code remains the same...
-// Add all your existing functions here: initUsersTable, createCharts, etc.
+// DataTables initialization functions (keep your existing functions for initUsersTable, initProgramsTable, etc.)
+// ... [Keep all your existing DataTables initialization functions as they are] ...
 
-// Logout function
+// Render functions for Leader (keep your existing render functions)
+// ... [Keep all your existing render functions as they are] ...
+
+// Modal Functions (keep your existing modal functions)
+// ... [Keep all your existing modal functions as they are] ...
+
+// Save Functions
+async function saveUser() {
+    const userData = {
+        sl_no: document.getElementById('userSlNo').value,
+        name: document.getElementById('userName').value,
+        role: document.getElementById('userRole').value,
+        password: document.getElementById('userPassword').value,
+        team: document.getElementById('userTeam').value
+    };
+    
+    if (!userData.sl_no || !userData.name || !userData.role || !userData.password) {
+        alert('Please fill in all required fields');
+        return;
+    }
+    
+    debugLog(`Saving user: ${userData.name}`);
+    
+    try {
+        // Using GET for GAS compatibility
+        const url = `${SCRIPT_URL}?action=addUser&sl_no=${encodeURIComponent(userData.sl_no)}&name=${encodeURIComponent(userData.name)}&role=${encodeURIComponent(userData.role)}&password=${encodeURIComponent(userData.password)}&team=${encodeURIComponent(userData.team)}`;
+        
+        const response = await safeFetch(url);
+        const result = await response.json();
+        
+        debugLog(`Save user response: ${JSON.stringify(result)}`);
+        
+        if (result.status === "success") {
+            alert('User added successfully!');
+            closeModal('addUserModal');
+            if (currentUser.role === 'admin') {
+                await loadAdminData();
+            }
+        } else {
+            alert('Error: ' + result.message);
+        }
+    } catch (error) {
+        debugLog(`Error saving user: ${error.message}`, 'error');
+        alert('Error saving user. Please try again.');
+    }
+}
+
+// Show error function
+function showError(message) {
+    alert(message);
+    debugLog(`Error: ${message}`, 'error');
+}
+
+// Logout
 function logout() {
     if (confirm("Are you sure you want to logout?")) {
         debugLog('Logging out...');
         currentUser = null;
+        
+        // Destroy DataTables if they exist
+        if (userDataTable) {
+            userDataTable.destroy();
+            userDataTable = null;
+        }
+        if (programsDataTable) {
+            programsDataTable.destroy();
+            programsDataTable = null;
+        }
+        if (registrationDataTable) {
+            registrationDataTable.destroy();
+            registrationDataTable = null;
+        }
+        if (scheduleDataTable) {
+            scheduleDataTable.destroy();
+            scheduleDataTable = null;
+        }
+        if (resultsDataTable) {
+            resultsDataTable.destroy();
+            resultsDataTable = null;
+        }
+        
         document.getElementById('dashboard').classList.add('hidden');
         document.getElementById('loginSection').classList.remove('hidden');
         document.getElementById('uPswd').value = '';
         document.getElementById('errMsg').innerText = '';
-        
-        // Reset DataTables
-        if (userDataTable) userDataTable.destroy();
-        if (programsDataTable) programsDataTable.destroy();
-        if (registrationDataTable) registrationDataTable.destroy();
-        if (scheduleDataTable) scheduleDataTable.destroy();
-        if (resultsDataTable) resultsDataTable.destroy();
         
         debugLog('Logged out successfully');
     }
 }
 
 // Enter key support for login
+document.getElementById('uPswd').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+        handleLogin();
+    }
+});
+
+// Close modal when clicking outside
+window.onclick = function(event) {
+    if (event.target.classList.contains('modal')) {
+        event.target.style.display = 'none';
+    }
+};
+
+// Initialize when page loads
 document.addEventListener('DOMContentLoaded', function() {
     debugLog('Page loaded');
+    
+    // Test connection on load
+    testConnection();
     
     // Add refresh button
     const refreshBtn = document.createElement('button');
     refreshBtn.innerHTML = '<i class="fas fa-sync-alt"></i>';
     refreshBtn.className = 'fixed bottom-4 right-4 bg-purple-600 text-white p-3 rounded-full shadow-lg hover:bg-purple-700 transition-colors z-40';
     refreshBtn.title = 'Refresh Data';
-    refreshBtn.onclick = function() {
+    refreshBtn.onclick = async function() {
         debugLog('Manual refresh triggered');
         if (currentUser) {
-            if (currentUser.role === 'admin') {
-                loadAdminData();
-            } else if (currentUser.role === 'leader') {
-                loadLeaderData();
-            } else if (currentUser.role === 'member') {
-                loadMemberData();
+            try {
+                if (currentUser.role === 'admin') {
+                    await loadAdminData();
+                } else if (currentUser.role === 'leader') {
+                    await loadLeaderData();
+                } else if (currentUser.role === 'member') {
+                    await loadMemberData();
+                }
+                alert('Data refreshed!');
+            } catch (error) {
+                debugLog(`Refresh error: ${error.message}`, 'error');
+                alert('Error refreshing data.');
             }
-            alert('Data refreshed!');
         }
     };
     document.body.appendChild(refreshBtn);
 });
-
-// Initialize debug console
-toggleDebug();
