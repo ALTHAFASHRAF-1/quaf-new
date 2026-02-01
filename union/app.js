@@ -688,17 +688,19 @@ function toggleSubjectTasks(subject) {
 // Helper functions for subject icons
 function getSubjectIcon(subject) {
     const subjectLower = subject.toLowerCase();
-    if (subjectLower.includes('math')) return 'fas fa-calculator';
-    if (subjectLower.includes('english') || subjectLower.includes('language')) return 'fas fa-language';
-    if (subjectLower.includes('science')) return 'fas fa-flask';
-    if (subjectLower.includes('arabic')) return 'fas fa-book-open';
-    if (subjectLower.includes('islamic') || subjectLower.includes('quran')) return 'fas fa-mosque';
-    if (subjectLower.includes('computer')) return 'fas fa-laptop-code';
-    if (subjectLower.includes('history')) return 'fas fa-scroll';
-    if (subjectLower.includes('geography')) return 'fas fa-globe';
-    if (subjectLower.includes('urdu')) return 'fas fa-font';
-    if (subjectLower.includes('malayalam')) return 'fas fa-language';
-    if (subjectLower.includes('social')) return 'fas fa-users';
+    if (subjectLower.includes('quaf')) return 'fas fa-scroll';
+    if (subjectLower.includes('arabic-wing')) return 'fas fa-scroll';
+    if (subjectLower.includes('urdu-wing')) return 'fas fa-scroll';
+    if (subjectLower.includes('english-wing')) return 'fas fa-scroll';
+    if (subjectLower.includes('malayalam-wing')) return 'fas fa-scroll';
+    if (subjectLower.includes('media-wing')) return 'fas fa-scroll';
+    if (subjectLower.includes('sigma-wing')) return 'fas fa-scroll';
+    if (subjectLower.includes('art-wing')) return 'fas fa-scroll';
+    if (subjectLower.includes('oration-wing')) return 'fas fa-scroll';
+    if (subjectLower.includes('gk-wing')) return 'fas fa-scroll';
+    if (subjectLower.includes('himaya-wing')) return 'fas fa-scroll';
+    if (subjectLower.includes('class')) return 'fas fa-scroll';
+    if (subjectLower.includes('swalah')) return 'fas fa-scroll';
     return 'fas fa-book';
 }
 
