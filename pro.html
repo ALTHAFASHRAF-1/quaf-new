@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Programs & Reports - QUAF</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Abel&family=ABeeZee&family=Alfa+Slab+One&family=ADLaM+Display&family=Inika:wght@400;700&family=Manrope:wght@300;400;500;600;700;800&family=Clash+Display:wght@600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --maindark: #0f0b0c;
+            --mainprimary: #7a38fc;
+            --mainsecondary: #febf00;
+            --mainwhite: #ffffff;
+            --shadesdark-5: #f3f3f3;
+            --shadesdark-10: #e7e7e7;
+            --shadesdark-15: #dbdadb;
+            --shadesdark-30: #b7b6b6;
+            --shadesdark-40: #9f9d9e;
+            --shadesdark-60: #6f6d6d;
+            --shadesdark-80: #3f3c3d;
+            --shadessecondary-15: #fff5d9;
+            --header-height: 82px;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Manrope', sans-serif; font-size: 13px; line-height: 1.5; color: var(--maindark); background-color: var(--mainwhite); padding-top: 0; overflow-x: hidden; }
+        
+        .container { width: 100%; max-width: 800px; margin: 0 auto; padding: 0 1rem; } 
+        .container-wide { max-width: 1000px; }
+        
+        .navbar { display: flex; justify-content: space-between; align-items: center; padding: 1rem; background-color: #000000; position: fixed; top: 0; left: 0; right: 0; z-index: 1000; height: var(--header-height); box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3); transition: all 0.3s ease; }
+        .navbar.scrolled { box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4); }
+        .logo { display: flex; align-items: center; gap: 0.5rem; font-family: 'Abel', sans-serif; font-size: 1.7rem; font-weight: 700; text-decoration: none; color: white; }
+        .logo img { width: 50px; height: 50px; }
+        
+        .nav-links { display: none; gap: 1.5rem; align-items: center; list-style: none; height: 100%; }
+        .nav-item { position: relative; height: 100%; display: flex; align-items: center; }
+        .nav-link { 
+            color: var(--shadesdark-30); 
+            font-weight: 500; 
+            font-size: 16px; 
+            text-decoration: none; 
+            transition: color 0.3s; 
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+            padding: 10px 0;
+        }
+        .nav-link:hover { color: var(--mainwhite); }
+        
+        .mobile-menu-btn { background: none; border: none; color: var(--mainwhite); font-size: 1.7rem; cursor: pointer; display: block; z-index: 100; }
+        
+        .banner-section {
+            color: black;
+            padding: 3rem 0;
+            min-height: 30vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            margin-top: var(--header-height);
+        }
+        .banner-section::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url('https://quaf2026.netlify.app/images/desktop-banner.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            z-index: -2;
+        }
+        
+        .control-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
+        .btn { display: inline-flex; align-items: center; justify-content: center; padding: 0.6rem 1.25rem; border-radius: 6px; font-weight: 600; cursor: pointer; border: none; transition: all 0.3s; text-decoration: none; font-family: 'Manrope', sans-serif; font-size: 14px; white-space: nowrap; }
+        .btn-outline-dark { background-color: transparent; color: var(--maindark); border: 1.5px solid var(--maindark); }
+        .btn-outline-dark:hover { background-color: rgba(15, 11, 12, 0.05); }
+        .btn-primary { background-color: var(--mainprimary); color: var(--mainwhite); }
+        .btn-primary:hover { background-color: #6a30e5; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(122, 56, 252, 0.2); }
+        
+        .section-padding { padding: 4rem 0; }
+        .reports-section { background-color: var(--mainwhite); min-height: 60vh; }
+        
+        .section-title { font-family: 'Alfa Slab One', cursive; font-size: 1.75rem; line-height: 1.2; margin-bottom: 1rem; }
+        .section-subtitle { font-family: 'Manrope', sans-serif; font-size: 1rem; color: var(--shadesdark-60); margin-bottom: 2rem; }
+
+        .report-card {
+            margin-bottom: 1.5rem;
+            background-color: var(--shadessecondary-15);
+            border-radius: 0.75rem;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+            width: 100%;
+        }
+        
+        .report-card:hover { transform: translateY(-3px); }
+        
+        .report-header {
+            background-color: var(--maindark);
+            color: var(--mainwhite);
+            padding: 0.75rem 1rem;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85rem;
+        }
+        
+        .report-content { padding: 1.5rem; }
+        
+        .report-content-inner {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .report-image {
+            flex-shrink: 0;
+            width: 100%;
+            height: 200px;
+            border-radius: 0.5rem;
+            overflow: hidden;
+        }
+        
+        .report-image img { width: 100%; height: 100%; object-fit: cover; }
+        
+        .report-details { flex: 1; }
+        
+        .report-title {
+            font-family: 'ABeeZee', sans-serif;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .report-time {
+            font-size: 0.85rem;
+            color: var(--shadesdark-60);
+            margin-bottom: 0.5rem;
+        }
+        
+        .report-by {
+            font-weight: 500;
+            font-size: 0.85rem;
+            margin-bottom: 0.75rem;
+        }
+        
+        .report-description {
+            font-size: 0.8rem;
+            line-height: 1.6;
+            color: var(--shadesdark-80);
+        }
+        
+        .report-images-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+        
+        .report-images-grid img {
+            width: 100%;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 0.4rem;
+        }
+        
+        .loading-spinner {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid var(--mainprimary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 2rem auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .error-message {
+            background-color: #fee;
+            border: 1px solid #f99;
+            color: #c00;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            text-align: center;
+        }
+        
+        @media (min-width: 768px) {
+            .report-content-inner { flex-direction: row; }
+            .report-image { width: 200px; height: 150px; }
+            .section-title { font-size: 2rem; }
+        }
+        
+        @media (min-width: 1024px) {
+            .nav-links { display: flex; }
+            .mobile-menu-btn { display: none; }
+        }
+        
+        .footer { background: linear-gradient(135deg, #0a0809 0%, #151522 100%); color: white; padding: 3rem 0; }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="container" style="width: 100%; max-width: 1200px; display: flex; justify-content: space-between; align-items: center;">
+            <a href="index.html" class="logo">
+                <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/logo3d-1.png" alt="QUAF Logo">
+                <span>QUAF</span>
+            </a>
+            
+            <ul class="nav-links">
+                <li class="nav-item"><a href="index.html" class="nav-link">Home</a></li>
+                <li class="nav-item"><a href="qalam.html" class="nav-link">Qalam</a></li>
+                <li class="nav-item"><a href="scholars.html" class="nav-link">Scholars</a></li>
+                <li class="nav-item"><a href="authors.html" class="nav-link">Blog</a></li>
+                <li class="nav-item"><a href="union/index.html" class="nav-link">Login</a></li>
+            </ul>
+            
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <div class="mobile-menu" id="mobileMenu">
+        <ul class="mobile-menu-links">
+            <li><a href="index.html" class="mobile-cat-title" style="text-decoration: none;">Home</a></li>
+            <li><a href="qalam.html" class="mobile-cat-title" style="text-decoration: none;">Qalam</a></li>
+            <li><a href="scholars.html" class="mobile-cat-title" style="text-decoration: none;">Scholars</a></li>
+            <li><a href="authors.html" class="mobile-cat-title" style="text-decoration: none;">Blog</a></li>
+            <li><a href="union/index.html" class="mobile-cat-title" style="text-decoration: none;">Login</a></li>
+        </ul>
+    </div>
+    
+    <section class="banner-section"></section>
+    
+    <section class="reports-section section-padding">
+        <div class="container container-wide">
+            <div class="control-bar">
+                <a href="index.html" class="btn btn-outline-dark">
+                    <i class="fas fa-arrow-left" style="margin-right: 8px;"></i> Back to Home
+                </a>
+                <a href="admin.html" class="btn btn-primary">
+                    <i class="fas fa-plus" style="margin-right: 8px;"></i> Add Program (Admin)
+                </a>
+            </div>
+
+            <div style="text-align: center; margin-bottom: 3rem;">
+                <h2 class="section-title" style="font-family: 'ADLaM Display', cursive;">Programs & Reports</h2>
+                <p class="section-subtitle">
+                    Explore the main programs with detailed descriptions, featured highlights, and everything you need to know before getting started.
+                </p>
+            </div>
+            
+            <div id="reportsContainer">
+                <!-- Programs will be loaded here dynamically -->
+                <div id="loadingIndicator" class="text-center">
+                    <div class="loading-spinner"></div>
+                    <p>Loading programs...</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container" style="text-align: center;">
+            <div style="font-family: 'ADLaM Display'; font-size: 1.5rem; margin-bottom: 1rem;">QUAF</div>
+            <p style="color: #dbdadb; font-size: 0.8rem;">Copyright © QUAF-2026 All Rights Reserved</p>
+        </div>
+    </footer>
+
+    <script>
+        // Configuration - Replace with your Web App URL
+        const API_URL = 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL';
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            setupNavbar();
+            loadPrograms();
+        });
+
+        function setupNavbar() {
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            const mobileMenu = document.getElementById('mobileMenu');
+            const navbar = document.querySelector('.navbar');
+            
+            if (mobileMenuBtn) {
+                mobileMenuBtn.addEventListener('click', function() {
+                    mobileMenu.classList.toggle('active');
+                    if (mobileMenu.classList.contains('active')) {
+                        document.body.style.overflow = 'hidden';
+                        mobileMenuBtn.innerHTML = '<i class="fas fa-times"></i>';
+                    } else {
+                        document.body.style.overflow = '';
+                        mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+                    }
+                });
+            }
+            
+            window.addEventListener('scroll', function() {
+                if (window.scrollY > 50) {
+                    navbar.classList.add('scrolled');
+                } else {
+                    navbar.classList.remove('scrolled');
+                }
+            });
+        }
+
+        async function loadPrograms() {
+            try {
+                const response = await fetch(API_URL);
+                const programs = await response.json();
+                
+                const container = document.getElementById('reportsContainer');
+                const loadingIndicator = document.getElementById('loadingIndicator');
+                
+                if (loadingIndicator) {
+                    loadingIndicator.remove();
+                }
+                
+                if (programs.error) {
+                    throw new Error(programs.error);
+                }
+                
+                if (!programs || programs.length === 0) {
+                    container.innerHTML = '<p class="text-center">No programs found.</p>';
+                    return;
+                }
+                
+                // Sort programs by date (newest first)
+                programs.sort((a, b) => new Date(b.CreatedAt) - new Date(a.CreatedAt));
+                
+                container.innerHTML = '';
+                
+                programs.forEach(program => {
+                    const card = createProgramCard(program);
+                    container.appendChild(card);
+                });
+                
+            } catch (error) {
+                console.error('Error loading programs:', error);
+                const container = document.getElementById('reportsContainer');
+                container.innerHTML = `
+                    <div class="error-message">
+                        <p>Failed to load programs. Please try again later.</p>
+                        <p><small>Error: ${error.message}</small></p>
+                    </div>
+                `;
+            }
+        }
+
+        function createProgramCard(program) {
+            const card = document.createElement('div');
+            card.className = 'report-card';
+            
+            // Parse additional images
+            let additionalImagesHTML = '';
+            if (program.AdditionalImages) {
+                const imageUrls = program.AdditionalImages.split(',').filter(url => url.trim() !== '');
+                if (imageUrls.length > 0) {
+                    const images = imageUrls.map(url => 
+                        `<img src="${url}" alt="Additional image">`
+                    ).join('');
+                    additionalImagesHTML = `
+                        <div class="report-images-grid">
+                            ${images}
+                        </div>
+                    `;
+                }
+            }
+            
+            card.innerHTML = `
+                <div class="report-header">
+                    <span>${program.Date}</span>
+                    <span>${program.Category}</span>
+                </div>
+                <div class="report-content">
+                    <div class="report-content-inner">
+                        ${program.ImageURL ? `
+                        <div class="report-image">
+                            <img src="${program.ImageURL}" alt="${program.Title}">
+                        </div>
+                        ` : ''}
+                        <div class="report-details">
+                            <h3 class="report-title">${program.Title}</h3>
+                            ${program.Time ? `<div class="report-time">${program.Time}</div>` : ''}
+                            ${program.By ? `<p class="report-by">${program.By}</p>` : ''}
+                            <p class="report-description">${program.Description}</p>
+                            ${additionalImagesHTML}
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            return card;
+        }
+    </script>
+</body>
+</html>
