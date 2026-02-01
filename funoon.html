@@ -169,6 +169,38 @@
         
         .section-subtitle { font-family: 'Manrope', sans-serif; font-size: 1rem; color: var(--shadesdark-60); margin-bottom: 2rem; }
 
+        /* Loading State */
+        .loading-state {
+            text-align: center;
+            padding: 3rem 0;
+            color: var(--shadesdark-60);
+        }
+        
+        .loading-spinner {
+            border: 3px solid var(--shadesdark-10);
+            border-top: 3px solid var(--mainprimary);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Error State */
+        .error-state {
+            text-align: center;
+            padding: 3rem 0;
+            color: #dc2626;
+            background-color: #fef2f2;
+            border-radius: 0.75rem;
+            margin: 1rem 0;
+        }
+        
         .report-card {
             margin-bottom: 1.5rem;
             background-color: var(--shadessecondary-15);
@@ -263,13 +295,7 @@
             object-fit: cover;
             border-radius: 0.4rem;
         }
-
-        /* Responsive Fixes from original */
-        @media (max-width: 500px) { .report-images-grid { grid-template-columns: repeat(3, 1fr); } }
-        @media (min-width: 1024px) {
-            .report-images-grid img { width: 50%; height: 100%; object-fit: cover; border-radius: 0.4rem; }
-        }
-
+        
         /* Footer (From Snippet 2) */
         .footer { background: linear-gradient(135deg, #0a0809 0%, #151522 100%); color: white; padding: 3rem 0; }
     </style>
@@ -324,146 +350,23 @@
                 </p>
             </div>
             
-            <div>
-                <div class="report-card">
-                    <div class="report-header">
-                        <span>Thursday, July-25-2024</span>
-                        <span>Programs & Reports</span>
-                    </div>
-                    <div class="report-content">
-                        <div class="report-content-inner">
-                            <div class="report-image">
-                                <img src="https://quaf2026.netlify.app/images/tarheeb.png" alt="Freshers Meet">
-                            </div>
-                            <div class="report-details">
-                                <h3 class="report-title">Freshers Meet</h3>
-                                <div class="report-time">9:00 AM - 4:00 PM</div>
-                                <p class="report-by">By Darul Huda Islamic University, Chemmad</p>
-                                <p class="report-description">
-                                    Tarhib 1446 – Freshers' Grand Meet Up is a welcoming and celebratory event organized by the Centre for Public Education and Training (CPET) and the Office of Guidance and Extension Activities (OGEA) at Darul Huda Islamic University. Designed especially for freshers, the program marks the beginning of a new academic journey by fostering connection, inspiration, and a sense of belonging within the university community.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
+            <!-- Dynamic Content Area -->
+            <div id="reports-container">
+                <!-- Loading state will be shown initially -->
+                <div class="loading-state" id="loadingState">
+                    <div class="loading-spinner"></div>
+                    <p>Loading programs and reports...</p>
                 </div>
-                
-                <div class="report-card">
-                    <div class="report-header">
-                        <span>November, 2024</span>
-                        <span>Programs & Reports</span>
-                    </div>
-                    <div class="report-content">
-                        <div class="report-content-inner">
-                            <div class="report-image">
-                                <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-40.png" alt="Website Launching">
-                            </div>
-                            <div class="report-details">
-                                <h3 class="report-title">Website Launching</h3>
-                                <p class="report-by">First Website for a class union in the history of Darul Hidaya Da'wa College, Manoor</p>
-                                <p class="report-description">
-                                    QUAF launched an official website for its class union, marking a historic milestone as the first-ever website created for a class organization in the history of Darul Hidaya Da'wa College, Manoor.<br>
-                                    The website was officially launched by the Vice Principal, Usthad Junaid Hudawi.
-                                </p>
-                                <div class="report-images-grid">
-                                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-37.png" alt="">
-                                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-38.png" alt="">
-                                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-39.png" alt="">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <!-- Error state (hidden by default) -->
+                <div class="error-state" id="errorState" style="display: none;">
+                    <i class="fas fa-exclamation-triangle" style="font-size: 2rem; margin-bottom: 1rem;"></i>
+                    <h3>Failed to Load Data</h3>
+                    <p>Unable to fetch programs from Google Sheets. Please check your connection and try again.</p>
+                    <button class="btn btn-primary" id="retryBtn" style="margin-top: 1rem;">
+                        <i class="fas fa-redo" style="margin-right: 8px;"></i> Retry
+                    </button>
                 </div>
-                
-                <div class="report-card">
-                    <div class="report-header">
-                        <span>December, 2024</span>
-                        <span>Programs & Reports</span>
-                    </div>
-                    <div class="report-content">
-                        <div class="report-content-inner">
-                            <div class="report-image">
-                                <img src="https://quaf2026.netlify.app/images/malabart.jpg" alt="MALABART">
-                            </div>
-                            <div class="report-details">
-                                <h3 class="report-title">MALABART</h3>
-                                <p class="report-by">Class Artsfest</p>
-                                <p class="report-description">
-                                    27th Batch of Darul Hidaya Da'wa College, class union (QUAF) Qualitative Union for Academic Focus,
-                                    organized a class Artsfest under the name "MALABART." Inspired by history of Malabar
-                                    Muslims.10/11/2024 The logo was launched by Ustad Abdul Kareem Thangal, Three teams and names were
-                                    announced by class teacher Munavvar Hudawi. Coordinators: Ustad Nasik, Ustad Ramees, Ustad Mazin
-                                    Sha.
-                                </p>
-                                <div class="report-images-grid">
-                                    <img src="https://quaf2026.netlify.app/images/arakkal.jpg" alt="">
-                                    <img src="https://quaf2026.netlify.app/images/marakkar.jpg" alt="">
-                                    <img src="https://quaf2026.netlify.app/images/makhdoom.jpg" alt="">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="report-card">
-                    <div class="report-header">
-                        <span>March-1-2025</span>
-                        <span>Programs & Reports</span>
-                    </div>
-                    <div class="report-content">
-                        <div class="report-content-inner">
-                            <div class="report-image">
-                                <img src="https://quaf2026.netlify.app/images/career.png" alt="Career Development">
-                            </div>
-                            <div class="report-details">
-                                <h3 class="report-title">Career Development Program</h3>
-                                <div class="report-time">March-1 to April-1</div>
-                                <p class="report-by">Ramadan Vocation</p>
-                                <p class="report-description">
-                                    From March 1 (Saturday) to April 1, 2025, the Quaf Organization conducted a Career Development
-                                    Program aimed at enhancing students' overall skills. The program focused on developing proficiency
-                                    in four languages—Arabic, Urdu, English, and Malayalam—along with Quran recitation with Tajweed,
-                                    covering Surah Al-Fatiha and Surah Ad-Duha through Surah An-Nas.
-                                </p>
-                                <div class="report-images-grid" style="grid-template-columns: repeat(4, 1fr);">
-                                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-44.png" alt="">
-                                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-45.png" alt="">
-                                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-46.png" alt="">
-                                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/photo-47.png" alt="">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="report-card">
-                    <div class="report-header">
-                        <span>December, 2025</span>
-                        <span>Programs & Reports</span>
-                    </div>
-                    <div class="report-content">
-                        <div class="report-content-inner">
-                            <div class="report-image">
-                                <img src="https://quaf2026.netlify.app/images/kalwar.jpg" alt="KALWAR">
-                            </div>
-                            <div class="report-details">
-                                <h3 class="report-title">KALWAR</h3>
-                                <p class="report-by">Class Artsfest</p>
-                                <p class="report-description">
-                                    27th Batch of Darul Hidaya Da'wa College, class union (QUAF) Qualitative Union for Academic Focus,
-                                    organized a class Artsfest under the name "KALWAR." Three teams and names were announced by
-                                    class teacher Munavvar Hudawi. <br><br>
-                                    Behind The Teams Name These Names (BURSA, EDIRNE, ISTANBUL) were more important in Islamic history.
-                                </p>
-                                <div class="report-images-grid">
-                                    <img src="https://quaf2026.netlify.app/images/EDIRNE.png" alt="">
-                                    <img src="https://quaf2026.netlify.app/images/BURSA.png" alt="">
-                                    <img src="https://quaf2026.netlify.app/images/ISTANBUL.png" alt="">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
+                <!-- Reports will be dynamically inserted here -->
             </div>
         </div>
     </section>
@@ -479,6 +382,9 @@
         document.addEventListener('DOMContentLoaded', function() {
             // Navbar Interactions
             setupNavbar();
+            
+            // Load reports from Google Sheets
+            loadReports();
         });
 
         // --- NAVBAR LOGIC ---
@@ -509,14 +415,283 @@
             });
         }
 
-        // --- MOBILE MENU ACCORDION ---
-        function toggleMobileSubMenu(element) {
-            element.classList.toggle('active');
-            const subMenu = element.nextElementSibling;
-            if (subMenu && subMenu.classList.contains('mobile-sub-menu')) {
-                subMenu.classList.toggle('show');
+        // --- GOOGLE SHEETS INTEGRATION ---
+        const GOOGLE_SHEETS_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRuxfN3pkRvY7gU6w474iyADXj69wz4jVQI0qWMFqqJe0lmKBqSe8Z5yIwNZ5wnPmq_MNWaIjIWE6vo/pub?gid=512772452&single=true&output=csv';
+        const CACHE_KEY = 'quaf_reports_cache';
+        const CACHE_TIMESTAMP_KEY = 'quaf_reports_timestamp';
+        const CACHE_DURATION = 2 * 60 * 60 * 1000; // 2 hours in milliseconds
+
+        async function loadReports() {
+            const loadingState = document.getElementById('loadingState');
+            const errorState = document.getElementById('errorState');
+            const reportsContainer = document.getElementById('reports-container');
+            const retryBtn = document.getElementById('retryBtn');
+            
+            // Check cache first
+            const cachedData = getCachedData();
+            if (cachedData) {
+                renderReports(cachedData);
+                loadingState.style.display = 'none';
+                // Still fetch fresh data in background
+                fetchFreshData();
+                return;
+            }
+            
+            try {
+                const response = await fetch(GOOGLE_SHEETS_CSV_URL);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const csvText = await response.text();
+                const reports = parseCSV(csvText);
+                
+                // Cache the data
+                cacheData(reports);
+                
+                // Render the reports
+                renderReports(reports);
+                loadingState.style.display = 'none';
+                
+            } catch (error) {
+                console.error('Error loading reports:', error);
+                loadingState.style.display = 'none';
+                errorState.style.display = 'block';
+                
+                // Try to show cached data even if expired
+                const expiredCache = getCachedData(true); // Force get even if expired
+                if (expiredCache) {
+                    renderReports(expiredCache);
+                    errorState.innerHTML += '<p style="margin-top: 1rem; color: var(--shadesdark-60);"><i>Showing cached data - last updated: ' + 
+                        new Date(localStorage.getItem(CACHE_TIMESTAMP_KEY)).toLocaleDateString() + '</i></p>';
+                }
+            }
+            
+            // Setup retry button
+            if (retryBtn) {
+                retryBtn.addEventListener('click', function() {
+                    errorState.style.display = 'none';
+                    loadingState.style.display = 'block';
+                    loadReports();
+                });
             }
         }
+        
+        function fetchFreshData() {
+            // Fetch fresh data in background without blocking UI
+            fetch(GOOGLE_SHEETS_CSV_URL)
+                .then(response => {
+                    if (!response.ok) throw new Error('Fetch failed');
+                    return response.text();
+                })
+                .then(csvText => {
+                    const reports = parseCSV(csvText);
+                    cacheData(reports);
+                    // Optional: Show a subtle notification that data was updated
+                    console.log('Reports data refreshed in background');
+                })
+                .catch(error => {
+                    console.log('Background refresh failed:', error);
+                });
+        }
+        
+        function parseCSV(csvText) {
+            const lines = csvText.split('\n');
+            const reports = [];
+            
+            // Extract headers (first line)
+            const headers = lines[0].split(',').map(h => h.trim());
+            
+            // Process each data row
+            for (let i = 1; i < lines.length; i++) {
+                const line = lines[i].trim();
+                if (!line) continue; // Skip empty lines
+                
+                // Simple CSV parsing (for basic CSV format)
+                const values = [];
+                let inQuotes = false;
+                let currentValue = '';
+                
+                for (let j = 0; j < line.length; j++) {
+                    const char = line[j];
+                    
+                    if (char === '"') {
+                        inQuotes = !inQuotes;
+                    } else if (char === ',' && !inQuotes) {
+                        values.push(currentValue.trim());
+                        currentValue = '';
+                    } else {
+                        currentValue += char;
+                    }
+                }
+                values.push(currentValue.trim());
+                
+                // Create report object
+                const report = {};
+                headers.forEach((header, index) => {
+                    if (values[index]) {
+                        // Convert header to lowercase and replace spaces for easier access
+                        const key = header.toLowerCase().replace(/\s+/g, '_');
+                        report[key] = values[index];
+                    }
+                });
+                
+                // Only add if we have essential data
+                if (report.title || report.program_title) {
+                    reports.push(report);
+                }
+            }
+            
+            // Sort by date (most recent first) if date column exists
+            if (reports[0] && (reports[0].date || reports[0].program_date)) {
+                reports.sort((a, b) => {
+                    const dateA = a.date || a.program_date || '1970-01-01';
+                    const dateB = b.date || b.program_date || '1970-01-01';
+                    return new Date(dateB) - new Date(dateA);
+                });
+            }
+            
+            return reports;
+        }
+        
+        function renderReports(reports) {
+            const reportsContainer = document.getElementById('reports-container');
+            
+            // Clear existing content except loading/error states
+            const loadingState = document.getElementById('loadingState');
+            const errorState = document.getElementById('errorState');
+            
+            reportsContainer.innerHTML = '';
+            
+            if (reports.length === 0) {
+                reportsContainer.innerHTML = `
+                    <div class="error-state">
+                        <i class="fas fa-info-circle" style="font-size: 2rem; margin-bottom: 1rem;"></i>
+                        <h3>No Programs Found</h3>
+                        <p>No program data is available in the Google Sheet yet.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Create report cards for each program
+            reports.forEach(report => {
+                // Extract image links
+                const imageLinks = [];
+                for (let i = 1; i <= 4; i++) {
+                    const imgKey = `img${i}_link` in report ? `img${i}_link` : 
+                                  `image${i}` in report ? `image${i}` : null;
+                    
+                    if (imgKey && report[imgKey] && report[imgKey].trim() && 
+                        (report[imgKey].startsWith('http') || report[imgKey].startsWith('https'))) {
+                        imageLinks.push(report[imgKey].trim());
+                    }
+                }
+                
+                // Create the report card HTML
+                const reportCard = document.createElement('div');
+                reportCard.className = 'report-card';
+                
+                // Format date for display
+                const rawDate = report.date || report.program_date || 'Date not specified';
+                const displayDate = formatDate(rawDate);
+                
+                // Get main image
+                const mainImage = report.main_image || report.image || report.img1_link || 
+                                 report.image1 || 'https://quaf2026.netlify.app/images/default-program.jpg';
+                
+                reportCard.innerHTML = `
+                    <div class="report-header">
+                        <span>${displayDate}</span>
+                        <span>Programs & Reports</span>
+                    </div>
+                    <div class="report-content">
+                        <div class="report-content-inner">
+                            <div class="report-image">
+                                <img src="${mainImage}" alt="${report.title || report.program_title || 'Program'}">
+                            </div>
+                            <div class="report-details">
+                                <h3 class="report-title">${report.title || report.program_title || 'Untitled Program'}</h3>
+                                ${report.time || report.program_time ? `<div class="report-time">${report.time || report.program_time}</div>` : ''}
+                                ${report.by || report.author || report.organizer ? `<p class="report-by">By ${report.by || report.author || report.organizer}</p>` : ''}
+                                <p class="report-description">${report.description || report.program_description || 'No description available.'}</p>
+                                
+                                ${imageLinks.length > 0 ? `
+                                    <div class="report-images-grid" style="grid-template-columns: repeat(${Math.min(imageLinks.length, 4)}, 1fr);">
+                                        ${imageLinks.map(img => `<img src="${img}" alt="Program Image">`).join('')}
+                                    </div>
+                                ` : ''}
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                reportsContainer.appendChild(reportCard);
+            });
+        }
+        
+        function formatDate(dateString) {
+            if (!dateString || dateString === 'Date not specified') {
+                return 'Date not specified';
+            }
+            
+            try {
+                const date = new Date(dateString);
+                if (isNaN(date.getTime())) {
+                    return dateString; // Return original if can't parse
+                }
+                
+                // Format as "Day, Month-DD-YYYY"
+                const options = { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' };
+                return date.toLocaleDateString('en-US', options);
+            } catch (e) {
+                return dateString;
+            }
+        }
+        
+        function cacheData(data) {
+            try {
+                localStorage.setItem(CACHE_KEY, JSON.stringify(data));
+                localStorage.setItem(CACHE_TIMESTAMP_KEY, Date.now().toString());
+            } catch (e) {
+                console.log('Could not cache data:', e);
+            }
+        }
+        
+        function getCachedData(force = false) {
+            try {
+                const cached = localStorage.getItem(CACHE_KEY);
+                const timestamp = localStorage.getItem(CACHE_TIMESTAMP_KEY);
+                
+                if (!cached || !timestamp) {
+                    return null;
+                }
+                
+                const age = Date.now() - parseInt(timestamp, 10);
+                
+                if (!force && age > CACHE_DURATION) {
+                    return null; // Cache expired
+                }
+                
+                return JSON.parse(cached);
+            } catch (e) {
+                console.log('Could not read cache:', e);
+                return null;
+            }
+        }
+        
+        // Refresh data every 2 hours
+        setInterval(fetchFreshData, 2 * 60 * 60 * 1000);
+        
+        // Also refresh when page becomes visible again
+        document.addEventListener('visibilitychange', function() {
+            if (!document.hidden) {
+                const cachedData = getCachedData();
+                if (!cachedData || (Date.now() - parseInt(localStorage.getItem(CACHE_TIMESTAMP_KEY) || '0', 10) > CACHE_DURATION)) {
+                    fetchFreshData();
+                }
+            }
+        });
     </script>
 </body>
 </html>
