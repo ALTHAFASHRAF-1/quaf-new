@@ -1002,6 +1002,56 @@
             margin-bottom: 0.75rem;
             color: var(--mainsecondary);
         }
+        
+        /* About Section - 50% Width Desktop with Natural Aspect Ratio */
+.about-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.about-content {
+    order: 2;
+}
+
+.about-image-container {
+    order: 1;
+}
+
+@media (min-width: 768px) {
+    .about-wrapper {
+        flex-direction: row;
+        align-items: flex-start;
+        gap: 4rem;
+    }
+    
+    .about-content {
+        flex: 1;
+        order: 1;
+        margin-top: 0;
+        max-width: 50%;
+    }
+    
+    .about-image-container {
+        flex: 1;
+        order: 2;
+        max-width: 50%;
+    }
+    
+    .about-single-image {
+        width: 100%;
+        height: auto;
+        margin-top: 0;
+        position: relative;
+    }
+    
+    .about-single-image img {
+        width: 100%;
+        height: auto;
+        object-fit: contain; /* Changed from cover to contain to show full image */
+        display: block;
+    }
+}
     </style>
 </head>
 <body>
@@ -1111,9 +1161,10 @@
     </div>
     
     <!-- About Us Section -->
-    <section id="about" class="section-padding">
-        <div class="container">
-            <div style="display: flex; flex-direction: column; gap: 1.5rem; margin-bottom: 2rem;">
+<section id="about" class="section-padding">
+    <div class="container">
+        <div class="about-wrapper">
+            <div class="about-content">
                 <h2 class="section-title">About Us</h2>
                 <p class="section-subtitle">
                     "Admitted to Darul Hidaya Da'wa College, Manoor, 27th Batch, QUAF (Qualitative Union for Academic Focus) on 
@@ -1121,11 +1172,14 @@
                 </p>
             </div>
             
-            <div class="about-single-image">
-                <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/rectangle-27.png" alt="Class Group Photo">
+            <div class="about-image-container">
+                <div class="about-single-image">
+                    <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/rectangle-27.png" alt="Class Group Photo">
+                </div>
             </div>
         </div>
-    </section>
+    </div>
+</section>
     
     <!-- Programs Section -->
     <section class="programs-section section-padding">
