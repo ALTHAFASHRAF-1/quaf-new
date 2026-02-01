@@ -85,7 +85,7 @@
         }
         .btn-outline-dark:hover { background-color: var(--maindark); color: white; }
 
-        .section-title { font-family: 'ADLaM Display', cursive; font-size: 2.5rem; text-align: center; margin-bottom: 1rem; }
+        .section-title { font-family: 'ADLaM Display', cursive; font-size: 1.5rem; text-align: center; margin-bottom: 1rem; }
         .section-subtitle { text-align: center; color: var(--shadesdark-60); margin-bottom: 4rem; max-width: 600px; margin-left: auto; margin-right: auto; }
 
         /* THE UNIFIED CARD */
@@ -93,11 +93,11 @@
             display: flex;
             flex-direction: row; 
             background-color: var(--shadessecondary-15);
-            border-radius: 50px;
+            border-radius: 50px; /* Strong Pill Shape */
             overflow: hidden;
             box-shadow: 0 15px 35px rgba(0,0,0,0.08);
             margin-bottom: 4rem;
-            height: 400px;
+            height: 400px; /* Fixed Height for Desktop */
             transition: transform 0.3s ease;
         }
 
@@ -174,43 +174,37 @@
         }
         .watch-btn:hover { background-color: #6a30e5; transform: translateY(-2px); }
 
-        /* Loading State */
-        .loading-container {
-            text-align: center;
-            padding: 3rem;
-        }
-        .loading-spinner {
-            border: 3px solid #f3f3f3;
-            border-top: 3px solid var(--mainprimary);
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 1rem;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* --- MOBILE ADJUSTMENTS --- */
+        /* --- MOBILE ADJUSTMENTS (Hide Video, Popup Logic) --- */
         @media (max-width: 768px) {
-            .card-video { display: none; }
-            .card-half.card-text { width: 100%; }
+            /* 1. Hide the video half on mobile */
+            .card-video {
+                display: none; 
+            }
+            
+            /* 2. Make text half full width */
+            .card-half.card-text {
+                width: 100%;
+            }
+
+            /* 3. Adjust Card Height and Shape */
             .unified-card {
-                height: auto;
+                height: auto; /* Auto height to fit text */
                 flex-direction: column;
                 border-radius: 30px;
                 margin-bottom: 2rem;
                 padding-bottom: 1rem;
             }
-            .card-text { padding: 2rem 1.5rem; }
+
+            .card-text {
+                padding: 2rem 1.5rem; /* Better padding for mobile */
+            }
+
             .video-heading { font-size: 1.5rem; }
         }
 
         /* --- VIDEO POPUP MODAL STYLES --- */
         .video-modal {
-            display: none;
+            display: none; /* Hidden by default */
             position: fixed;
             z-index: 9999;
             left: 0;
@@ -257,6 +251,42 @@
             transition: 0.3s;
         }
         .close-modal:hover { color: var(--mainprimary); }
+
+        /* --- LOADING SPINNER --- */
+        .loading-spinner {
+            display: none;
+            text-align: center;
+            padding: 3rem;
+        }
+        
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border-left-color: var(--mainprimary);
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .error-message {
+            display: none;
+            text-align: center;
+            padding: 3rem;
+            color: #e53e3e;
+        }
+
+        .no-videos {
+            display: none;
+            text-align: center;
+            padding: 3rem;
+            color: var(--shadesdark-60);
+        }
 
         /* --- ANIMATIONS --- */
         .animate-on-scroll {
@@ -323,13 +353,30 @@
         <h2 class="section-title">Visual Journey</h2>
         <p class="section-subtitle">Experience the moments that define us. Click 'Watch Now' to view the videos.</p>
 
-        <!-- Loading State -->
-        <div id="loadingState" class="loading-container">
-            <div class="loading-spinner"></div>
+        <!-- Loading Spinner -->
+        <div id="loadingSpinner" class="loading-spinner">
+            <div class="spinner"></div>
             <p>Loading videos...</p>
         </div>
 
-        <!-- Videos Container -->
+        <!-- Error Message -->
+        <div id="errorMessage" class="error-message">
+            <i class="fas fa-exclamation-triangle fa-2x mb-4"></i>
+            <h3 class="text-xl font-bold mb-2">Failed to Load Videos</h3>
+            <p id="errorText">Unable to load videos from Google Sheets. Please try again later.</p>
+            <button onclick="loadVideos()" class="mt-4 watch-btn">
+                <i class="fas fa-redo mr-2"></i> Retry
+            </button>
+        </div>
+
+        <!-- No Videos Message -->
+        <div id="noVideos" class="no-videos">
+            <i class="far fa-folder-open fa-2x mb-4"></i>
+            <h3 class="text-xl font-bold mb-2">No Videos Yet</h3>
+            <p>Check back soon for new video content!</p>
+        </div>
+
+        <!-- Videos Container - This will be populated dynamically -->
         <div id="videosContainer"></div>
 
     </div>
@@ -342,19 +389,269 @@
     </footer>
 
     <script>
-        // CONFIGURATION - Replace with your Google Sheet CSV URL
-        const GOOGLE_SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSTO4bX4f8beRI4i6mqhZZZKYLVvb1BDRoPseprkTYmO3kDSmJ6yr3Tym9xsVLfcTGjbSCinUMT1bE5/pub?gid=0&single=true&output=csv';
+        // Configuration
+        const GOOGLE_SHEETS_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSTO4bX4f8beRI4i6mqhZZZKYLVvb1BDRoPseprkTYmO3kDSmJ6yr3Tym9xsVLfcTGjbSCinUMT1bE5/pub?gid=0&single=true&output=csv';
         
-        // Sample CSV URL format:
-        // https://docs.google.com/spreadsheets/d/e/2PACX-1vQ1234567890abcdefghijklmnopqrstuvwxyz/pub?output=csv
+        // State
+        let videosData = [];
+        let alternateLayout = false; // For alternating card layouts
 
-        document.addEventListener('DOMContentLoaded', function() {
-            // Initialize
-            initializeNavigation();
-            fetchAndDisplayVideos();
-        });
+        // DOM Elements
+        const videosContainer = document.getElementById('videosContainer');
+        const loadingSpinner = document.getElementById('loadingSpinner');
+        const errorMessage = document.getElementById('errorMessage');
+        const errorText = document.getElementById('errorText');
+        const noVideos = document.getElementById('noVideos');
 
-        function initializeNavigation() {
+        // CSV parsing function
+        function parseCSV(csvText) {
+            const rows = csvText.split('\n');
+            const headers = rows[0].split(',').map(header => header.trim());
+            
+            const videos = [];
+            
+            for (let i = 1; i < rows.length; i++) {
+                if (!rows[i].trim()) continue;
+                
+                // Handle commas within quoted fields
+                const row = rows[i].match(/(".*?"|[^",]+)(?=\s*,|\s*$)/g) || [];
+                const cleanRow = row.map(field => {
+                    let clean = field.trim();
+                    if (clean.startsWith('"') && clean.endsWith('"')) {
+                        clean = clean.substring(1, clean.length - 1);
+                    }
+                    return clean;
+                });
+                
+                // Create video object
+                const video = {
+                    id: i,
+                    date: cleanRow[0] || '',
+                    heading: cleanRow[1] || '',
+                    description: cleanRow[2] || '',
+                    videoLink: cleanRow[3] || '',
+                    order: parseInt(cleanRow[4]) || 999
+                };
+                
+                // Only add if we have required data
+                if (video.heading && video.videoLink) {
+                    videos.push(video);
+                }
+            }
+            
+            // Sort by order
+            videos.sort((a, b) => a.order - b.order);
+            
+            return videos;
+        }
+
+        // Ensure video link has autoplay parameter
+        function ensureAutoplay(url) {
+            if (!url) return '';
+            
+            // If it's already an embed URL
+            if (url.includes('youtube.com/embed/')) {
+                if (!url.includes('autoplay=1')) {
+                    return url.includes('?') ? 
+                        url + '&autoplay=1' : 
+                        url + '?autoplay=1';
+                }
+                return url;
+            }
+            
+            // If it's a regular YouTube URL, convert it
+            return convertToEmbed(url);
+        }
+
+        // Convert regular YouTube URL to embed with autoplay
+        function convertToEmbed(url) {
+            if (!url) return '';
+            
+            let videoId = '';
+            const cleanUrl = url.trim();
+            
+            // Extract video ID from different formats
+            if (cleanUrl.includes('youtube.com/watch?v=')) {
+                const match = cleanUrl.match(/v=([^&]+)/);
+                videoId = match ? match[1] : '';
+            } else if (cleanUrl.includes('youtu.be/')) {
+                videoId = cleanUrl.split('youtu.be/')[1];
+            } else if (cleanUrl.includes('youtube.com/embed/')) {
+                videoId = cleanUrl.split('embed/')[1];
+            }
+            
+            // Clean video ID
+            if (videoId) {
+                videoId = videoId.split(/[?&#]/)[0];
+            }
+            
+            return videoId ? `https://www.youtube.com/embed/${videoId}?autoplay=1` : '';
+        }
+
+        // Create video card HTML
+        function createVideoCard(video, isAlternate) {
+            const videoLinkWithAutoplay = ensureAutoplay(video.videoLink);
+            const embedUrl = videoLinkWithAutoplay.replace('?autoplay=1', ''); // For iframe src (no autoplay)
+            
+            // Alternate layout for desktop
+            const desktopLayout = isAlternate ? 
+                `
+                <div class="card-half card-video">
+                    <iframe src="${embedUrl}" title="${video.heading}" allowfullscreen></iframe>
+                </div>
+                <div class="card-half card-text">
+                    <div class="video-date">${video.date}</div>
+                    <h3 class="video-heading">${video.heading}</h3>
+                    <p class="video-desc">${video.description}</p>
+                    <button class="watch-btn" data-video="${videoLinkWithAutoplay}">
+                        WATCH NOW <i class="fas fa-play"></i>
+                    </button>
+                </div>
+                ` : 
+                `
+                <div class="card-half card-text">
+                    <div class="video-date">${video.date}</div>
+                    <h3 class="video-heading">${video.heading}</h3>
+                    <p class="video-desc">${video.description}</p>
+                    <button class="watch-btn" data-video="${videoLinkWithAutoplay}">
+                        WATCH NOW <i class="fas fa-play"></i>
+                    </button>
+                </div>
+                <div class="card-half card-video">
+                    <iframe src="${embedUrl}" title="${video.heading}" allowfullscreen></iframe>
+                </div>
+                `;
+            
+            return `
+                <div class="unified-card animate-on-scroll slide-up">
+                    ${desktopLayout}
+                </div>
+            `;
+        }
+
+        // Render videos to the page
+        function renderVideos(videos) {
+            videosContainer.innerHTML = '';
+            
+            if (videos.length === 0) {
+                noVideos.style.display = 'block';
+                return;
+            }
+            
+            noVideos.style.display = 'none';
+            
+            let alternate = false;
+            videos.forEach(video => {
+                const cardHTML = createVideoCard(video, alternate);
+                videosContainer.innerHTML += cardHTML;
+                alternate = !alternate; // Alternate layout for next card
+            });
+            
+            // Re-initialize animations and event listeners
+            initAnimations();
+            initVideoModal();
+        }
+
+        // Load videos from Google Sheets
+        async function loadVideos() {
+            // Show loading, hide other states
+            loadingSpinner.style.display = 'block';
+            errorMessage.style.display = 'none';
+            noVideos.style.display = 'none';
+            videosContainer.innerHTML = '';
+            
+            try {
+                // Fetch CSV data
+                const response = await fetch(GOOGLE_SHEETS_CSV_URL);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const csvText = await response.text();
+                
+                // Parse CSV data
+                videosData = parseCSV(csvText);
+                
+                // Render videos
+                renderVideos(videosData);
+                
+                loadingSpinner.style.display = 'none';
+                
+                console.log(`Loaded ${videosData.length} videos from Google Sheets`);
+            } catch (error) {
+                console.error('Error loading videos:', error);
+                loadingSpinner.style.display = 'none';
+                errorText.textContent = `Error: ${error.message}. Please check your internet connection and try again.`;
+                errorMessage.style.display = 'block';
+            }
+        }
+
+        // Initialize scroll animations
+        function initAnimations() {
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.15
+            };
+
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                        observer.unobserve(entry.target); 
+                    }
+                });
+            }, observerOptions);
+
+            const hiddenElements = document.querySelectorAll('.animate-on-scroll');
+            hiddenElements.forEach((el) => observer.observe(el));
+        }
+
+        // Initialize video modal functionality
+        function initVideoModal() {
+            const modal = document.getElementById('videoModal');
+            const iframe = document.getElementById('modalIframe');
+            const closeBtn = document.querySelector('.close-modal');
+            const watchBtns = document.querySelectorAll('.watch-btn');
+
+            // Open Modal
+            watchBtns.forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const videoSrc = this.getAttribute('data-video');
+                    iframe.src = videoSrc;
+                    modal.classList.add('show');
+                    document.body.style.overflow = 'hidden';
+                });
+            });
+
+            // Close Modal Function
+            function closeModal() {
+                modal.classList.remove('show');
+                iframe.src = "";
+                document.body.style.overflow = '';
+            }
+
+            closeBtn.addEventListener('click', closeModal);
+
+            // Close on background click
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    closeModal();
+                }
+            });
+
+            // Close on Escape key
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && modal.classList.contains('show')) {
+                    closeModal();
+                }
+            });
+        }
+
+        // Initialize mobile menu
+        function initMobileMenu() {
             const mobileMenuBtn = document.getElementById('mobileMenuBtn');
             const mobileMenu = document.getElementById('mobileMenu');
             const navbar = document.querySelector('.navbar');
@@ -381,172 +678,14 @@
             });
         }
 
-        async function fetchAndDisplayVideos() {
-            try {
-                // Show loading state
-                const loadingState = document.getElementById('loadingState');
-                const videosContainer = document.getElementById('videosContainer');
-                
-                // Fetch CSV data
-                const response = await fetch(GOOGLE_SHEET_CSV_URL);
-                const csvText = await response.text();
-                
-                // Parse CSV
-                const videos = parseCSV(csvText);
-                
-                // Hide loading state
-                loadingState.style.display = 'none';
-                
-                // Display videos
-                videos.forEach((video, index) => {
-                    const videoCard = createVideoCard(video, index);
-                    videosContainer.appendChild(videoCard);
-                });
-                
-                // Initialize animations and video modal
-                initializeAnimations();
-                initializeVideoModal();
-                
-            } catch (error) {
-                console.error('Error loading videos:', error);
-                document.getElementById('loadingState').innerHTML = 
-                    '<p style="color: #ff4444;">Error loading videos. Please try again later.</p>';
-            }
-        }
+        // Initialize everything when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            initMobileMenu();
+            loadVideos();
+        });
 
-        function parseCSV(csvText) {
-            const lines = csvText.split('\n');
-            const headers = lines[0].split(',').map(header => header.trim());
-            
-            const videos = [];
-            
-            for (let i = 1; i < lines.length; i++) {
-                if (!lines[i].trim()) continue;
-                
-                const values = lines[i].split(',').map(value => value.trim());
-                const video = {};
-                
-                headers.forEach((header, index) => {
-                    video[header] = values[index] || '';
-                });
-                
-                // Convert order to number and validate
-                video.order = parseInt(video.order) || i;
-                
-                // Only add if it has required fields
-                if (video.heading && video.videoLink) {
-                    videos.push(video);
-                }
-            }
-            
-            // Sort by order
-            return videos.sort((a, b) => a.order - b.order);
-        }
-
-        function createVideoCard(video, index) {
-            const isEven = index % 2 === 0;
-            
-            // Extract YouTube ID for thumbnail
-            const youtubeId = extractYouTubeId(video.videoLink);
-            const thumbnailUrl = youtubeId ? `https://img.youtube.com/vi/${youtubeId}/maxresdefault.jpg` : '';
-            
-            const card = document.createElement('div');
-            card.className = 'unified-card animate-on-scroll slide-up';
-            
-            card.innerHTML = `
-                ${isEven ? `
-                    <div class="card-half card-text">
-                        <div class="video-date">${video.date || 'Date not specified'}</div>
-                        <h3 class="video-heading">${video.heading}</h3>
-                        <p class="video-desc">${video.description || 'No description available.'}</p>
-                        <button class="watch-btn" data-video="${video.videoLink}?autoplay=1">
-                            WATCH NOW <i class="fas fa-play"></i>
-                        </button>
-                    </div>
-                    <div class="card-half card-video">
-                        <iframe 
-                            src="${video.videoLink}" 
-                            title="${video.heading}"
-                            allowfullscreen
-                            loading="lazy">
-                        </iframe>
-                    </div>
-                ` : `
-                    <div class="card-half card-video">
-                        <iframe 
-                            src="${video.videoLink}" 
-                            title="${video.heading}"
-                            allowfullscreen
-                            loading="lazy">
-                        </iframe>
-                    </div>
-                    <div class="card-half card-text">
-                        <div class="video-date">${video.date || 'Date not specified'}</div>
-                        <h3 class="video-heading">${video.heading}</h3>
-                        <p class="video-desc">${video.description || 'No description available.'}</p>
-                        <button class="watch-btn" data-video="${video.videoLink}?autoplay=1">
-                            WATCH NOW <i class="fas fa-play"></i>
-                        </button>
-                    </div>
-                `}
-            `;
-            
-            return card;
-        }
-
-        function extractYouTubeId(url) {
-            if (!url) return '';
-            const match = url.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/);
-            return match ? match[1] : '';
-        }
-
-        function initializeAnimations() {
-            const observerOptions = {
-                root: null,
-                rootMargin: '0px',
-                threshold: 0.15
-            };
-
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('active');
-                        observer.unobserve(entry.target);
-                    }
-                });
-            }, observerOptions);
-
-            document.querySelectorAll('.animate-on-scroll').forEach(el => observer.observe(el));
-        }
-
-        function initializeVideoModal() {
-            const modal = document.getElementById('videoModal');
-            const iframe = document.getElementById('modalIframe');
-            const closeBtn = document.querySelector('.close-modal');
-
-            // Open Modal
-            document.addEventListener('click', function(e) {
-                if (e.target.classList.contains('watch-btn') || e.target.closest('.watch-btn')) {
-                    const btn = e.target.classList.contains('watch-btn') ? e.target : e.target.closest('.watch-btn');
-                    const videoSrc = btn.getAttribute('data-video');
-                    iframe.src = videoSrc;
-                    modal.classList.add('show');
-                    document.body.style.overflow = 'hidden';
-                }
-            });
-
-            // Close Modal Function
-            function closeModal() {
-                modal.classList.remove('show');
-                iframe.src = "";
-                document.body.style.overflow = '';
-            }
-
-            closeBtn.addEventListener('click', closeModal);
-            modal.addEventListener('click', function(e) {
-                if (e.target === modal) closeModal();
-            });
-        }
+        // Make loadVideos available globally for retry button
+        window.loadVideos = loadVideos;
     </script>
 </body>
 </html>
