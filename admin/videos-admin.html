@@ -1,0 +1,1251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QUAF - Admin Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --mainprimary: #7a38fc;
+            --maindark: #0f0b0c;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Manrope', sans-serif; background: #f8f9fa; }
+        
+        .sidebar {
+            background: linear-gradient(180deg, var(--maindark) 0%, #2d1b3a 100%);
+            color: white;
+            min-height: 100vh;
+            position: fixed;
+            width: 280px;
+            transition: all 0.3s;
+        }
+        
+        .content { margin-left: 280px; padding: 20px; transition: all 0.3s; }
+        
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            color: #ddd;
+            text-decoration: none;
+            transition: all 0.3s;
+            border-left: 3px solid transparent;
+        }
+        
+        .nav-link:hover, .nav-link.active {
+            background: rgba(122, 56, 252, 0.1);
+            color: white;
+            border-left: 3px solid var(--mainprimary);
+        }
+        
+        .logo { padding: 20px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        
+        .form-group { margin-bottom: 1.5rem; }
+        
+        .form-label { display: block; margin-bottom: 0.5rem; font-weight: 600; color: #333; }
+        
+        .form-control {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border 0.3s;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--mainprimary);
+            box-shadow: 0 0 0 3px rgba(122, 56, 252, 0.1);
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background: var(--mainprimary);
+            color: white;
+        }
+        
+        .btn-primary:hover { background: #6a30e5; transform: translateY(-2px); }
+        
+        .alert {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .table-container {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .table { width: 100%; border-collapse: collapse; }
+        
+        .table th {
+            background: #f8f9fa;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            color: #333;
+            border-bottom: 2px solid #dee2e6;
+        }
+        
+        .table td {
+            padding: 15px;
+            border-bottom: 1px solid #dee2e6;
+            vertical-align: middle;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .badge-success { background: #d4edda; color: #155724; }
+        
+        .action-btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 12px;
+            margin-right: 5px;
+        }
+        
+        .edit-btn { background: #fff3cd; color: #856404; }
+        .delete-btn { background: #f8d7da; color: #721c24; }
+        
+        .edit-btn:hover { background: #ffeaa7; }
+        .delete-btn:hover { background: #f5c6cb; }
+        
+        .mobile-menu-btn { display: none; }
+        
+        @media (max-width: 768px) {
+            .sidebar { 
+                left: -280px; 
+                z-index: 1000;
+                box-shadow: 5px 0 15px rgba(0,0,0,0.1);
+            }
+            
+            .sidebar.active { left: 0; }
+            
+            .content { margin-left: 0; }
+            
+            .mobile-menu-btn {
+                display: block;
+                position: fixed;
+                top: 20px;
+                left: 20px;
+                z-index: 999;
+                background: var(--mainprimary);
+                color: white;
+                border: none;
+                border-radius: 6px;
+                padding: 10px;
+                cursor: pointer;
+            }
+            
+            .overlay {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0,0,0,0.5);
+                z-index: 999;
+            }
+            
+            .overlay.active { display: block; }
+        }
+        
+        .video-preview {
+            aspect-ratio: 16/9;
+            background: #f0f0f0;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+        
+        .preview-thumbnail {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .thumbnail-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-size: 14px;
+        }
+        
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid var(--mainprimary);
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Mobile Menu Button -->
+    <button class="mobile-menu-btn" id="mobileMenuBtn">
+        <i class="fas fa-bars"></i>
+    </button>
+    
+    <!-- Overlay for Mobile -->
+    <div class="overlay" id="overlay"></div>
+    
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="logo">
+            <h2 class="text-2xl font-bold">QUAF Admin</h2>
+            <p class="text-sm text-gray-400 mt-1">Video Dashboard</p>
+        </div>
+        
+        <div class="py-4">
+            <a href="#" class="nav-link active" data-tab="add-video">
+                <i class="fas fa-plus-circle mr-3"></i>
+                Add New Video
+            </a>
+            <a href="#" class="nav-link" data-tab="manage-videos">
+                <i class="fas fa-list mr-3"></i>
+                Manage Videos
+            </a>
+            <a href="#" class="nav-link" data-tab="settings">
+                <i class="fas fa-cog mr-3"></i>
+                Settings
+            </a>
+            <a href="video-showcase.html" class="nav-link">
+                <i class="fas fa-external-link-alt mr-3"></i>
+                View Website
+            </a>
+            <a href="index.html" class="nav-link">
+                <i class="fas fa-home mr-3"></i>
+                Back to Main Site
+            </a>
+        </div>
+        
+        <div class="mt-auto p-4 border-t border-gray-700">
+            <div class="flex items-center">
+                <div class="w-10 h-10 rounded-full bg-purple-600 flex items-center justify-center mr-3">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div>
+                    <p class="font-medium">Admin User</p>
+                    <p class="text-xs text-gray-400">Last login: Today</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="content" id="content">
+        <!-- Add Video Tab -->
+        <div id="add-video-tab" class="tab-content active">
+            <div class="mb-8">
+                <h1 class="text-3xl font-bold text-gray-800">Add New Video</h1>
+                <p class="text-gray-600">Add new videos to your showcase. YouTube links will be converted to embed format automatically.</p>
+            </div>
+            
+            <!-- Alerts -->
+            <div id="successAlert" class="alert alert-success">
+                <i class="fas fa-check-circle mr-2"></i>
+                <span>Video added successfully!</span>
+            </div>
+            
+            <div id="errorAlert" class="alert alert-error">
+                <i class="fas fa-exclamation-circle mr-2"></i>
+                <span id="errorMessage">Error adding video. Please try again.</span>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Form -->
+                <div class="lg:col-span-2">
+                    <div class="bg-white rounded-xl p-6 shadow-md">
+                        <form id="videoForm">
+                            <div class="form-group">
+                                <label class="form-label">YouTube Video URL *</label>
+                                <input type="url" id="youtubeUrl" class="form-control" 
+                                       placeholder="https://www.youtube.com/watch?v=44rWRiaKgrg" 
+                                       required>
+                                <p class="text-sm text-gray-500 mt-1">Enter the full YouTube URL. Will be converted to embed format automatically.</p>
+                            </div>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div class="form-group">
+                                    <label class="form-label">Date *</label>
+                                    <input type="text" id="videoDate" class="form-control" 
+                                           placeholder="July 25, 2024" required>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="form-label">Order *</label>
+                                    <input type="number" id="videoOrder" class="form-control" 
+                                           placeholder="1" min="1" required>
+                                    <p class="text-sm text-gray-500 mt-1">Lower numbers appear first</p>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Video Title *</label>
+                                <input type="text" id="videoTitle" class="form-control" 
+                                       placeholder="Freshers Meet Highlights" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Description *</label>
+                                <textarea id="videoDescription" class="form-control" 
+                                          rows="4" placeholder="Enter video description..." required></textarea>
+                            </div>
+                            
+                            <div class="flex items-center justify-between mt-8">
+                                <button type="button" id="clearForm" class="btn" style="background: #f8f9fa; color: #333;">
+                                    <i class="fas fa-redo mr-2"></i> Clear Form
+                                </button>
+                                
+                                <button type="submit" id="submitBtn" class="btn btn-primary">
+                                    <i class="fas fa-upload mr-2"></i> Add Video to Showcase
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                
+                <!-- Preview -->
+                <div class="lg:col-span-1">
+                    <div class="bg-white rounded-xl p-6 shadow-md sticky top-6">
+                        <h3 class="text-lg font-bold mb-4">Video Preview</h3>
+                        
+                        <div class="video-preview mb-4" id="videoPreview">
+                            <div class="thumbnail-placeholder">
+                                <i class="fas fa-video mr-2"></i>
+                                <span>Enter URL to see preview</span>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <p class="text-sm font-medium text-gray-700 mb-2">Video Details:</p>
+                            <div class="space-y-2">
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">Title:</span>
+                                    <span id="previewTitle" class="font-medium">Not set</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">Date:</span>
+                                    <span id="previewDate" class="font-medium">Not set</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">Order:</span>
+                                    <span id="previewOrder" class="font-medium">Not set</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="p-4 bg-blue-50 rounded-lg">
+                            <h4 class="font-bold text-blue-800 mb-2">
+                                <i class="fas fa-info-circle mr-2"></i> Important Notes
+                            </h4>
+                            <ul class="text-sm text-blue-700 space-y-1">
+                                <li>• Videos will appear in ascending order (1, 2, 3...)</li>
+                                <li>• YouTube links are automatically converted</li>
+                                <li>• Changes appear live on the website</li>
+                                <li>• You can edit/delete videos later</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Manage Videos Tab -->
+        <div id="manage-videos-tab" class="tab-content hidden">
+            <div class="mb-8">
+                <h1 class="text-3xl font-bold text-gray-800">Manage Videos</h1>
+                <p class="text-gray-600">Edit or delete existing videos in your showcase.</p>
+            </div>
+            
+            <div class="table-container">
+                <div class="p-4 border-b flex justify-between items-center">
+                    <h3 class="text-lg font-bold">All Videos</h3>
+                    <div class="flex items-center gap-4">
+                        <div class="relative">
+                            <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                            <input type="text" id="searchVideos" class="pl-10 pr-4 py-2 border rounded-lg" 
+                                   placeholder="Search videos...">
+                        </div>
+                        <button id="refreshVideos" class="btn" style="background: #f8f9fa; color: #333;">
+                            <i class="fas fa-sync-alt"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="overflow-x-auto">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Order</th>
+                                <th>Title</th>
+                                <th>Date</th>
+                                <th>Embed Link</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="videosTableBody">
+                            <!-- Videos will be loaded here -->
+                            <tr>
+                                <td colspan="5" class="text-center py-8">
+                                    <div class="spinner mx-auto"></div>
+                                    <p class="text-gray-500 mt-2">Loading videos...</p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Settings Tab -->
+        <div id="settings-tab" class="tab-content hidden">
+            <div class="mb-8">
+                <h1 class="text-3xl font-bold text-gray-800">Settings</h1>
+                <p class="text-gray-600">Configure your Google Sheet and other settings.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div class="bg-white rounded-xl p-6 shadow-md">
+                    <h3 class="text-xl font-bold mb-4">Google Sheet Configuration</h3>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Google Apps Script URL</label>
+                        <input type="url" id="scriptUrl" class="form-control" 
+                               placeholder="https://script.google.com/macros/s/...">
+                        <p class="text-sm text-gray-500 mt-1">Enter the web app URL from Google Apps Script deployment</p>
+                    </div>
+                    
+                    <div class="p-4 bg-yellow-50 rounded-lg mb-4">
+                        <h4 class="font-bold text-yellow-800 mb-2">
+                            <i class="fas fa-exclamation-triangle mr-2"></i> Setup Instructions
+                        </h4>
+                        <ol class="text-sm text-yellow-700 list-decimal pl-4 space-y-1">
+                            <li>Create a Google Sheet with columns: date, heading, description, videoLink, order</li>
+                            <li>Open Script Editor (Extensions → Apps Script)</li>
+                            <li>Copy the provided script code</li>
+                            <li>Deploy as Web App (set "Anyone" to access)</li>
+                            <li>Copy the deployment URL (https://script.google.com/macros/s/AKfycbyN1r1up6Rs0ph03D8jy7TMNRLQEhdHQcFlu7irkiWWxDPOc9fAiuZPhgAbL3eHf5PTQA/exec) and paste above</li>
+                        </ol>
+                    </div>
+                    
+                    <button id="saveSettings" class="btn btn-primary">
+                        <i class="fas fa-save mr-2"></i> Save Settings
+                    </button>
+                </div>
+                
+                <div class="bg-white rounded-xl p-6 shadow-md">
+                    <h3 class="text-xl font-bold mb-4">Instructions</h3>
+                    
+                    <div class="space-y-4">
+                        <div class="p-4 bg-purple-50 rounded-lg">
+                            <h4 class="font-bold text-purple-800 mb-2">
+                                <i class="fas fa-table mr-2"></i> Google Sheet Format
+                            </h4>
+                            <p class="text-sm text-purple-700">Your Google Sheet must have these columns in order:</p>
+                            <code class="block mt-2 p-2 bg-purple-100 text-purple-800 rounded text-sm">
+                                date | heading | description | videoLink | order
+                            </code>
+                        </div>
+                        
+                        <div class="p-4 bg-green-50 rounded-lg">
+                            <h4 class="font-bold text-green-800 mb-2">
+                                <i class="fas fa-link mr-2"></i> YouTube URL Conversion
+                            </h4>
+                            <p class="text-sm text-green-700">The system automatically converts:</p>
+                            <ul class="text-sm text-green-700 list-disc pl-4 mt-2">
+                                <li><code>https://youtu.be/ID</code> → <code>https://www.youtube.com/embed/ID</code></li>
+                                <li><code>https://youtube.com/watch?v=ID</code> → <code>https://www.youtube.com/embed/ID</code></li>
+                                <li><code>https://www.youtube.com/embed/ID</code> → (stays the same)</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="p-4 bg-blue-50 rounded-lg">
+                            <h4 class="font-bold text-blue-800 mb-2">
+                                <i class="fas fa-code mr-2"></i> Get Script Code
+                            </h4>
+                            <p class="text-sm text-blue-700 mb-2">Copy the Google Apps Script code from the button below:</p>
+                            <button id="showScriptCode" class="btn" style="background: #e3f2fd; color: #1565c0;">
+                                <i class="fas fa-copy mr-2"></i> View Script Code
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script Code Modal -->
+    <div id="scriptModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-xl max-w-4xl w-full max-h-[90vh] overflow-hidden">
+            <div class="p-4 border-b flex justify-between items-center">
+                <h3 class="text-xl font-bold">Google Apps Script Code</h3>
+                <button id="closeModal" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            <div class="p-4 overflow-auto max-h-[70vh]">
+                <pre class="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto text-sm">
+<code>// Google Apps Script for QUAF Video Showcase
+// Paste this code in Google Sheets Script Editor
+
+// Configuration
+const SHEET_NAME = "Videos";
+const HEADERS = ["date", "heading", "description", "videoLink", "order"];
+
+function doGet(e) {
+  return handleRequest(e);
+}
+
+function doPost(e) {
+  return handleRequest(e);
+}
+
+function handleRequest(e) {
+  const action = e.parameter.action;
+  
+  try {
+    if (action === "addVideo") {
+      return addVideo(e);
+    } else if (action === "getVideos") {
+      return getVideos();
+    } else if (action === "deleteVideo") {
+      return deleteVideo(e);
+    } else if (action === "updateVideo") {
+      return updateVideo(e);
+    } else {
+      return createResponse("error", "Invalid action", null);
+    }
+  } catch (error) {
+    return createResponse("error", error.toString(), null);
+  }
+}
+
+function addVideo(e) {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const sheet = ss.getSheetByName(SHEET_NAME) || ss.insertSheet(SHEET_NAME);
+  
+  // Set headers if sheet is empty
+  if (sheet.getLastRow() === 0) {
+    sheet.appendRow(HEADERS);
+  }
+  
+  // Get data from request
+  const data = {
+    date: e.parameter.date,
+    heading: e.parameter.heading,
+    description: e.parameter.description,
+    videoLink: convertToEmbed(e.parameter.youtubeUrl),
+    order: parseInt(e.parameter.order)
+  };
+  
+  // Validate data
+  if (!data.date || !data.heading || !data.videoLink || !data.order) {
+    return createResponse("error", "Missing required fields", null);
+  }
+  
+  // Add to sheet
+  const rowData = [data.date, data.heading, data.description, data.videoLink, data.order];
+  sheet.appendRow(rowData);
+  
+  // Get the new row number
+  const newRow = sheet.getLastRow();
+  
+  return createResponse("success", "Video added successfully", {
+    id: newRow,
+    ...data
+  });
+}
+
+function getVideos() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const sheet = ss.getSheetByName(SHEET_NAME);
+  
+  if (!sheet || sheet.getLastRow() === 0) {
+    return createResponse("success", "No videos found", []);
+  }
+  
+  const data = sheet.getDataRange().getValues();
+  const headers = data[0];
+  const videos = [];
+  
+  // Start from row 1 to skip header
+  for (let i = 1; i < data.length; i++) {
+    const row = data[i];
+    const video = {
+      id: i + 1, // Google Sheets rows are 1-indexed
+      date: row[0] || "",
+      heading: row[1] || "",
+      description: row[2] || "",
+      videoLink: row[3] || "",
+      order: row[4] || 999
+    };
+    
+    // Only add if it has a title
+    if (video.heading) {
+      videos.push(video);
+    }
+  }
+  
+  // Sort by order
+  videos.sort((a, b) => a.order - b.order);
+  
+  return createResponse("success", "Videos retrieved", videos);
+}
+
+function deleteVideo(e) {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const sheet = ss.getSheetByName(SHEET_NAME);
+  
+  if (!sheet) {
+    return createResponse("error", "Sheet not found", null);
+  }
+  
+  const rowId = parseInt(e.parameter.id);
+  
+  if (rowId <= 1) {
+    return createResponse("error", "Cannot delete header row", null);
+  }
+  
+  sheet.deleteRow(rowId);
+  
+  return createResponse("success", "Video deleted successfully", { id: rowId });
+}
+
+function updateVideo(e) {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const sheet = ss.getSheetByName(SHEET_NAME);
+  
+  if (!sheet) {
+    return createResponse("error", "Sheet not found", null);
+  }
+  
+  const rowId = parseInt(e.parameter.id);
+  
+  if (rowId <= 1) {
+    return createResponse("error", "Cannot update header row", null);
+  }
+  
+  const data = {
+    date: e.parameter.date,
+    heading: e.parameter.heading,
+    description: e.parameter.description,
+    videoLink: convertToEmbed(e.parameter.youtubeUrl),
+    order: parseInt(e.parameter.order)
+  };
+  
+  // Update row
+  const rowRange = sheet.getRange(rowId, 1, 1, 5);
+  rowRange.setValues([[data.date, data.heading, data.description, data.videoLink, data.order]]);
+  
+  return createResponse("success", "Video updated successfully", {
+    id: rowId,
+    ...data
+  });
+}
+
+function convertToEmbed(youtubeUrl) {
+  if (!youtubeUrl) return "";
+  
+  // Handle various YouTube URL formats
+  let videoId = "";
+  
+  // Standard formats
+  if (youtubeUrl.includes("youtu.be/")) {
+    videoId = youtubeUrl.split("youtu.be/")[1];
+  } else if (youtubeUrl.includes("youtube.com/watch?v=")) {
+    videoId = youtubeUrl.split("v=")[1];
+  } else if (youtubeUrl.includes("youtube.com/embed/")) {
+    videoId = youtubeUrl.split("embed/")[1];
+  }
+  
+  // Clean up any extra parameters
+  if (videoId.includes("&")) {
+    videoId = videoId.split("&")[0];
+  }
+  if (videoId.includes("?")) {
+    videoId = videoId.split("?")[0];
+  }
+  
+  return videoId ? `https://www.youtube.com/embed/${videoId}` : youtubeUrl;
+}
+
+function createResponse(status, message, data) {
+  const output = ContentService.createTextOutput();
+  output.setContent(JSON.stringify({
+    status: status,
+    message: message,
+    data: data
+  }));
+  output.setMimeType(ContentService.MimeType.JSON);
+  return output;
+}</code></pre>
+                
+                <div class="mt-4 p-4 bg-yellow-50 rounded-lg">
+                    <h4 class="font-bold text-yellow-800 mb-2">
+                        <i class="fas fa-exclamation-circle mr-2"></i> Deployment Instructions
+                    </h4>
+                    <ol class="text-sm text-yellow-700 list-decimal pl-4 space-y-1">
+                        <li>Copy the entire code above</li>
+                        <li>Open your Google Sheet</li>
+                        <li>Go to Extensions → Apps Script</li>
+                        <li>Delete any existing code and paste this code</li>
+                        <li>Click "Save" (disk icon or Ctrl+S)</li>
+                        <li>Click "Deploy" → "New deployment"</li>
+                        <li>Select "Web app" as type</li>
+                        <li>Set "Execute as" to "Me"</li>
+                        <li>Set "Who has access" to "Anyone"</li>
+                        <li>Click "Deploy" and copy the web app URL</li>
+                        <li>Paste the URL in the Settings tab</li>
+                    </ol>
+                </div>
+            </div>
+            <div class="p-4 border-t flex justify-end gap-4">
+                <button id="copyScriptCode" class="btn btn-primary">
+                    <i class="fas fa-copy mr-2"></i> Copy Script Code
+                </button>
+                <button id="closeModal2" class="btn" style="background: #f8f9fa; color: #333;">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Configuration
+        const CONFIG = {
+            scriptUrl: localStorage.getItem('quaf_script_url') || '',
+            apiEndpoints: {
+                addVideo: 'addVideo',
+                getVideos: 'getVideos',
+                deleteVideo: 'deleteVideo',
+                updateVideo: 'updateVideo'
+            }
+        };
+        
+        // DOM Elements
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+        const content = document.getElementById('content');
+        const navLinks = document.querySelectorAll('.nav-link');
+        const tabContents = document.querySelectorAll('.tab-content');
+        
+        // Mobile menu toggle
+        mobileMenuBtn.addEventListener('click', () => {
+            sidebar.classList.add('active');
+            overlay.classList.add('active');
+        });
+        
+        overlay.addEventListener('click', () => {
+            sidebar.classList.remove('active');
+            overlay.classList.remove('active');
+        });
+        
+        // Navigation tabs
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                
+                // Update active nav link
+                navLinks.forEach(l => l.classList.remove('active'));
+                link.classList.add('active');
+                
+                // Show corresponding tab
+                const tabName = link.getAttribute('data-tab');
+                tabContents.forEach(tab => {
+                    tab.classList.remove('active');
+                    tab.classList.add('hidden');
+                });
+                
+                const targetTab = document.getElementById(`${tabName}-tab`);
+                if (targetTab) {
+                    targetTab.classList.remove('hidden');
+                    targetTab.classList.add('active');
+                }
+                
+                // Load videos if on manage tab
+                if (tabName === 'manage-videos') {
+                    loadVideos();
+                }
+                
+                // Close mobile menu
+                sidebar.classList.remove('active');
+                overlay.classList.remove('active');
+            });
+        });
+        
+        // YouTube URL parsing and preview
+        const youtubeUrlInput = document.getElementById('youtubeUrl');
+        const videoTitleInput = document.getElementById('videoTitle');
+        const videoDateInput = document.getElementById('videoDate');
+        const videoOrderInput = document.getElementById('videoOrder');
+        const previewTitle = document.getElementById('previewTitle');
+        const previewDate = document.getElementById('previewDate');
+        const previewOrder = document.getElementById('previewOrder');
+        const videoPreview = document.getElementById('videoPreview');
+        
+        // Extract YouTube ID from URL
+        function extractYouTubeId(url) {
+            if (!url) return null;
+            
+            const patterns = [
+                /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&?#]+)/,
+                /youtube\.com\/watch\?.*v=([^&?#]+)/,
+                /youtu\.be\/([^&?#]+)/
+            ];
+            
+            for (const pattern of patterns) {
+                const match = url.match(pattern);
+                if (match && match[1]) {
+                    return match[1];
+                }
+            }
+            
+            return null;
+        }
+        
+        // Update preview when inputs change
+        youtubeUrlInput.addEventListener('input', updatePreview);
+        videoTitleInput.addEventListener('input', updatePreview);
+        videoDateInput.addEventListener('input', updatePreview);
+        videoOrderInput.addEventListener('input', updatePreview);
+        
+        function updatePreview() {
+            const youtubeId = extractYouTubeId(youtubeUrlInput.value);
+            
+            // Update thumbnail
+            if (youtubeId) {
+                videoPreview.innerHTML = `
+                    <img src="https://img.youtube.com/vi/${youtubeId}/maxresdefault.jpg" 
+                         class="preview-thumbnail" 
+                         alt="Video Thumbnail"
+                         onerror="this.onerror=null;this.src='https://img.youtube.com/vi/${youtubeId}/hqdefault.jpg';">
+                `;
+            } else {
+                videoPreview.innerHTML = `
+                    <div class="thumbnail-placeholder">
+                        <i class="fas fa-video mr-2"></i>
+                        <span>Enter valid YouTube URL</span>
+                    </div>
+                `;
+            }
+            
+            // Update text previews
+            previewTitle.textContent = videoTitleInput.value || 'Not set';
+            previewDate.textContent = videoDateInput.value || 'Not set';
+            previewOrder.textContent = videoOrderInput.value || 'Not set';
+        }
+        
+        // Form submission
+        const videoForm = document.getElementById('videoForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const clearFormBtn = document.getElementById('clearForm');
+        const successAlert = document.getElementById('successAlert');
+        const errorAlert = document.getElementById('errorAlert');
+        const errorMessage = document.getElementById('errorMessage');
+        
+        videoForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            if (!CONFIG.scriptUrl) {
+                showError('Please set your Google Apps Script URL in Settings first.');
+                return;
+            }
+            
+            // Validate form
+            if (!youtubeUrlInput.value || !videoTitleInput.value || 
+                !videoDateInput.value || !videoOrderInput.value) {
+                showError('Please fill all required fields.');
+                return;
+            }
+            
+            // Show loading state
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<div class="spinner mr-2"></div> Processing...';
+            submitBtn.disabled = true;
+            
+            try {
+                // Prepare data
+                const formData = new FormData(videoForm);
+                const data = {
+                    action: 'addVideo',
+                    date: videoDateInput.value,
+                    heading: videoTitleInput.value,
+                    description: document.getElementById('videoDescription').value,
+                    youtubeUrl: youtubeUrlInput.value,
+                    order: videoOrderInput.value
+                };
+                
+                // Send to Google Apps Script
+                const response = await fetch(`${CONFIG.scriptUrl}?${new URLSearchParams(data)}`);
+                const result = await response.json();
+                
+                if (result.status === 'success') {
+                    showSuccess('Video added successfully!');
+                    clearFormFields();
+                    updatePreview();
+                    
+                    // Switch to manage tab and refresh
+                    document.querySelector('[data-tab="manage-videos"]').click();
+                } else {
+                    showError(result.message || 'Error adding video.');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showError('Network error. Please check your script URL and try again.');
+            } finally {
+                // Reset button
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+            }
+        });
+        
+        // Clear form
+        clearFormBtn.addEventListener('click', () => {
+            if (confirm('Are you sure you want to clear the form?')) {
+                clearFormFields();
+                updatePreview();
+            }
+        });
+        
+        function clearFormFields() {
+            videoForm.reset();
+        }
+        
+        // Alert functions
+        function showSuccess(message) {
+            successAlert.querySelector('span').textContent = message;
+            successAlert.style.display = 'block';
+            errorAlert.style.display = 'none';
+            
+            setTimeout(() => {
+                successAlert.style.display = 'none';
+            }, 5000);
+        }
+        
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorAlert.style.display = 'block';
+            successAlert.style.display = 'none';
+            
+            setTimeout(() => {
+                errorAlert.style.display = 'none';
+            }, 5000);
+        }
+        
+        // Load videos for management
+        const videosTableBody = document.getElementById('videosTableBody');
+        const refreshVideosBtn = document.getElementById('refreshVideos');
+        const searchVideosInput = document.getElementById('searchVideos');
+        
+        refreshVideosBtn.addEventListener('click', loadVideos);
+        
+        async function loadVideos() {
+            if (!CONFIG.scriptUrl) {
+                videosTableBody.innerHTML = `
+                    <tr>
+                        <td colspan="5" class="text-center py-8">
+                            <i class="fas fa-exclamation-triangle text-yellow-500 text-2xl mb-2"></i>
+                            <p class="text-gray-700">Please set your Google Apps Script URL in Settings first.</p>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            videosTableBody.innerHTML = `
+                <tr>
+                    <td colspan="5" class="text-center py-8">
+                        <div class="spinner mx-auto"></div>
+                        <p class="text-gray-500 mt-2">Loading videos...</p>
+                    </td>
+                </tr>
+            `;
+            
+            try {
+                const response = await fetch(`${CONFIG.scriptUrl}?action=getVideos`);
+                const result = await response.json();
+                
+                if (result.status === 'success') {
+                    renderVideosTable(result.data);
+                } else {
+                    videosTableBody.innerHTML = `
+                        <tr>
+                            <td colspan="5" class="text-center py-8">
+                                <i class="fas fa-exclamation-circle text-red-500 text-2xl mb-2"></i>
+                                <p class="text-gray-700">${result.message || 'Error loading videos'}</p>
+                            </td>
+                        </tr>
+                    `;
+                }
+            } catch (error) {
+                videosTableBody.innerHTML = `
+                    <tr>
+                        <td colspan="5" class="text-center py-8">
+                            <i class="fas fa-exclamation-triangle text-red-500 text-2xl mb-2"></i>
+                            <p class="text-gray-700">Network error. Please check your connection.</p>
+                        </td>
+                    </tr>
+                `;
+            }
+        }
+        
+        function renderVideosTable(videos) {
+            if (!videos || videos.length === 0) {
+                videosTableBody.innerHTML = `
+                    <tr>
+                        <td colspan="5" class="text-center py-8">
+                            <i class="fas fa-video-slash text-gray-400 text-2xl mb-2"></i>
+                            <p class="text-gray-700">No videos found. Add your first video!</p>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            let html = '';
+            
+            videos.forEach(video => {
+                // Truncate title for display
+                const shortTitle = video.heading.length > 40 
+                    ? video.heading.substring(0, 40) + '...' 
+                    : video.heading;
+                
+                // Extract video ID for thumbnail
+                const videoIdMatch = video.videoLink.match(/embed\/([^&?#]+)/);
+                const videoId = videoIdMatch ? videoIdMatch[1] : '';
+                
+                html += `
+                    <tr data-video-id="${video.id}">
+                        <td>
+                            <span class="badge badge-success">${video.order}</span>
+                        </td>
+                        <td>
+                            <div class="flex items-center">
+                                ${videoId ? `
+                                    <img src="https://img.youtube.com/vi/${videoId}/default.jpg" 
+                                         class="w-12 h-8 rounded mr-3" 
+                                         alt="Thumbnail">
+                                ` : ''}
+                                <div>
+                                    <p class="font-medium">${shortTitle}</p>
+                                    <p class="text-xs text-gray-500">ID: ${video.id}</p>
+                                </div>
+                            </div>
+                        </td>
+                        <td>${video.date}</td>
+                        <td>
+                            <input type="text" 
+                                   value="${video.videoLink}" 
+                                   class="text-xs p-1 border rounded w-full" 
+                                   readonly>
+                            <button onclick="copyToClipboard('${video.videoLink}')" 
+                                    class="text-xs text-blue-600 hover:text-blue-800 mt-1">
+                                <i class="fas fa-copy mr-1"></i> Copy
+                            </button>
+                        </td>
+                        <td>
+                            <button onclick="editVideo(${video.id})" class="action-btn edit-btn">
+                                <i class="fas fa-edit mr-1"></i> Edit
+                            </button>
+                            <button onclick="deleteVideo(${video.id})" class="action-btn delete-btn">
+                                <i class="fas fa-trash mr-1"></i> Delete
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
+            
+            videosTableBody.innerHTML = html;
+        }
+        
+        // Search functionality
+        let searchTimeout;
+        searchVideosInput.addEventListener('input', () => {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                const searchTerm = searchVideosInput.value.toLowerCase();
+                const rows = videosTableBody.querySelectorAll('tr[data-video-id]');
+                
+                rows.forEach(row => {
+                    const text = row.textContent.toLowerCase();
+                    row.style.display = text.includes(searchTerm) ? '' : 'none';
+                });
+            }, 300);
+        });
+        
+        // Video actions
+        window.copyToClipboard = (text) => {
+            navigator.clipboard.writeText(text).then(() => {
+                alert('Link copied to clipboard!');
+            });
+        };
+        
+        window.deleteVideo = async (id) => {
+            if (!confirm('Are you sure you want to delete this video?')) return;
+            
+            if (!CONFIG.scriptUrl) {
+                alert('Please set your script URL in Settings first.');
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${CONFIG.scriptUrl}?action=deleteVideo&id=${id}`);
+                const result = await response.json();
+                
+                if (result.status === 'success') {
+                    alert('Video deleted successfully!');
+                    loadVideos();
+                } else {
+                    alert('Error deleting video: ' + result.message);
+                }
+            } catch (error) {
+                alert('Network error. Please try again.');
+            }
+        };
+        
+        window.editVideo = (id) => {
+            alert('Edit functionality coming soon! For now, delete and re-add the video.');
+        };
+        
+        // Settings
+        const scriptUrlInput = document.getElementById('scriptUrl');
+        const saveSettingsBtn = document.getElementById('saveSettings');
+        const showScriptCodeBtn = document.getElementById('showScriptCode');
+        const scriptModal = document.getElementById('scriptModal');
+        const closeModalBtns = document.querySelectorAll('#closeModal, #closeModal2');
+        const copyScriptCodeBtn = document.getElementById('copyScriptCode');
+        
+        // Load saved settings
+        scriptUrlInput.value = CONFIG.scriptUrl;
+        
+        saveSettingsBtn.addEventListener('click', () => {
+            const url = scriptUrlInput.value.trim();
+            
+            if (!url) {
+                alert('Please enter your Google Apps Script URL.');
+                return;
+            }
+            
+            // Validate URL
+            if (!url.startsWith('https://script.google.com/')) {
+                if (confirm('This doesn\'t look like a Google Apps Script URL. Are you sure?')) {
+                    saveScriptUrl(url);
+                }
+            } else {
+                saveScriptUrl(url);
+            }
+        });
+        
+        function saveScriptUrl(url) {
+            localStorage.setItem('quaf_script_url', url);
+            CONFIG.scriptUrl = url;
+            
+            // Update submit button in form
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = false;
+            
+            alert('Settings saved successfully!');
+            
+            // If on manage tab, refresh videos
+            if (document.querySelector('[data-tab="manage-videos"].active')) {
+                loadVideos();
+            }
+        }
+        
+        // Script modal
+        showScriptCodeBtn.addEventListener('click', () => {
+            scriptModal.classList.remove('hidden');
+            scriptModal.classList.add('flex');
+        });
+        
+        closeModalBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                scriptModal.classList.add('hidden');
+                scriptModal.classList.remove('flex');
+            });
+        });
+        
+        copyScriptCodeBtn.addEventListener('click', () => {
+            const codeElement = scriptModal.querySelector('code');
+            const code = codeElement.textContent;
+            
+            navigator.clipboard.writeText(code).then(() => {
+                const originalText = copyScriptCodeBtn.innerHTML;
+                copyScriptCodeBtn.innerHTML = '<i class="fas fa-check mr-2"></i> Copied!';
+                
+                setTimeout(() => {
+                    copyScriptCodeBtn.innerHTML = originalText;
+                }, 2000);
+            });
+        });
+        
+        // Initialize
+        updatePreview();
+        
+        // Check if script URL is set
+        if (!CONFIG.scriptUrl) {
+            setTimeout(() => {
+                alert('Welcome to QUAF Admin! Please go to Settings and configure your Google Apps Script URL first.');
+                document.querySelector('[data-tab="settings"]').click();
+            }, 1000);
+        }
+    </script>
+</body>
+</html>
