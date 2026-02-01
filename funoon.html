@@ -160,7 +160,7 @@
         .btn-primary { background-color: var(--mainprimary); color: var(--mainwhite); }
         .btn-primary:hover { background-color: #6a30e5; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(122, 56, 252, 0.2); }
 
-        /* --- REPORT SECTION STYLES --- */
+        /* --- REPORT SECTION STYLES (From Snippet 1) --- */
         .section-padding { padding: 4rem 0; }
         .reports-section { background-color: var(--mainwhite); min-height: 60vh; }
         
@@ -200,7 +200,7 @@
             border-radius: 0.75rem;
             margin: 1rem 0;
         }
-
+        
         .report-card {
             margin-bottom: 1.5rem;
             background-color: var(--shadessecondary-15);
@@ -242,7 +242,7 @@
         .report-image {
             flex-shrink: 0;
             width: 100%;
-            height: auto;
+            height: 100%;
             border-radius: 0.5rem;
             overflow: hidden;
         }
@@ -254,11 +254,7 @@
             }
         }
         
-        .report-image img { 
-            width: 100%; 
-            height: 100%; 
-            object-fit: cover; 
-        }
+        .report-image img { width: 100%; height: 100%; object-fit: cover; }
         
         .report-details { flex: 1; }
         
@@ -299,24 +295,8 @@
             object-fit: cover;
             border-radius: 0.4rem;
         }
-
-        /* Responsive Fixes from original */
-        @media (max-width: 500px) { 
-            .report-images-grid { 
-                grid-template-columns: repeat(3, 1fr); 
-            } 
-        }
         
-        @media (min-width: 1024px) {
-            .report-images-grid img { 
-                width: 50%; 
-                height: 100%; 
-                object-fit: cover; 
-                border-radius: 0.4rem; 
-            }
-        }
-        
-        /* Footer */
+        /* Footer (From Snippet 2) */
         .footer { background: linear-gradient(135deg, #0a0809 0%, #151522 100%); color: white; padding: 3rem 0; }
     </style>
 </head>
@@ -507,6 +487,7 @@
                 .then(csvText => {
                     const reports = parseCSV(csvText);
                     cacheData(reports);
+                    // Optional: Show a subtle notification that data was updated
                     console.log('Reports data refreshed in background');
                 })
                 .catch(error => {
@@ -524,9 +505,9 @@
             // Process each data row
             for (let i = 1; i < lines.length; i++) {
                 const line = lines[i].trim();
-                if (!line) continue;
+                if (!line) continue; // Skip empty lines
                 
-                // Simple CSV parsing
+                // Simple CSV parsing (for basic CSV format)
                 const values = [];
                 let inQuotes = false;
                 let currentValue = '';
@@ -549,6 +530,7 @@
                 const report = {};
                 headers.forEach((header, index) => {
                     if (values[index]) {
+                        // Convert header to lowercase and replace spaces for easier access
                         const key = header.toLowerCase().replace(/\s+/g, '_');
                         report[key] = values[index];
                     }
@@ -560,7 +542,7 @@
                 }
             }
             
-            // Sort by date (most recent first)
+            // Sort by date (most recent first) if date column exists
             if (reports[0] && (reports[0].date || reports[0].program_date)) {
                 reports.sort((a, b) => {
                     const dateA = a.date || a.program_date || '1970-01-01';
@@ -574,6 +556,10 @@
         
         function renderReports(reports) {
             const reportsContainer = document.getElementById('reports-container');
+            
+            // Clear existing content except loading/error states
+            const loadingState = document.getElementById('loadingState');
+            const errorState = document.getElementById('errorState');
             
             reportsContainer.innerHTML = '';
             
@@ -590,12 +576,11 @@
             
             // Create report cards for each program
             reports.forEach(report => {
-                // Extract image links (for grid at bottom)
+                // Extract image links
                 const imageLinks = [];
                 for (let i = 1; i <= 4; i++) {
                     const imgKey = `img${i}_link` in report ? `img${i}_link` : 
-                                  `image${i}` in report ? `image${i}` : 
-                                  `image_${i}` in report ? `image_${i}` : null;
+                                  `image${i}` in report ? `image${i}` : null;
                     
                     if (imgKey && report[imgKey] && report[imgKey].trim() && 
                         (report[imgKey].startsWith('http') || report[imgKey].startsWith('https'))) {
@@ -613,21 +598,12 @@
                 
                 // Get main image
                 const mainImage = report.main_image || report.image || report.img1_link || 
-                                 report.image1 || report.image_1 || 'https://quaf2026.netlify.app/images/default-program.jpg';
-                
-                // Determine grid columns based on number of images
-                let gridColumns = 'repeat(3, 1fr)';
-                if (imageLinks.length === 4) {
-                    gridColumns = 'repeat(4, 1fr)';
-                } else if (imageLinks.length === 2) {
-                    gridColumns = 'repeat(1, 1fr)';
-                } else if (imageLinks.length === 4) {
-                    gridColumns = '1fr';
-                }
+                                 report.image1 || 'https://quaf2026.netlify.app/images/default-program.jpg';
                 
                 reportCard.innerHTML = `
                     <div class="report-header">
                         <span>${displayDate}</span>
+                        
                     </div>
                     <div class="report-content">
                         <div class="report-content-inner">
@@ -641,7 +617,7 @@
                                 <p class="report-description">${report.description || report.program_description || 'No description available.'}</p>
                                 
                                 ${imageLinks.length > 0 ? `
-                                    <div class="report-images-grid" style="grid-template-columns: ${gridColumns};">
+                                    <div class="report-images-grid" style="grid-template-columns: repeat(${Math.min(imageLinks.length, 4)}, 1fr);">
                                         ${imageLinks.map(img => `<img src="${img}" alt="Program Image">`).join('')}
                                     </div>
                                 ` : ''}
@@ -662,9 +638,10 @@
             try {
                 const date = new Date(dateString);
                 if (isNaN(date.getTime())) {
-                    return dateString;
+                    return dateString; // Return original if can't parse
                 }
                 
+                // Format as "Day, Month-DD-YYYY"
                 const options = { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' };
                 return date.toLocaleDateString('en-US', options);
             } catch (e) {
@@ -680,7 +657,7 @@
                 console.log('Could not cache data:', e);
             }
         }
-        
+         
         function getCachedData(force = false) {
             try {
                 const cached = localStorage.getItem(CACHE_KEY);
@@ -693,7 +670,7 @@
                 const age = Date.now() - parseInt(timestamp, 10);
                 
                 if (!force && age > CACHE_DURATION) {
-                    return null;
+                    return null; // Cache expired
                 }
                 
                 return JSON.parse(cached);
