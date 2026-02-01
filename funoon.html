@@ -34,7 +34,7 @@
         .container { width: 100%; max-width: 800px; margin: 0 auto; padding: 0 1rem; } 
         .container-wide { max-width: 1000px; }
         
-        /* --- NAVIGATION (From Snippet 2) --- */
+        /* --- NAVIGATION --- */
         .navbar { display: flex; justify-content: space-between; align-items: center; padding: 1rem; background-color: #000000; position: fixed; top: 0; left: 0; right: 0; z-index: 1000; height: var(--header-height); box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3); transition: all 0.3s ease; }
         .navbar.scrolled { box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4); }
         .logo { display: flex; align-items: center; gap: 0.5rem; font-family: 'Abel', sans-serif; font-size: 1.7rem; font-weight: 700; text-decoration: none; color: white; }
@@ -159,8 +159,29 @@
         .btn-outline-dark:hover { background-color: rgba(15, 11, 12, 0.05); }
         .btn-primary { background-color: var(--mainprimary); color: var(--mainwhite); }
         .btn-primary:hover { background-color: #6a30e5; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(122, 56, 252, 0.2); }
+        
+        /* Gallery Button */
+        .view-gallery-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background-color: transparent;
+            color: var(--mainprimary);
+            border: 1.5px solid var(--mainprimary);
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.85rem;
+            margin-top: 1rem;
+        }
+        .view-gallery-btn:hover {
+            background-color: rgba(122, 56, 252, 0.1);
+            transform: translateY(-2px);
+        }
 
-        /* --- REPORT SECTION STYLES (From Snippet 1) --- */
+        /* --- REPORT SECTION STYLES --- */
         .section-padding { padding: 4rem 0; }
         .reports-section { background-color: var(--mainwhite); min-height: 60vh; }
         
@@ -254,7 +275,7 @@
         /* Main image - fixed height with responsive width */
         .report-image img {
             width: 100%;
-            height: 200px; /* Fixed height */
+            height: 200px;
             object-fit: cover;
             display: block;
         }
@@ -262,34 +283,34 @@
         /* Mobile adjustments */
         @media (max-width: 767px) {
             .report-image img {
-                height: 180px; /* Slightly smaller on mobile */
+                height: 180px;
             }
         }
         
         @media (min-width: 768px) {
             .report-image {
-                width: 300px; /* Fixed width on desktop */
-                min-width: 300px; /* Prevent shrinking */
+                width: 300px;
+                min-width: 300px;
             }
             
             .report-image img {
                 width: 100%;
-                height: 200px; /* Fixed height on desktop too */
+                height: 200px;
             }
         }
         
         @media (min-width: 1024px) {
             .report-image {
-                width: 320px; /* Slightly larger on larger screens */
+                width: 320px;
                 min-width: 320px;
             }
             
             .report-image img {
-                height: 220px; /* Slightly taller on larger screens */
+                height: 220px;
             }
         }
         
-        .report-details { flex: 1; min-width: 0; } /* Prevent flex item overflow */
+        .report-details { flex: 1; min-width: 0; }
         
         .report-title {
             font-family: 'ABeeZee', sans-serif;
@@ -317,51 +338,163 @@
             color: var(--shadesdark-80);
         }
         
-        /* UPDATED GRID IMAGES - Fixed square sizes */
-        .report-images-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 0.5rem;
-            margin-top: 1rem;
-        }
-        
-        /* Grid images - fixed square size */
-        .report-images-grid img {
+        /* --- GALLERY MODAL STYLES --- */
+        .gallery-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
-            height: 80px; /* Fixed height for grid images */
-            object-fit: cover;
-            border-radius: 0.4rem;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 2000;
+            overflow: hidden;
         }
         
-        /* Responsive adjustments for grid images */
-        @media (max-width: 767px) {
-            .report-images-grid {
-                grid-template-columns: repeat(2, 1fr); /* 2 columns on mobile */
-            }
-            
-            .report-images-grid img {
-                height: 70px; /* Slightly smaller on mobile */
-            }
+        .gallery-modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         
-        @media (min-width: 768px) and (max-width: 1023px) {
-            .report-images-grid {
-                grid-template-columns: repeat(3, 1fr); /* 3 columns on tablet */
-            }
+        .gallery-modal-content {
+            width: 90%;
+            max-width: 900px;
+            height: 80vh;
+            background-color: var(--maindark);
+            border-radius: 12px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            position: relative;
         }
         
-        /* For cards with 1-2 images, adjust grid */
-        .report-images-grid[style*="grid-template-columns: repeat(1"] img,
-        .report-images-grid[style*="grid-template-columns: repeat(2"] img {
-            height: 100px; /* Taller for fewer images */
+        .gallery-header {
+            padding: 1rem 1.5rem;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 10;
         }
         
-        /* For single image in grid, make it larger */
-        .report-images-grid[style*="grid-template-columns: repeat(1"] img {
-            height: 120px;
+        .image-counter {
+            font-family: 'Manrope', sans-serif;
+            font-weight: 600;
+            font-size: 0.9rem;
         }
         
-        /* Footer (From Snippet 2) */
+        .close-gallery {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: background-color 0.3s;
+        }
+        
+        .close-gallery:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .gallery-body {
+            flex: 1;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        
+        .gallery-slide-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+        
+        .gallery-slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        
+        .gallery-slide.active {
+            opacity: 1;
+            z-index: 2;
+        }
+        
+        .gallery-image {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            padding: 4rem 2rem;
+        }
+        
+        .gallery-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: background-color 0.3s;
+            z-index: 5;
+        }
+        
+        .gallery-nav:hover {
+            background-color: rgba(122, 56, 252, 0.8);
+        }
+        
+        .gallery-nav.prev {
+            left: 20px;
+        }
+        
+        .gallery-nav.next {
+            right: 20px;
+        }
+        
+        .gallery-nav:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+        
+        /* Touch swipe area */
+        .gallery-swipe-area {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 3;
+        }
+        
+        /* Footer */
         .footer { background: linear-gradient(135deg, #0a0809 0%, #151522 100%); color: white; padding: 3rem 0; }
     </style>
 </head>
@@ -436,6 +569,34 @@
         </div>
     </section>
 
+    <!-- Gallery Modal -->
+    <div class="gallery-modal" id="galleryModal">
+        <div class="gallery-modal-content">
+            <div class="gallery-header">
+                <span class="image-counter" id="imageCounter">1 / 0</span>
+                <button class="close-gallery" id="closeGallery">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="gallery-body">
+                <button class="gallery-nav prev" id="prevBtn">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                
+                <div class="gallery-slide-container" id="slideContainer">
+                    <!-- Slides will be dynamically inserted here -->
+                </div>
+                
+                <button class="gallery-nav next" id="nextBtn">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+                
+                <!-- Touch swipe area -->
+                <div class="gallery-swipe-area" id="swipeArea"></div>
+            </div>
+        </div>
+    </div>
+
     <footer class="footer">
         <div class="container" style="text-align: center;">
             <div style="font-family: 'ADLaM Display'; font-size: 1.5rem; margin-bottom: 1rem;">QUAF</div>
@@ -450,6 +611,9 @@
             
             // Load reports from Google Sheets
             loadReports();
+            
+            // Initialize gallery modal
+            initGalleryModal();
         });
 
         // --- NAVBAR LOGIC ---
@@ -478,6 +642,148 @@
                     navbar.classList.remove('scrolled');
                 }
             });
+        }
+
+        // --- GALLERY MODAL LOGIC ---
+        let currentGalleryImages = [];
+        let currentGalleryIndex = 0;
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        function initGalleryModal() {
+            const galleryModal = document.getElementById('galleryModal');
+            const closeGalleryBtn = document.getElementById('closeGallery');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const swipeArea = document.getElementById('swipeArea');
+
+            // Close modal
+            closeGalleryBtn.addEventListener('click', closeGallery);
+            galleryModal.addEventListener('click', function(e) {
+                if (e.target === galleryModal) {
+                    closeGallery();
+                }
+            });
+
+            // Keyboard navigation
+            document.addEventListener('keydown', function(e) {
+                if (!galleryModal.classList.contains('active')) return;
+                
+                if (e.key === 'Escape') {
+                    closeGallery();
+                } else if (e.key === 'ArrowLeft') {
+                    prevImage();
+                } else if (e.key === 'ArrowRight') {
+                    nextImage();
+                }
+            });
+
+            // Previous/Next buttons
+            prevBtn.addEventListener('click', prevImage);
+            nextBtn.addEventListener('click', nextImage);
+
+            // Touch swipe handling
+            swipeArea.addEventListener('touchstart', function(e) {
+                touchStartX = e.changedTouches[0].screenX;
+            });
+
+            swipeArea.addEventListener('touchend', function(e) {
+                touchEndX = e.changedTouches[0].screenX;
+                handleSwipe();
+            });
+        }
+
+        function openGallery(images) {
+            if (!images || images.length === 0) return;
+            
+            currentGalleryImages = images;
+            currentGalleryIndex = 0;
+            
+            const galleryModal = document.getElementById('galleryModal');
+            const slideContainer = document.getElementById('slideContainer');
+            const imageCounter = document.getElementById('imageCounter');
+            
+            // Clear previous slides
+            slideContainer.innerHTML = '';
+            
+            // Create slides for each image
+            images.forEach((imgSrc, index) => {
+                const slide = document.createElement('div');
+                slide.className = `gallery-slide ${index === 0 ? 'active' : ''}`;
+                slide.innerHTML = `
+                    <img src="${imgSrc}" alt="Gallery Image ${index + 1}" class="gallery-image" 
+                         onerror="this.src='https://quaf2026.netlify.app/images/default-program.jpg'">
+                `;
+                slideContainer.appendChild(slide);
+            });
+            
+            // Update counter
+            imageCounter.textContent = `1 / ${images.length}`;
+            
+            // Show modal
+            galleryModal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            
+            // Update button states
+            updateGalleryButtons();
+        }
+
+        function closeGallery() {
+            const galleryModal = document.getElementById('galleryModal');
+            galleryModal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        function nextImage() {
+            if (currentGalleryIndex < currentGalleryImages.length - 1) {
+                changeImage(currentGalleryIndex + 1);
+            }
+        }
+
+        function prevImage() {
+            if (currentGalleryIndex > 0) {
+                changeImage(currentGalleryIndex - 1);
+            }
+        }
+
+        function changeImage(newIndex) {
+            const slides = document.querySelectorAll('.gallery-slide');
+            const imageCounter = document.getElementById('imageCounter');
+            
+            // Remove active class from current slide
+            slides[currentGalleryIndex].classList.remove('active');
+            
+            // Update index
+            currentGalleryIndex = newIndex;
+            
+            // Add active class to new slide
+            slides[currentGalleryIndex].classList.add('active');
+            
+            // Update counter
+            imageCounter.textContent = `${currentGalleryIndex + 1} / ${currentGalleryImages.length}`;
+            
+            // Update button states
+            updateGalleryButtons();
+        }
+
+        function updateGalleryButtons() {
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            
+            prevBtn.disabled = currentGalleryIndex === 0;
+            nextBtn.disabled = currentGalleryIndex === currentGalleryImages.length - 1;
+        }
+
+        function handleSwipe() {
+            const swipeThreshold = 50; // Minimum distance for swipe
+            
+            if (touchEndX < touchStartX - swipeThreshold) {
+                // Swipe left - next image
+                nextImage();
+            } else if (touchEndX > touchStartX + swipeThreshold) {
+                // Swipe right - previous image
+                prevImage();
+            }
         }
 
         // --- GOOGLE SHEETS INTEGRATION ---
@@ -640,7 +946,7 @@
             }
             
             // Create report cards for each program
-            reports.forEach(report => {
+            reports.forEach((report, index) => {
                 // Extract image links
                 const imageLinks = [];
                 for (let i = 1; i <= 4; i++) {
@@ -652,12 +958,6 @@
                         imageLinks.push(report[imgKey].trim());
                     }
                 }
-                
-                // Determine grid columns based on number of images
-                let gridColumns = 4;
-                if (imageLinks.length === 1) gridColumns = 1;
-                else if (imageLinks.length === 2) gridColumns = 2;
-                else if (imageLinks.length === 3) gridColumns = 3;
                 
                 // Create the report card HTML
                 const reportCard = document.createElement('div');
@@ -674,7 +974,6 @@
                 reportCard.innerHTML = `
                     <div class="report-header">
                         <span>${displayDate}</span>
-                        
                     </div>
                     <div class="report-content">
                         <div class="report-content-inner">
@@ -688,9 +987,9 @@
                                 <p class="report-description">${report.description || report.program_description || 'No description available.'}</p>
                                 
                                 ${imageLinks.length > 0 ? `
-                                    <div class="report-images-grid" style="grid-template-columns: repeat(${gridColumns}, 1fr);">
-                                        ${imageLinks.map(img => `<img src="${img}" alt="Program Image" onerror="this.src='https://quaf2026.netlify.app/images/default-program.jpg'">`).join('')}
-                                    </div>
+                                    <button class="view-gallery-btn" data-index="${index}">
+                                        <i class="fas fa-images"></i> View Gallery (${imageLinks.length} images)
+                                    </button>
                                 ` : ''}
                             </div>
                         </div>
@@ -698,6 +997,14 @@
                 `;
                 
                 reportsContainer.appendChild(reportCard);
+                
+                // Add event listener to the gallery button
+                if (imageLinks.length > 0) {
+                    const galleryBtn = reportCard.querySelector('.view-gallery-btn');
+                    galleryBtn.addEventListener('click', function() {
+                        openGallery(imageLinks);
+                    });
+                }
             });
         }
         
