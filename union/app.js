@@ -863,7 +863,7 @@ async function loadAdminData() {
                         const [classNum, subjectsString] = match.slice(1, -1).split('-', 2);
                         if (classNum && subjectsString) {
                             const subjects = subjectsString.toLowerCase() === 'all' 
-                                ? ['english', 'mathematics', 'urdu', 'arabic', 'malayalam', 'social science', 'science']
+                                ? ['quaf', 'arabic-wing', 'urdu-wing', 'english-wing', 'malayalam-wing', 'media-wing', 'sigma-wing', 'art-wing', 'oration-wing', 'gk-wing', 'himaya-wing', 'class', 'swalah']
                                 : subjectsString.split(',').map(s => s.trim().toLowerCase()).filter(s => s);
                             
                             if (subjects.length > 0 && adminClasses.includes(classNum.trim())) {
