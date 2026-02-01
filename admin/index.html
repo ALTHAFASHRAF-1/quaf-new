@@ -175,12 +175,6 @@
             text-decoration: none;
         }
 
-        .mobile-cat-title i {
-            font-size: 0.9rem;
-            color: var(--shadesdark-30);
-            transition: transform 0.3s ease;
-        }
-
         .mobile-cat-title.active i {
             transform: rotate(180deg);
             color: var(--mainprimary);
@@ -985,7 +979,7 @@
             
             <ul class="nav-links">
                 
-                <li class="nav-item"><a href="https://quaf2026.netlify.app/funoon.html" class="nav-link">View Programs</a></li>
+                <li class="nav-item"><a href="https://quaf2026.netlify.app/funoon/index.html" class="nav-link">View Programs</a></li>
                 <li class="nav-item"><a href="index.html" class="nav-link">Back to Home</a></li>
             </ul>
             
@@ -998,7 +992,7 @@
     <div class="mobile-menu" id="mobileMenu">
         <ul class="mobile-menu-links">
             
-            <li><a href="https://quaf2026.netlify.app/funoon.html" class="mobile-cat-title">View Programs</a></li>
+            <li><a href="https://quaf2026.netlify.app/funoon/index.html" class="mobile-cat-title">View Programs</a></li>
             <li><a href="index.html" class="mobile-cat-title">Back to Home</a></li>
         </ul>
     </div>
@@ -1007,7 +1001,7 @@
     <div id="dashboard-tab" class="tab-content active">
         <div class="data-wrapper">
             <div class="control-bar">
-                <a href="https://quaf2026.netlify.app/funoon.html" class="btn btn-outline-dark">
+                <a href="programs.html" class="btn btn-outline-dark">
                     <i class="fas fa-arrow-left" style="margin-right: 8px;"></i> View Programs Page
                 </a>
             </div>
@@ -1049,7 +1043,7 @@
                         <button class="btn btn-primary" style="background: var(--shadesdark-80);" onclick="switchTab('managePrograms')">
                             <i class="fas fa-edit"></i> Manage Programs
                         </button>
-                        <a href="https://quaf2026.netlify.app/funoon.html" class="btn btn-primary" style="background: var(--success-color);" target="_blank">
+                        <a href="programs.html" class="btn btn-primary" style="background: var(--success-color);" target="_blank">
                             <i class="fas fa-eye"></i> View Live Page
                         </a>
                     </div>
@@ -1340,8 +1334,8 @@
     </div>
 
     <script>
-        // Configuration - UPDATE THESE WITH YOUR ACTUAL URLS
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwbxP0c4eI1KvjrFYazyaqXTOpxF2X0tLuPuDtCmbczOA1V2yMs8aWMc115GMQNA8WIcA/exec';
+        // Configuration
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbymqk6r3OfP6DepkQ9zy599X0XRAs6mOQBN8I0ihqphfxo2cyJ5hebVgq3hFOKSQbXR-g/exec';
         const PROGRAMS_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRuxfN3pkRvY7gU6w474iyADXj69wz4jVQI0qWMFqqJe0lmKBqSe8Z5yIwNZ5wnPmq_MNWaIjIWE6vo/pub?gid=961050982&single=true&output=csv';
         
         // Global variables
@@ -1469,7 +1463,7 @@
 
         function validateFile(file) {
             const maxSize = 10 * 1024 * 1024; // 10MB
-            const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+            const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
 
             if (file.size > maxSize) {
                 return false;
@@ -1557,7 +1551,6 @@
                 formData.append('type', 'program');
                 formData.append('fileName', file.name);
                 formData.append('fileType', file.type);
-                formData.append('fileSize', file.size);
                 formData.append('fileData', base64Data);
 
                 // Simulate progress
@@ -1636,6 +1629,8 @@
                         progress.classList.remove('active');
                     }
                 }, 3000);
+                
+                alert(`Failed to upload ${type} image: ${error.message}`);
             }
         }
 
@@ -1701,6 +1696,15 @@
             loadingState.style.display = 'block';
 
             try {
+                // Check if all required images are uploaded
+                const mainImageUrl = document.getElementById('program_main_image_url').value;
+                if (!mainImageUrl) {
+                    throw new Error('Please wait for the main image to finish uploading');
+                }
+
+                // Wait a moment to ensure all image uploads are complete
+                await new Promise(resolve => setTimeout(resolve, 1000));
+
                 const data = {
                     action: 'submit'
                 };
@@ -1709,14 +1713,24 @@
                 const formElements = e.target.elements;
                 for (let element of formElements) {
                     if (element.name && element.type !== 'file') {
-                        data[element.name] = String(element.value || '').trim();
+                        const value = String(element.value || '').trim();
+                        if (value) {
+                            data[element.name] = value;
+                        }
                     }
                 }
 
                 // Collect all image URLs
-                const imageFields = ['main_image_url', 'img1_url', 'img2_url', 'img3_url', 'img4_url'];
-                imageFields.forEach(field => {
-                    const element = document.getElementById(field === 'main_image_url' ? 'program_main_image_url' : field);
+                const imageFields = [
+                    { field: 'main_image', input: 'program_main_image_url' },
+                    { field: 'img1_link', input: 'img1_url' },
+                    { field: 'img2_link', input: 'img2_url' },
+                    { field: 'img3_link', input: 'img3_url' },
+                    { field: 'img4_link', input: 'img4_url' }
+                ];
+
+                imageFields.forEach(({ field, input }) => {
+                    const element = document.getElementById(input);
                     if (element && element.value) {
                         data[field] = element.value;
                     }
@@ -1752,6 +1766,8 @@
                                 loadDashboardData();
                             }
                         }, 2000);
+                    } else if (result.status === 'duplicate_error') {
+                        throw new Error(result.message);
                     } else {
                         throw new Error(result.message || 'Submission failed');
                     }
@@ -1765,7 +1781,7 @@
                 loadingState.style.display = 'none';
                 
                 document.getElementById('error-text').textContent = 
-                    `Submission failed: ${error.message}. Please check your internet connection and try again.`;
+                    `Submission failed: ${error.message}`;
                 errorMessage.style.display = 'block';
                 errorMessage.scrollIntoView({ behavior: 'smooth' });
             } finally {
@@ -2258,9 +2274,16 @@
                 }
 
                 // Collect all image URLs
-                const imageFields = ['main_image_url', 'img1_url', 'img2_url', 'img3_url', 'img4_url'];
-                imageFields.forEach(field => {
-                    const element = document.getElementById(`edit_${field}`);
+                const imageFields = [
+                    { field: 'main_image', input: 'edit_program_main_image_url' },
+                    { field: 'img1_link', input: 'edit_img1_url' },
+                    { field: 'img2_link', input: 'edit_img2_url' },
+                    { field: 'img3_link', input: 'edit_img3_url' },
+                    { field: 'img4_link', input: 'edit_img4_url' }
+                ];
+
+                imageFields.forEach(({ field, input }) => {
+                    const element = document.getElementById(input);
                     if (element && element.value) {
                         data[field] = element.value;
                     }
@@ -2287,6 +2310,8 @@
                         closeModal();
                         loadProgramsData();
                         loadDashboardData();
+                    } else if (result.status === 'duplicate_error') {
+                        throw new Error(result.message);
                     } else {
                         throw new Error(result.message || 'Update failed');
                     }
