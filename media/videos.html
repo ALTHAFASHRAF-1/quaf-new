@@ -93,11 +93,11 @@
             display: flex;
             flex-direction: row; 
             background-color: var(--shadessecondary-15);
-            border-radius: 50px; /* Strong Pill Shape */
+            border-radius: 50px;
             overflow: hidden;
             box-shadow: 0 15px 35px rgba(0,0,0,0.08);
             margin-bottom: 4rem;
-            height: 400px; /* Fixed Height for Desktop */
+            height: 400px;
             transition: transform 0.3s ease;
         }
 
@@ -174,37 +174,43 @@
         }
         .watch-btn:hover { background-color: #6a30e5; transform: translateY(-2px); }
 
-        /* --- MOBILE ADJUSTMENTS (Hide Video, Popup Logic) --- */
-        @media (max-width: 768px) {
-            /* 1. Hide the video half on mobile */
-            .card-video {
-                display: none; 
-            }
-            
-            /* 2. Make text half full width */
-            .card-half.card-text {
-                width: 100%;
-            }
+        /* Loading State */
+        .loading-container {
+            text-align: center;
+            padding: 3rem;
+        }
+        .loading-spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid var(--mainprimary);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
 
-            /* 3. Adjust Card Height and Shape */
+        /* --- MOBILE ADJUSTMENTS --- */
+        @media (max-width: 768px) {
+            .card-video { display: none; }
+            .card-half.card-text { width: 100%; }
             .unified-card {
-                height: auto; /* Auto height to fit text */
+                height: auto;
                 flex-direction: column;
                 border-radius: 30px;
                 margin-bottom: 2rem;
                 padding-bottom: 1rem;
             }
-
-            .card-text {
-                padding: 2rem 1.5rem; /* Better padding for mobile */
-            }
-
+            .card-text { padding: 2rem 1.5rem; }
             .video-heading { font-size: 1.5rem; }
         }
 
         /* --- VIDEO POPUP MODAL STYLES --- */
         .video-modal {
-            display: none; /* Hidden by default */
+            display: none;
             position: fixed;
             z-index: 9999;
             left: 0;
@@ -251,7 +257,6 @@
             transition: 0.3s;
         }
         .close-modal:hover { color: var(--mainprimary); }
-
 
         /* --- ANIMATIONS --- */
         .animate-on-scroll {
@@ -318,69 +323,14 @@
         <h2 class="section-title">Visual Journey</h2>
         <p class="section-subtitle">Experience the moments that define us. Click 'Watch Now' to view the videos.</p>
 
-        <div class="unified-card animate-on-scroll slide-up">
-            <div class="card-half card-text">
-                <div class="video-date">July 25, 2024</div>
-                <h3 class="video-heading">Freshers Meet Highlights</h3>
-                <p class="video-desc">
-                    Tarhib 1446 – A grand welcome for the newcomers. Witness the joy, the speeches, and the beginning of a new academic journey.
-                </p>
-                <button class="watch-btn" data-video="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1">
-                    WATCH NOW <i class="fas fa-play"></i>
-                </button>
-            </div>
-            <div class="card-half card-video">
-                <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="Freshers Meet" allowfullscreen></iframe>
-            </div>
+        <!-- Loading State -->
+        <div id="loadingState" class="loading-container">
+            <div class="loading-spinner"></div>
+            <p>Loading videos...</p>
         </div>
 
-        <div class="unified-card animate-on-scroll slide-up">
-            <div class="card-half card-video">
-                <iframe src="https://www.youtube.com/embed/lxRwEPvL-mQ" title="Website Launch" allowfullscreen></iframe>
-            </div>
-            <div class="card-half card-text">
-                <div class="video-date">November 10, 2024</div>
-                <h3 class="video-heading">Historical Website Launch</h3>
-                <p class="video-desc">
-                    A milestone for QUAF. We became the first class union in Darul Hidaya history to launch an official website.
-                </p>
-                <button class="watch-btn" data-video="https://www.youtube.com/embed/lxRwEPvL-mQ?autoplay=1">
-                    WATCH NOW <i class="fas fa-play"></i>
-                </button>
-            </div>
-        </div>
-
-        <div class="unified-card animate-on-scroll slide-up">
-            <div class="card-half card-text">
-                <div class="video-date">December 05, 2024</div>
-                <h3 class="video-heading">MALABART Arts Fest</h3>
-                <p class="video-desc">
-                    Celebrating the legacy of Malabar. From the logo launch to the stage performances, relive the excitement.
-                </p>
-                <button class="watch-btn" data-video="https://www.youtube.com/embed/5qap5aO4i9A?autoplay=1">
-                    WATCH NOW <i class="fas fa-play"></i>
-                </button>
-            </div>
-            <div class="card-half card-video">
-                <iframe src="https://www.youtube.com/embed/5qap5aO4i9A" title="Malabart" allowfullscreen></iframe>
-            </div>
-        </div>
-
-        <div class="unified-card animate-on-scroll slide-up">
-            <div class="card-half card-video">
-                <iframe src="https://www.youtube.com/embed/tgbNymZ7vqY" title="Career" allowfullscreen></iframe>
-            </div>
-            <div class="card-half card-text">
-                <div class="video-date">March 01, 2025</div>
-                <h3 class="video-heading">Career Development</h3>
-                <p class="video-desc">
-                    Investing in our future. A look back at the intensive language and skills development camp held during the Ramadan vacation.
-                </p>
-                <button class="watch-btn" data-video="https://www.youtube.com/embed/tgbNymZ7vqY?autoplay=1">
-                    WATCH NOW <i class="fas fa-play"></i>
-                </button>
-            </div>
-        </div>
+        <!-- Videos Container -->
+        <div id="videosContainer"></div>
 
     </div>
 
@@ -392,8 +342,19 @@
     </footer>
 
     <script>
+        // CONFIGURATION - Replace with your Google Sheet CSV URL
+        const GOOGLE_SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSTO4bX4f8beRI4i6mqhZZZKYLVvb1BDRoPseprkTYmO3kDSmJ6yr3Tym9xsVLfcTGjbSCinUMT1bE5/pub?gid=0&single=true&output=csv';
+        
+        // Sample CSV URL format:
+        // https://docs.google.com/spreadsheets/d/e/2PACX-1vQ1234567890abcdefghijklmnopqrstuvwxyz/pub?output=csv
+
         document.addEventListener('DOMContentLoaded', function() {
-            // Navbar Functionality
+            // Initialize
+            initializeNavigation();
+            fetchAndDisplayVideos();
+        });
+
+        function initializeNavigation() {
             const mobileMenuBtn = document.getElementById('mobileMenuBtn');
             const mobileMenu = document.getElementById('mobileMenu');
             const navbar = document.querySelector('.navbar');
@@ -418,59 +379,174 @@
                     navbar.classList.remove('scrolled');
                 }
             });
+        }
 
-            // --- POPUP VIDEO LOGIC ---
-            const modal = document.getElementById('videoModal');
-            const iframe = document.getElementById('modalIframe');
-            const closeBtn = document.querySelector('.close-modal');
-            const watchBtns = document.querySelectorAll('.watch-btn');
-
-            // Open Modal
-            watchBtns.forEach(btn => {
-                btn.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const videoSrc = this.getAttribute('data-video');
-                    iframe.src = videoSrc;
-                    modal.classList.add('show');
-                    document.body.style.overflow = 'hidden'; // Stop background scrolling
+        async function fetchAndDisplayVideos() {
+            try {
+                // Show loading state
+                const loadingState = document.getElementById('loadingState');
+                const videosContainer = document.getElementById('videosContainer');
+                
+                // Fetch CSV data
+                const response = await fetch(GOOGLE_SHEET_CSV_URL);
+                const csvText = await response.text();
+                
+                // Parse CSV
+                const videos = parseCSV(csvText);
+                
+                // Hide loading state
+                loadingState.style.display = 'none';
+                
+                // Display videos
+                videos.forEach((video, index) => {
+                    const videoCard = createVideoCard(video, index);
+                    videosContainer.appendChild(videoCard);
                 });
-            });
-
-            // Close Modal Function
-            function closeModal() {
-                modal.classList.remove('show');
-                iframe.src = ""; // Stop video playback
-                document.body.style.overflow = ''; // Restore scrolling
+                
+                // Initialize animations and video modal
+                initializeAnimations();
+                initializeVideoModal();
+                
+            } catch (error) {
+                console.error('Error loading videos:', error);
+                document.getElementById('loadingState').innerHTML = 
+                    '<p style="color: #ff4444;">Error loading videos. Please try again later.</p>';
             }
+        }
 
-            closeBtn.addEventListener('click', closeModal);
-
-            // Close on background click
-            modal.addEventListener('click', function(e) {
-                if (e.target === modal) {
-                    closeModal();
+        function parseCSV(csvText) {
+            const lines = csvText.split('\n');
+            const headers = lines[0].split(',').map(header => header.trim());
+            
+            const videos = [];
+            
+            for (let i = 1; i < lines.length; i++) {
+                if (!lines[i].trim()) continue;
+                
+                const values = lines[i].split(',').map(value => value.trim());
+                const video = {};
+                
+                headers.forEach((header, index) => {
+                    video[header] = values[index] || '';
+                });
+                
+                // Convert order to number and validate
+                video.order = parseInt(video.order) || i;
+                
+                // Only add if it has required fields
+                if (video.heading && video.videoLink) {
+                    videos.push(video);
                 }
-            });
+            }
+            
+            // Sort by order
+            return videos.sort((a, b) => a.order - b.order);
+        }
 
-            // --- SCROLL ANIMATION ---
+        function createVideoCard(video, index) {
+            const isEven = index % 2 === 0;
+            
+            // Extract YouTube ID for thumbnail
+            const youtubeId = extractYouTubeId(video.videoLink);
+            const thumbnailUrl = youtubeId ? `https://img.youtube.com/vi/${youtubeId}/maxresdefault.jpg` : '';
+            
+            const card = document.createElement('div');
+            card.className = 'unified-card animate-on-scroll slide-up';
+            
+            card.innerHTML = `
+                ${isEven ? `
+                    <div class="card-half card-text">
+                        <div class="video-date">${video.date || 'Date not specified'}</div>
+                        <h3 class="video-heading">${video.heading}</h3>
+                        <p class="video-desc">${video.description || 'No description available.'}</p>
+                        <button class="watch-btn" data-video="${video.videoLink}?autoplay=1">
+                            WATCH NOW <i class="fas fa-play"></i>
+                        </button>
+                    </div>
+                    <div class="card-half card-video">
+                        <iframe 
+                            src="${video.videoLink}" 
+                            title="${video.heading}"
+                            allowfullscreen
+                            loading="lazy">
+                        </iframe>
+                    </div>
+                ` : `
+                    <div class="card-half card-video">
+                        <iframe 
+                            src="${video.videoLink}" 
+                            title="${video.heading}"
+                            allowfullscreen
+                            loading="lazy">
+                        </iframe>
+                    </div>
+                    <div class="card-half card-text">
+                        <div class="video-date">${video.date || 'Date not specified'}</div>
+                        <h3 class="video-heading">${video.heading}</h3>
+                        <p class="video-desc">${video.description || 'No description available.'}</p>
+                        <button class="watch-btn" data-video="${video.videoLink}?autoplay=1">
+                            WATCH NOW <i class="fas fa-play"></i>
+                        </button>
+                    </div>
+                `}
+            `;
+            
+            return card;
+        }
+
+        function extractYouTubeId(url) {
+            if (!url) return '';
+            const match = url.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/);
+            return match ? match[1] : '';
+        }
+
+        function initializeAnimations() {
             const observerOptions = {
                 root: null,
                 rootMargin: '0px',
                 threshold: 0.15
             };
 
-            const observer = new IntersectionObserver((entries, observer) => {
+            const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
                         entry.target.classList.add('active');
-                        observer.unobserve(entry.target); 
+                        observer.unobserve(entry.target);
                     }
                 });
             }, observerOptions);
 
-            const hiddenElements = document.querySelectorAll('.animate-on-scroll');
-            hiddenElements.forEach((el) => observer.observe(el));
-        });
+            document.querySelectorAll('.animate-on-scroll').forEach(el => observer.observe(el));
+        }
+
+        function initializeVideoModal() {
+            const modal = document.getElementById('videoModal');
+            const iframe = document.getElementById('modalIframe');
+            const closeBtn = document.querySelector('.close-modal');
+
+            // Open Modal
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('watch-btn') || e.target.closest('.watch-btn')) {
+                    const btn = e.target.classList.contains('watch-btn') ? e.target : e.target.closest('.watch-btn');
+                    const videoSrc = btn.getAttribute('data-video');
+                    iframe.src = videoSrc;
+                    modal.classList.add('show');
+                    document.body.style.overflow = 'hidden';
+                }
+            });
+
+            // Close Modal Function
+            function closeModal() {
+                modal.classList.remove('show');
+                iframe.src = "";
+                document.body.style.overflow = '';
+            }
+
+            closeBtn.addEventListener('click', closeModal);
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) closeModal();
+            });
+        }
     </script>
 </body>
 </html>
