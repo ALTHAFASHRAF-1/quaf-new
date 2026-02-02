@@ -70,16 +70,16 @@
             opacity: 1;
 
             /* Default BG */
-            background-image: url('https://quaf2026.netlify.app/bg.png');
+            background-image: url('https://quaf2026.netlify.app/images/bg.png');
         }
 
         @media only screen and (max-width: 768px) {
             #landing-layer {
-                background-image: url('https://quaf2026.netlify.app/bg1.png');
+                background-image: url('https://quaf2026.netlify.app/images/bg1.png');
             }
         }
 
-        /* 5. THE EXACT GLOWING BUTTON STYLE YOU REQUESTED */
+        /* 5. GLOWING BUTTON STYLE */
         .cyber-button {
             position: relative;
             padding: 25px 60px;
@@ -141,7 +141,7 @@
         
         <div id="video-layer">
             <video id="intro-video" playsinline preload="auto">
-                <source src="launch.mp4" type="video/mp4">
+                <source src="launch1.mp4" type="video/mp4">
             </video>
         </div>
 
@@ -149,12 +149,17 @@
             <button class="cyber-button" id="launch-btn">LAUNCH</button>
         </div>
 
+        <audio id="cheer-audio" preload="auto">
+            <source src="cheer.mp3" type="audio/mpeg">
+        </audio>
+
     </div>
 
     <script>
         // Cache Elements
         const btn = document.getElementById('launch-btn');
         const video = document.getElementById('intro-video');
+        const audio = document.getElementById('cheer-audio');
         const landingLayer = document.getElementById('landing-layer');
         const targetUrl = "https://quaf2026.netlify.app/";
 
@@ -164,10 +169,20 @@
         // ONE-TIME CLICK EVENT
         btn.addEventListener('click', async (e) => {
             
-            // 1. Play Video INSTANTLY (Hidden layer)
+            // 1. Play Sound (Cheer)
+            // We set volume to 1.0 (Max) initially
+            if(audio) {
+                audio.volume = 1.0;
+                audio.play().catch(e => console.log("Audio play failed", e));
+                
+                // Fade out audio after 2.5 seconds so video audio can take over
+                setTimeout(() => { fadeOutAudio(); }, 2500);
+            }
+
+            // 2. Play Video INSTANTLY (Hidden layer)
             video.play().catch(() => video.controls = true);
 
-            // 2. Trigger Fullscreen
+            // 3. Trigger Fullscreen
             try {
                 if (document.documentElement.requestFullscreen) 
                     await document.documentElement.requestFullscreen();
@@ -175,14 +190,27 @@
                     await document.documentElement.webkitRequestFullscreen();
             } catch (err) { /* Ignore */ }
 
-            // 3. Fire Particles
+            // 4. Fire Particles
             fireParticles(e);
 
-            // 4. Fade Out Image
+            // 5. Fade Out Image
             setTimeout(() => {
                 landingLayer.classList.add('fade-out');
-            }, 50);
+            }, 100);
         });
+
+        // Helper: Smoothly fade out the cheering sound
+        function fadeOutAudio() {
+            let fadeInterval = setInterval(() => {
+                if (audio.volume > 0.1) {
+                    audio.volume -= 0.1;
+                } else {
+                    audio.pause();
+                    audio.currentTime = 0;
+                    clearInterval(fadeInterval);
+                }
+            }, 100); // Lowers volume every 100ms
+        }
 
         // OPTIMIZED PARTICLE FUNCTION
         function fireParticles(e) {
@@ -226,3 +254,5 @@
 </body>
 
 </html>
+
+
