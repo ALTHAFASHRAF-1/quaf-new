@@ -3,377 +3,519 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Scholars - QUAF</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Abel&family=Manrope:wght@400;700&family=Alfa+Slab+One&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --maindark: #0f0b0c;
-            --mainprimary: #7a38fc;
-            --header-height: 82px;
-            --shadesdark-30: #b7b6b6;
-        }
-        
-        body { 
-            font-family: 'Manrope', sans-serif; 
-            background-color: #ffffff; 
-            margin: 0;
-            padding: 0;
-            overflow-x: hidden;
-        }
-        
-        .container { 
-            width: 100%; 
-            max-width: 1200px; 
-            margin: 0 auto; 
-            padding: 0 1rem; 
-        }
-
-        /* --- NAVIGATION --- */
-        .navbar { 
-            display: flex; 
-            align-items: center; 
-            background-color: #000000; 
-            position: fixed; 
-            top: 0; 
-            left: 0; 
-            right: 0; 
-            z-index: 1000; 
-            height: var(--header-height); 
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
-        
-        .logo { 
-            display: flex; 
-            align-items: center; 
-            gap: 0.5rem; 
-            font-family: 'Abel', sans-serif; 
-            font-size: 1.7rem; 
-            color: white; 
-            text-decoration: none;
-            z-index: 1001;
-        }
-        
-        .logo img { 
-            width: 50px; 
-            height: 50px; 
-        }
-        
-        /* Desktop Navigation */
-        .nav-links { 
-            display: none; 
-            gap: 1.5rem; 
-            list-style: none; 
-            margin-left: auto; 
-            align-items: center; 
-        }
-        
-        .nav-link { 
-            color: var(--shadesdark-30); 
-            text-decoration: none; 
-            font-weight: 500; 
-            transition: 0.3s; 
-            font-size: 1rem;
-        }
-        
-        .nav-link:hover { 
-            color: white; 
-        }
-
-        .btn-login {
-            background-color: var(--mainprimary);
-            color: white;
-            padding: 0.5rem 1.5rem;
-            border-radius: 50px;
-            font-weight: 700;
-            text-decoration: none;
-            margin-left: 1.5rem;
-            transition: all 0.3s;
-            display: inline-block;
-        }
-        
-        .btn-login:hover { 
-            transform: scale(1.05); 
-            background-color: #622ad4; 
-            box-shadow: 0 4px 12px rgba(122, 56, 252, 0.3);
-        }
-
-        /* Mobile Navigation */
-        .mobile-menu-btn {
-            display: block;
-            background: none;
-            border: none;
-            color: white;
-            font-size: 1.8rem;
-            cursor: pointer;
-            margin-left: auto;
-            z-index: 1001;
-        }
-        
-        .mobile-nav {
-            position: fixed;
-            top: var(--header-height);
-            left: 0;
-            width: 100%;
-            background-color: rgba(0, 0, 0, 0.95);
-            backdrop-filter: blur(10px);
-            z-index: 999;
-            padding: 1.5rem 0;
-            transform: translateY(-100%);
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.4s ease;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-        }
-        
-        .mobile-nav.active {
-            transform: translateY(0);
-            opacity: 1;
-            visibility: visible;
-        }
-        
-        .mobile-nav-links {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 1.5rem;
-        }
-        
-        .mobile-nav-link {
-            color: var(--shadesdark-30);
-            text-decoration: none;
-            font-size: 1.2rem;
-            font-weight: 500;
-            transition: 0.3s;
-            padding: 0.5rem 0;
-            width: 100%;
-            text-align: center;
-        }
-        
-        .mobile-nav-link:hover {
-            color: white;
-            background-color: rgba(122, 56, 252, 0.1);
-        }
-        
-        .mobile-btn-login {
-            background-color: var(--mainprimary);
-            color: white;
-            padding: 0.8rem 2rem;
-            border-radius: 50px;
-            font-weight: 700;
-            text-decoration: none;
-            transition: all 0.3s;
-            margin-top: 0.5rem;
-            display: inline-block;
-            font-size: 1.1rem;
-        }
-        
-        .mobile-btn-login:hover {
-            transform: scale(1.05);
-            background-color: #622ad4;
-        }
-
-        /* Banner Section */
-        .banner-section {
-            margin-top: var(--header-height);
-            min-height: 30vh;
-            background-image: url('https://quaf2026.netlify.app/images/desktop-banner.png');
-            background-size: cover;
-            background-position: center;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-        }
-        
-        .banner-section::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.1));
-        }
-
-        /* Responsive Styles */
-        @media (max-width: 767px) {
-            .banner-section { 
-                min-height: 20vh; 
-                background-image: url('https://quaf2026.netlify.app/images/mobile-banner.png'); 
-            }
-            
-            .mobile-menu-btn {
-                display: block;
-            }
-            
-            .nav-links { 
-                display: none; 
-            }
-        }
-        
-        @media (min-width: 1024px) { 
-            .nav-links { 
-                display: flex; 
-            }
-            
-            .mobile-menu-btn {
-                display: none;
-            }
-            
-            .mobile-nav {
-                display: none;
-            }
-        }
-        
-        /* Content Styles */
-        .content-section {
-            padding: 4rem 0;
-            text-align: center;
-        }
-        
-        .content-section h2 {
-            font-size: 2.5rem;
-            font-weight: bold;
-            margin-bottom: 1rem;
-            color: #333;
-        }
-        
-        .content-section p {
-            font-size: 1.1rem;
-            color: #666;
-            max-width: 600px;
-            margin: 0 auto 2rem;
-        }
-        
-        /* Footer */
-        .footer {
-            background-color: #000;
-            color: white;
-            padding: 2rem 0;
-            text-align: center;
-            margin-top: 4rem;
-        }
-        
-        .footer p {
-            color: var(--shadesdark-30);
-            margin: 0.5rem 0;
-        }
-    </style>
+    <title>College Fest Management</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-
-    <nav class="navbar">
-        <div class="container flex justify-between items-center">
-            <a href="index.html" class="logo">
-                <img src="https://c.animaapp.com/mjwngvpjWKAdmV/img/logo3d-1.png" alt="Logo">
-                <span>QUAF</span>
-            </a>
-            
-            <!-- Desktop Navigation -->
-            <ul class="nav-links">
-                <li><a href="index.html" class="nav-link">Home</a></li>
-                <li><a href="qalam.html" class="nav-link">Qalam</a></li>
-                <li><a href="scholars.html" class="nav-link">Scholars</a></li>
-                <li><a href="https://quaf2026.netlify.app/fest/login.html" class="btn-login">Login</a></li>
-            </ul>
-            
-            <!-- Mobile Menu Button -->
-            <button class="mobile-menu-btn" id="mobileMenuBtn">
-                <i class="fas fa-bars"></i>
-            </button>
+    <div id="app">
+        <!-- Login Screen -->
+        <div id="loginScreen" class="screen">
+            <div class="login-container">
+                <div class="login-header">
+                    <h1><i class="fas fa-graduation-cap"></i> College Fest 2024</h1>
+                    <p>Management System</p>
+                </div>
+                <div class="login-form">
+                    <h2>Login</h2>
+                    <div class="input-group">
+                        <label for="username"><i class="fas fa-user"></i> Username/Admission No</label>
+                        <input type="text" id="username" placeholder="Enter username or admission number">
+                    </div>
+                    <div class="input-group">
+                        <label for="password"><i class="fas fa-lock"></i> Password</label>
+                        <input type="password" id="password" placeholder="Enter password">
+                    </div>
+                    <button id="loginBtn" class="btn btn-primary">Login <i class="fas fa-sign-in-alt"></i></button>
+                    <div id="loginError" class="error-message"></div>
+                </div>
+                <div class="login-footer">
+                    <p>Teams: A | B | C</p>
+                </div>
+            </div>
         </div>
-        
-        <!-- Mobile Navigation Menu -->
-        <div class="mobile-nav" id="mobileNav">
-            <ul class="mobile-nav-links">
-                <li><a href="index.html" class="mobile-nav-link">Home</a></li>
-                <li><a href="qalam.html" class="mobile-nav-link">Qalam</a></li>
-                <li><a href="scholars.html" class="mobile-nav-link">Scholars</a></li>
-                <li><a href="https://quaf2026.netlify.app/fest/login.html" class="mobile-btn-login">Login</a></li>
-            </ul>
+
+        <!-- Member Dashboard -->
+        <div id="memberDashboard" class="screen" style="display: none;">
+            <nav class="navbar">
+                <div class="nav-brand">
+                    <h2><i class="fas fa-user"></i> Member Dashboard</h2>
+                </div>
+                <div class="nav-user">
+                    <span id="memberName"></span>
+                    <button id="logoutBtn" class="btn btn-logout">Logout <i class="fas fa-sign-out-alt"></i></button>
+                </div>
+            </nav>
+            
+            <div class="dashboard-content">
+                <div class="sidebar">
+                    <button class="sidebar-btn active" data-page="schedule">
+                        <i class="fas fa-calendar-alt"></i> Schedule
+                    </button>
+                    <button class="sidebar-btn" data-page="programs">
+                        <i class="fas fa-list"></i> My Programs
+                    </button>
+                    <button class="sidebar-btn" data-page="results">
+                        <i class="fas fa-trophy"></i> Results
+                    </button>
+                    <button class="sidebar-btn" data-page="points">
+                        <i class="fas fa-chart-bar"></i> Points Summary
+                    </button>
+                </div>
+                
+                <div class="main-content">
+                    <!-- Schedule Page -->
+                    <div id="schedulePage" class="content-page active">
+                        <h3><i class="fas fa-calendar-alt"></i> Event Schedule</h3>
+                        <div class="table-container">
+                            <table id="scheduleTable">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Day</th>
+                                        <th>Time</th>
+                                        <th>Program Code</th>
+                                        <th>Program Name</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <!-- My Programs Page -->
+                    <div id="programsPage" class="content-page">
+                        <h3><i class="fas fa-list"></i> My Registered Programs</h3>
+                        <div class="table-container">
+                            <table id="programsTable">
+                                <thead>
+                                    <tr>
+                                        <th>Program Code</th>
+                                        <th>Program Name</th>
+                                        <th>Team</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <!-- Results Page -->
+                    <div id="resultsPage" class="content-page">
+                        <h3><i class="fas fa-trophy"></i> My Results</h3>
+                        <div class="table-container">
+                            <table id="resultsTable">
+                                <thead>
+                                    <tr>
+                                        <th>Program Code</th>
+                                        <th>Position</th>
+                                        <th>Grade</th>
+                                        <th>Points</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <!-- Points Summary Page -->
+                    <div id="pointsPage" class="content-page">
+                        <h3><i class="fas fa-chart-bar"></i> Points Summary</h3>
+                        <div class="stats-container">
+                            <div class="stat-card">
+                                <h4>Stage Programs</h4>
+                                <div class="stat-value" id="stageCount">0</div>
+                            </div>
+                            <div class="stat-card">
+                                <h4>Non-Stage Programs</h4>
+                                <div class="stat-value" id="nonStageCount">0</div>
+                            </div>
+                            <div class="stat-card">
+                                <h4>Sports Programs</h4>
+                                <div class="stat-value" id="sportsCount">0</div>
+                            </div>
+                            <div class="stat-card">
+                                <h4>Total Programs</h4>
+                                <div class="stat-value" id="totalPrograms">0</div>
+                            </div>
+                            <div class="stat-card status-card">
+                                <h4>Status</h4>
+                                <div class="stat-value" id="programStatus">OK</div>
+                            </div>
+                        </div>
+                        <div class="points-summary">
+                            <h4>Total Points: <span id="totalPoints">0</span></h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-    </nav>
 
-    <section class="banner-section">
-        <!-- Optional banner content can be added here -->
-    </section>
+        <!-- Leader Dashboard -->
+        <div id="leaderDashboard" class="screen" style="display: none;">
+            <nav class="navbar">
+                <div class="nav-brand">
+                    <h2><i class="fas fa-users"></i> Leader Dashboard - Team <span id="teamDisplay"></span></h2>
+                </div>
+                <div class="nav-user">
+                    <span id="leaderName"></span>
+                    <button id="logoutLeaderBtn" class="btn btn-logout">Logout <i class="fas fa-sign-out-alt"></i></button>
+                </div>
+            </nav>
+            
+            <div class="dashboard-content">
+                <div class="sidebar">
+                    <button class="sidebar-btn active" data-page="teamMembers">
+                        <i class="fas fa-users"></i> Team Members
+                    </button>
+                    <button class="sidebar-btn" data-page="assignProgram">
+                        <i class="fas fa-tasks"></i> Assign Program
+                    </button>
+                    <button class="sidebar-btn" data-page="teamPrograms">
+                        <i class="fas fa-list-alt"></i> Team Programs
+                    </button>
+                    <button class="sidebar-btn" data-page="teamResults">
+                        <i class="fas fa-medal"></i> Team Results
+                    </button>
+                </div>
+                
+                <div class="main-content">
+                    <!-- Team Members Page -->
+                    <div id="teamMembersPage" class="content-page active">
+                        <h3><i class="fas fa-users"></i> Team Members</h3>
+                        <div class="table-container">
+                            <table id="teamMembersTable">
+                                <thead>
+                                    <tr>
+                                        <th>SL No</th>
+                                        <th>Admission No</th>
+                                        <th>Name</th>
+                                        <th>Role</th>
+                                        <th>Program Count</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <!-- Assign Program Page -->
+                    <div id="assignProgramPage" class="content-page">
+                        <h3><i class="fas fa-tasks"></i> Assign Program to Member</h3>
+                        <div class="form-container">
+                            <div class="form-group">
+                                <label for="memberSelect">Select Member:</label>
+                                <select id="memberSelect" class="form-control">
+                                    <option value="">Select a member</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="programCodeSelect">Program Code:</label>
+                                <select id="programCodeSelect" class="form-control">
+                                    <option value="">Select program code</option>
+                                    <option value="s01">s01 - Solo Singing</option>
+                                    <option value="s02">s02 - Instrumental</option>
+                                    <option value="ns01">ns01 - Elocution</option>
+                                    <option value="ns02">ns02 - Debate</option>
+                                    <option value="sp01">sp01 - 100m Race</option>
+                                    <option value="sp02">sp02 - Long Jump</option>
+                                    <option value="gs01">gs01 - Group Dance</option>
+                                    <option value="gns01">gns01 - Group Quiz</option>
+                                    <option value="gsp01">gsp01 - Relay Race</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="programName">Program Name:</label>
+                                <input type="text" id="programName" class="form-control" placeholder="Program name">
+                            </div>
+                            <button id="assignProgramBtn" class="btn btn-primary">Assign Program <i class="fas fa-check"></i></button>
+                            <div id="assignMessage" class="message"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Team Programs Page -->
+                    <div id="teamProgramsPage" class="content-page">
+                        <h3><i class="fas fa-list-alt"></i> Team Programs</h3>
+                        <div class="table-container">
+                            <table id="teamProgramsTable">
+                                <thead>
+                                    <tr>
+                                        <th>Program Code</th>
+                                        <th>Program Name</th>
+                                        <th>SL No</th>
+                                        <th>Name</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <!-- Team Results Page -->
+                    <div id="teamResultsPage" class="content-page">
+                        <h3><i class="fas fa-medal"></i> Team Results</h3>
+                        <div class="table-container">
+                            <table id="teamResultsTable">
+                                <thead>
+                                    <tr>
+                                        <th>Program Code</th>
+                                        <th>SL No</th>
+                                        <th>Position</th>
+                                        <th>Grade</th>
+                                        <th>Points</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-    <div class="content-section container">
-        <h2 class="text-3xl md:text-4xl font-bold">Welcome to QUAF</h2>
-        <p class="text-gray-600">Please login to access the fest dashboard.</p>
-        <p class="text-gray-500 mt-4">Explore our scholars section to learn more about the academic opportunities available.</p>
-        
-        <div class="mt-10">
-            <a href="https://quaf2026.netlify.app/fest/login.html" class="btn-login inline-block">
-                <i class="fas fa-sign-in-alt mr-2"></i> Go to Login Page
-            </a>
+        <!-- Admin Dashboard -->
+        <div id="adminDashboard" class="screen" style="display: none;">
+            <nav class="navbar">
+                <div class="nav-brand">
+                    <h2><i class="fas fa-crown"></i> Admin Dashboard</h2>
+                </div>
+                <div class="nav-user">
+                    <span id="adminName"></span>
+                    <button id="logoutAdminBtn" class="btn btn-logout">Logout <i class="fas fa-sign-out-alt"></i></button>
+                </div>
+            </nav>
+            
+            <div class="dashboard-content">
+                <div class="sidebar">
+                    <button class="sidebar-btn active" data-page="manageUsers">
+                        <i class="fas fa-user-plus"></i> Manage Users
+                    </button>
+                    <button class="sidebar-btn" data-page="manageSchedule">
+                        <i class="fas fa-calendar-plus"></i> Manage Schedule
+                    </button>
+                    <button class="sidebar-btn" data-page="manageResults">
+                        <i class="fas fa-star"></i> Manage Results
+                    </button>
+                    <button class="sidebar-btn" data-page="viewAll">
+                        <i class="fas fa-eye"></i> View All Data
+                    </button>
+                </div>
+                
+                <div class="main-content">
+                    <!-- Manage Users Page -->
+                    <div id="manageUsersPage" class="content-page active">
+                        <h3><i class="fas fa-user-plus"></i> Manage Users</h3>
+                        <div class="form-container">
+                            <h4>Add New User</h4>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="adNo">Admission No:</label>
+                                    <input type="text" id="adNo" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label for="userName">Name:</label>
+                                    <input type="text" id="userName" class="form-control">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="userRole">Role:</label>
+                                    <select id="userRole" class="form-control">
+                                        <option value="member">Member</option>
+                                        <option value="leader">Leader</option>
+                                        <option value="assistant">Assistant Leader</option>
+                                        <option value="admin">Admin</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="userTeam">Team:</label>
+                                    <select id="userTeam" class="form-control">
+                                        <option value="A">Team A</option>
+                                        <option value="B">Team B</option>
+                                        <option value="C">Team C</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="userPassword">Password:</label>
+                                <input type="password" id="userPassword" class="form-control">
+                            </div>
+                            <button id="addUserBtn" class="btn btn-primary">Add User <i class="fas fa-plus"></i></button>
+                            <div id="userMessage" class="message"></div>
+                        </div>
+                        
+                        <div class="table-container" style="margin-top: 30px;">
+                            <h4>All Users</h4>
+                            <table id="allUsersTable">
+                                <thead>
+                                    <tr>
+                                        <th>SL No</th>
+                                        <th>Admission No</th>
+                                        <th>Name</th>
+                                        <th>Role</th>
+                                        <th>Team</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <!-- Manage Schedule Page -->
+                    <div id="manageSchedulePage" class="content-page">
+                        <h3><i class="fas fa-calendar-plus"></i> Manage Schedule</h3>
+                        <div class="form-container">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="scheduleDate">Date:</label>
+                                    <input type="date" id="scheduleDate" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label for="scheduleDay">Day:</label>
+                                    <input type="text" id="scheduleDay" class="form-control" placeholder="e.g., Monday">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="scheduleTime">Time:</label>
+                                    <input type="text" id="scheduleTime" class="form-control" placeholder="e.g., 09:00 AM">
+                                </div>
+                                <div class="form-group">
+                                    <label for="scheduleProgramCode">Program Code:</label>
+                                    <input type="text" id="scheduleProgramCode" class="form-control" placeholder="e.g., s01">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="scheduleProgramName">Program Name:</label>
+                                <input type="text" id="scheduleProgramName" class="form-control" placeholder="Program name">
+                            </div>
+                            <button id="addScheduleBtn" class="btn btn-primary">Add to Schedule <i class="fas fa-plus"></i></button>
+                            <div id="scheduleMessage" class="message"></div>
+                        </div>
+                        
+                        <div class="table-container" style="margin-top: 30px;">
+                            <h4>Current Schedule</h4>
+                            <table id="adminScheduleTable">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Day</th>
+                                        <th>Time</th>
+                                        <th>Program Code</th>
+                                        <th>Program Name</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <!-- Manage Results Page -->
+                    <div id="manageResultsPage" class="content-page">
+                        <h3><i class="fas fa-star"></i> Manage Results</h3>
+                        <div class="form-container">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="resultProgramCode">Program Code:</label>
+                                    <input type="text" id="resultProgramCode" class="form-control" placeholder="e.g., s01">
+                                </div>
+                                <div class="form-group">
+                                    <label for="resultSlNo">SL No:</label>
+                                    <input type="number" id="resultSlNo" class="form-control" placeholder="Student SL No">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="resultPosition">Position:</label>
+                                    <select id="resultPosition" class="form-control">
+                                        <option value="1">1st</option>
+                                        <option value="2">2nd</option>
+                                        <option value="3">3rd</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="resultGrade">Grade:</label>
+                                    <select id="resultGrade" class="form-control">
+                                        <option value="A">A</option>
+                                        <option value="B">B</option>
+                                        <option value="C">C</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="resultPoints">Points (Auto-calculated):</label>
+                                <input type="number" id="resultPoints" class="form-control" readonly>
+                            </div>
+                            <button id="addResultBtn" class="btn btn-primary">Add Result <i class="fas fa-plus"></i></button>
+                            <div id="resultMessage" class="message"></div>
+                        </div>
+                        
+                        <div class="table-container" style="margin-top: 30px;">
+                            <h4>All Results</h4>
+                            <table id="allResultsTable">
+                                <thead>
+                                    <tr>
+                                        <th>Program Code</th>
+                                        <th>SL No</th>
+                                        <th>Position</th>
+                                        <th>Grade</th>
+                                        <th>Points</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <!-- View All Data Page -->
+                    <div id="viewAllPage" class="content-page">
+                        <h3><i class="fas fa-eye"></i> View All Data</h3>
+                        <div class="data-sections">
+                            <div class="data-section">
+                                <h4>All Registrations</h4>
+                                <div class="table-container">
+                                    <table id="allRegistrationsTable">
+                                        <thead>
+                                            <tr>
+                                                <th>Program Code</th>
+                                                <th>Program Name</th>
+                                                <th>SL No</th>
+                                                <th>Name</th>
+                                                <th>Team</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="data-section">
+                                <h4>Program Counts</h4>
+                                <div class="table-container">
+                                    <table id="allProgramCountsTable">
+                                        <thead>
+                                            <tr>
+                                                <th>SL No</th>
+                                                <th>Name</th>
+                                                <th>Team</th>
+                                                <th>S</th>
+                                                <th>NS</th>
+                                                <th>SP</th>
+                                                <th>Total</th>
+                                                <th>Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
-    <footer class="footer">
-        <div class="container">
-            <p>&copy; 2023 QUAF. All rights reserved.</p>
-            <p>Academic Fest for University Students</p>
-        </div>
-    </footer>
-
-    <script>
-        // Mobile navigation toggle
-        document.addEventListener('DOMContentLoaded', function() {
-            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-            const mobileNav = document.getElementById('mobileNav');
-            const menuIcon = mobileMenuBtn.querySelector('i');
-            
-            // Toggle mobile menu
-            mobileMenuBtn.addEventListener('click', function() {
-                mobileNav.classList.toggle('active');
-                
-                // Change menu icon
-                if (mobileNav.classList.contains('active')) {
-                    menuIcon.classList.remove('fa-bars');
-                    menuIcon.classList.add('fa-times');
-                } else {
-                    menuIcon.classList.remove('fa-times');
-                    menuIcon.classList.add('fa-bars');
-                }
-            });
-            
-            // Close mobile menu when clicking on a link
-            const mobileNavLinks = document.querySelectorAll('.mobile-nav-link, .mobile-btn-login');
-            mobileNavLinks.forEach(link => {
-                link.addEventListener('click', function() {
-                    mobileNav.classList.remove('active');
-                    menuIcon.classList.remove('fa-times');
-                    menuIcon.classList.add('fa-bars');
-                });
-            });
-            
-            // Close mobile menu when clicking outside
-            document.addEventListener('click', function(event) {
-                const isClickInsideNav = mobileNav.contains(event.target) || mobileMenuBtn.contains(event.target);
-                
-                if (!isClickInsideNav && mobileNav.classList.contains('active')) {
-                    mobileNav.classList.remove('active');
-                    menuIcon.classList.remove('fa-times');
-                    menuIcon.classList.add('fa-bars');
-                }
-            });
-            
-            // Handle window resize
-            window.addEventListener('resize', function() {
-                if (window.innerWidth >= 1024) {
-                    mobileNav.classList.remove('active');
-                    menuIcon.classList.remove('fa-times');
-                    menuIcon.classList.add('fa-bars');
-                }
-            });
-        });
-    </script>
-
+    <script src="app.js"></script>
 </body>
 </html>
