@@ -2647,3 +2647,152 @@ console.log('%cSample Login:', 'color: #f59e0b; font-size: 12px;');
 console.log('%cAdmin: ADM001 / admin123', 'color: #dc2626;');
 console.log('%cTeam 1 Leader: T1L001 / t1leader', 'color: #3b82f6;');
 console.log('%cTeam 1 Member: T1M001 / t1m001', 'color: #10b981;');
+
+// =============================
+// 📱 Mobile Responsive Functions
+// =============================
+
+// Update the updateUIForRole function to load mobile navigation
+function updateUIForRole() {
+    if (!currentUser) return;
+
+    const welcomeUser = document.getElementById('welcomeUser');
+    const profileName = document.getElementById('profileName');
+    const profileUsername = document.getElementById('profileUsername');
+    const profileRole = document.getElementById('profileRole');
+    const profileTeam = document.getElementById('profileTeam');
+    const leaderNav = document.getElementById('leaderNav');
+    const adminNav = document.getElementById('adminNav');
+    const leaderDashboardCards = document.getElementById('leaderDashboardCards');
+    const adminDashboardCards = document.getElementById('adminDashboardCards');
+
+    // Update welcome message
+    const roleDisplay = currentUser.role.charAt(0).toUpperCase() + currentUser.role.slice(1);
+    if (welcomeUser) welcomeUser.textContent = `Welcome, ${currentUser.name} (${roleDisplay})`;
+    
+    // Update profile info
+    if (profileName) profileName.textContent = currentUser.name;
+    if (profileUsername) profileUsername.textContent = `@${currentUser.ad_no}`;
+    if (profileRole) {
+        profileRole.textContent = roleDisplay;
+        profileRole.className = 'text-xs px-2 py-1 bg-white/20 rounded-full ' + 
+            (currentUser.role === 'admin' ? 'role-admin' : 
+             currentUser.role === 'leader' ? 'role-leader' : 
+             currentUser.role === 'assistant' ? 'role-assistant' : 'role-member');
+    }
+    
+    if (profileTeam) {
+        profileTeam.textContent = `Team ${currentUser.team}`;
+        profileTeam.className = 'text-xs px-2 py-1 bg-white/20 rounded-full ml-1 team-' + currentUser.team;
+    }
+    
+    // Show/hide navigation based on role
+    if (currentUser.role === 'admin') {
+        if (adminNav) adminNav.classList.remove('hidden');
+        if (leaderNav) leaderNav.classList.add('hidden');
+        if (adminDashboardCards) adminDashboardCards.classList.remove('hidden');
+        if (leaderDashboardCards) leaderDashboardCards.classList.add('hidden');
+    } else if (currentUser.role === 'leader' || currentUser.role === 'assistant') {
+        if (leaderNav) leaderNav.classList.remove('hidden');
+        if (adminNav) adminNav.classList.add('hidden');
+        if (leaderDashboardCards) leaderDashboardCards.classList.remove('hidden');
+        if (adminDashboardCards) adminDashboardCards.classList.add('hidden');
+    } else {
+        if (leaderNav) leaderNav.classList.add('hidden');
+        if (adminNav) adminNav.classList.add('hidden');
+        if (leaderDashboardCards) leaderDashboardCards.classList.add('hidden');
+        if (adminDashboardCards) adminDashboardCards.classList.add('hidden');
+    }
+    
+    // Load mobile navigation
+    if (typeof loadMobileNavigation === 'function') {
+        loadMobileNavigation();
+    }
+}
+
+// Update the showPage function to handle mobile menu
+async function showPage(page) {
+    try {
+        // Hide all pages
+        document.querySelectorAll('.page-content').forEach(p => p.classList.add('hidden'));
+        
+        // Show selected page
+        const pageElement = document.getElementById(page + 'Page');
+        if (pageElement) {
+            pageElement.classList.remove('hidden');
+        }
+        
+        currentPage = page;
+        
+        // Update mobile navigation active state
+        if (typeof loadMobileNavigation === 'function') {
+            loadMobileNavigation();
+        }
+        
+        // Close mobile menu if open
+        if (typeof closeMobileMenu === 'function' && window.mobileMenuOpen) {
+            closeMobileMenu();
+        }
+        
+        // Load page-specific data
+        switch (page) {
+            case 'dashboard':
+                await loadDashboard();
+                break;
+            case 'schedule':
+                await loadSchedule();
+                break;
+            case 'programs':
+                await loadMyPrograms();
+                break;
+            case 'results':
+                await loadMyResults();
+                break;
+            case 'teamMembers':
+                await loadTeamMembers();
+                break;
+            case 'assignPrograms':
+                await loadAssignPrograms();
+                break;
+            case 'allTeams':
+                await loadAllTeams();
+                break;
+            case 'programCount':
+                await loadProgramCount();
+                break;
+            case 'manageResults':
+                await loadManageResults();
+                break;
+            case 'adminSchedule':
+                await loadAdminSchedule();
+                break;
+        }
+    } catch (error) {
+        console.error('Error showing page:', error);
+    }
+}
+
+// Update tables for mobile view
+function optimizeTablesForMobile() {
+    // This function can be called to optimize table display for mobile
+    const isMobile = window.innerWidth <= 768;
+    
+    // Add mobile-specific classes to tables
+    document.querySelectorAll('.data-table').forEach(table => {
+        if (isMobile) {
+            table.classList.add('text-sm');
+        } else {
+            table.classList.remove('text-sm');
+        }
+    });
+}
+
+// Call this on window resize
+window.addEventListener('resize', function() {
+    optimizeTablesForMobile();
+});
+
+// Initialize on load
+document.addEventListener('DOMContentLoaded', function() {
+    optimizeTablesForMobile();
+});
