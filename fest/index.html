@@ -2,7 +2,7 @@
 <html lang="en" dir="ltr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link rel="icon" type="image/png" sizes="32x32" href="favicon32x32.png">
     <link rel="icon" type="image/x-icon" href="favicon.ico">
 
@@ -27,6 +27,7 @@
         -moz-osx-font-smoothing: grayscale;
         margin: 0;
         padding: 0;
+        -webkit-tap-highlight-color: transparent;
     }
     
     :root {
@@ -48,6 +49,10 @@
         line-height: 1.6;
         background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
         min-height: 100vh;
+        -webkit-text-size-adjust: 100%;
+        -moz-text-size-adjust: 100%;
+        -ms-text-size-adjust: 100%;
+        text-size-adjust: 100%;
     }
 
     .hidden {
@@ -79,33 +84,224 @@
         font-weight: 500;
         font-size: 0.875rem;
         white-space: nowrap;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 44px;
+        min-width: 44px;
     }
 
     .nav-btn:hover {
         background-color: rgba(0, 0, 0, 0.05);
     }
 
+    /* Mobile hamburger menu */
+    .mobile-menu-btn {
+        display: none;
+        flex-direction: column;
+        justify-content: space-between;
+        width: 30px;
+        height: 21px;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        padding: 0;
+        margin-right: 12px;
+    }
+
+    .mobile-menu-btn span {
+        width: 100%;
+        height: 3px;
+        background-color: white;
+        border-radius: 3px;
+        transition: all 0.3s ease;
+    }
+
+    .mobile-menu-btn.active span:nth-child(1) {
+        transform: translateY(9px) rotate(45deg);
+    }
+
+    .mobile-menu-btn.active span:nth-child(2) {
+        opacity: 0;
+    }
+
+    .mobile-menu-btn.active span:nth-child(3) {
+        transform: translateY(-9px) rotate(-45deg);
+    }
+
+    /* Mobile menu overlay */
+    .mobile-menu-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 999;
+        display: none;
+    }
+
+    .mobile-menu-overlay.active {
+        display: block;
+    }
+
+    /* Mobile menu sidebar */
+    .mobile-menu-sidebar {
+        position: fixed;
+        top: 0;
+        left: -280px;
+        width: 280px;
+        height: 100%;
+        background: white;
+        z-index: 1000;
+        transition: left 0.3s ease;
+        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .mobile-menu-sidebar.active {
+        left: 0;
+    }
+
+    .mobile-menu-header {
+        padding: 16px;
+        background: linear-gradient(to right, #3b82f6, #059669);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .mobile-menu-header h3 {
+        font-size: 1.1rem;
+        font-weight: 600;
+    }
+
+    .mobile-menu-close {
+        background: none;
+        border: none;
+        color: white;
+        font-size: 1.5rem;
+        cursor: pointer;
+        padding: 4px;
+    }
+
+    .mobile-nav-content {
+        flex: 1;
+        padding: 16px 0;
+    }
+
+    .mobile-nav-section {
+        padding: 8px 0;
+    }
+
+    .mobile-nav-section-title {
+        padding: 8px 16px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        color: #6b7280;
+        letter-spacing: 0.05em;
+    }
+
+    .mobile-nav-btn {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        padding: 12px 16px;
+        border: none;
+        background: none;
+        text-align: left;
+        color: #374151;
+        font-size: 0.9375rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+    }
+
+    .mobile-nav-btn:hover {
+        background-color: #f3f4f6;
+    }
+
+    .mobile-nav-btn i {
+        width: 24px;
+        margin-right: 12px;
+        font-size: 1.125rem;
+        color: #6b7280;
+    }
+
+    .mobile-nav-btn.active {
+        background-color: #eff6ff;
+        color: #3b82f6;
+        border-right: 3px solid #3b82f6;
+    }
+
+    .mobile-nav-btn.active i {
+        color: #3b82f6;
+    }
+
+    /* Desktop navigation styles */
+    .desktop-nav {
+        display: flex;
+        gap: 4px;
+    }
+
     /* Mobile navigation styles */
     @media (max-width: 768px) {
-        .nav-btn {
-            padding: 0.375rem 0.75rem;
-            font-size: 0.75rem;
-            margin: 0 0.125rem;
+        .mobile-menu-btn {
+            display: flex;
+        }
+        
+        .desktop-nav {
+            display: none;
         }
         
         nav .container {
-            padding: 0 1rem;
+            padding: 0 12px;
         }
         
-        nav .flex {
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-            scrollbar-width: none;
-            -ms-overflow-style: none;
+        .nav-btn {
+            padding: 0.5rem 0.75rem;
+            font-size: 0.8125rem;
+            margin: 0 0.125rem;
         }
         
-        nav .flex::-webkit-scrollbar {
-            display: none;
+        /* Adjust header for mobile */
+        .header-content {
+            padding: 8px 0;
+        }
+        
+        .header-title {
+            font-size: 1rem;
+        }
+        
+        .header-subtitle {
+            font-size: 0.75rem;
+        }
+        
+        /* Profile picture smaller on mobile */
+        .profile-pic-container {
+            width: 36px;
+            height: 36px;
+        }
+    }
+
+    /* Extra small devices */
+    @media (max-width: 480px) {
+        .header-title {
+            font-size: 0.875rem;
+        }
+        
+        .profile-pic-container {
+            width: 32px;
+            height: 32px;
+        }
+        
+        .mobile-menu-sidebar {
+            width: 260px;
+            left: -260px;
         }
     }
 
@@ -121,6 +317,7 @@
         font-size: 0.75rem;
         font-weight: 600;
         text-transform: uppercase;
+        display: inline-block;
     }
 
     .team-1 { background-color: #fee2e2; color: #dc2626; }
@@ -136,6 +333,7 @@
         transition: all 0.3s ease;
         cursor: pointer;
         height: 100%;
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
     }
 
     .dashboard-card:hover {
@@ -149,6 +347,29 @@
         margin-bottom: 1rem;
     }
 
+    @media (max-width: 768px) {
+        .dashboard-card {
+            padding: 1.25rem;
+            border-radius: 0.875rem;
+        }
+        
+        .dashboard-card i {
+            font-size: 1.75rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .dashboard-card {
+            padding: 1rem;
+            border-radius: 0.75rem;
+        }
+        
+        .dashboard-card i {
+            font-size: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+    }
+
     /* Stats cards */
     .stat-card {
         background: white;
@@ -156,12 +377,17 @@
         padding: 1rem;
         border: 1px solid #e5e7eb;
         text-align: center;
+        min-height: 80px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
     }
 
     .stat-value {
         font-size: 1.5rem;
         font-weight: 700;
         margin-bottom: 0.25rem;
+        line-height: 1.2;
     }
 
     .stat-label {
@@ -169,6 +395,38 @@
         color: #6b7280;
         text-transform: uppercase;
         letter-spacing: 0.05em;
+        line-height: 1.2;
+    }
+
+    @media (max-width: 768px) {
+        .stat-card {
+            padding: 0.75rem;
+            min-height: 70px;
+        }
+        
+        .stat-value {
+            font-size: 1.25rem;
+        }
+        
+        .stat-label {
+            font-size: 0.6875rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .stat-card {
+            padding: 0.625rem;
+            min-height: 65px;
+            border-radius: 0.625rem;
+        }
+        
+        .stat-value {
+            font-size: 1.125rem;
+        }
+        
+        .stat-label {
+            font-size: 0.625rem;
+        }
     }
 
     /* Program card */
@@ -193,6 +451,19 @@
         border-radius: 0.375rem;
         font-size: 0.75rem;
         font-weight: 600;
+        display: inline-block;
+    }
+
+    @media (max-width: 768px) {
+        .program-card {
+            padding: 0.875rem;
+            border-radius: 0.625rem;
+        }
+        
+        .program-code {
+            font-size: 0.6875rem;
+            padding: 0.1875rem 0.375rem;
+        }
     }
 
     /* Result card */
@@ -214,13 +485,27 @@
         font-weight: 700;
         color: white;
         font-size: 0.875rem;
+        flex-shrink: 0;
     }
 
     .position-1 { background-color: #f59e0b; }
     .position-2 { background-color: #6b7280; }
     .position-3 { background-color: #92400e; }
 
-    /* Table styles */
+    @media (max-width: 768px) {
+        .result-card {
+            padding: 0.875rem;
+            border-left-width: 3px;
+        }
+        
+        .position-badge {
+            width: 1.75rem;
+            height: 1.75rem;
+            font-size: 0.8125rem;
+        }
+    }
+
+    /* Table styles - Mobile responsive */
     .data-table {
         width: 100%;
         border-collapse: collapse;
@@ -228,6 +513,7 @@
         border-radius: 0.75rem;
         overflow: hidden;
         box-shadow: var(--shadow-soft);
+        min-width: 100%;
     }
 
     .data-table th {
@@ -240,19 +526,38 @@
         font-size: 0.75rem;
         text-transform: uppercase;
         letter-spacing: 0.05em;
+        white-space: nowrap;
     }
 
     .data-table td {
         padding: 0.75rem 1rem;
         border-bottom: 1px solid #e5e7eb;
         font-size: 0.875rem;
+        word-break: break-word;
     }
 
     .data-table tr:hover {
         background: #f9fafb;
     }
 
-    /* Modal styles */
+    @media (max-width: 768px) {
+        .data-table th {
+            padding: 0.625rem 0.75rem;
+            font-size: 0.6875rem;
+        }
+        
+        .data-table td {
+            padding: 0.625rem 0.75rem;
+            font-size: 0.8125rem;
+        }
+        
+        /* Hide less important columns on mobile */
+        .data-table .hide-mobile {
+            display: none;
+        }
+    }
+
+    /* Modal styles - Mobile responsive */
     .modal {
         position: fixed;
         top: 0;
@@ -274,9 +579,32 @@
         width: 100%;
         max-height: 90vh;
         overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
     }
 
-    /* Form styles */
+    @media (max-width: 768px) {
+        .modal {
+            padding: 0.75rem;
+        }
+        
+        .modal-content {
+            border-radius: 0.875rem;
+            max-height: 85vh;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .modal {
+            padding: 0.5rem;
+        }
+        
+        .modal-content {
+            border-radius: 0.75rem;
+            max-height: 80vh;
+        }
+    }
+
+    /* Form styles - Mobile responsive */
     .form-group {
         margin-bottom: 1rem;
     }
@@ -296,6 +624,8 @@
         border-radius: 0.5rem;
         font-size: 0.875rem;
         transition: border-color 0.2s ease;
+        -webkit-appearance: none;
+        min-height: 44px;
     }
 
     .form-input:focus {
@@ -312,6 +642,13 @@
         font-size: 0.875rem;
         background: white;
         transition: border-color 0.2s ease;
+        -webkit-appearance: none;
+        min-height: 44px;
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+        background-position: right 0.5rem center;
+        background-repeat: no-repeat;
+        background-size: 1.5em 1.5em;
+        padding-right: 2.5rem;
     }
 
     .form-select:focus {
@@ -320,7 +657,20 @@
         box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
     }
 
-    /* Button styles */
+    @media (max-width: 768px) {
+        .form-label {
+            font-size: 0.8125rem;
+        }
+        
+        .form-input,
+        .form-select {
+            padding: 0.625rem;
+            font-size: 0.8125rem;
+            border-radius: 0.375rem;
+        }
+    }
+
+    /* Button styles - Mobile responsive */
     .btn {
         display: inline-flex;
         align-items: center;
@@ -332,6 +682,10 @@
         cursor: pointer;
         transition: all 0.2s ease;
         border: none;
+        min-height: 44px;
+        min-width: 44px;
+        -webkit-tap-highlight-color: transparent;
+        user-select: none;
     }
 
     .btn-primary {
@@ -376,6 +730,14 @@
         background: #4b5563;
     }
 
+    @media (max-width: 768px) {
+        .btn {
+            padding: 0.625rem 1.25rem;
+            font-size: 0.8125rem;
+            border-radius: 0.375rem;
+        }
+    }
+
     /* Loading spinner */
     .loading-spinner {
         display: inline-block;
@@ -417,6 +779,14 @@
         color: #92400e;
     }
 
+    @media (max-width: 768px) {
+        .alert {
+            padding: 0.875rem;
+            font-size: 0.8125rem;
+            border-radius: 0.375rem;
+        }
+    }
+
     /* Page content */
     .page-content {
         padding: 1.5rem 0;
@@ -425,6 +795,12 @@
     @media (max-width: 768px) {
         .page-content {
             padding: 1rem 0;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .page-content {
+            padding: 0.75rem 0;
         }
     }
 
@@ -445,6 +821,12 @@
         }
     }
 
+    @media (max-width: 480px) {
+        .main-container {
+            padding: 0 0.75rem;
+        }
+    }
+
     /* Header styles */
     .header-content {
         display: flex;
@@ -458,11 +840,37 @@
         font-size: 1.25rem;
         font-weight: 700;
         color: white;
+        line-height: 1.2;
     }
 
     .header-subtitle {
         font-size: 0.875rem;
         opacity: 0.9;
+        line-height: 1.2;
+    }
+
+    @media (max-width: 768px) {
+        .header-content {
+            gap: 0.75rem;
+        }
+        
+        .header-title {
+            font-size: 1rem;
+        }
+        
+        .header-subtitle {
+            font-size: 0.75rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .header-title {
+            font-size: 0.875rem;
+        }
+        
+        .header-subtitle {
+            font-size: 0.6875rem;
+        }
     }
 
     /* Profile styles */
@@ -509,11 +917,32 @@
         }
     }
 
-    /* Grid layouts */
+    @media (max-width: 768px) {
+        .profile-menu {
+            min-width: 180px;
+            right: -8px;
+        }
+        
+        .profile-menu-content {
+            border-radius: 0.625rem;
+        }
+    }
+
+    /* Grid layouts - Mobile responsive */
     .grid-cols-1 { grid-template-columns: 1fr; }
     .grid-cols-2 { grid-template-columns: repeat(2, 1fr); }
     .grid-cols-3 { grid-template-columns: repeat(3, 1fr); }
     .grid-cols-4 { grid-template-columns: repeat(4, 1fr); }
+
+    /* Mobile grid adjustments */
+    @media (max-width: 640px) {
+        .grid-cols-2,
+        .grid-cols-3,
+        .grid-cols-4 {
+            grid-template-columns: 1fr;
+            gap: 0.75rem;
+        }
+    }
 
     @media (min-width: 768px) {
         .md\:grid-cols-2 { grid-template-columns: repeat(2, 1fr); }
@@ -521,12 +950,31 @@
         .md\:grid-cols-4 { grid-template-columns: repeat(4, 1fr); }
     }
 
+    /* Mobile breakpoints for grid */
+    @media (max-width: 480px) {
+        .dashboard-card {
+            margin-bottom: 0.75rem;
+        }
+    }
+
     /* Flex utilities */
     .gap-2 { gap: 0.5rem; }
     .gap-4 { gap: 1rem; }
     .gap-6 { gap: 1.5rem; }
 
-    /* Margin utilities */
+    @media (max-width: 768px) {
+        .gap-2 { gap: 0.375rem; }
+        .gap-4 { gap: 0.75rem; }
+        .gap-6 { gap: 1rem; }
+    }
+
+    @media (max-width: 480px) {
+        .gap-2 { gap: 0.25rem; }
+        .gap-4 { gap: 0.5rem; }
+        .gap-6 { gap: 0.75rem; }
+    }
+
+    /* Margin utilities - Mobile responsive */
     .mb-2 { margin-bottom: 0.5rem; }
     .mb-4 { margin-bottom: 1rem; }
     .mb-6 { margin-bottom: 1.5rem; }
@@ -536,7 +984,29 @@
     .mt-4 { margin-top: 1rem; }
     .mt-6 { margin-top: 1.5rem; }
 
-    /* Text utilities */
+    @media (max-width: 768px) {
+        .mb-2 { margin-bottom: 0.375rem; }
+        .mb-4 { margin-bottom: 0.75rem; }
+        .mb-6 { margin-bottom: 1rem; }
+        .mb-8 { margin-bottom: 1.25rem; }
+        
+        .mt-2 { margin-top: 0.375rem; }
+        .mt-4 { margin-top: 0.75rem; }
+        .mt-6 { margin-top: 1rem; }
+    }
+
+    @media (max-width: 480px) {
+        .mb-2 { margin-bottom: 0.25rem; }
+        .mb-4 { margin-bottom: 0.5rem; }
+        .mb-6 { margin-bottom: 0.75rem; }
+        .mb-8 { margin-bottom: 1rem; }
+        
+        .mt-2 { margin-top: 0.25rem; }
+        .mt-4 { margin-top: 0.5rem; }
+        .mt-6 { margin-top: 0.75rem; }
+    }
+
+    /* Text utilities - Mobile responsive */
     .text-xs { font-size: 0.75rem; }
     .text-sm { font-size: 0.875rem; }
     .text-base { font-size: 1rem; }
@@ -547,6 +1017,15 @@
     .font-bold { font-weight: 700; }
     .font-semibold { font-weight: 600; }
     .font-medium { font-weight: 500; }
+
+    @media (max-width: 768px) {
+        .text-xs { font-size: 0.6875rem; }
+        .text-sm { font-size: 0.8125rem; }
+        .text-base { font-size: 0.9375rem; }
+        .text-lg { font-size: 1rem; }
+        .text-xl { font-size: 1.125rem; }
+        .text-2xl { font-size: 1.25rem; }
+    }
 
     /* Color utilities */
     .text-gray-600 { color: #4b5563; }
@@ -580,6 +1059,16 @@
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
         border-radius: 0.75rem;
+        margin: 0 -0.5rem;
+        padding: 0 0.5rem;
+    }
+
+    @media (max-width: 768px) {
+        .table-container {
+            margin: 0 -0.75rem;
+            padding: 0 0.75rem;
+            border-radius: 0;
+        }
     }
 
     /* Schedule timeline */
@@ -622,6 +1111,7 @@
         font-size: 0.75rem;
         font-weight: 600;
         text-transform: uppercase;
+        white-space: nowrap;
     }
 
     .badge-stage { background-color: #fef3c7; color: #92400e; }
@@ -629,11 +1119,20 @@
     .badge-sports { background-color: #dbeafe; color: #1d4ed8; }
     .badge-group { background-color: #f3e8ff; color: #7c3aed; }
 
+    @media (max-width: 768px) {
+        .badge {
+            padding: 0.1875rem 0.375rem;
+            font-size: 0.6875rem;
+            border-radius: 0.25rem;
+        }
+    }
+
     /* Points display */
     .points-display {
         font-size: 1.5rem;
         font-weight: 800;
         color: #059669;
+        line-height: 1;
     }
 
     .points-label {
@@ -641,6 +1140,17 @@
         color: #6b7280;
         text-transform: uppercase;
         letter-spacing: 0.05em;
+        line-height: 1.2;
+    }
+
+    @media (max-width: 768px) {
+        .points-display {
+            font-size: 1.25rem;
+        }
+        
+        .points-label {
+            font-size: 0.6875rem;
+        }
     }
 
     /* Override warning for program count */
@@ -701,10 +1211,87 @@
         .form-select {
             min-height: 44px;
         }
+        
+        /* Increase touch targets for mobile */
+        .mobile-nav-btn {
+            min-height: 48px;
+        }
+    }
+
+    /* Safe area insets for modern mobile devices */
+    @supports (padding: max(0px)) {
+        .main-container,
+        .page-content,
+        nav .container {
+            padding-left: max(1rem, env(safe-area-inset-left));
+            padding-right: max(1rem, env(safe-area-inset-right));
+        }
+        
+        .mobile-menu-sidebar {
+            padding-top: env(safe-area-inset-top);
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+    }
+
+    /* Prevent zoom on input focus on mobile */
+    @media (max-width: 768px) {
+        input,
+        select,
+        textarea {
+            font-size: 16px !important;
+        }
+    }
+
+    /* Smooth scrolling */
+    html {
+        scroll-behavior: smooth;
+    }
+
+    /* Improve button active states on mobile */
+    button:active {
+        transform: scale(0.98);
+    }
+
+    /* Custom scrollbar for mobile */
+    @media (max-width: 768px) {
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 3px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 3px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #a8a8a8;
+        }
     }
     </style>
 </head>
 <body>
+    <!-- Mobile Menu Overlay -->
+    <div id="mobileMenuOverlay" class="mobile-menu-overlay"></div>
+
+    <!-- Mobile Menu Sidebar -->
+    <div id="mobileMenuSidebar" class="mobile-menu-sidebar">
+        <div class="mobile-menu-header">
+            <h3>Menu</h3>
+            <button id="mobileMenuClose" class="mobile-menu-close">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="mobile-nav-content" id="mobileNavContent">
+            <!-- Mobile navigation will be loaded here -->
+        </div>
+    </div>
+
     <!-- Login Page -->
     <div id="loginPage" class="min-h-screen flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md">
@@ -756,6 +1343,13 @@
             <div class="container mx-auto px-4 py-3">
                 <div class="header-content">
                     <div class="flex items-center space-x-3 min-w-0">
+                        <!-- Mobile Menu Button -->
+                        <button id="mobileMenuBtn" class="mobile-menu-btn">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </button>
+                        
                         <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
                             <i class="fas fa-trophy text-white"></i>
                         </div>
@@ -802,8 +1396,8 @@
             </div>
         </header>
 
-        <!-- Navigation -->
-        <nav class="bg-white shadow-sm border-b">
+        <!-- Navigation - Desktop -->
+        <nav class="bg-white shadow-sm border-b hidden md:block">
             <div class="container mx-auto px-4">
                 <div class="flex space-x-1 overflow-x-auto py-2">
                     <!-- Common Navigation for All Roles -->
@@ -821,7 +1415,7 @@
                     </button>
                     
                     <!-- Leader/Assistant Navigation -->
-                    <div id="leaderNav" class="hidden">
+                    <div id="leaderNav" class="hidden desktop-nav">
                         <button onclick="showPage('teamMembers')" class="nav-btn text-gray-700 hover:text-blue-600 whitespace-nowrap">
                             <i class="fas fa-users mr-2"></i>Team Members
                         </button>
@@ -831,7 +1425,7 @@
                     </div>
                     
                     <!-- Admin Navigation -->
-                    <div id="adminNav" class="hidden">
+                    <div id="adminNav" class="hidden desktop-nav">
                         <button onclick="showPage('allTeams')" class="nav-btn text-gray-700 hover:text-red-600 whitespace-nowrap">
                             <i class="fas fa-users-cog mr-2"></i>All Teams
                         </button>
@@ -960,11 +1554,11 @@
                             <thead>
                                 <tr>
                                     <th>Date</th>
-                                    <th>Day</th>
+                                    <th class="hide-mobile">Day</th>
                                     <th>Time</th>
                                     <th>Program Code</th>
-                                    <th>Program Type</th>
-                                    <th>Registered Candidates</th>
+                                    <th class="hide-mobile">Program Type</th>
+                                    <th>Registered</th>
                                 </tr>
                             </thead>
                             <tbody id="scheduleTableBody">
@@ -1030,10 +1624,10 @@
                                 <tr>
                                     <th>SL No</th>
                                     <th>Name</th>
-                                    <th>Role</th>
+                                    <th class="hide-mobile">Role</th>
                                     <th>Stage</th>
-                                    <th>Non-Stage</th>
-                                    <th>Sports</th>
+                                    <th class="hide-mobile">Non-Stage</th>
+                                    <th class="hide-mobile">Sports</th>
                                     <th>Total</th>
                                     <th>Actions</th>
                                 </tr>
@@ -1100,14 +1694,14 @@
                 <div class="bg-white rounded-lg shadow-md p-4 md:p-6">
                     <!-- Team Tabs -->
                     <div class="mb-6">
-                        <div class="flex space-x-2 border-b">
-                            <button onclick="showTeamTab(1)" class="px-4 py-2 font-medium border-b-2 border-transparent hover:text-red-600" id="team1Tab">
+                        <div class="flex space-x-2 border-b overflow-x-auto">
+                            <button onclick="showTeamTab(1)" class="px-4 py-2 font-medium border-b-2 border-transparent hover:text-red-600 whitespace-nowrap" id="team1Tab">
                                 Team 1
                             </button>
-                            <button onclick="showTeamTab(2)" class="px-4 py-2 font-medium border-b-2 border-transparent hover:text-blue-600" id="team2Tab">
+                            <button onclick="showTeamTab(2)" class="px-4 py-2 font-medium border-b-2 border-transparent hover:text-blue-600 whitespace-nowrap" id="team2Tab">
                                 Team 2
                             </button>
-                            <button onclick="showTeamTab(3)" class="px-4 py-2 font-medium border-b-2 border-transparent hover:text-green-600" id="team3Tab">
+                            <button onclick="showTeamTab(3)" class="px-4 py-2 font-medium border-b-2 border-transparent hover:text-green-600 whitespace-nowrap" id="team3Tab">
                                 Team 3
                             </button>
                         </div>
@@ -1134,10 +1728,10 @@
                                 <tr>
                                     <th>SL No</th>
                                     <th>Name</th>
-                                    <th>Team</th>
+                                    <th class="hide-mobile">Team</th>
                                     <th>Stage</th>
-                                    <th>Non-Stage</th>
-                                    <th>Sports</th>
+                                    <th class="hide-mobile">Non-Stage</th>
+                                    <th class="hide-mobile">Sports</th>
                                     <th>Total</th>
                                     <th>Status</th>
                                 </tr>
@@ -1160,23 +1754,23 @@
                 <div class="bg-white rounded-lg shadow-md p-4 md:p-6">
                     <!-- Result Type Tabs -->
                     <div class="mb-6">
-                        <div class="flex flex-wrap gap-2">
-                            <button onclick="showResultType('s')" class="px-4 py-2 bg-yellow-100 text-yellow-800 rounded-lg font-medium">
+                        <div class="flex flex-wrap gap-2 overflow-x-auto">
+                            <button onclick="showResultType('s')" class="px-4 py-2 bg-yellow-100 text-yellow-800 rounded-lg font-medium whitespace-nowrap">
                                 Stage Results
                             </button>
-                            <button onclick="showResultType('ns')" class="px-4 py-2 bg-green-100 text-green-800 rounded-lg font-medium">
+                            <button onclick="showResultType('ns')" class="px-4 py-2 bg-green-100 text-green-800 rounded-lg font-medium whitespace-nowrap">
                                 Non-Stage Results
                             </button>
-                            <button onclick="showResultType('sp')" class="px-4 py-2 bg-blue-100 text-blue-800 rounded-lg font-medium">
+                            <button onclick="showResultType('sp')" class="px-4 py-2 bg-blue-100 text-blue-800 rounded-lg font-medium whitespace-nowrap">
                                 Sports Results
                             </button>
-                            <button onclick="showResultType('gs')" class="px-4 py-2 bg-purple-100 text-purple-800 rounded-lg font-medium">
+                            <button onclick="showResultType('gs')" class="px-4 py-2 bg-purple-100 text-purple-800 rounded-lg font-medium whitespace-nowrap">
                                 Group Stage
                             </button>
-                            <button onclick="showResultType('gns')" class="px-4 py-2 bg-indigo-100 text-indigo-800 rounded-lg font-medium">
+                            <button onclick="showResultType('gns')" class="px-4 py-2 bg-indigo-100 text-indigo-800 rounded-lg font-medium whitespace-nowrap">
                                 Group Non-Stage
                             </button>
-                            <button onclick="showResultType('gsp')" class="px-4 py-2 bg-pink-100 text-pink-800 rounded-lg font-medium">
+                            <button onclick="showResultType('gsp')" class="px-4 py-2 bg-pink-100 text-pink-800 rounded-lg font-medium whitespace-nowrap">
                                 Group Sports
                             </button>
                         </div>
@@ -1231,7 +1825,7 @@
                                 <thead>
                                     <tr>
                                         <th>Date</th>
-                                        <th>Time</th>
+                                        <th class="hide-mobile">Time</th>
                                         <th>Program Code</th>
                                         <th>Actions</th>
                                     </tr>
@@ -1328,9 +1922,122 @@
         </div>
     </div>
 
-    <script src="app.js"></script>
-
     <script>
+        // Mobile Menu Functions
+        let mobileMenuOpen = false;
+        
+        function toggleMobileMenu() {
+            const btn = document.getElementById('mobileMenuBtn');
+            const overlay = document.getElementById('mobileMenuOverlay');
+            const sidebar = document.getElementById('mobileMenuSidebar');
+            
+            mobileMenuOpen = !mobileMenuOpen;
+            
+            if (mobileMenuOpen) {
+                btn.classList.add('active');
+                overlay.classList.add('active');
+                sidebar.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            } else {
+                btn.classList.remove('active');
+                overlay.classList.remove('active');
+                sidebar.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        }
+        
+        function closeMobileMenu() {
+            const btn = document.getElementById('mobileMenuBtn');
+            const overlay = document.getElementById('mobileMenuOverlay');
+            const sidebar = document.getElementById('mobileMenuSidebar');
+            
+            mobileMenuOpen = false;
+            btn.classList.remove('active');
+            overlay.classList.remove('active');
+            sidebar.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+        
+        function loadMobileNavigation() {
+            const navContent = document.getElementById('mobileNavContent');
+            if (!navContent) return;
+            
+            const currentUser = window.currentUser;
+            const role = currentUser?.role || 'member';
+            
+            let html = '';
+            
+            // Common navigation for all roles
+            html += `
+                <div class="mobile-nav-section">
+                    <div class="mobile-nav-section-title">Main Menu</div>
+                    <button onclick="showPage('dashboard'); closeMobileMenu();" class="mobile-nav-btn ${window.currentPage === 'dashboard' ? 'active' : ''}">
+                        <i class="fas fa-home"></i>Dashboard
+                    </button>
+                    <button onclick="showPage('schedule'); closeMobileMenu();" class="mobile-nav-btn ${window.currentPage === 'schedule' ? 'active' : ''}">
+                        <i class="fas fa-calendar-alt"></i>Schedule
+                    </button>
+                    <button onclick="showPage('programs'); closeMobileMenu();" class="mobile-nav-btn ${window.currentPage === 'programs' ? 'active' : ''}">
+                        <i class="fas fa-list-alt"></i>My Programs
+                    </button>
+                    <button onclick="showPage('results'); closeMobileMenu();" class="mobile-nav-btn ${window.currentPage === 'results' ? 'active' : ''}">
+                        <i class="fas fa-chart-line"></i>Results
+                    </button>
+                </div>
+            `;
+            
+            // Leader/Assistant navigation
+            if (role === 'leader' || role === 'assistant') {
+                html += `
+                    <div class="mobile-nav-section">
+                        <div class="mobile-nav-section-title">Team Management</div>
+                        <button onclick="showPage('teamMembers'); closeMobileMenu();" class="mobile-nav-btn ${window.currentPage === 'teamMembers' ? 'active' : ''}">
+                            <i class="fas fa-users"></i>Team Members
+                        </button>
+                        <button onclick="showPage('assignPrograms'); closeMobileMenu();" class="mobile-nav-btn ${window.currentPage === 'assignPrograms' ? 'active' : ''}">
+                            <i class="fas fa-tasks"></i>Assign Programs
+                        </button>
+                    </div>
+                `;
+            }
+            
+            // Admin navigation
+            if (role === 'admin') {
+                html += `
+                    <div class="mobile-nav-section">
+                        <div class="mobile-nav-section-title">Administration</div>
+                        <button onclick="showPage('allTeams'); closeMobileMenu();" class="mobile-nav-btn ${window.currentPage === 'allTeams' ? 'active' : ''}">
+                            <i class="fas fa-users-cog"></i>All Teams
+                        </button>
+                        <button onclick="showPage('programCount'); closeMobileMenu();" class="mobile-nav-btn ${window.currentPage === 'programCount' ? 'active' : ''}">
+                            <i class="fas fa-calculator"></i>Program Count
+                        </button>
+                        <button onclick="showPage('manageResults'); closeMobileMenu();" class="mobile-nav-btn ${window.currentPage === 'manageResults' ? 'active' : ''}">
+                            <i class="fas fa-edit"></i>Manage Results
+                        </button>
+                        <button onclick="showPage('adminSchedule'); closeMobileMenu();" class="mobile-nav-btn ${window.currentPage === 'adminSchedule' ? 'active' : ''}">
+                            <i class="fas fa-calendar-plus"></i>Manage Schedule
+                        </button>
+                    </div>
+                `;
+            }
+            
+            // Profile section
+            html += `
+                <div class="mobile-nav-section">
+                    <div class="mobile-nav-section-title">Account</div>
+                    <button onclick="openChangePasswordModal(); closeMobileMenu();" class="mobile-nav-btn">
+                        <i class="fas fa-key"></i>Change Password
+                    </button>
+                    <button onclick="logout(); closeMobileMenu();" class="mobile-nav-btn text-red-600">
+                        <i class="fas fa-sign-out-alt"></i>Logout
+                    </button>
+                </div>
+            `;
+            
+            navContent.innerHTML = html;
+        }
+        
         // Utility functions for index.html
         function toggleProfileMenu() {
             const profileMenu = document.getElementById('profileMenu');
@@ -1362,6 +2069,12 @@
             const profileMenu = document.getElementById('profileMenu');
             if (!profileContainer && profileMenu && !profileMenu.classList.contains('hidden')) {
                 profileMenu.classList.add('hidden');
+            }
+
+            // Mobile menu overlay
+            const overlay = document.getElementById('mobileMenuOverlay');
+            if (overlay && event.target === overlay && mobileMenuOpen) {
+                closeMobileMenu();
             }
 
             // Modals
@@ -1405,6 +2118,43 @@
         window.closeEditResultModal = closeEditResultModal;
         window.showTeamTab = showTeamTab;
         window.showResultType = showResultType;
+        window.toggleMobileMenu = toggleMobileMenu;
+        window.closeMobileMenu = closeMobileMenu;
+        window.loadMobileNavigation = loadMobileNavigation;
+
+        // Initialize mobile menu
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            const mobileMenuClose = document.getElementById('mobileMenuClose');
+            
+            if (mobileMenuBtn) {
+                mobileMenuBtn.addEventListener('click', toggleMobileMenu);
+            }
+            
+            if (mobileMenuClose) {
+                mobileMenuClose.addEventListener('click', closeMobileMenu);
+            }
+            
+            // Close mobile menu on escape key
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && mobileMenuOpen) {
+                    closeMobileMenu();
+                }
+            });
+            
+            // Handle window resize
+            let resizeTimer;
+            window.addEventListener('resize', function() {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(function() {
+                    if (window.innerWidth > 768 && mobileMenuOpen) {
+                        closeMobileMenu();
+                    }
+                }, 250);
+            });
+        });
     </script>
+    
+    <script src="app.js"></script>
 </body>
 </html>
