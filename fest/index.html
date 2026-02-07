@@ -2,7 +2,8 @@
 <html lang="en" dir="ltr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#3b82f6">
     <link rel="icon" type="image/png" sizes="32x32" href="favicon32x32.png">
     <link rel="icon" type="image/x-icon" href="favicon.ico">
 
@@ -15,13 +16,12 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     
     <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
     
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <style>
-    /* ====== MOBILE-FIRST CSS ====== */
     * {
         box-sizing: border-box;
         -webkit-font-smoothing: antialiased;
@@ -43,8 +43,6 @@
         --bg-light: #f8fafc;
         --shadow-soft: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
         --shadow-medium: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-        --safe-area-inset-left: env(safe-area-inset-left);
-        --safe-area-inset-right: env(safe-area-inset-right);
     }
     
     body {
@@ -56,36 +54,75 @@
         -moz-text-size-adjust: 100%;
         -ms-text-size-adjust: 100%;
         text-size-adjust: 100%;
-        padding-left: var(--safe-area-inset-left);
-        padding-right: var(--safe-area-inset-right);
     }
 
     .hidden {
         display: none !important;
     }
 
-    /* ====== MOBILE MENU SYSTEM ====== */
+    /* Loading Overlay */
+    .loading-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.7);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+        backdrop-filter: blur(4px);
+    }
+
+    .loading-spinner-large {
+        width: 50px;
+        height: 50px;
+        border: 4px solid #f3f4f6;
+        border-radius: 50%;
+        border-top-color: #3b82f6;
+        animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+
+    /* Profile picture fallback */
+    .profile-pic-fallback {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.2rem;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+    }
+
+    /* Mobile Menu Styles */
     .mobile-menu-btn {
         display: none;
         flex-direction: column;
         justify-content: space-between;
-        width: 28px;
-        height: 20px;
+        width: 30px;
+        height: 21px;
         background: transparent;
         border: none;
         cursor: pointer;
-        padding: 4px;
-        margin-right: 8px;
+        padding: 0;
+        margin-right: 12px;
         z-index: 1001;
     }
 
     .mobile-menu-btn span {
         width: 100%;
-        height: 2px;
+        height: 3px;
         background-color: white;
         border-radius: 3px;
         transition: all 0.3s ease;
-        transform-origin: center;
     }
 
     .mobile-menu-btn.active span:nth-child(1) {
@@ -94,7 +131,6 @@
 
     .mobile-menu-btn.active span:nth-child(2) {
         opacity: 0;
-        transform: scaleX(0);
     }
 
     .mobile-menu-btn.active span:nth-child(3) {
@@ -110,28 +146,29 @@
         background-color: rgba(0, 0, 0, 0.5);
         z-index: 999;
         display: none;
-        backdrop-filter: blur(3px);
+        opacity: 0;
+        transition: opacity 0.3s ease;
     }
 
     .mobile-menu-overlay.active {
         display: block;
-        animation: fadeIn 0.3s ease;
+        opacity: 1;
     }
 
     .mobile-menu-sidebar {
         position: fixed;
         top: 0;
-        left: -280px;
+        left: -100%;
         width: 280px;
+        max-width: 85vw;
         height: 100%;
-        background: linear-gradient(180deg, #1e3a8a 0%, #1e40af 100%);
+        background: white;
         z-index: 1000;
-        transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        box-shadow: 4px 0 20px rgba(0, 0, 0, 0.2);
+        transition: left 0.3s ease;
+        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
         overflow-y: auto;
         display: flex;
         flex-direction: column;
-        -webkit-overflow-scrolling: touch;
     }
 
     .mobile-menu-sidebar.active {
@@ -140,12 +177,12 @@
 
     .mobile-menu-header {
         padding: 16px;
-        background: rgba(255, 255, 255, 0.1);
+        background: linear-gradient(to right, #3b82f6, #059669);
         color: white;
         display: flex;
         align-items: center;
         justify-content: space-between;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        min-height: 60px;
     }
 
     .mobile-menu-header h3 {
@@ -159,31 +196,35 @@
         color: white;
         font-size: 1.5rem;
         cursor: pointer;
-        padding: 4px 8px;
-        border-radius: 4px;
-        transition: background-color 0.2s;
-    }
-
-    .mobile-menu-close:hover {
-        background: rgba(255, 255, 255, 0.1);
+        padding: 4px;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
     .mobile-nav-content {
         flex: 1;
-        padding: 8px 0;
+        padding: 16px 0;
         overflow-y: auto;
     }
 
     .mobile-nav-section {
         padding: 8px 0;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    .mobile-nav-section:last-child {
+        border-bottom: none;
     }
 
     .mobile-nav-section-title {
-        padding: 12px 16px 8px;
+        padding: 8px 16px;
         font-size: 0.75rem;
         font-weight: 600;
         text-transform: uppercase;
-        color: rgba(255, 255, 255, 0.6);
+        color: #6b7280;
         letter-spacing: 0.05em;
     }
 
@@ -195,154 +236,113 @@
         border: none;
         background: none;
         text-align: left;
-        color: white;
+        color: #374151;
         font-size: 0.9375rem;
         font-weight: 500;
         cursor: pointer;
         transition: background-color 0.2s ease;
-        text-decoration: none;
-        position: relative;
+        min-height: 48px;
     }
 
     .mobile-nav-btn:hover {
-        background: rgba(255, 255, 255, 0.1);
+        background-color: #f3f4f6;
     }
 
     .mobile-nav-btn i {
-        width: 24px;
+        width: 28px;
         margin-right: 12px;
         font-size: 1.125rem;
-        color: rgba(255, 255, 255, 0.7);
-        transition: color 0.2s;
+        color: #6b7280;
     }
 
     .mobile-nav-btn.active {
-        background: rgba(59, 130, 246, 0.2);
-        border-right: 3px solid #3b82f6;
+        background-color: #eff6ff;
+        color: #3b82f6;
+        border-left: 4px solid #3b82f6;
+        padding-left: 12px;
     }
 
     .mobile-nav-btn.active i {
         color: #3b82f6;
     }
 
-    .mobile-nav-btn.active::after {
-        content: '';
-        position: absolute;
-        right: 16px;
-        width: 8px;
-        height: 8px;
-        background: #3b82f6;
-        border-radius: 50%;
-        animation: pulse 2s infinite;
-    }
-
-    /* ====== PROFILE SECTION ====== */
-    .profile-pic-container {
-        position: relative;
-        width: 40px;
-        height: 40px;
-        cursor: pointer;
-    }
-
-    .profile-pic {
-        width: 100%;
-        height: 100%;
-        border-radius: 50%;
-        object-fit: cover;
-        border: 2px solid rgba(255, 255, 255, 0.3);
-        transition: transform 0.3s ease;
-    }
-
-    .profile-pic:hover {
-        transform: scale(1.05);
-    }
-
-    .profile-pic-fallback {
-        width: 100%;
-        height: 100%;
-        border-radius: 50%;
-        background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+    /* Desktop Navigation */
+    .desktop-nav {
         display: flex;
+        gap: 4px;
+    }
+
+    .nav-btn {
+        padding: 0.5rem 1rem;
+        margin: 0 0.25rem;
+        border: 2px solid transparent;
+        border-radius: 0.5rem;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        font-weight: 500;
+        font-size: 0.875rem;
+        white-space: nowrap;
+        display: inline-flex;
         align-items: center;
         justify-content: center;
-        color: white;
-        font-size: 1.2rem;
-        border: 2px solid rgba(255, 255, 255, 0.3);
+        min-height: 44px;
+        min-width: 44px;
+        cursor: pointer;
     }
 
-    .profile-menu {
-        position: absolute;
-        top: calc(100% + 8px);
-        right: 0;
-        z-index: 1000;
-        min-width: 240px;
-        animation: slideDown 0.2s ease-out;
+    .nav-btn:hover {
+        background-color: rgba(0, 0, 0, 0.05);
     }
 
-    .profile-menu-content {
-        background: white;
-        border-radius: 12px;
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-        border: 1px solid #e5e7eb;
-        overflow: hidden;
-        backdrop-filter: blur(10px);
-        background: rgba(255, 255, 255, 0.95);
+    @media (max-width: 768px) {
+        .mobile-menu-btn {
+            display: flex;
+        }
+        
+        .desktop-nav {
+            display: none;
+        }
+        
+        nav .container {
+            padding: 0 12px;
+        }
+        
+        .nav-btn {
+            padding: 0.5rem 0.75rem;
+            font-size: 0.8125rem;
+            margin: 0 0.125rem;
+        }
     }
 
-    /* ====== HEADER ====== */
-    .header-content {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        flex-wrap: nowrap;
-        gap: 12px;
-        min-height: 60px;
+    /* Role-based colors */
+    .role-member { color: #6b7280; }
+    .role-leader { color: #3b82f6; }
+    .role-assistant { color: #8b5cf6; }
+    .role-admin { color: #dc2626; }
+
+    .team-badge {
+        padding: 0.25rem 0.5rem;
+        border-radius: 0.375rem;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        display: inline-block;
     }
 
-    .header-title {
-        font-size: 1.1rem;
-        font-weight: 700;
-        color: white;
-        line-height: 1.2;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        max-width: 200px;
-    }
+    .team-1 { background-color: #fee2e2; color: #dc2626; }
+    .team-2 { background-color: #dbeafe; color: #1d4ed8; }
+    .team-3 { background-color: #d1fae5; color: #047857; }
 
-    .header-subtitle {
-        font-size: 0.8rem;
-        opacity: 0.9;
-        line-height: 1.2;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-
-    /* ====== DASHBOARD CARDS ====== */
+    /* Dashboard cards */
     .dashboard-card {
         background: white;
-        border-radius: 16px;
-        padding: 20px;
+        border-radius: 1rem;
+        padding: 1.5rem;
         border: 2px solid #e5e7eb;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        transition: all 0.3s ease;
         cursor: pointer;
         height: 100%;
-        position: relative;
-        overflow: hidden;
-    }
-
-    .dashboard-card::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 4px;
-        background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
-        transform: scaleX(0);
-        transition: transform 0.3s ease;
-        transform-origin: left;
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
     }
 
     .dashboard-card:hover {
@@ -351,74 +351,104 @@
         transform: translateY(-4px);
     }
 
-    .dashboard-card:hover::before {
-        transform: scaleX(1);
-    }
-
     .dashboard-card i {
         font-size: 2rem;
-        margin-bottom: 12px;
-        transition: transform 0.3s ease;
+        margin-bottom: 1rem;
     }
 
-    .dashboard-card:hover i {
-        transform: scale(1.1);
+    @media (max-width: 768px) {
+        .dashboard-card {
+            padding: 1.25rem;
+            border-radius: 0.875rem;
+        }
+        
+        .dashboard-card i {
+            font-size: 1.75rem;
+        }
     }
 
-    /* ====== STATS CARDS ====== */
+    /* Stats cards */
     .stat-card {
         background: white;
-        border-radius: 12px;
-        padding: 16px;
+        border-radius: 0.75rem;
+        padding: 1rem;
         border: 1px solid #e5e7eb;
         text-align: center;
-        min-height: 90px;
+        min-height: 80px;
         display: flex;
         flex-direction: column;
         justify-content: center;
-        transition: all 0.3s ease;
-    }
-
-    .stat-card:hover {
-        transform: translateY(-2px);
-        box-shadow: var(--shadow-soft);
     }
 
     .stat-value {
-        font-size: 1.75rem;
-        font-weight: 800;
-        margin-bottom: 4px;
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 0.25rem;
         line-height: 1.2;
-        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
     }
 
     .stat-label {
-        font-size: 0.8rem;
+        font-size: 0.75rem;
         color: #6b7280;
         text-transform: uppercase;
         letter-spacing: 0.05em;
         line-height: 1.2;
-        font-weight: 600;
     }
 
-    /* ====== TABLES ====== */
+    @media (max-width: 768px) {
+        .stat-card {
+            padding: 0.875rem;
+            min-height: 75px;
+        }
+        
+        .stat-value {
+            font-size: 1.375rem;
+        }
+        
+        .stat-label {
+            font-size: 0.6875rem;
+        }
+    }
+
+    /* Program card */
+    .program-card {
+        background: white;
+        border-radius: 0.75rem;
+        padding: 1rem;
+        border: 2px solid #e5e7eb;
+        margin-bottom: 1rem;
+        transition: all 0.2s ease;
+    }
+
+    .program-card:hover {
+        border-color: var(--secondary-color);
+        box-shadow: var(--shadow-soft);
+    }
+
+    .program-code {
+        font-family: monospace;
+        background: #f3f4f6;
+        padding: 0.25rem 0.5rem;
+        border-radius: 0.375rem;
+        font-size: 0.75rem;
+        font-weight: 600;
+        display: inline-block;
+    }
+
+    /* Table styles - Mobile responsive */
     .data-table {
         width: 100%;
         border-collapse: collapse;
         background: white;
-        border-radius: 12px;
+        border-radius: 0.75rem;
         overflow: hidden;
         box-shadow: var(--shadow-soft);
-        min-width: 100%;
-        font-size: 14px;
+        font-size: 0.875rem;
     }
 
     .data-table th {
         background: #f8fafc;
-        padding: 12px 16px;
+        padding: 0.75rem 1rem;
         text-align: left;
         font-weight: 600;
         color: #374151;
@@ -427,14 +457,12 @@
         text-transform: uppercase;
         letter-spacing: 0.05em;
         white-space: nowrap;
-        position: sticky;
-        top: 0;
-        z-index: 10;
     }
 
     .data-table td {
-        padding: 12px 16px;
+        padding: 0.75rem 1rem;
         border-bottom: 1px solid #e5e7eb;
+        font-size: 0.875rem;
         word-break: break-word;
     }
 
@@ -442,7 +470,43 @@
         background: #f9fafb;
     }
 
-    /* ====== MODALS ====== */
+    @media (max-width: 768px) {
+        .data-table {
+            font-size: 0.8125rem;
+        }
+        
+        .data-table th {
+            padding: 0.625rem 0.75rem;
+            font-size: 0.6875rem;
+        }
+        
+        .data-table td {
+            padding: 0.625rem 0.75rem;
+            font-size: 0.8125rem;
+        }
+        
+        .data-table .hide-mobile {
+            display: none;
+        }
+    }
+
+    /* Responsive table container */
+    .table-container {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        border-radius: 0.75rem;
+        margin: 0;
+    }
+
+    @media (max-width: 768px) {
+        .table-container {
+            border-radius: 0;
+            margin: 0 -1rem;
+            padding: 0 1rem;
+        }
+    }
+
+    /* Modal styles */
     .modal {
         position: fixed;
         top: 0;
@@ -453,35 +517,55 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        z-index: 2000;
-        padding: 16px;
-        backdrop-filter: blur(4px);
-        animation: fadeIn 0.3s ease;
+        z-index: 1000;
+        padding: 1rem;
     }
 
     .modal-content {
         background: white;
-        border-radius: 16px;
-        max-width: 500px;
+        border-radius: 1rem;
+        max-width: 600px;
         width: 100%;
-        max-height: 85vh;
+        max-height: 90vh;
         overflow-y: auto;
         -webkit-overflow-scrolling: touch;
-        animation: slideUp 0.3s ease;
-        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
     }
 
-    /* ====== FORMS ====== */
+    @media (max-width: 768px) {
+        .modal {
+            padding: 0.75rem;
+            align-items: flex-start;
+            padding-top: 10vh;
+        }
+        
+        .modal-content {
+            border-radius: 0.875rem;
+            max-height: 85vh;
+        }
+    }
+
+    /* Form styles */
+    .form-group {
+        margin-bottom: 1rem;
+    }
+
+    .form-label {
+        display: block;
+        font-weight: 500;
+        color: #374151;
+        margin-bottom: 0.5rem;
+        font-size: 0.875rem;
+    }
+
     .form-input, .form-select {
         width: 100%;
-        padding: 12px 16px;
+        padding: 0.75rem;
         border: 2px solid #e5e7eb;
-        border-radius: 8px;
-        font-size: 16px; /* Prevents iOS zoom */
-        transition: all 0.2s ease;
-        background: white;
+        border-radius: 0.5rem;
+        font-size: 0.875rem;
+        transition: border-color 0.2s ease;
         -webkit-appearance: none;
-        min-height: 48px;
+        min-height: 44px;
     }
 
     .form-input:focus, .form-select:focus {
@@ -490,58 +574,198 @@
         box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
     }
 
-    /* ====== BUTTONS ====== */
+    .form-select {
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+        background-position: right 0.5rem center;
+        background-repeat: no-repeat;
+        background-size: 1.5em 1.5em;
+        padding-right: 2.5rem;
+    }
+
+    /* Button styles */
     .btn {
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        padding: 12px 24px;
-        border-radius: 8px;
+        padding: 0.75rem 1.5rem;
+        border-radius: 0.5rem;
         font-weight: 500;
-        font-size: 16px;
+        font-size: 0.875rem;
         cursor: pointer;
         transition: all 0.2s ease;
         border: none;
-        min-height: 48px;
-        min-width: 48px;
-        text-decoration: none;
+        min-height: 44px;
+        min-width: 44px;
+        -webkit-tap-highlight-color: transparent;
+        user-select: none;
+    }
+
+    .btn:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+        color: white;
+    }
+
+    .btn-primary:hover:not(:disabled) {
+        background: linear-gradient(135deg, #2563eb, #1e40af);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+    }
+
+    .btn-success {
+        background: linear-gradient(135deg, #10b981, #059669);
+        color: white;
+    }
+
+    .btn-success:hover:not(:disabled) {
+        background: linear-gradient(135deg, #059669, #047857);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    }
+
+    .btn-danger {
+        background: linear-gradient(135deg, #ef4444, #dc2626);
+        color: white;
+    }
+
+    .btn-danger:hover:not(:disabled) {
+        background: linear-gradient(135deg, #dc2626, #b91c1c);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+    }
+
+    .btn-secondary {
+        background: #6b7280;
+        color: white;
+    }
+
+    .btn-secondary:hover:not(:disabled) {
+        background: #4b5563;
+    }
+
+    @media (max-width: 768px) {
+        .btn {
+            padding: 0.625rem 1.25rem;
+            font-size: 0.8125rem;
+            border-radius: 0.375rem;
+        }
+    }
+
+    /* Alert styles */
+    .alert {
+        padding: 1rem;
+        border-radius: 0.5rem;
+        margin-bottom: 1rem;
+        font-size: 0.875rem;
+    }
+
+    .alert-success {
+        background-color: #d1fae5;
+        border: 1px solid #a7f3d0;
+        color: #047857;
+    }
+
+    .alert-error {
+        background-color: #fee2e2;
+        border: 1px solid #fecaca;
+        color: #dc2626;
+    }
+
+    .alert-warning {
+        background-color: #fef3c7;
+        border: 1px solid #fde68a;
+        color: #92400e;
+    }
+
+    .alert-info {
+        background-color: #dbeafe;
+        border: 1px solid #bfdbfe;
+        color: #1e40af;
+    }
+
+    /* Program warning */
+    .program-warning {
+        background-color: #fef3c7 !important;
+        border-color: #f59e0b !important;
+        animation: pulseWarning 2s infinite;
+    }
+
+    @keyframes pulseWarning {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.8; }
+    }
+
+    /* Badge styles */
+    .badge {
+        display: inline-block;
+        padding: 0.25rem 0.5rem;
+        border-radius: 0.375rem;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        white-space: nowrap;
+    }
+
+    .badge-stage { background-color: #fef3c7; color: #92400e; }
+    .badge-nonstage { background-color: #d1fae5; color: #047857; }
+    .badge-sports { background-color: #dbeafe; color: #1d4ed8; }
+    .badge-group { background-color: #f3e8ff; color: #7c3aed; }
+    .badge-groupstage { background-color: #f3e8ff; color: #7c3aed; }
+    .badge-groupnon-stage { background-color: #ede9fe; color: #6d28d9; }
+    .badge-groupsports { background-color: #ddd6fe; color: #5b21b6; }
+
+    /* Position badges */
+    .position-badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 2rem;
+        height: 2rem;
+        border-radius: 50%;
+        font-weight: 700;
+        color: white;
+        font-size: 0.875rem;
+        flex-shrink: 0;
+    }
+
+    .position-1 { background-color: #f59e0b; }
+    .position-2 { background-color: #6b7280; }
+    .position-3 { background-color: #92400e; }
+
+    /* Profile styles */
+    .profile-pic-container {
         position: relative;
-        overflow: hidden;
+        width: 2.5rem;
+        height: 2.5rem;
     }
 
-    .btn::after {
-        content: '';
+    .profile-pic {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .profile-menu {
         position: absolute;
-        top: 50%;
-        left: 50%;
-        width: 5px;
-        height: 5px;
-        background: rgba(255, 255, 255, 0.5);
-        opacity: 0;
-        border-radius: 100%;
-        transform: scale(1, 1) translate(-50%);
-        transform-origin: 50% 50%;
+        top: calc(100% + 0.5rem);
+        right: 0;
+        z-index: 1000;
+        min-width: 200px;
     }
 
-    .btn:focus:not(:active)::after {
-        animation: ripple 1s ease-out;
-    }
-
-    /* ====== ANIMATIONS ====== */
-    @keyframes fadeIn {
-        from { opacity: 0; }
-        to { opacity: 1; }
-    }
-
-    @keyframes slideUp {
-        from {
-            opacity: 0;
-            transform: translateY(20px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
+    .profile-menu-content {
+        background: white;
+        border-radius: 0.75rem;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        border: 1px solid #e5e7eb;
+        overflow: hidden;
+        animation: slideDown 0.2s ease-out;
     }
 
     @keyframes slideDown {
@@ -555,481 +779,75 @@
         }
     }
 
-    @keyframes ripple {
-        0% {
-            transform: scale(0, 0);
-            opacity: 0.5;
-        }
-        100% {
-            transform: scale(40, 40);
-            opacity: 0;
-        }
-    }
-
-    @keyframes pulse {
-        0%, 100% { opacity: 1; }
-        50% { opacity: 0.5; }
-    }
-
-    /* ====== MOBILE SPECIFIC STYLES ====== */
     @media (max-width: 768px) {
-        /* Show mobile menu button */
-        .mobile-menu-btn {
-            display: flex;
-        }
-        
-        /* Hide desktop nav */
-        .desktop-nav {
-            display: none !important;
-        }
-        
-        /* Adjust header for mobile */
-        .header-title {
-            font-size: 1rem;
-            max-width: 150px;
-        }
-        
-        .header-subtitle {
-            font-size: 0.75rem;
-        }
-        
-        /* Profile picture smaller */
         .profile-pic-container {
             width: 36px;
             height: 36px;
         }
         
-        /* Adjust main container padding */
-        .main-container {
-            padding: 0 12px !important;
-        }
-        
-        /* Cards more compact */
-        .dashboard-card {
-            padding: 16px;
-            border-radius: 12px;
-        }
-        
-        .dashboard-card i {
-            font-size: 1.75rem;
-        }
-        
-        /* Stats cards */
-        .stat-card {
-            padding: 12px;
-            min-height: 80px;
-        }
-        
-        .stat-value {
-            font-size: 1.5rem;
-        }
-        
-        .stat-label {
-            font-size: 0.7rem;
-        }
-        
-        /* Tables - hide less important columns */
-        .data-table .mobile-hide {
-            display: none;
-        }
-        
-        .data-table th, .data-table td {
-            padding: 10px 12px;
-            font-size: 13px;
-        }
-        
-        /* Buttons */
-        .btn {
-            padding: 10px 20px;
-            min-height: 44px;
-            font-size: 15px;
-        }
-        
-        /* Forms */
-        .form-input, .form-select {
-            padding: 10px 14px;
-            font-size: 16px;
-            min-height: 44px;
-        }
-        
-        /* Modal adjustments */
-        .modal {
-            padding: 12px;
-        }
-        
-        .modal-content {
-            max-height: 80vh;
-            border-radius: 12px;
+        .profile-menu {
+            min-width: 180px;
+            right: -8px;
         }
     }
 
-    @media (max-width: 480px) {
-        /* Extra small devices */
-        .header-title {
-            font-size: 0.9rem;
-            max-width: 120px;
+    /* Smooth scrolling */
+    html {
+        scroll-behavior: smooth;
+    }
+
+    /* Safe area insets for modern mobile devices */
+    @supports (padding: max(0px)) {
+        .main-container,
+        .page-content,
+        nav .container {
+            padding-left: max(1rem, env(safe-area-inset-left));
+            padding-right: max(1rem, env(safe-area-inset-right));
         }
         
-        .header-subtitle {
-            font-size: 0.7rem;
-        }
-        
-        .profile-pic-container {
-            width: 32px;
-            height: 32px;
-        }
-        
-        .dashboard-card {
-            padding: 14px;
-        }
-        
-        .dashboard-card i {
-            font-size: 1.5rem;
-            margin-bottom: 10px;
-        }
-        
-        .stat-card {
-            padding: 10px;
-            min-height: 70px;
-        }
-        
-        .stat-value {
-            font-size: 1.25rem;
-        }
-        
-        .stat-label {
-            font-size: 0.65rem;
-        }
-        
-        /* Grid adjustments */
-        .grid-cols-1 {
-            grid-template-columns: 1fr;
-        }
-        
-        .grid-cols-2, .grid-cols-3, .grid-cols-4 {
-            grid-template-columns: repeat(2, 1fr);
-            gap: 8px;
-        }
-        
-        /* Mobile menu sidebar narrower */
         .mobile-menu-sidebar {
-            width: 260px;
-            left: -260px;
+            padding-top: env(safe-area-inset-top);
+            padding-bottom: env(safe-area-inset-bottom);
         }
     }
 
-    @media (max-width: 360px) {
-        /* Very small devices */
-        .header-title {
-            font-size: 0.85rem;
-            max-width: 100px;
-        }
-        
-        .main-container {
-            padding: 0 8px !important;
-        }
-        
-        .grid-cols-2, .grid-cols-3, .grid-cols-4 {
-            grid-template-columns: 1fr;
+    /* Prevent zoom on input focus on mobile */
+    @media (max-width: 768px) {
+        input,
+        select,
+        textarea {
+            font-size: 16px !important;
         }
     }
 
-    /* ====== TABLET STYLES ====== */
-    @media (min-width: 769px) and (max-width: 1024px) {
-        .header-title {
-            font-size: 1.2rem;
-            max-width: 250px;
-        }
-        
-        .main-container {
-            padding: 0 24px !important;
-        }
-        
-        .dashboard-card {
-            padding: 18px;
-        }
-        
-        .mobile-menu-btn {
-            display: none;
-        }
-        
-        .desktop-nav {
-            display: flex !important;
-        }
-    }
-
-    /* ====== DESKTOP STYLES ====== */
-    @media (min-width: 1025px) {
-        .mobile-menu-btn {
-            display: none;
-        }
-        
-        .desktop-nav {
-            display: flex !important;
-        }
-        
-        .main-container {
-            padding: 0 32px !important;
-        }
-    }
-
-    /* ====== UTILITY CLASSES ====== */
-    .text-truncate {
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-
-    .scrollbar-hide {
-        -ms-overflow-style: none;
-        scrollbar-width: none;
+    /* Custom scrollbar */
+    ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
     }
     
-    .scrollbar-hide::-webkit-scrollbar {
-        display: none;
-    }
-
-    .touch-action-none {
-        touch-action: none;
-    }
-
-    .touch-action-auto {
-        touch-action: auto;
-    }
-
-    /* ====== SAFE AREA INSETS ====== */
-    @supports (padding: max(0px)) {
-        body, .main-container, .page-content, nav .container {
-            padding-left: max(16px, env(safe-area-inset-left));
-            padding-right: max(16px, env(safe-area-inset-right));
-        }
-        
-        .mobile-menu-sidebar {
-            padding-left: env(safe-area-inset-left);
-        }
-    }
-
-    /* ====== PROGRAM CARDS ====== */
-    .program-card {
-        background: white;
-        border-radius: 12px;
-        padding: 16px;
-        border: 2px solid #e5e7eb;
-        margin-bottom: 12px;
-        transition: all 0.2s ease;
-        position: relative;
-        overflow: hidden;
-    }
-
-    .program-card:hover {
-        border-color: var(--secondary-color);
-        box-shadow: var(--shadow-soft);
-    }
-
-    .program-code {
-        font-family: 'Courier New', monospace;
-        background: #f3f4f6;
-        padding: 4px 8px;
-        border-radius: 6px;
-        font-size: 0.8rem;
-        font-weight: 600;
-        display: inline-block;
-    }
-
-    /* ====== RESULT CARDS ====== */
-    .result-card {
-        background: white;
-        border-radius: 12px;
-        padding: 16px;
-        border-left: 4px solid #059669;
-        margin-bottom: 12px;
-        transition: all 0.2s ease;
-    }
-
-    .position-badge {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        width: 32px;
-        height: 32px;
-        border-radius: 50%;
-        font-weight: 700;
-        color: white;
-        font-size: 0.875rem;
-        flex-shrink: 0;
-    }
-
-    .position-1 { background-color: #f59e0b; }
-    .position-2 { background-color: #6b7280; }
-    .position-3 { background-color: #92400e; }
-
-    /* ====== TABLE CONTAINER ====== */
-    .table-container {
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-        border-radius: 12px;
-        margin: 0 -4px;
-        padding: 0 4px;
-    }
-
-    /* ====== LOADING STATES ====== */
-    .loading-spinner {
-        display: inline-block;
-        width: 20px;
-        height: 20px;
-        border: 3px solid rgba(59, 130, 246, 0.1);
-        border-radius: 50%;
-        border-top-color: #3b82f6;
-        animation: spin 1s linear infinite;
-    }
-
-    @keyframes spin {
-        to { transform: rotate(360deg); }
-    }
-
-    .skeleton {
-        background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-        background-size: 200% 100%;
-        animation: loading 1.5s infinite;
+    ::-webkit-scrollbar-track {
+        background: #f1f1f1;
         border-radius: 4px;
     }
-
-    @keyframes loading {
-        0% { background-position: 200% 0; }
-        100% { background-position: -200% 0; }
+    
+    ::-webkit-scrollbar-thumb {
+        background: #c1c1c1;
+        border-radius: 4px;
+    }
+    
+    ::-webkit-scrollbar-thumb:hover {
+        background: #a8a8a8;
     }
 
-    /* ====== ALERTS ====== */
-    .alert {
-        padding: 12px 16px;
-        border-radius: 8px;
-        margin-bottom: 16px;
-        font-size: 14px;
-        border: 1px solid transparent;
-        animation: slideUp 0.3s ease;
-    }
-
-    .alert-success {
-        background-color: #d1fae5;
-        border-color: #a7f3d0;
-        color: #047857;
-    }
-
-    .alert-error {
-        background-color: #fee2e2;
-        border-color: #fecaca;
-        color: #dc2626;
-    }
-
-    .alert-warning {
-        background-color: #fef3c7;
-        border-color: #fde68a;
-        color: #92400e;
-    }
-
-    /* ====== BADGES ====== */
-    .badge {
-        display: inline-block;
-        padding: 4px 8px;
-        border-radius: 6px;
-        font-size: 0.75rem;
-        font-weight: 600;
-        text-transform: uppercase;
-        white-space: nowrap;
-    }
-
-    .badge-stage { background-color: #fef3c7; color: #92400e; }
-    .badge-nonstage { background-color: #d1fae5; color: #047857; }
-    .badge-sports { background-color: #dbeafe; color: #1d4ed8; }
-    .badge-group { background-color: #f3e8ff; color: #7c3aed; }
-
-    /* ====== TEAM BADGES ====== */
-    .team-badge {
-        padding: 4px 8px;
-        border-radius: 6px;
-        font-size: 0.75rem;
-        font-weight: 600;
-        text-transform: uppercase;
-        display: inline-block;
-    }
-
-    .team-1 { background-color: #fee2e2; color: #dc2626; }
-    .team-2 { background-color: #dbeafe; color: #1d4ed8; }
-    .team-3 { background-color: #d1fae5; color: #047857; }
-
-    /* ====== ROLE COLORS ====== */
-    .role-member { color: #6b7280; }
-    .role-leader { color: #3b82f6; }
-    .role-assistant { color: #8b5cf6; }
-    .role-admin { color: #dc2626; }
-
-    /* ====== POINTS DISPLAY ====== */
-    .points-display {
-        font-size: 2rem;
-        font-weight: 800;
-        color: #059669;
-        line-height: 1;
-        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
-
-    .points-label {
-        font-size: 0.8rem;
-        color: #6b7280;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-        line-height: 1.2;
-        font-weight: 600;
-    }
-
-    /* ====== PROGRAM WARNING ====== */
-    .program-warning {
-        animation: pulseWarning 2s infinite;
-        position: relative;
-    }
-
-    .program-warning::before {
-        content: '⚠️';
-        position: absolute;
-        left: 8px;
-        top: 50%;
-        transform: translateY(-50%);
-        font-size: 1.2rem;
-    }
-
-    @keyframes pulseWarning {
-        0%, 100% { 
-            background-color: #fef3c7;
-            border-color: #f59e0b;
-        }
-        50% { 
-            background-color: #fde68a;
-            border-color: #f59e0b;
-        }
-    }
-
-    /* ====== SCROLLBAR STYLING ====== */
-    @media (min-width: 769px) {
+    @media (max-width: 768px) {
         ::-webkit-scrollbar {
-            width: 10px;
-            height: 10px;
-        }
-        
-        ::-webkit-scrollbar-track {
-            background: #f1f1f1;
-            border-radius: 5px;
-        }
-        
-        ::-webkit-scrollbar-thumb {
-            background: #c1c1c1;
-            border-radius: 5px;
-        }
-        
-        ::-webkit-scrollbar-thumb:hover {
-            background: #a8a8a8;
+            width: 6px;
+            height: 6px;
         }
     }
 
-    /* ====== ACCESSIBILITY ====== */
+    /* Accessibility */
     @media (prefers-reduced-motion: reduce) {
         *, *::before, *::after {
             animation-duration: 0.01ms !important;
@@ -1038,94 +856,107 @@
         }
     }
 
-    .focus\:outline-none:focus {
+    /* Focus states */
+    button:focus,
+    input:focus,
+    select:focus,
+    textarea:focus {
         outline: 2px solid #3b82f6;
         outline-offset: 2px;
     }
 
-    /* ====== PRINT STYLES ====== */
-    @media print {
-        .no-print {
-            display: none !important;
+    /* Button active states */
+    button:active:not(:disabled) {
+        transform: scale(0.98);
+    }
+
+    /* Empty state */
+    .empty-state {
+        text-align: center;
+        padding: 3rem 1rem;
+    }
+
+    .empty-state i {
+        font-size: 3rem;
+        color: #d1d5db;
+        margin-bottom: 1rem;
+    }
+
+    .empty-state p {
+        color: #6b7280;
+        font-size: 0.9375rem;
+    }
+
+    @media (max-width: 768px) {
+        .empty-state {
+            padding: 2rem 1rem;
         }
         
-        body {
-            background: white !important;
-            color: black !important;
-        }
-        
-        .dashboard-card, .stat-card {
-            break-inside: avoid;
-            border: 1px solid #000;
-            box-shadow: none;
+        .empty-state i {
+            font-size: 2.5rem;
         }
     }
     </style>
 </head>
-<body class="antialiased">
-    <!-- Mobile Menu System -->
-    <div id="mobileMenuOverlay" class="mobile-menu-overlay" onclick="closeMobileMenu()"></div>
-    
+<body>
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay hidden">
+        <div class="loading-spinner-large"></div>
+    </div>
+
+    <!-- Mobile Menu Overlay -->
+    <div id="mobileMenuOverlay" class="mobile-menu-overlay"></div>
+
+    <!-- Mobile Menu Sidebar -->
     <div id="mobileMenuSidebar" class="mobile-menu-sidebar">
         <div class="mobile-menu-header">
-            <h3>Navigation</h3>
+            <h3>Menu</h3>
             <button id="mobileMenuClose" class="mobile-menu-close" aria-label="Close menu">
                 <i class="fas fa-times"></i>
             </button>
         </div>
         <div class="mobile-nav-content" id="mobileNavContent">
-            <!-- Mobile navigation will be loaded dynamically -->
+            <!-- Mobile navigation will be loaded here -->
         </div>
     </div>
 
     <!-- Login Page -->
     <div id="loginPage" class="min-h-screen flex items-center justify-center p-4">
-        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md">
             <div class="p-6 md:p-8">
-                <!-- Login Section -->
                 <div id="loginSection">
                     <div class="text-center mb-6">
-                        <div class="w-20 h-20 bg-gradient-to-br from-blue-600 to-green-600 rounded-2xl mx-auto mb-4 flex items-center justify-center shadow-lg">
-                            <i class="fas fa-trophy text-white text-3xl"></i>
+                        <div class="w-16 h-16 bg-gradient-to-br from-blue-600 to-green-600 rounded-2xl mx-auto mb-4 flex items-center justify-center">
+                            <i class="fas fa-trophy text-white text-2xl"></i>
                         </div>
                         <h1 class="text-2xl font-bold text-gray-800">FEST MANAGEMENT</h1>
                         <p class="text-gray-600 mt-2">Team Competition System</p>
                     </div>
 
-                    <form id="loginForm" class="space-y-4">
-                        <div>
-                            <label for="username" class="form-label">Admission Number</label>
-                            <input type="text" id="username" name="username" required
-                                class="form-input" placeholder="Enter your admission number"
-                                autocapitalize="none" autocomplete="username">
-                        </div>
-                        
-                        <div>
-                            <label for="password" class="form-label">Password</label>
-                            <div class="relative">
-                                <input type="password" id="password" name="password" required
-                                    class="form-input pr-10" placeholder="Enter your password"
-                                    autocomplete="current-password">
-                                <button type="button" onclick="togglePasswordVisibility()"
-                                    class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700">
-                                    <i class="fas fa-eye"></i>
-                                </button>
+                    <form id="loginForm">
+                        <div class="space-y-4">
+                            <div>
+                                <label for="username" class="form-label">Admission Number</label>
+                                <input type="text" id="username" name="username" required
+                                    class="form-input" placeholder="Enter your admission number" autocomplete="username">
                             </div>
+                            
+                            <div>
+                                <label for="password" class="form-label">Password</label>
+                                <input type="password" id="password" name="password" required
+                                    class="form-input" placeholder="Enter your password" autocomplete="current-password">
+                            </div>
+
+                            <div id="loginError" class="alert alert-error hidden"></div>
+
+                            <button type="submit" class="btn btn-primary w-full">
+                                <i class="fas fa-sign-in-alt mr-2"></i>Sign In
+                            </button>
                         </div>
-
-                        <div id="loginError" class="alert alert-error hidden"></div>
-
-                        <button type="submit" class="btn btn-primary w-full group">
-                            <i class="fas fa-sign-in-alt mr-2 group-hover:rotate-12 transition-transform"></i>
-                            <span>Sign In</span>
-                        </button>
                     </form>
 
-                    <div class="text-center mt-6 pt-6 border-t border-gray-200">
-                        <p class="text-gray-600 text-sm">
-                            <i class="fas fa-info-circle mr-1"></i>
-                            Contact admin if you forgot your password
-                        </p>
+                    <div class="text-center mt-4">
+                        <p class="text-gray-600 text-sm">Contact admin if you forgot your password</p>
                     </div>
                 </div>
             </div>
@@ -1137,10 +968,10 @@
         <!-- Header -->
         <header class="bg-gradient-to-r from-blue-600 to-green-600 text-white shadow-lg sticky top-0 z-50">
             <div class="container mx-auto px-4 py-3">
-                <div class="header-content">
+                <div class="flex items-center justify-between">
                     <div class="flex items-center space-x-3 min-w-0 flex-1">
                         <!-- Mobile Menu Button -->
-                        <button id="mobileMenuBtn" class="mobile-menu-btn" aria-label="Toggle menu">
+                        <button id="mobileMenuBtn" class="mobile-menu-btn" aria-label="Open menu">
                             <span></span>
                             <span></span>
                             <span></span>
@@ -1150,16 +981,15 @@
                             <i class="fas fa-trophy text-white"></i>
                         </div>
                         <div class="min-w-0 flex-1">
-                            <h1 class="header-title text-truncate">FEST MANAGEMENT SYSTEM</h1>
-                            <p class="header-subtitle text-truncate" id="welcomeUser">Welcome</p>
+                            <h1 class="text-sm md:text-base font-bold truncate">FEST MANAGEMENT</h1>
+                            <p class="text-xs opacity-90 truncate" id="welcomeUser">Welcome</p>
                         </div>
                     </div>
                     
                     <!-- Profile Picture Section -->
                     <div class="relative flex-shrink-0">
                         <button onclick="toggleProfileMenu()" class="profile-pic-container focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50 rounded-full">
-                            <img id="profilePic" src="" alt="Profile" class="profile-pic" onerror="showProfileFallback(this)">
-                            <div id="profileFallback" class="profile-pic-fallback hidden">
+                            <div id="profileFallback" class="profile-pic-fallback">
                                 <i class="fas fa-user text-white"></i>
                             </div>
                         </button>
@@ -1167,22 +997,20 @@
                         <!-- Profile Dropdown Menu -->
                         <div id="profileMenu" class="profile-menu hidden">
                             <div class="profile-menu-content">
-                                <div class="p-4 bg-gradient-to-r from-blue-600 to-green-600 text-white">
-                                    <div class="profile-name text-truncate font-semibold" id="profileName">User Name</div>
-                                    <div class="profile-username text-truncate text-sm opacity-90 mt-1" id="profileUsername">@username</div>
-                                    <div class="mt-2 flex flex-wrap gap-1">
-                                        <span id="profileRole" class="text-xs px-2 py-1 bg-white/20 rounded-full"></span>
-                                        <span id="profileTeam" class="text-xs px-2 py-1 bg-white/20 rounded-full"></span>
+                                <div class="p-3 bg-gradient-to-r from-blue-600 to-green-600 text-white">
+                                    <div class="font-medium truncate" id="profileName">User Name</div>
+                                    <div class="text-sm opacity-90 truncate" id="profileUsername">@username</div>
+                                    <div class="mt-1">
+                                        <span id="profileRole" class="text-xs px-2 py-1 bg-white/20 rounded-full">Role</span>
+                                        <span id="profileTeam" class="text-xs px-2 py-1 bg-white/20 rounded-full ml-1">Team</span>
                                     </div>
                                 </div>
                                 <div class="border-t border-gray-200">
-                                    <button onclick="openChangePasswordModal()" 
-                                            class="w-full text-left px-4 py-3 hover:bg-gray-50 flex items-center transition-colors">
+                                    <button onclick="openChangePasswordModal()" class="w-full text-left px-4 py-3 hover:bg-gray-50 flex items-center">
                                         <i class="fas fa-key text-gray-400 mr-3"></i>
                                         Change Password
                                     </button>
-                                    <button onclick="logout()" 
-                                            class="w-full text-left px-4 py-3 hover:bg-gray-50 flex items-center text-red-600 transition-colors">
+                                    <button onclick="logout()" class="w-full text-left px-4 py-3 hover:bg-gray-50 flex items-center text-red-600">
                                         <i class="fas fa-sign-out-alt mr-3"></i>
                                         Logout
                                     </button>
@@ -1195,65 +1023,45 @@
         </header>
 
         <!-- Navigation - Desktop -->
-        <nav class="bg-white shadow-sm border-b hidden md:block">
+        <nav class="bg-white shadow-sm border-b hidden md:block sticky top-14 z-40">
             <div class="container mx-auto px-4">
-                <div class="flex space-x-1 overflow-x-auto py-2 scrollbar-hide">
-                    <!-- Common Navigation for All Roles -->
-                    <button onclick="showPage('dashboard')" 
-                            class="nav-btn text-gray-700 hover:text-blue-600 whitespace-nowrap transition-colors"
-                            aria-label="Dashboard">
+                <div class="flex space-x-1 overflow-x-auto py-2">
+                    <!-- Common Navigation -->
+                    <button onclick="showPage('dashboard')" class="nav-btn text-gray-700 hover:text-blue-600">
                         <i class="fas fa-home mr-2"></i>Dashboard
                     </button>
-                    <button onclick="showPage('schedule')" 
-                            class="nav-btn text-gray-700 hover:text-blue-600 whitespace-nowrap transition-colors"
-                            aria-label="Schedule">
+                    <button onclick="showPage('schedule')" class="nav-btn text-gray-700 hover:text-blue-600">
                         <i class="fas fa-calendar-alt mr-2"></i>Schedule
                     </button>
-                    <button onclick="showPage('programs')" 
-                            class="nav-btn text-gray-700 hover:text-blue-600 whitespace-nowrap transition-colors"
-                            aria-label="My Programs">
+                    <button onclick="showPage('programs')" class="nav-btn text-gray-700 hover:text-blue-600">
                         <i class="fas fa-list-alt mr-2"></i>My Programs
                     </button>
-                    <button onclick="showPage('results')" 
-                            class="nav-btn text-gray-700 hover:text-blue-600 whitespace-nowrap transition-colors"
-                            aria-label="Results">
+                    <button onclick="showPage('results')" class="nav-btn text-gray-700 hover:text-blue-600">
                         <i class="fas fa-chart-line mr-2"></i>Results
                     </button>
                     
                     <!-- Leader/Assistant Navigation -->
                     <div id="leaderNav" class="hidden desktop-nav">
-                        <button onclick="showPage('teamMembers')" 
-                                class="nav-btn text-gray-700 hover:text-blue-600 whitespace-nowrap transition-colors"
-                                aria-label="Team Members">
+                        <button onclick="showPage('teamMembers')" class="nav-btn text-gray-700 hover:text-blue-600">
                             <i class="fas fa-users mr-2"></i>Team Members
                         </button>
-                        <button onclick="showPage('assignPrograms')" 
-                                class="nav-btn text-gray-700 hover:text-blue-600 whitespace-nowrap transition-colors"
-                                aria-label="Assign Programs">
+                        <button onclick="showPage('assignPrograms')" class="nav-btn text-gray-700 hover:text-blue-600">
                             <i class="fas fa-tasks mr-2"></i>Assign Programs
                         </button>
                     </div>
                     
                     <!-- Admin Navigation -->
                     <div id="adminNav" class="hidden desktop-nav">
-                        <button onclick="showPage('allTeams')" 
-                                class="nav-btn text-gray-700 hover:text-red-600 whitespace-nowrap transition-colors"
-                                aria-label="All Teams">
+                        <button onclick="showPage('allTeams')" class="nav-btn text-gray-700 hover:text-red-600">
                             <i class="fas fa-users-cog mr-2"></i>All Teams
                         </button>
-                        <button onclick="showPage('programCount')" 
-                                class="nav-btn text-gray-700 hover:text-red-600 whitespace-nowrap transition-colors"
-                                aria-label="Program Count">
+                        <button onclick="showPage('programCount')" class="nav-btn text-gray-700 hover:text-red-600">
                             <i class="fas fa-calculator mr-2"></i>Program Count
                         </button>
-                        <button onclick="showPage('manageResults')" 
-                                class="nav-btn text-gray-700 hover:text-red-600 whitespace-nowrap transition-colors"
-                                aria-label="Manage Results">
+                        <button onclick="showPage('manageResults')" class="nav-btn text-gray-700 hover:text-red-600">
                             <i class="fas fa-edit mr-2"></i>Manage Results
                         </button>
-                        <button onclick="showPage('adminSchedule')" 
-                                class="nav-btn text-gray-700 hover:text-red-600 whitespace-nowrap transition-colors"
-                                aria-label="Manage Schedule">
+                        <button onclick="showPage('adminSchedule')" class="nav-btn text-gray-700 hover:text-red-600">
                             <i class="fas fa-calendar-plus mr-2"></i>Manage Schedule
                         </button>
                     </div>
@@ -1262,359 +1070,237 @@
         </nav>
 
         <!-- Main Content -->
-        <main class="container mx-auto main-container">
+        <main class="container mx-auto px-4 py-6">
             <!-- Dashboard Page -->
             <div id="dashboardPage" class="page-content">
                 <div class="mb-6">
-                    <h2 class="text-2xl font-bold text-gray-800 mb-2">Dashboard</h2>
-                    <p class="text-gray-600" id="dashboardInfo">Loading...</p>
+                    <h2 class="text-xl md:text-2xl font-bold text-gray-800 mb-2">Dashboard</h2>
+                    <p class="text-sm md:text-base text-gray-600" id="dashboardInfo">Loading...</p>
                 </div>
 
                 <!-- Stats Cards -->
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mb-6">
                     <div class="stat-card">
                         <div class="stat-value" id="totalPrograms">0</div>
-                        <div class="stat-label">Total Programs</div>
+                        <div class="stat-label">Programs</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-value" id="completedPrograms">0</div>
                         <div class="stat-label">Completed</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-value" id="totalPoints">0</div>
-                        <div class="stat-label">Total Points</div>
+                        <div class="stat-value text-green-600" id="totalPoints">0</div>
+                        <div class="stat-label">Points</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-value" id="teamRank">-</div>
+                        <div class="stat-value text-blue-600" id="teamRank">-</div>
                         <div class="stat-label">Team Rank</div>
                     </div>
                 </div>
 
                 <!-- Dashboard Cards -->
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <!-- My Programs -->
-                    <div class="dashboard-card" onclick="showPage('programs')" role="button" tabindex="0">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+                    <div class="dashboard-card" onclick="showPage('programs')">
                         <i class="fas fa-list-alt text-blue-600"></i>
                         <h3 class="font-bold text-gray-800 mb-2">My Programs</h3>
                         <p class="text-gray-600 text-sm">View all programs you're registered for</p>
                     </div>
 
-                    <!-- Schedule -->
-                    <div class="dashboard-card" onclick="showPage('schedule')" role="button" tabindex="0">
+                    <div class="dashboard-card" onclick="showPage('schedule')">
                         <i class="fas fa-calendar-alt text-green-600"></i>
                         <h3 class="font-bold text-gray-800 mb-2">Schedule</h3>
                         <p class="text-gray-600 text-sm">Check program timings and dates</p>
                     </div>
 
-                    <!-- Results -->
-                    <div class="dashboard-card" onclick="showPage('results')" role="button" tabindex="0">
+                    <div class="dashboard-card" onclick="showPage('results')">
                         <i class="fas fa-chart-line text-purple-600"></i>
                         <h3 class="font-bold text-gray-800 mb-2">Results & Points</h3>
                         <p class="text-gray-600 text-sm">View your performance and points</p>
                     </div>
+                </div>
 
-                    <!-- Leader/Assistant Cards -->
-                    <div id="leaderDashboardCards" class="hidden">
-                        <div class="dashboard-card" onclick="showPage('teamMembers')" role="button" tabindex="0">
-                            <i class="fas fa-users text-yellow-600"></i>
-                            <h3 class="font-bold text-gray-800 mb-2">Team Members</h3>
-                            <p class="text-gray-600 text-sm">Manage your team members</p>
-                        </div>
-
-                        <div class="dashboard-card" onclick="showPage('assignPrograms')" role="button" tabindex="0">
-                            <i class="fas fa-tasks text-red-600"></i>
-                            <h3 class="font-bold text-gray-800 mb-2">Assign Programs</h3>
-                            <p class="text-gray-600 text-sm">Assign programs to team members</p>
-                        </div>
+                <!-- Leader/Assistant Cards -->
+                <div id="leaderDashboardCards" class="hidden grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                    <div class="dashboard-card" onclick="showPage('teamMembers')">
+                        <i class="fas fa-users text-yellow-600"></i>
+                        <h3 class="font-bold text-gray-800 mb-2">Team Members</h3>
+                        <p class="text-gray-600 text-sm">Manage your team members</p>
                     </div>
 
-                    <!-- Admin Cards -->
-                    <div id="adminDashboardCards" class="hidden">
-                        <div class="dashboard-card" onclick="showPage('allTeams')" role="button" tabindex="0">
-                            <i class="fas fa-users-cog text-red-600"></i>
-                            <h3 class="font-bold text-gray-800 mb-2">All Teams</h3>
-                            <p class="text-gray-600 text-sm">Manage all teams and members</p>
-                        </div>
+                    <div class="dashboard-card" onclick="showPage('assignPrograms')">
+                        <i class="fas fa-tasks text-red-600"></i>
+                        <h3 class="font-bold text-gray-800 mb-2">Assign Programs</h3>
+                        <p class="text-gray-600 text-sm">Assign programs to team members</p>
+                    </div>
+                </div>
 
-                        <div class="dashboard-card" onclick="showPage('programCount')" role="button" tabindex="0">
-                            <i class="fas fa-calculator text-green-600"></i>
-                            <h3 class="font-bold text-gray-800 mb-2">Program Count</h3>
-                            <p class="text-gray-600 text-sm">Monitor program participation</p>
-                        </div>
+                <!-- Admin Cards -->
+                <div id="adminDashboardCards" class="hidden grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+                    <div class="dashboard-card" onclick="showPage('allTeams')">
+                        <i class="fas fa-users-cog text-red-600"></i>
+                        <h3 class="font-bold text-gray-800 mb-2">All Teams</h3>
+                        <p class="text-gray-600 text-sm">Manage all teams and members</p>
+                    </div>
 
-                        <div class="dashboard-card" onclick="showPage('manageResults')" role="button" tabindex="0">
-                            <i class="fas fa-edit text-blue-600"></i>
-                            <h3 class="font-bold text-gray-800 mb-2">Manage Results</h3>
-                            <p class="text-gray-600 text-sm">Update results and points</p>
-                        </div>
+                    <div class="dashboard-card" onclick="showPage('programCount')">
+                        <i class="fas fa-calculator text-green-600"></i>
+                        <h3 class="font-bold text-gray-800 mb-2">Program Count</h3>
+                        <p class="text-gray-600 text-sm">Monitor program participation</p>
+                    </div>
+
+                    <div class="dashboard-card" onclick="showPage('manageResults')">
+                        <i class="fas fa-edit text-blue-600"></i>
+                        <h3 class="font-bold text-gray-800 mb-2">Manage Results</h3>
+                        <p class="text-gray-600 text-sm">Update results and points</p>
                     </div>
                 </div>
 
                 <!-- Upcoming Events -->
-                <div class="mt-8">
+                <div>
                     <h3 class="text-lg font-bold text-gray-800 mb-4">Upcoming Programs</h3>
                     <div id="upcomingPrograms" class="space-y-3">
-                        <!-- Upcoming programs will be loaded here -->
+                        <div class="empty-state">
+                            <i class="fas fa-calendar-alt"></i>
+                            <p>Loading upcoming programs...</p>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- All other pages (schedule, programs, results, etc.) remain the same as before -->
-            <!-- Due to space constraints, I'm showing only the improved structure -->
+            <!-- Other pages will continue in the next part due to character limit -->
+            <!-- Schedule Page -->
+            <div id="schedulePage" class="page-content hidden">
+                <div class="mb-6">
+                    <h2 class="text-xl md:text-2xl font-bold text-gray-800 mb-2">Program Schedule</h2>
+                    <p class="text-sm md:text-base text-gray-600">All scheduled programs with dates and timings</p>
+                </div>
 
+                <div class="bg-white rounded-lg shadow-md p-4">
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th class="hide-mobile">Time</th>
+                                    <th>Program</th>
+                                    <th class="hide-mobile">Type</th>
+                                </tr>
+                            </thead>
+                            <tbody id="scheduleTableBody">
+                                <tr>
+                                    <td colspan="4" class="empty-state">
+                                        <i class="fas fa-calendar-alt"></i>
+                                        <p>Loading schedule...</p>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- My Programs Page -->
+            <div id="programsPage" class="page-content hidden">
+                <div class="mb-6">
+                    <h2 class="text-xl md:text-2xl font-bold text-gray-800 mb-2">My Programs</h2>
+                    <p class="text-sm md:text-base text-gray-600">All programs you're registered for</p>
+                </div>
+
+                <div id="myProgramsList" class="space-y-3">
+                    <div class="empty-state">
+                        <i class="fas fa-clipboard-list"></i>
+                        <p>Loading your programs...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Results Page -->
+            <div id="resultsPage" class="page-content hidden">
+                <div class="mb-6">
+                    <h2 class="text-xl md:text-2xl font-bold text-gray-800 mb-2">My Results & Points</h2>
+                    <p class="text-sm md:text-base text-gray-600">Your performance in all programs</p>
+                </div>
+
+                <!-- Points Summary -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                    <div class="bg-white rounded-lg shadow-md p-6 text-center">
+                        <div class="text-3xl font-bold text-green-600" id="totalPointsDisplay">0</div>
+                        <div class="text-sm text-gray-600 mt-1">Total Points</div>
+                    </div>
+                    <div class="bg-white rounded-lg shadow-md p-6 text-center">
+                        <div class="text-3xl font-bold text-yellow-600" id="stagePoints">0</div>
+                        <div class="text-sm text-gray-600 mt-1">Stage Points</div>
+                    </div>
+                    <div class="bg-white rounded-lg shadow-md p-6 text-center">
+                        <div class="text-3xl font-bold text-blue-600" id="nonStagePoints">0</div>
+                        <div class="text-sm text-gray-600 mt-1">Non-Stage Points</div>
+                    </div>
+                </div>
+
+                <!-- Results List -->
+                <div class="space-y-3" id="resultsList">
+                    <div class="empty-state">
+                        <i class="fas fa-chart-line"></i>
+                        <p>Loading your results...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Placeholder pages for other sections -->
+            <div id="teamMembersPage" class="page-content hidden"></div>
+            <div id="assignProgramsPage" class="page-content hidden"></div>
+            <div id="allTeamsPage" class="page-content hidden"></div>
+            <div id="programCountPage" class="page-content hidden"></div>
+            <div id="manageResultsPage" class="page-content hidden"></div>
+            <div id="adminSchedulePage" class="page-content hidden"></div>
         </main>
     </div>
 
-    <!-- Modals (Change Password, Assign Program, Edit Result) -->
-    <!-- These remain similar to your original but with improved mobile styling -->
+    <!-- Change Password Modal -->
+    <div id="changePasswordModal" class="modal hidden">
+        <div class="modal-content" style="max-width: 400px;">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-bold text-blue-600">Change Password</h3>
+                    <button onclick="closeChangePasswordModal()" class="text-gray-500 hover:text-gray-700">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                
+                <form id="changePasswordForm">
+                    <div class="space-y-4">
+                        <div class="form-group">
+                            <label for="currentPassword" class="form-label">Current Password</label>
+                            <input type="password" id="currentPassword" class="form-input" required autocomplete="current-password">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="newPassword" class="form-label">New Password</label>
+                            <input type="password" id="newPassword" class="form-input" required minlength="6" autocomplete="new-password">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="confirmPassword" class="form-label">Confirm New Password</label>
+                            <input type="password" id="confirmPassword" class="form-input" required minlength="6" autocomplete="new-password">
+                        </div>
+                    </div>
+                    
+                    <div id="changePasswordError" class="alert alert-error hidden mt-4"></div>
+                    <div id="changePasswordSuccess" class="alert alert-success hidden mt-4"></div>
+                    
+                    <div class="flex justify-end space-x-3 mt-6">
+                        <button type="button" onclick="closeChangePasswordModal()" class="btn btn-secondary">
+                            Cancel
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-key mr-2"></i>Change Password
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
-    <script>
-        // Mobile Menu Functions - Enhanced
-        let mobileMenuOpen = false;
-        let currentPage = 'dashboard';
-        
-        function toggleMobileMenu() {
-            const btn = document.getElementById('mobileMenuBtn');
-            const overlay = document.getElementById('mobileMenuOverlay');
-            const sidebar = document.getElementById('mobileMenuSidebar');
-            
-            mobileMenuOpen = !mobileMenuOpen;
-            
-            if (mobileMenuOpen) {
-                btn.classList.add('active');
-                overlay.classList.add('active');
-                sidebar.classList.add('active');
-                document.body.style.overflow = 'hidden';
-                document.documentElement.style.overflow = 'hidden';
-            } else {
-                btn.classList.remove('active');
-                overlay.classList.remove('active');
-                sidebar.classList.remove('active');
-                document.body.style.overflow = '';
-                document.documentElement.style.overflow = '';
-            }
-        }
-        
-        function closeMobileMenu() {
-            const btn = document.getElementById('mobileMenuBtn');
-            const overlay = document.getElementById('mobileMenuOverlay');
-            const sidebar = document.getElementById('mobileMenuSidebar');
-            
-            mobileMenuOpen = false;
-            btn.classList.remove('active');
-            overlay.classList.remove('active');
-            sidebar.classList.remove('active');
-            document.body.style.overflow = '';
-            document.documentElement.style.overflow = '';
-        }
-        
-        // Enhanced mobile navigation loader
-        function loadMobileNavigation() {
-            const navContent = document.getElementById('mobileNavContent');
-            if (!navContent) return;
-            
-            const currentUser = window.currentUser;
-            const role = currentUser?.role || 'member';
-            
-            let html = '';
-            
-            // Common navigation for all roles
-            html += `
-                <div class="mobile-nav-section">
-                    <div class="mobile-nav-section-title">Main Menu</div>
-                    <button onclick="showPage('dashboard'); closeMobileMenu();" 
-                            class="mobile-nav-btn ${currentPage === 'dashboard' ? 'active' : ''}">
-                        <i class="fas fa-home"></i>Dashboard
-                    </button>
-                    <button onclick="showPage('schedule'); closeMobileMenu();" 
-                            class="mobile-nav-btn ${currentPage === 'schedule' ? 'active' : ''}">
-                        <i class="fas fa-calendar-alt"></i>Schedule
-                    </button>
-                    <button onclick="showPage('programs'); closeMobileMenu();" 
-                            class="mobile-nav-btn ${currentPage === 'programs' ? 'active' : ''}">
-                        <i class="fas fa-list-alt"></i>My Programs
-                    </button>
-                    <button onclick="showPage('results'); closeMobileMenu();" 
-                            class="mobile-nav-btn ${currentPage === 'results' ? 'active' : ''}">
-                        <i class="fas fa-chart-line"></i>Results
-                    </button>
-                </div>
-            `;
-            
-            // Leader/Assistant navigation
-            if (role === 'leader' || role === 'assistant') {
-                html += `
-                    <div class="mobile-nav-section">
-                        <div class="mobile-nav-section-title">Team Management</div>
-                        <button onclick="showPage('teamMembers'); closeMobileMenu();" 
-                                class="mobile-nav-btn ${currentPage === 'teamMembers' ? 'active' : ''}">
-                            <i class="fas fa-users"></i>Team Members
-                        </button>
-                        <button onclick="showPage('assignPrograms'); closeMobileMenu();" 
-                                class="mobile-nav-btn ${currentPage === 'assignPrograms' ? 'active' : ''}">
-                            <i class="fas fa-tasks"></i>Assign Programs
-                        </button>
-                    </div>
-                `;
-            }
-            
-            // Admin navigation
-            if (role === 'admin') {
-                html += `
-                    <div class="mobile-nav-section">
-                        <div class="mobile-nav-section-title">Administration</div>
-                        <button onclick="showPage('allTeams'); closeMobileMenu();" 
-                                class="mobile-nav-btn ${currentPage === 'allTeams' ? 'active' : ''}">
-                            <i class="fas fa-users-cog"></i>All Teams
-                        </button>
-                        <button onclick="showPage('programCount'); closeMobileMenu();" 
-                                class="mobile-nav-btn ${currentPage === 'programCount' ? 'active' : ''}">
-                            <i class="fas fa-calculator"></i>Program Count
-                        </button>
-                        <button onclick="showPage('manageResults'); closeMobileMenu();" 
-                                class="mobile-nav-btn ${currentPage === 'manageResults' ? 'active' : ''}">
-                            <i class="fas fa-edit"></i>Manage Results
-                        </button>
-                        <button onclick="showPage('adminSchedule'); closeMobileMenu();" 
-                                class="mobile-nav-btn ${currentPage === 'adminSchedule' ? 'active' : ''}">
-                            <i class="fas fa-calendar-plus"></i>Manage Schedule
-                        </button>
-                    </div>
-                `;
-            }
-            
-            // Account section
-            html += `
-                <div class="mobile-nav-section">
-                    <div class="mobile-nav-section-title">Account</div>
-                    <button onclick="openChangePasswordModal(); closeMobileMenu();" 
-                            class="mobile-nav-btn">
-                        <i class="fas fa-key"></i>Change Password
-                    </button>
-                    <button onclick="logout(); closeMobileMenu();" 
-                            class="mobile-nav-btn text-red-400 hover:text-red-300">
-                        <i class="fas fa-sign-out-alt"></i>Logout
-                    </button>
-                </div>
-            `;
-            
-            navContent.innerHTML = html;
-        }
-        
-        // Utility functions
-        function togglePasswordVisibility() {
-            const passwordInput = document.getElementById('password');
-            const icon = passwordInput.nextElementSibling.querySelector('i');
-            
-            if (passwordInput.type === 'password') {
-                passwordInput.type = 'text';
-                icon.classList.remove('fa-eye');
-                icon.classList.add('fa-eye-slash');
-            } else {
-                passwordInput.type = 'password';
-                icon.classList.remove('fa-eye-slash');
-                icon.classList.add('fa-eye');
-            }
-        }
-        
-        // Enhanced showPage function
-        function showPage(page) {
-            currentPage = page;
-            
-            // Update UI
-            document.querySelectorAll('.page-content').forEach(p => p.classList.add('hidden'));
-            const pageElement = document.getElementById(page + 'Page');
-            if (pageElement) {
-                pageElement.classList.remove('hidden');
-            }
-            
-            // Update mobile navigation
-            loadMobileNavigation();
-            
-            // Close mobile menu if open
-            if (mobileMenuOpen) {
-                closeMobileMenu();
-            }
-            
-            // Load page data
-            if (typeof window.loadPageData === 'function') {
-                window.loadPageData(page);
-            }
-        }
-        
-        // Initialize
-        document.addEventListener('DOMContentLoaded', function() {
-            // Mobile menu event listeners
-            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-            const mobileMenuClose = document.getElementById('mobileMenuClose');
-            
-            if (mobileMenuBtn) {
-                mobileMenuBtn.addEventListener('click', toggleMobileMenu);
-                mobileMenuBtn.addEventListener('touchstart', function(e) {
-                    e.preventDefault();
-                    toggleMobileMenu();
-                }, { passive: false });
-            }
-            
-            if (mobileMenuClose) {
-                mobileMenuClose.addEventListener('click', closeMobileMenu);
-            }
-            
-            // Close menu on escape
-            document.addEventListener('keydown', function(e) {
-                if (e.key === 'Escape' && mobileMenuOpen) {
-                    closeMobileMenu();
-                }
-            });
-            
-            // Close menu on outside click
-            document.getElementById('mobileMenuOverlay')?.addEventListener('click', closeMobileMenu);
-            
-            // Handle window resize
-            let resizeTimer;
-            window.addEventListener('resize', function() {
-                clearTimeout(resizeTimer);
-                resizeTimer = setTimeout(function() {
-                    if (window.innerWidth > 768 && mobileMenuOpen) {
-                        closeMobileMenu();
-                    }
-                }, 100);
-            });
-            
-            // Prevent body scroll when modal is open
-            const observer = new MutationObserver(function(mutations) {
-                mutations.forEach(function(mutation) {
-                    if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
-                        const modalOpen = document.querySelector('.modal:not(.hidden)');
-                        if (modalOpen) {
-                            document.body.style.overflow = 'hidden';
-                        } else if (!mobileMenuOpen) {
-                            document.body.style.overflow = '';
-                        }
-                    }
-                });
-            });
-            
-            observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
-            
-            // Touch gesture for closing modals
-            document.addEventListener('touchstart', function(e) {
-                if (e.target.classList.contains('modal')) {
-                    e.target.classList.add('hidden');
-                }
-            });
-        });
-        
-        // Export functions to global scope
-        window.toggleMobileMenu = toggleMobileMenu;
-        window.closeMobileMenu = closeMobileMenu;
-        window.loadMobileNavigation = loadMobileNavigation;
-        window.showPage = showPage;
-        window.togglePasswordVisibility = togglePasswordVisibility;
-    </script>
-    
-    <!-- Load main app.js -->
     <script src="app.js"></script>
 </body>
 </html>
- 
