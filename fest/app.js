@@ -1,25 +1,18 @@
-// =============================
-// 🌐 FEST MANAGEMENT SYSTEM
-// Complete JavaScript Implementation
-// Mobile-Optimized & Production Ready
-// =============================
-
-// Global Variables
+// 🌐 Global Variables
 let currentUser = null;
 let currentPage = 'dashboard';
 let currentTeamTab = 1;
 let currentResultType = 's';
-let mobileMenuOpen = false;
 
 // =============================
-// 📊 Google Sheets API Integration
+// 📊 Google Sheets Integration - FIXED
 // =============================
 class GoogleSheetsAPI {
     constructor() {
-        // ⚠️ REPLACE WITH YOUR GOOGLE APPS SCRIPT WEB APP URL
-        this.apiUrl = "https://script.google.com/macros/s/AKfycbwF_EwH5GNgixEo3iynpTM8URVxS3a58EUUhtwdGnPeGd41zE0p0Dw4Itp4j3RFa8kTEw/exec";
+        // ⚠️ REPLACE THIS URL WITH YOUR GOOGLE APPS SCRIPT WEB APP URL
+        this.apiUrl = "https://script.google.com/macros/s/AKfycbxA1gSXVQU0kKyEQeNkfzObx8VjXaRuE0qUX6KKdNcg6H9Xos82TLkDCWhj7p20N9RmYA/exec";
         this.cache = new Map();
-        this.cacheTimeout = 30 * 1000; // 30 seconds
+        this.cacheTimeout = 30 * 1000;
     }
 
     async getSheet(sheetName, useCache = true) {
@@ -35,7 +28,7 @@ class GoogleSheetsAPI {
 
         try {
             const url = `${this.apiUrl}?sheet=${encodeURIComponent(sheetName)}&t=${now}`;
-            console.log(`📥 Fetching ${sheetName}...`);
+            console.log(`Fetching ${sheetName} from:`, url);
             
             const response = await fetch(url);
             
@@ -49,7 +42,8 @@ class GoogleSheetsAPI {
             try {
                 data = JSON.parse(text);
             } catch (e) {
-                console.error('❌ Failed to parse JSON:', e);
+                console.error('Failed to parse JSON from', sheetName, ':', e);
+                console.log('Raw response:', text);
                 data = [];
             }
             
@@ -57,17 +51,16 @@ class GoogleSheetsAPI {
                 this.cache.set(cacheKey, { data, timestamp: now });
             }
             
-            console.log(`✅ Loaded ${sheetName}: ${Array.isArray(data) ? data.length : 0} rows`);
             return data;
         } catch (error) {
-            console.error(`❌ Error fetching ${sheetName}:`, error);
+            console.error(`Error fetching ${sheetName}:`, error);
             return [];
         }
     }
 
     async addRow(sheetName, rowData) {
         try {
-            console.log(`📤 Adding row to ${sheetName}:`, rowData);
+            console.log(`Adding row to ${sheetName}:`, rowData);
             
             const formData = new FormData();
             formData.append('sheet', sheetName);
@@ -90,10 +83,9 @@ class GoogleSheetsAPI {
             // Clear cache for this sheet
             this.cache.delete(sheetName);
             
-            console.log(`✅ Add row result:`, result);
             return result;
         } catch (error) {
-            console.error('❌ Error adding row:', error);
+            console.error('Error adding row:', error);
             return { error: error.message };
         }
     }
@@ -124,7 +116,7 @@ class GoogleSheetsAPI {
             
             return result;
         } catch (error) {
-            console.error('❌ Error updating password:', error);
+            console.error('Error updating password:', error);
             return { error: error.message };
         }
     }
@@ -147,14 +139,32 @@ class GoogleSheetsAPI {
             try {
                 result = JSON.parse(text);
             } catch (e) {
-                console.error('❌ Login response parse error:', e);
+                console.error('Login response parse error:', e);
                 return { success: false, error: 'Invalid response from server' };
             }
             
             return result;
         } catch (error) {
-            console.error('❌ Login error:', error);
+            console.error('Login error:', error);
             return { success: false, error: 'Network error: ' + error.message };
+        }
+    }
+
+    async initializeSheets() {
+        try {
+            const response = await fetch(`${this.apiUrl}?action=initialize`);
+            const text = await response.text();
+            let result;
+            
+            try {
+                result = JSON.parse(text);
+            } catch (e) {
+                result = { success: true, message: text };
+            }
+            
+            return result;
+        } catch (error) {
+            return { error: error.message };
         }
     }
 
@@ -166,83 +176,8 @@ class GoogleSheetsAPI {
 const api = new GoogleSheetsAPI();
 
 // =============================
-// 🔧 Utility Functions
+// 🔑 Authentication - FIXED
 // =============================
-
-function showLoading(show = true) {
-    const overlay = document.getElementById('loadingOverlay');
-    if (overlay) {
-        if (show) {
-            overlay.classList.remove('hidden');
-        } else {
-            overlay.classList.add('hidden');
-        }
-    }
-}
-
-function showToast(message, type = 'info', duration = 3000) {
-    // Create toast element
-    const toast = document.createElement('div');
-    toast.className = `fixed bottom-4 right-4 max-w-sm p-4 rounded-lg shadow-lg z-50 alert alert-${type}`;
-    toast.style.animation = 'slideUp 0.3s ease-out';
-    toast.textContent = message;
-    
-    document.body.appendChild(toast);
-    
-    setTimeout(() => {
-        toast.style.animation = 'slideDown 0.3s ease-in';
-        setTimeout(() => toast.remove(), 300);
-    }, duration);
-}
-
-function getProgramType(programCode) {
-    if (!programCode) return 'General';
-    const code = programCode.toString().toUpperCase();
-    if (code.startsWith('GS') && !code.startsWith('GSP')) return 'Group Stage';
-    if (code.startsWith('GNS')) return 'Group Non-Stage';
-    if (code.startsWith('GSP')) return 'Group Sports';
-    if (code.startsWith('S') && !code.startsWith('SP')) return 'Stage';
-    if (code.startsWith('NS')) return 'Non-Stage';
-    if (code.startsWith('SP')) return 'Sports';
-    return 'General';
-}
-
-function formatDate(dateString) {
-    try {
-        const date = new Date(dateString);
-        return date.toLocaleDateString('en-US', { 
-            year: 'numeric', 
-            month: 'short', 
-            day: 'numeric' 
-        });
-    } catch (e) {
-        return dateString;
-    }
-}
-
-function formatTime(timeString) {
-    if (!timeString) return '';
-    // Handle both 12-hour and 24-hour formats
-    try {
-        const time = timeString.toString().trim();
-        if (time.includes('AM') || time.includes('PM')) {
-            return time;
-        }
-        // Convert 24-hour to 12-hour
-        const [hours, minutes] = time.split(':');
-        const h = parseInt(hours);
-        const ampm = h >= 12 ? 'PM' : 'AM';
-        const h12 = h % 12 || 12;
-        return `${h12}:${minutes} ${ampm}`;
-    } catch (e) {
-        return timeString;
-    }
-}
-
-// =============================
-// 🔑 Authentication Functions
-// =============================
-
 async function login() {
     const username = document.getElementById('username').value.trim();
     const password = document.getElementById('password').value.trim();
@@ -260,7 +195,7 @@ async function login() {
     try {
         const result = await api.login(username, password);
         
-        console.log('🔐 Login result:', result);
+        console.log('Login result:', result);
         
         if (result.success && result.user) {
             currentUser = {
@@ -271,9 +206,7 @@ async function login() {
                 team: result.user.team || '0'
             };
 
-            console.log('✅ Logged in as:', currentUser);
-
-            // Hide login page, show dashboard
+            // Show dashboard
             document.getElementById('loginPage').classList.add('hidden');
             document.getElementById('dashboardContainer').classList.remove('hidden');
             
@@ -281,17 +214,13 @@ async function login() {
             updateUIForRole();
             
             // Load dashboard data
-            showLoading(true);
             await loadDashboard();
-            showLoading(false);
             
             showLoginError('');
-            showToast(`Welcome, ${currentUser.name}!`, 'success');
         } else {
             showLoginError(result.error || 'Invalid admission number or password');
         }
     } catch (error) {
-        console.error('❌ Login error:', error);
         showLoginError('Network error: ' + error.message);
     } finally {
         loginBtn.innerHTML = originalText;
@@ -320,14 +249,11 @@ function logout() {
     document.getElementById('username').value = '';
     document.getElementById('password').value = '';
     showLoginError('');
-    
-    showToast('Logged out successfully', 'info');
 }
 
 // =============================
-// 🎭 UI Update Functions
+// 🎭 Update UI Based on Role
 // =============================
-
 function updateUIForRole() {
     if (!currentUser) return;
 
@@ -341,20 +267,24 @@ function updateUIForRole() {
     const leaderDashboardCards = document.getElementById('leaderDashboardCards');
     const adminDashboardCards = document.getElementById('adminDashboardCards');
 
+    // Update welcome message
     const roleDisplay = currentUser.role.charAt(0).toUpperCase() + currentUser.role.slice(1);
+    if (welcomeUser) welcomeUser.textContent = `Welcome, ${currentUser.name} (${roleDisplay})`;
     
-    if (welcomeUser) welcomeUser.textContent = `Welcome, ${currentUser.name}`;
+    // Update profile info
     if (profileName) profileName.textContent = currentUser.name;
     if (profileUsername) profileUsername.textContent = `@${currentUser.ad_no}`;
-    
     if (profileRole) {
         profileRole.textContent = roleDisplay;
-        profileRole.className = `text-xs px-2 py-1 bg-white/20 rounded-full role-${currentUser.role}`;
+        profileRole.className = 'text-xs px-2 py-1 bg-white/20 rounded-full ' + 
+            (currentUser.role === 'admin' ? 'role-admin' : 
+             currentUser.role === 'leader' ? 'role-leader' : 
+             currentUser.role === 'assistant' ? 'role-assistant' : 'role-member');
     }
     
-    if (profileTeam && currentUser.team !== '0') {
+    if (profileTeam) {
         profileTeam.textContent = `Team ${currentUser.team}`;
-        profileTeam.className = `text-xs px-2 py-1 bg-white/20 rounded-full ml-1 team-${currentUser.team}`;
+        profileTeam.className = 'text-xs px-2 py-1 bg-white/20 rounded-full ml-1 team-' + currentUser.team;
     }
     
     // Show/hide navigation based on role
@@ -374,124 +304,11 @@ function updateUIForRole() {
         if (leaderDashboardCards) leaderDashboardCards.classList.add('hidden');
         if (adminDashboardCards) adminDashboardCards.classList.add('hidden');
     }
-    
-    // Load mobile navigation
-    loadMobileNavigation();
-}
-
-function loadMobileNavigation() {
-    const navContent = document.getElementById('mobileNavContent');
-    if (!navContent || !currentUser) return;
-    
-    const role = currentUser.role;
-    
-    let html = `
-        <div class="mobile-nav-section">
-            <div class="mobile-nav-section-title">Main Menu</div>
-            <button onclick="showPage('dashboard')" class="mobile-nav-btn ${currentPage === 'dashboard' ? 'active' : ''}">
-                <i class="fas fa-home"></i>Dashboard
-            </button>
-            <button onclick="showPage('schedule')" class="mobile-nav-btn ${currentPage === 'schedule' ? 'active' : ''}">
-                <i class="fas fa-calendar-alt"></i>Schedule
-            </button>
-            <button onclick="showPage('programs')" class="mobile-nav-btn ${currentPage === 'programs' ? 'active' : ''}">
-                <i class="fas fa-list-alt"></i>My Programs
-            </button>
-            <button onclick="showPage('results')" class="mobile-nav-btn ${currentPage === 'results' ? 'active' : ''}">
-                <i class="fas fa-chart-line"></i>Results
-            </button>
-        </div>
-    `;
-    
-    if (role === 'leader' || role === 'assistant') {
-        html += `
-            <div class="mobile-nav-section">
-                <div class="mobile-nav-section-title">Team Management</div>
-                <button onclick="showPage('teamMembers')" class="mobile-nav-btn ${currentPage === 'teamMembers' ? 'active' : ''}">
-                    <i class="fas fa-users"></i>Team Members
-                </button>
-                <button onclick="showPage('assignPrograms')" class="mobile-nav-btn ${currentPage === 'assignPrograms' ? 'active' : ''}">
-                    <i class="fas fa-tasks"></i>Assign Programs
-                </button>
-            </div>
-        `;
-    }
-    
-    if (role === 'admin') {
-        html += `
-            <div class="mobile-nav-section">
-                <div class="mobile-nav-section-title">Administration</div>
-                <button onclick="showPage('allTeams')" class="mobile-nav-btn ${currentPage === 'allTeams' ? 'active' : ''}">
-                    <i class="fas fa-users-cog"></i>All Teams
-                </button>
-                <button onclick="showPage('programCount')" class="mobile-nav-btn ${currentPage === 'programCount' ? 'active' : ''}">
-                    <i class="fas fa-calculator"></i>Program Count
-                </button>
-                <button onclick="showPage('manageResults')" class="mobile-nav-btn ${currentPage === 'manageResults' ? 'active' : ''}">
-                    <i class="fas fa-edit"></i>Manage Results
-                </button>
-                <button onclick="showPage('adminSchedule')" class="mobile-nav-btn ${currentPage === 'adminSchedule' ? 'active' : ''}">
-                    <i class="fas fa-calendar-plus"></i>Manage Schedule
-                </button>
-            </div>
-        `;
-    }
-    
-    html += `
-        <div class="mobile-nav-section">
-            <div class="mobile-nav-section-title">Account</div>
-            <button onclick="openChangePasswordModal()" class="mobile-nav-btn">
-                <i class="fas fa-key"></i>Change Password
-            </button>
-            <button onclick="logout()" class="mobile-nav-btn text-red-600">
-                <i class="fas fa-sign-out-alt"></i>Logout
-            </button>
-        </div>
-    `;
-    
-    navContent.innerHTML = html;
 }
 
 // =============================
-// 📱 Mobile Menu Functions
+// 📍 Navigation
 // =============================
-
-function toggleMobileMenu() {
-    const btn = document.getElementById('mobileMenuBtn');
-    const overlay = document.getElementById('mobileMenuOverlay');
-    const sidebar = document.getElementById('mobileMenuSidebar');
-    
-    mobileMenuOpen = !mobileMenuOpen;
-    
-    if (mobileMenuOpen) {
-        btn.classList.add('active');
-        overlay.classList.add('active');
-        sidebar.classList.add('active');
-        document.body.style.overflow = 'hidden';
-    } else {
-        btn.classList.remove('active');
-        overlay.classList.remove('active');
-        sidebar.classList.remove('active');
-        document.body.style.overflow = '';
-    }
-}
-
-function closeMobileMenu() {
-    const btn = document.getElementById('mobileMenuBtn');
-    const overlay = document.getElementById('mobileMenuOverlay');
-    const sidebar = document.getElementById('mobileMenuSidebar');
-    
-    mobileMenuOpen = false;
-    btn.classList.remove('active');
-    overlay.classList.remove('active');
-    sidebar.classList.remove('active');
-    document.body.style.overflow = '';
-}
-
-// =============================
-// 📍 Navigation Functions
-// =============================
-
 async function showPage(page) {
     try {
         // Hide all pages
@@ -504,17 +321,6 @@ async function showPage(page) {
         }
         
         currentPage = page;
-        
-        // Update mobile navigation
-        loadMobileNavigation();
-        
-        // Close mobile menu if open
-        if (mobileMenuOpen) {
-            closeMobileMenu();
-        }
-        
-        // Show loading
-        showLoading(true);
         
         // Load page-specific data
         switch (page) {
@@ -549,46 +355,38 @@ async function showPage(page) {
                 await loadAdminSchedule();
                 break;
         }
-        
-        showLoading(false);
     } catch (error) {
-        console.error('❌ Error showing page:', error);
-        showLoading(false);
-        showToast('Error loading page: ' + error.message, 'error');
+        console.error('Error showing page:', error);
     }
 }
 
 // =============================
-// 🏠 Dashboard Functions
+// 🏠 Dashboard Functions - FIXED
 // =============================
-
 async function loadDashboard() {
     if (!currentUser) return;
 
     try {
-        console.log('📊 Loading dashboard...');
-        
         const dashboardInfo = document.getElementById('dashboardInfo');
         const totalPrograms = document.getElementById('totalPrograms');
         const completedPrograms = document.getElementById('completedPrograms');
         const totalPoints = document.getElementById('totalPoints');
         const teamRank = document.getElementById('teamRank');
+        const upcomingPrograms = document.getElementById('upcomingPrograms');
 
         // Update dashboard info
         if (dashboardInfo) {
             const roleText = currentUser.role === 'admin' ? 'Admin' : 
                            currentUser.role === 'leader' ? 'Leader' :
                            currentUser.role === 'assistant' ? 'Assistant' : 'Member';
-            dashboardInfo.textContent = currentUser.team !== '0' 
-                ? `${roleText} of Team ${currentUser.team}` 
-                : roleText;
+            dashboardInfo.textContent = `${roleText} of Team ${currentUser.team}`;
         }
 
         // Load user's programs
         const registrationSheet = `registration_team_${currentUser.team}`;
         const registrations = await api.getSheet(registrationSheet);
         
-        // Load all results
+        // Load all results to calculate points
         const resultSheets = ['s_result', 'ns_result', 'sp_result', 'gs_result', 'gns_result', 'gsp_result'];
         const allResults = await Promise.all(resultSheets.map(sheet => api.getSheet(sheet)));
         
@@ -599,7 +397,9 @@ async function loadDashboard() {
         if (Array.isArray(registrations) && registrations.length > 0) {
             userPrograms = registrations.filter(reg => {
                 const regSlNo = reg['sl:no'] || reg.sl_no || '';
-                return regSlNo == currentUser.sl_no;
+                const regName = reg.name || '';
+                return regSlNo == currentUser.sl_no || 
+                       regName.toLowerCase() === currentUser.name.toLowerCase();
             });
             
             // Calculate points from results
@@ -607,7 +407,9 @@ async function loadDashboard() {
                 if (Array.isArray(results) && results.length > 0) {
                     const userResults = results.filter(result => {
                         const resultSlNo = result['sl:no'] || result.sl_no || '';
-                        return resultSlNo == currentUser.sl_no;
+                        const resultName = result.name || '';
+                        return resultSlNo == currentUser.sl_no || 
+                               resultName.toLowerCase() === currentUser.name.toLowerCase();
                     });
                     
                     userResults.forEach(result => {
@@ -618,11 +420,12 @@ async function loadDashboard() {
             });
         }
         
-        // Count completed programs
+        // Count completed programs (programs with results)
         let completedCount = 0;
         if (Array.isArray(userPrograms)) {
             userPrograms.forEach(program => {
                 const programCode = program.program_code || '';
+                // Check if this program has a result
                 const hasResult = allResults.some(results => {
                     if (!Array.isArray(results)) return false;
                     return results.some(result => {
@@ -640,20 +443,14 @@ async function loadDashboard() {
         if (totalPoints) totalPoints.textContent = userPoints;
         
         // Calculate team rank
-        if (currentUser.team !== '0') {
-            const teamPoints = await calculateTeamPoints(currentUser.team);
-            if (teamRank) teamRank.textContent = teamPoints.rank || '-';
-        } else {
-            if (teamRank) teamRank.textContent = '-';
-        }
+        const teamPoints = await calculateTeamPoints(currentUser.team);
+        if (teamRank) teamRank.textContent = teamPoints.rank || '-';
         
         // Load upcoming programs
         await loadUpcomingPrograms();
 
-        console.log('✅ Dashboard loaded successfully');
     } catch (error) {
-        console.error('❌ Error loading dashboard:', error);
-        showToast('Error loading dashboard', 'error');
+        console.error('Error loading dashboard:', error);
     }
 }
 
@@ -662,6 +459,7 @@ async function calculateTeamPoints(teamNumber) {
         const resultSheets = ['s_result', 'ns_result', 'sp_result', 'gs_result', 'gns_result', 'gsp_result'];
         const allResults = await Promise.all(resultSheets.map(sheet => api.getSheet(sheet)));
         
+        let teamPoints = 0;
         const teamTotals = {1: 0, 2: 0, 3: 0};
         
         // Calculate points for all teams
@@ -678,7 +476,7 @@ async function calculateTeamPoints(teamNumber) {
             }
         });
         
-        // Convert to array and sort
+        // Convert to array for sorting
         const teamsArray = Object.entries(teamTotals).map(([team, points]) => ({team, points}));
         teamsArray.sort((a, b) => b.points - a.points);
         
@@ -686,8 +484,9 @@ async function calculateTeamPoints(teamNumber) {
         let rank = 1;
         for (let i = 0; i < teamsArray.length; i++) {
             if (teamsArray[i].team == teamNumber) {
+                // Check if there's a tie
                 if (i > 0 && teamsArray[i].points === teamsArray[i-1].points) {
-                    rank = i;
+                    rank = i; // Same rank as previous
                 } else {
                     rank = i + 1;
                 }
@@ -702,7 +501,7 @@ async function calculateTeamPoints(teamNumber) {
         };
         
     } catch (error) {
-        console.error('❌ Error calculating team points:', error);
+        console.error('Error calculating team points:', error);
         return { points: 0, rank: '-', leaderboard: [] };
     }
 }
@@ -715,15 +514,11 @@ async function loadUpcomingPrograms() {
         if (!upcomingPrograms) return;
         
         if (!Array.isArray(schedule) || schedule.length === 0) {
-            upcomingPrograms.innerHTML = `
-                <div class="empty-state">
-                    <i class="fas fa-calendar-alt"></i>
-                    <p>No upcoming programs</p>
-                </div>
-            `;
+            upcomingPrograms.innerHTML = '<p class="text-gray-500 text-center py-4">No upcoming programs</p>';
             return;
         }
         
+        // Get today's date
         const today = new Date();
         today.setHours(0, 0, 0, 0);
         
@@ -741,30 +536,34 @@ async function loadUpcomingPrograms() {
         }).slice(0, 5);
         
         if (upcoming.length === 0) {
-            upcomingPrograms.innerHTML = `
-                <div class="empty-state">
-                    <i class="fas fa-calendar-alt"></i>
-                    <p>No upcoming programs in next 7 days</p>
-                </div>
-            `;
+            upcomingPrograms.innerHTML = '<p class="text-gray-500 text-center py-4">No upcoming programs in next 7 days</p>';
             return;
         }
         
         let html = '';
         upcoming.forEach(item => {
-            const itemDate = new Date(item.date || new Date());
+            let itemDate;
+            try {
+                itemDate = new Date(item.date || new Date());
+            } catch (e) {
+                itemDate = new Date();
+            }
+            
             const dayName = item.day || itemDate.toLocaleDateString('en-US', { weekday: 'short' });
-            const formattedDate = formatDate(item.date);
+            const formattedDate = itemDate.toLocaleDateString('en-US', { 
+                month: 'short', 
+                day: 'numeric' 
+            });
+            
             const programCode = item.program_code || '';
-            const time = formatTime(item.time || '');
-            const programType = getProgramType(programCode);
+            const time = item.time || '';
             
             html += `
-                <div class="bg-white rounded-lg shadow-sm p-4 border border-gray-200 hover:border-blue-400 transition-colors">
+                <div class="bg-white rounded-lg shadow-sm p-4 border border-gray-200">
                     <div class="flex justify-between items-center">
                         <div>
                             <span class="program-code">${programCode}</span>
-                            <span class="text-xs text-gray-500 ml-2">${programType}</span>
+                            <span class="text-xs text-gray-500 ml-2">${getProgramType(programCode)}</span>
                         </div>
                         <div class="text-right">
                             <div class="text-sm font-medium">${time}</div>
@@ -778,18 +577,27 @@ async function loadUpcomingPrograms() {
         upcomingPrograms.innerHTML = html;
         
     } catch (error) {
-        console.error('❌ Error loading upcoming programs:', error);
+        console.error('Error loading upcoming programs:', error);
     }
 }
 
-// =============================
-// 📅 Schedule Functions
-// =============================
+function getProgramType(programCode) {
+    if (!programCode) return 'General';
+    const code = programCode.toString().toUpperCase();
+    if (code.startsWith('S') && !code.startsWith('SP') && !code.startsWith('GS')) return 'Stage';
+    if (code.startsWith('NS') && !code.startsWith('GNS')) return 'Non-Stage';
+    if (code.startsWith('SP') && !code.startsWith('GSP')) return 'Sports';
+    if (code.startsWith('GS')) return 'Group Stage';
+    if (code.startsWith('GNS')) return 'Group Non-Stage';
+    if (code.startsWith('GSP')) return 'Group Sports';
+    return 'General';
+}
 
+// =============================
+// 📅 Schedule Functions - FIXED
+// =============================
 async function loadSchedule() {
     try {
-        console.log('📅 Loading schedule...');
-        
         const schedule = await api.getSheet('schedule');
         const tableBody = document.getElementById('scheduleTableBody');
         
@@ -798,7 +606,7 @@ async function loadSchedule() {
         if (!Array.isArray(schedule) || schedule.length === 0) {
             tableBody.innerHTML = `
                 <tr>
-                    <td colspan="4" class="text-center py-8 text-gray-500">
+                    <td colspan="6" class="text-center py-8 text-gray-500">
                         No schedule available
                     </td>
                 </tr>
@@ -806,39 +614,70 @@ async function loadSchedule() {
             return;
         }
         
+        // Get registrations count for each program
+        const registrationsByProgram = {};
+        for (let team = 1; team <= 3; team++) {
+            const regSheet = await api.getSheet(`registration_team_${team}`);
+            if (Array.isArray(regSheet)) {
+                regSheet.forEach(reg => {
+                    const programCode = reg.program_code || '';
+                    if (programCode) {
+                        if (!registrationsByProgram[programCode]) {
+                            registrationsByProgram[programCode] = 0;
+                        }
+                        registrationsByProgram[programCode]++;
+                    }
+                });
+            }
+        }
+        
         let html = '';
         schedule.forEach(item => {
-            const formattedDate = formatDate(item.date);
-            const time = formatTime(item.time || '');
+            let date;
+            try {
+                date = new Date(item.date || new Date());
+            } catch (e) {
+                date = new Date();
+            }
+            
+            const dayName = item.day || date.toLocaleDateString('en-US', { weekday: 'long' });
+            const formattedDate = date.toLocaleDateString('en-US', { 
+                year: 'numeric', 
+                month: 'short', 
+                day: 'numeric' 
+            });
+            
             const programCode = item.program_code || '';
-            const programType = getProgramType(programCode);
-            const badgeClass = programType.toLowerCase().replace(/\s+/g, '');
+            const time = item.time || '';
+            const registeredCount = registrationsByProgram[programCode] || 0;
             
             html += `
                 <tr>
                     <td>${formattedDate}</td>
-                    <td class="hide-mobile">${time}</td>
+                    <td>${dayName}</td>
+                    <td>${time}</td>
                     <td>
                         <span class="program-code">${programCode}</span>
-                        <div class="text-xs text-gray-500 md:hidden">${time}</div>
                     </td>
-                    <td class="hide-mobile">
-                        <span class="badge badge-${badgeClass}">${programType}</span>
+                    <td>
+                        <span class="badge badge-${getProgramType(programCode).toLowerCase().replace(' ', '')}">
+                            ${getProgramType(programCode)}
+                        </span>
                     </td>
+                    <td>${registeredCount}</td>
                 </tr>
             `;
         });
         
         tableBody.innerHTML = html;
-        console.log('✅ Schedule loaded successfully');
         
     } catch (error) {
-        console.error('❌ Error loading schedule:', error);
+        console.error('Error loading schedule:', error);
         const tableBody = document.getElementById('scheduleTableBody');
         if (tableBody) {
             tableBody.innerHTML = `
                 <tr>
-                    <td colspan="4" class="text-center py-8 text-red-500">
+                    <td colspan="6" class="text-center py-8 text-red-500">
                         Error loading schedule
                     </td>
                 </tr>
@@ -848,15 +687,12 @@ async function loadSchedule() {
 }
 
 // =============================
-// 📋 My Programs Functions
+// 📋 My Programs Functions - FIXED
 // =============================
-
 async function loadMyPrograms() {
     if (!currentUser) return;
 
     try {
-        console.log('📋 Loading my programs...');
-        
         const registrationSheet = `registration_team_${currentUser.team}`;
         const registrations = await api.getSheet(registrationSheet);
         const programsList = document.getElementById('myProgramsList');
@@ -865,9 +701,9 @@ async function loadMyPrograms() {
         
         if (!Array.isArray(registrations) || registrations.length === 0) {
             programsList.innerHTML = `
-                <div class="empty-state">
-                    <i class="fas fa-clipboard-list"></i>
-                    <p>No programs registered yet</p>
+                <div class="text-center py-8">
+                    <i class="fas fa-clipboard-list text-4xl text-gray-300 mb-3"></i>
+                    <p class="text-gray-500">No programs registered yet</p>
                 </div>
             `;
             return;
@@ -875,14 +711,16 @@ async function loadMyPrograms() {
         
         const myRegistrations = registrations.filter(reg => {
             const regSlNo = reg['sl:no'] || reg.sl_no || '';
-            return regSlNo == currentUser.sl_no;
+            const regName = reg.name || '';
+            return regSlNo == currentUser.sl_no || 
+                   regName.toLowerCase() === currentUser.name.toLowerCase();
         });
         
         if (myRegistrations.length === 0) {
             programsList.innerHTML = `
-                <div class="empty-state">
-                    <i class="fas fa-clipboard-list"></i>
-                    <p>No programs registered yet</p>
+                <div class="text-center py-8">
+                    <i class="fas fa-clipboard-list text-4xl text-gray-300 mb-3"></i>
+                    <p class="text-gray-500">No programs registered yet</p>
                 </div>
             `;
             return;
@@ -917,25 +755,28 @@ async function loadMyPrograms() {
             });
             
             const programType = getProgramType(programCode);
-            const badgeClass = programType.toLowerCase().replace(/\s+/g, '');
+            const badgeClass = programType.toLowerCase().replace(' ', '');
             
             html += `
-                <div class="program-card ${hasResult ? 'border-green-500 bg-green-50' : ''}">
+                <div class="program-card ${hasResult ? 'border-green-500' : ''}">
                     <div class="flex justify-between items-start mb-3">
-                        <div class="flex-1">
+                        <div>
                             <span class="program-code">${programCode}</span>
                             <span class="text-sm font-medium text-gray-700 ml-2">${programName}</span>
                         </div>
-                        <div class="flex items-center space-x-2 flex-shrink-0 ml-2">
+                        <div class="flex items-center space-x-2">
                             <span class="badge badge-${badgeClass}">${programType}</span>
                             ${hasResult ? `<span class="text-green-600 font-bold">${resultPoints} pts</span>` : ''}
                         </div>
                     </div>
                     <div class="text-sm text-gray-600">
-                        <div class="flex justify-between items-center">
+                        <div class="flex justify-between">
                             <span>Team: <span class="font-medium">${team}</span></span>
-                            <span class="font-medium ${hasResult ? 'text-green-600' : 'text-yellow-600'}">
-                                ${hasResult ? '✓ Completed' : '⏱ Upcoming'}
+                            <span>SL No: <span class="font-medium">${slNo}</span></span>
+                        </div>
+                        <div class="mt-1">
+                            Status: <span class="font-medium ${hasResult ? 'text-green-600' : 'text-yellow-600'}">
+                                ${hasResult ? 'Completed' : 'Upcoming'}
                             </span>
                         </div>
                     </div>
@@ -944,24 +785,19 @@ async function loadMyPrograms() {
         });
         
         programsList.innerHTML = html;
-        console.log('✅ My programs loaded successfully');
         
     } catch (error) {
-        console.error('❌ Error loading my programs:', error);
-        showToast('Error loading programs', 'error');
+        console.error('Error loading my programs:', error);
     }
 }
 
 // =============================
-// 🏆 My Results Functions
+// 🏆 My Results Functions - FIXED
 // =============================
-
 async function loadMyResults() {
     if (!currentUser) return;
 
     try {
-        console.log('🏆 Loading my results...');
-        
         const resultSheets = ['s_result', 'ns_result', 'sp_result', 'gs_result', 'gns_result', 'gsp_result'];
         const allResults = await Promise.all(resultSheets.map(sheet => api.getSheet(sheet)));
         
@@ -975,6 +811,8 @@ async function loadMyResults() {
         let totalPoints = 0;
         let stageTotal = 0;
         let nonStageTotal = 0;
+        let sportsTotal = 0;
+        let groupTotal = 0;
         let allUserResults = [];
         
         // Process all results
@@ -983,7 +821,9 @@ async function loadMyResults() {
             if (Array.isArray(results) && results.length > 0) {
                 const userResults = results.filter(result => {
                     const resultSlNo = result['sl:no'] || result.sl_no || '';
-                    return resultSlNo == currentUser.sl_no;
+                    const resultName = result.name || '';
+                    return resultSlNo == currentUser.sl_no || 
+                           resultName.toLowerCase() === currentUser.name.toLowerCase();
                 });
                 
                 userResults.forEach(result => {
@@ -991,10 +831,14 @@ async function loadMyResults() {
                     totalPoints += isNaN(points) ? 0 : points;
                     
                     // Categorize points
-                    if (sheetName.includes('s_result') && !sheetName.includes('ns_result') && !sheetName.includes('gs_result')) {
+                    if (sheetName === 's_result') {
                         stageTotal += points;
-                    } else {
+                    } else if (sheetName === 'ns_result') {
                         nonStageTotal += points;
+                    } else if (sheetName === 'sp_result') {
+                        sportsTotal += points;
+                    } else {
+                        groupTotal += points;
                     }
                     
                     allUserResults.push({
@@ -1009,14 +853,14 @@ async function loadMyResults() {
         // Update points displays
         totalPointsDisplay.textContent = totalPoints;
         stagePoints.textContent = stageTotal;
-        nonStagePoints.textContent = nonStageTotal;
+        nonStagePoints.textContent = nonStageTotal + sportsTotal;
         
         // Display results
         if (allUserResults.length === 0) {
             resultsList.innerHTML = `
-                <div class="empty-state">
-                    <i class="fas fa-chart-line"></i>
-                    <p>No results available yet</p>
+                <div class="text-center py-8">
+                    <i class="fas fa-chart-line text-4xl text-gray-300 mb-3"></i>
+                    <p class="text-gray-500">No results available yet</p>
                 </div>
             `;
             return;
@@ -1030,47 +874,1622 @@ async function loadMyResults() {
             const points = result.points || 0;
             const type = result.type || '';
             
+            const positionClass = position <= 3 ? `position-${position}` : '';
             const programType = getProgramType(programCode);
             const typeColor = type === 's' ? 'text-yellow-600' : 
                             type === 'ns' ? 'text-green-600' : 
                             type === 'sp' ? 'text-blue-600' : 'text-purple-600';
             
             html += `
-                <div class="bg-white rounded-lg shadow-md p-4 border-l-4 border-green-500">
+                <div class="result-card">
                     <div class="flex justify-between items-center mb-3">
-                        <div class="flex items-center space-x-3">
-                            ${position <= 3 ? `<div class="position-${position} position-badge">${position}</div>` : ''}
-                            <div>
-                                <span class="program-code">${programCode}</span>
-                                <span class="text-sm font-medium ${typeColor} ml-2">${programType}</span>
-                            </div>
+                        <div>
+                            <span class="program-code">${programCode}</span>
+                            <span class="text-sm font-medium ${typeColor} ml-2">${programType}</span>
                         </div>
-                        <div class="text-right">
-                            <div class="text-2xl font-bold text-green-600">${points}</div>
-                            <div class="text-xs text-gray-500">points</div>
+                        <div class="flex items-center space-x-3">
+                            ${position <= 3 ? `<div class="${positionClass} position-badge">${position}</div>` : ''}
+                            <span class="text-lg font-bold text-green-600">${points} pts</span>
                         </div>
                     </div>
-                    <div class="text-sm text-gray-600 flex justify-between">
-                        <span>Grade: <span class="font-medium ${grade === 'A' ? 'text-green-600' : grade === 'B' ? 'text-yellow-600' : 'text-orange-600'}">${grade}</span></span>
-                        <span>Position: <span class="font-medium">${position}</span></span>
+                    <div class="text-sm text-gray-600">
+                        <div class="flex justify-between">
+                            <span>Grade: <span class="font-medium ${grade === 'A' ? 'text-green-600' : grade === 'B' ? 'text-yellow-600' : 'text-orange-600'}">${grade}</span></span>
+                            <span>Position: <span class="font-medium">${position}</span></span>
+                        </div>
                     </div>
                 </div>
             `;
         });
         
         resultsList.innerHTML = html;
-        console.log('✅ My results loaded successfully');
         
     } catch (error) {
-        console.error('❌ Error loading my results:', error);
-        showToast('Error loading results', 'error');
+        console.error('Error loading my results:', error);
     }
 }
 
 // =============================
-// 🔐 Change Password Functions
+// 👥 Team Members Functions (Leader/Assistant) - FIXED
 // =============================
+async function loadTeamMembers() {
+    if (!currentUser || (currentUser.role !== 'leader' && currentUser.role !== 'assistant')) {
+        return;
+    }
 
+    try {
+        // Load all team members
+        const users = await api.getSheet('user_credentials');
+        const teamMembers = users.filter(user => {
+            const userTeam = user.team || '';
+            const userRole = (user.role || '').toLowerCase();
+            return userTeam == currentUser.team && 
+                   ['member', 'leader', 'assistant'].includes(userRole);
+        });
+        
+        // Load program count
+        const programCounts = await api.getSheet('program_count');
+        
+        const tableBody = document.getElementById('teamMembersTableBody');
+        if (!tableBody) return;
+        
+        if (teamMembers.length === 0) {
+            tableBody.innerHTML = `
+                <tr>
+                    <td colspan="8" class="text-center py-8 text-gray-500">
+                        No team members found
+                    </td>
+                </tr>
+            `;
+            return;
+        }
+        
+        let html = '';
+        teamMembers.forEach(member => {
+            const slNo = member['sl:no'] || member.sl_no || '';
+            const name = member.name || '';
+            const role = (member.role || '').toLowerCase();
+            const adNo = member['ad:no'] || member.ad_no || '';
+            
+            // Find program count for this member
+            let countData = null;
+            if (Array.isArray(programCounts) && programCounts.length > 0) {
+                countData = programCounts.find(pc => {
+                    const pcSlNo = pc['sl:no'] || pc.sl_no || '';
+                    return pcSlNo == slNo;
+                });
+            }
+            
+            const stageCount = countData ? (parseInt(countData.s || 0)) : 0;
+            const nonStageCount = countData ? (parseInt(countData.ns || 0)) : 0;
+            const sportsCount = countData ? (parseInt(countData.sp || 0)) : 0;
+            const totalCount = countData ? (parseInt(countData.count || 0)) : 0;
+            
+            // Check if member meets minimum requirements
+            const meetsStage = stageCount >= 1;
+            const meetsNonStage = nonStageCount >= 1;
+            const meetsSports = sportsCount >= 1;
+            const meetsTotal = totalCount <= 12;
+            
+            const hasWarning = !meetsStage || !meetsNonStage || !meetsSports || !meetsTotal;
+            
+            html += `
+                <tr class="${hasWarning ? 'program-warning' : ''}">
+                    <td>${slNo}</td>
+                    <td>
+                        <div class="font-medium">${name}</div>
+                        <div class="text-xs text-gray-500">${adNo}</div>
+                    </td>
+                    <td>
+                        <span class="${role === 'leader' ? 'role-leader' : 
+                                     role === 'assistant' ? 'role-assistant' : 
+                                     'role-member'}">
+                            ${role}
+                        </span>
+                    </td>
+                    <td class="text-center ${meetsStage ? '' : 'text-red-600'}">${stageCount}</td>
+                    <td class="text-center ${meetsNonStage ? '' : 'text-red-600'}">${nonStageCount}</td>
+                    <td class="text-center ${meetsSports ? '' : 'text-red-600'}">${sportsCount}</td>
+                    <td class="text-center font-bold ${meetsTotal ? '' : 'text-red-600'}">${totalCount}</td>
+                    <td>
+                        <button onclick="viewMemberPrograms('${slNo}')" class="text-blue-600 hover:text-blue-800 mr-2">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <button onclick="assignProgramToMember('${slNo}', '${name}')" class="text-green-600 hover:text-green-800">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </td>
+                </tr>
+            `;
+        });
+        
+        tableBody.innerHTML = html;
+        
+    } catch (error) {
+        console.error('Error loading team members:', error);
+    }
+}
+
+async function viewMemberPrograms(slNo) {
+    try {
+        const registrationSheet = `registration_team_${currentUser.team}`;
+        const registrations = await api.getSheet(registrationSheet);
+        
+        const memberPrograms = Array.isArray(registrations) ? 
+            registrations.filter(reg => {
+                const regSlNo = reg['sl:no'] || reg.sl_no || '';
+                return regSlNo == slNo;
+            }) : [];
+        
+        // Get user name
+        const users = await api.getSheet('user_credentials');
+        const member = users.find(u => {
+            const userSlNo = u['sl:no'] || u.sl_no || '';
+            return userSlNo == slNo;
+        });
+        
+        const memberName = member ? (member.name || 'Unknown') : 'Unknown';
+        
+        if (memberPrograms.length === 0) {
+            alert(`${memberName} (SL: ${slNo}) has no programs registered.`);
+            return;
+        }
+        
+        let message = `${memberName} (SL: ${slNo}) has ${memberPrograms.length} programs:\n\n`;
+        memberPrograms.forEach((program, index) => {
+            const programCode = program.program_code || '';
+            const programName = program.program || getProgramType(programCode);
+            message += `${index + 1}. ${programCode} - ${programName}\n`;
+        });
+        
+        alert(message);
+        
+    } catch (error) {
+        console.error('Error viewing member programs:', error);
+        alert('Error loading member programs');
+    }
+}
+
+async function assignProgramToMember(slNo, memberName) {
+    try {
+        // Load available programs from schedule
+        const schedule = await api.getSheet('schedule');
+        const programCodes = [...new Set(schedule.map(item => item.program_code || '').filter(Boolean))];
+        
+        // Load member's current programs
+        const registrationSheet = `registration_team_${currentUser.team}`;
+        const registrations = await api.getSheet(registrationSheet);
+        const memberPrograms = Array.isArray(registrations) ? 
+            registrations.filter(reg => {
+                const regSlNo = reg['sl:no'] || reg.sl_no || '';
+                return regSlNo == slNo;
+            }).map(reg => reg.program_code || '') : [];
+        
+        // Filter out already assigned programs
+        const availablePrograms = programCodes.filter(code => !memberPrograms.includes(code));
+        
+        if (availablePrograms.length === 0) {
+            alert(`${memberName} is already registered for all available programs.`);
+            return;
+        }
+        
+        const modal = document.getElementById('assignProgramModal');
+        const modalContent = document.getElementById('assignProgramModalContent');
+        
+        if (!modal || !modalContent) return;
+        
+        let optionsHtml = '';
+        availablePrograms.forEach(code => {
+            optionsHtml += `<option value="${code}">${code} - ${getProgramType(code)}</option>`;
+        });
+        
+        modalContent.innerHTML = `
+            <form id="assignProgramModalForm" onsubmit="assignProgramFromModal(event, '${slNo}', '${memberName}')">
+                <div class="space-y-4">
+                    <div class="form-group">
+                        <label class="form-label">Member</label>
+                        <input type="text" value="${memberName} (SL: ${slNo})" class="form-input" readonly>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Select Program</label>
+                        <select id="modalProgramCode" class="form-select" required>
+                            <option value="">Select a program</option>
+                            ${optionsHtml}
+                        </select>
+                    </div>
+                    
+                    <div id="assignModalError" class="alert alert-error hidden"></div>
+                    
+                    <div class="flex justify-end space-x-3">
+                        <button type="button" onclick="closeAssignProgramModal()" class="btn btn-secondary">
+                            Cancel
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-plus mr-2"></i>Assign Program
+                        </button>
+                    </div>
+                </div>
+            </form>
+        `;
+        
+        modal.classList.remove('hidden');
+        
+    } catch (error) {
+        console.error('Error assigning program:', error);
+        alert('Error loading programs');
+    }
+}
+
+async function assignProgramFromModal(event, slNo, memberName) {
+    event.preventDefault();
+    
+    const programCode = document.getElementById('modalProgramCode').value;
+    const errorDiv = document.getElementById('assignModalError');
+    
+    if (!programCode) {
+        if (errorDiv) {
+            errorDiv.textContent = 'Please select a program';
+            errorDiv.classList.remove('hidden');
+        }
+        return;
+    }
+    
+    try {
+        // Get program type
+        const programType = getProgramType(programCode);
+        
+        // Add registration
+        const rowData = {
+            'program_code': programCode,
+            'program': programType + ' Program',
+            'sl:no': slNo,
+            'name': memberName,
+            'team': currentUser.team
+        };
+        
+        const result = await api.addRow(`registration_team_${currentUser.team}`, rowData);
+        
+        if (result && !result.error) {
+            closeAssignProgramModal();
+            alert('Program assigned successfully!');
+            await loadTeamMembers();
+            await loadAssignPrograms();
+        } else {
+            throw new Error(result?.error || 'Failed to assign program');
+        }
+        
+    } catch (error) {
+        console.error('Error assigning program from modal:', error);
+        if (errorDiv) {
+            errorDiv.textContent = 'Error: ' + error.message;
+            errorDiv.classList.remove('hidden');
+        }
+    }
+}
+
+// =============================
+// 📝 Assign Programs Functions (Leader/Assistant) - FIXED
+// =============================
+async function loadAssignPrograms() {
+    if (!currentUser || (currentUser.role !== 'leader' && currentUser.role !== 'assistant')) {
+        return;
+    }
+
+    try {
+        // Load team members for dropdown
+        const users = await api.getSheet('user_credentials');
+        const teamMembers = users.filter(user => {
+            const userTeam = user.team || '';
+            const userRole = (user.role || '').toLowerCase();
+            return userTeam == currentUser.team && userRole === 'member';
+        });
+        
+        const memberSelect = document.getElementById('memberSelect');
+        if (!memberSelect) return;
+        
+        memberSelect.innerHTML = '<option value="">Select member</option>';
+        teamMembers.forEach(member => {
+            const slNo = member['sl:no'] || member.sl_no || '';
+            const name = member.name || '';
+            const adNo = member['ad:no'] || member.ad_no || '';
+            const option = document.createElement('option');
+            option.value = slNo;
+            option.textContent = `${slNo} - ${name} (${adNo})`;
+            memberSelect.appendChild(option);
+        });
+        
+        // Load program codes from schedule
+        const schedule = await api.getSheet('schedule');
+        const programCodes = [...new Set(schedule.map(item => item.program_code || '').filter(Boolean))];
+        
+        const programCodeSelect = document.getElementById('programCodeSelect');
+        if (!programCodeSelect) return;
+        
+        programCodeSelect.innerHTML = '<option value="">Select program</option>';
+        programCodes.forEach(code => {
+            const option = document.createElement('option');
+            option.value = code;
+            option.textContent = `${code} - ${getProgramType(code)}`;
+            programCodeSelect.appendChild(option);
+        });
+        
+        // Load currently assigned programs
+        await loadAssignedPrograms();
+        
+    } catch (error) {
+        console.error('Error loading assign programs:', error);
+    }
+}
+
+async function loadAssignedPrograms() {
+    try {
+        const registrationSheet = `registration_team_${currentUser.team}`;
+        const registrations = await api.getSheet(registrationSheet);
+        const assignedProgramsList = document.getElementById('assignedProgramsList');
+        
+        if (!assignedProgramsList) return;
+        
+        if (!Array.isArray(registrations) || registrations.length === 0) {
+            assignedProgramsList.innerHTML = `
+                <div class="text-center py-8 text-gray-500">
+                    No programs assigned yet
+                </div>
+            `;
+            return;
+        }
+        
+        // Get team members for names
+        const users = await api.getSheet('user_credentials');
+        
+        let html = '';
+        registrations.forEach(reg => {
+            const slNo = reg['sl:no'] || reg.sl_no || '';
+            const programCode = reg.program_code || '';
+            const programName = reg.program || getProgramType(programCode);
+            
+            const member = users.find(u => {
+                const userSlNo = u['sl:no'] || u.sl_no || '';
+                return userSlNo == slNo;
+            });
+            
+            const memberName = member ? (member.name || 'Unknown') : 'Unknown';
+            const memberAdNo = member ? (member['ad:no'] || member.ad_no || '') : '';
+            
+            html += `
+                <div class="program-card mb-3">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <div class="font-medium">${memberName}</div>
+                            <div class="text-sm text-gray-600">SL: ${slNo} | AD: ${memberAdNo}</div>
+                        </div>
+                        <div class="text-right">
+                            <div class="program-code">${programCode}</div>
+                            <div class="text-xs text-gray-500">${programName}</div>
+                        </div>
+                    </div>
+                    <div class="mt-2">
+                        <button onclick="removeAssignment('${slNo}', '${programCode}')" 
+                                class="text-red-600 hover:text-red-800 text-sm">
+                            <i class="fas fa-trash mr-1"></i> Remove
+                        </button>
+                    </div>
+                </div>
+            `;
+        });
+        
+        assignedProgramsList.innerHTML = html;
+        
+    } catch (error) {
+        console.error('Error loading assigned programs:', error);
+    }
+}
+
+// Handle assign program form submission
+document.getElementById('assignProgramForm')?.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const memberSlNo = document.getElementById('memberSelect').value;
+    const programCode = document.getElementById('programCodeSelect').value;
+    
+    if (!memberSlNo || !programCode) {
+        alert('Please select both member and program code');
+        return;
+    }
+    
+    try {
+        // Get member details
+        const users = await api.getSheet('user_credentials');
+        const member = users.find(u => {
+            const userSlNo = u['sl:no'] || u.sl_no || '';
+            const userTeam = u.team || '';
+            return userSlNo == memberSlNo && userTeam == currentUser.team;
+        });
+        
+        if (!member) {
+            alert('Member not found in your team');
+            return;
+        }
+        
+        const memberName = member.name || '';
+        
+        // Check if already registered
+        const registrationSheet = `registration_team_${currentUser.team}`;
+        const registrations = await api.getSheet(registrationSheet);
+        
+        const alreadyRegistered = Array.isArray(registrations) ? 
+            registrations.some(reg => {
+                const regSlNo = reg['sl:no'] || reg.sl_no || '';
+                const regProgramCode = reg.program_code || '';
+                return regSlNo == memberSlNo && regProgramCode === programCode;
+            }) : false;
+        
+        if (alreadyRegistered) {
+            alert('This member is already registered for this program');
+            return;
+        }
+        
+        // Get program type
+        const programType = getProgramType(programCode);
+        
+        // Add registration
+        const rowData = {
+            'program_code': programCode,
+            'program': programType + ' Program',
+            'sl:no': memberSlNo,
+            'name': memberName,
+            'team': currentUser.team
+        };
+        
+        const result = await api.addRow(registrationSheet, rowData);
+        
+        if (result && !result.error) {
+            alert('Program assigned successfully!');
+            document.getElementById('assignProgramForm').reset();
+            await loadAssignedPrograms();
+            await loadTeamMembers();
+        } else {
+            throw new Error(result?.error || 'Failed to assign program');
+        }
+        
+    } catch (error) {
+        console.error('Error assigning program:', error);
+        alert('Error assigning program: ' + error.message);
+    }
+});
+
+async function removeAssignment(slNo, programCode) {
+    if (!confirm('Are you sure you want to remove this assignment?')) {
+        return;
+    }
+    
+    try {
+        alert(`Removing assignment:\nSL No: ${slNo}\nProgram: ${programCode}\n\nNote: Delete functionality requires Google Apps Script implementation.`);
+        // In a full implementation, you would call an API to delete the row
+    } catch (error) {
+        console.error('Error removing assignment:', error);
+        alert('Error removing assignment');
+    }
+}
+
+// =============================
+// 🏢 All Teams Functions (Admin) - FIXED
+// =============================
+async function loadAllTeams() {
+    try {
+        // Set default team tab
+        window.showTeamTab(1);
+        await loadTeamData(1);
+        
+    } catch (error) {
+        console.error('Error loading all teams:', error);
+    }
+}
+
+async function loadTeamData(teamNumber) {
+    try {
+        // Load team members
+        const users = await api.getSheet('user_credentials');
+        const teamMembers = users.filter(user => {
+            const userTeam = user.team || '';
+            return userTeam == teamNumber.toString();
+        });
+        
+        // Load team registrations
+        const registrationSheet = `registration_team_${teamNumber}`;
+        const registrations = await api.getSheet(registrationSheet);
+        
+        const teamContent = document.getElementById('teamContent');
+        if (!teamContent) return;
+        
+        if (teamMembers.length === 0) {
+            teamContent.innerHTML = `
+                <div class="text-center py-8 text-gray-500">
+                    No members in Team ${teamNumber}
+                </div>
+            `;
+            return;
+        }
+        
+        // Get program counts
+        const programCounts = await api.getSheet('program_count');
+        
+        let html = `
+            <div class="mb-6">
+                <h4 class="font-bold text-gray-800 mb-4">Team ${teamNumber} Members (${teamMembers.length})</h4>
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>SL No</th>
+                                <th>Name</th>
+                                <th>Admission No</th>
+                                <th>Role</th>
+                                <th>Programs</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+        `;
+        
+        teamMembers.forEach(member => {
+            const slNo = member['sl:no'] || member.sl_no || '';
+            const name = member.name || '';
+            const adNo = member['ad:no'] || member.ad_no || '';
+            const role = (member.role || '').toLowerCase();
+            
+            // Find program count
+            let programCount = 0;
+            if (Array.isArray(programCounts)) {
+                const countData = programCounts.find(pc => {
+                    const pcSlNo = pc['sl:no'] || pc.sl_no || '';
+                    return pcSlNo == slNo;
+                });
+                programCount = countData ? parseInt(countData.count || 0) : 0;
+            }
+            
+            html += `
+                <tr>
+                    <td>${slNo}</td>
+                    <td>${name}</td>
+                    <td>${adNo}</td>
+                    <td>
+                        <span class="${role === 'admin' ? 'role-admin' : 
+                                     role === 'leader' ? 'role-leader' : 
+                                     role === 'assistant' ? 'role-assistant' : 
+                                     'role-member'}">
+                            ${role}
+                        </span>
+                    </td>
+                    <td class="text-center">${programCount}</td>
+                    <td>
+                        <button onclick="adminViewMemberDetails('${teamNumber}', '${slNo}')" 
+                                class="text-blue-600 hover:text-blue-800 mr-2">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <button onclick="adminAssignProgram('${teamNumber}', '${slNo}', '${name}')" 
+                                class="text-green-600 hover:text-green-800">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </td>
+                </tr>
+            `;
+        });
+        
+        html += `
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div>
+                <h4 class="font-bold text-gray-800 mb-4">Team ${teamNumber} Registrations</h4>
+        `;
+        
+        if (!Array.isArray(registrations) || registrations.length === 0) {
+            html += `<p class="text-gray-500">No registrations for Team ${teamNumber}</p>`;
+        } else {
+            html += `
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Program Code</th>
+                                <th>Program Type</th>
+                                <th>SL No</th>
+                                <th>Name</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            `;
+            
+            registrations.forEach(reg => {
+                const programCode = reg.program_code || '';
+                const programType = getProgramType(programCode);
+                const slNo = reg['sl:no'] || reg.sl_no || '';
+                const name = reg.name || '';
+                
+                html += `
+                    <tr>
+                        <td>${programCode}</td>
+                        <td>${programType}</td>
+                        <td>${slNo}</td>
+                        <td>${name}</td>
+                        <td>
+                            <button onclick="adminRemoveRegistration('${teamNumber}', '${programCode}', '${slNo}')" 
+                                    class="text-red-600 hover:text-red-800">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
+            
+            html += `
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        }
+        
+        html += `</div>`;
+        teamContent.innerHTML = html;
+        
+    } catch (error) {
+        console.error('Error loading team data:', error);
+    }
+}
+
+async function adminViewMemberDetails(teamNumber, slNo) {
+    try {
+        const users = await api.getSheet('user_credentials');
+        const member = users.find(u => {
+            const userTeam = u.team || '';
+            const userSlNo = u['sl:no'] || u.sl_no || '';
+            return userTeam == teamNumber.toString() && userSlNo == slNo;
+        });
+        
+        if (!member) {
+            alert('Member not found');
+            return;
+        }
+        
+        // Get member's programs
+        const regSheet = await api.getSheet(`registration_team_${teamNumber}`);
+        const memberPrograms = Array.isArray(regSheet) ? 
+            regSheet.filter(reg => {
+                const regSlNo = reg['sl:no'] || reg.sl_no || '';
+                return regSlNo == slNo;
+            }) : [];
+        
+        // Get program count
+        const programCounts = await api.getSheet('program_count');
+        let countData = null;
+        if (Array.isArray(programCounts)) {
+            countData = programCounts.find(pc => {
+                const pcSlNo = pc['sl:no'] || pc.sl_no || '';
+                return pcSlNo == slNo;
+            });
+        }
+        
+        let message = `Member Details:\n\n`;
+        message += `SL No: ${member['sl:no'] || member.sl_no || ''}\n`;
+        message += `Name: ${member.name || ''}\n`;
+        message += `Admission No: ${member['ad:no'] || member.ad_no || ''}\n`;
+        message += `Role: ${member.role || ''}\n`;
+        message += `Team: ${member.team || ''}\n\n`;
+        
+        if (countData) {
+            message += `Program Count:\n`;
+            message += `Stage: ${countData.s || 0}\n`;
+            message += `Non-Stage: ${countData.ns || 0}\n`;
+            message += `Sports: ${countData.sp || 0}\n`;
+            message += `Total: ${countData.count || 0}/12\n\n`;
+        }
+        
+        message += `Registered Programs (${memberPrograms.length}):\n`;
+        if (memberPrograms.length === 0) {
+            message += `None\n`;
+        } else {
+            memberPrograms.forEach((program, index) => {
+                const programCode = program.program_code || '';
+                const programName = program.program || getProgramType(programCode);
+                message += `${index + 1}. ${programCode} - ${programName}\n`;
+            });
+        }
+        
+        alert(message);
+        
+    } catch (error) {
+        console.error('Error viewing member details:', error);
+    }
+}
+
+async function adminAssignProgram(teamNumber, slNo, memberName) {
+    try {
+        // Load available programs from schedule
+        const schedule = await api.getSheet('schedule');
+        const programCodes = [...new Set(schedule.map(item => item.program_code || '').filter(Boolean))];
+        
+        // Load member's current programs
+        const registrationSheet = `registration_team_${teamNumber}`;
+        const registrations = await api.getSheet(registrationSheet);
+        const memberPrograms = Array.isArray(registrations) ? 
+            registrations.filter(reg => {
+                const regSlNo = reg['sl:no'] || reg.sl_no || '';
+                return regSlNo == slNo;
+            }).map(reg => reg.program_code || '') : [];
+        
+        // Filter out already assigned programs
+        const availablePrograms = programCodes.filter(code => !memberPrograms.includes(code));
+        
+        if (availablePrograms.length === 0) {
+            alert(`${memberName} is already registered for all available programs.`);
+            return;
+        }
+        
+        let programList = availablePrograms.map(code => `${code} - ${getProgramType(code)}`).join('\n');
+        const selectedCode = prompt(
+            `Assign program to ${memberName} (Team ${teamNumber})\n\n` +
+            `Available programs:\n${programList}\n\n` +
+            `Enter program code:`
+        );
+        
+        if (!selectedCode) return;
+        
+        const programCode = selectedCode.trim().toUpperCase();
+        
+        if (!availablePrograms.includes(programCode)) {
+            alert(`Invalid program code. Please select from available programs.`);
+            return;
+        }
+        
+        // Check if already registered
+        if (memberPrograms.includes(programCode)) {
+            alert('This member is already registered for this program');
+            return;
+        }
+        
+        // Get program type
+        const programType = getProgramType(programCode);
+        
+        // Add registration
+        const rowData = {
+            'program_code': programCode,
+            'program': programType + ' Program',
+            'sl:no': slNo,
+            'name': memberName,
+            'team': teamNumber
+        };
+        
+        const result = await api.addRow(registrationSheet, rowData);
+        
+        if (result && !result.error) {
+            alert('Program assigned successfully!');
+            await loadTeamData(teamNumber);
+        } else {
+            throw new Error(result?.error || 'Failed to assign program');
+        }
+        
+    } catch (error) {
+        console.error('Error assigning program as admin:', error);
+        alert('Error assigning program: ' + error.message);
+    }
+}
+
+async function adminRemoveRegistration(teamNumber, programCode, slNo) {
+    if (!confirm('Are you sure you want to remove this registration?')) {
+        return;
+    }
+    
+    try {
+        alert(`Removing registration:\nTeam: ${teamNumber}\nProgram: ${programCode}\nSL No: ${slNo}\n\nNote: Delete functionality requires Google Apps Script implementation.`);
+        // In a full implementation, you would call an API to delete the row
+    } catch (error) {
+        console.error('Error removing registration:', error);
+    }
+}
+
+// =============================
+// 🧮 Program Count Functions (Admin) - FIXED
+// =============================
+async function loadProgramCount() {
+    try {
+        const programCounts = await api.getSheet('program_count');
+        const tableBody = document.getElementById('programCountTableBody');
+        
+        if (!tableBody) return;
+        
+        if (!Array.isArray(programCounts) || programCounts.length === 0) {
+            tableBody.innerHTML = `
+                <tr>
+                    <td colspan="8" class="text-center py-8 text-gray-500">
+                        No program count data available
+                    </td>
+                </tr>
+            `;
+            return;
+        }
+        
+        // Get user names for better display
+        const users = await api.getSheet('user_credentials');
+        
+        let html = '';
+        programCounts.forEach(pc => {
+            const slNo = pc['sl:no'] || pc.sl_no || '';
+            const name = pc.name || '';
+            const team = pc.team || '';
+            const stageCount = parseInt(pc.s || 0);
+            const nonStageCount = parseInt(pc.ns || 0);
+            const sportsCount = parseInt(pc.sp || 0);
+            const totalCount = parseInt(pc.count || 0);
+            
+            // Find user role
+            let role = '';
+            if (Array.isArray(users)) {
+                const user = users.find(u => {
+                    const userSlNo = u['sl:no'] || u.sl_no || '';
+                    return userSlNo == slNo;
+                });
+                role = user ? (user.role || '').toLowerCase() : '';
+            }
+            
+            // Check requirements
+            const meetsStage = stageCount >= 1;
+            const meetsNonStage = nonStageCount >= 1;
+            const meetsSports = sportsCount >= 1;
+            const meetsTotal = totalCount <= 12;
+            
+            const hasWarning = !meetsStage || !meetsNonStage || !meetsSports || !meetsTotal;
+            
+            let status = '';
+            let statusDetails = [];
+            if (!meetsStage) statusDetails.push('Stage < 1');
+            if (!meetsNonStage) statusDetails.push('Non-Stage < 1');
+            if (!meetsSports) statusDetails.push('Sports < 1');
+            if (!meetsTotal) statusDetails.push('Total > 12');
+            
+            if (hasWarning) {
+                status = `<span class="text-red-600 font-medium" title="${statusDetails.join(', ')}">⚠️ Needs ${statusDetails.length} fix(es)</span>`;
+            } else {
+                status = '<span class="text-green-600 font-medium">✓ OK</span>';
+            }
+            
+            html += `
+                <tr class="${hasWarning ? 'program-warning' : ''}">
+                    <td>${slNo}</td>
+                    <td>
+                        <div class="font-medium">${name}</div>
+                        <div class="text-xs text-gray-500">${role}</div>
+                    </td>
+                    <td>
+                        <span class="team-${team} team-badge">Team ${team}</span>
+                    </td>
+                    <td class="text-center ${meetsStage ? '' : 'text-red-600 font-bold'}">${stageCount}</td>
+                    <td class="text-center ${meetsNonStage ? '' : 'text-red-600 font-bold'}">${nonStageCount}</td>
+                    <td class="text-center ${meetsSports ? '' : 'text-red-600 font-bold'}">${sportsCount}</td>
+                    <td class="text-center font-bold ${meetsTotal ? '' : 'text-red-600'}">${totalCount}/12</td>
+                    <td class="text-center">${status}</td>
+                </tr>
+            `;
+        });
+        
+        tableBody.innerHTML = html;
+        
+    } catch (error) {
+        console.error('Error loading program count:', error);
+    }
+}
+
+// =============================
+// 🏅 Manage Results Functions (Admin) - FIXED
+// =============================
+async function loadManageResults() {
+    try {
+        // Set default result type
+        await loadResultsByType('s');
+        
+    } catch (error) {
+        console.error('Error loading manage results:', error);
+    }
+}
+
+async function loadResultsByType(type) {
+    try {
+        const sheetName = `${type}_result`;
+        const results = await api.getSheet(sheetName);
+        
+        const resultsContent = document.getElementById('resultsContent');
+        if (!resultsContent) return;
+        
+        if (!Array.isArray(results) || results.length === 0) {
+            resultsContent.innerHTML = `
+                <div class="text-center py-8 text-gray-500">
+                    No results available for ${getResultTypeName(type)}
+                </div>
+            `;
+            return;
+        }
+        
+        // Get registrations for this type
+        const registrations = [];
+        for (let team = 1; team <= 3; team++) {
+            const regSheet = await api.getSheet(`registration_team_${team}`);
+            if (Array.isArray(regSheet)) {
+                regSheet.forEach(reg => {
+                    const programCode = reg.program_code || '';
+                    if (programCode.startsWith(type.charAt(0).toUpperCase())) {
+                        registrations.push({
+                            ...reg,
+                            team: team
+                        });
+                    }
+                });
+            }
+        }
+        
+        let html = `
+            <div class="mb-4">
+                <h4 class="font-bold text-gray-800 mb-4">${getResultTypeName(type)} Results</h4>
+                <div class="mb-4">
+                    <button onclick="addNewResult('${type}')" class="btn btn-primary">
+                        <i class="fas fa-plus mr-2"></i>Add New Result
+                    </button>
+                </div>
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Program Code</th>
+                                <th>SL No</th>
+                                <th>Name</th>
+                                <th>Team</th>
+                                <th>Position</th>
+                                <th>Grade</th>
+                                <th>Points</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+        `;
+        
+        results.forEach(result => {
+            const programCode = result.program_code || '';
+            const slNo = result['sl:no'] || result.sl_no || '';
+            const name = result.name || '';
+            const position = result.position || 'N/A';
+            const grade = result.grade || 'N/A';
+            const points = result.points || '0';
+            
+            // Find team
+            let team = '';
+            const registration = registrations.find(reg => {
+                const regSlNo = reg['sl:no'] || reg.sl_no || '';
+                const regProgramCode = reg.program_code || '';
+                return regSlNo == slNo && regProgramCode === programCode;
+            });
+            if (registration) {
+                team = registration.team || '';
+            }
+            
+            html += `
+                <tr>
+                    <td>${programCode}</td>
+                    <td>${slNo}</td>
+                    <td>${name}</td>
+                    <td>
+                        ${team ? `<span class="team-${team} team-badge">Team ${team}</span>` : ''}
+                    </td>
+                    <td>
+                        ${position <= 3 ? `<div class="position-${position} position-badge inline-flex">${position}</div>` : position}
+                    </td>
+                    <td>
+                        <span class="font-medium ${grade === 'A' ? 'text-green-600' : 
+                                                grade === 'B' ? 'text-yellow-600' : 
+                                                grade === 'C' ? 'text-orange-600' : ''}">
+                            ${grade}
+                        </span>
+                    </td>
+                    <td class="font-bold text-green-600">${points}</td>
+                    <td>
+                        <button onclick="editResult('${type}', '${programCode}', '${slNo}')" 
+                                class="text-blue-600 hover:text-blue-800 mr-2">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                    </td>
+                </tr>
+            `;
+        });
+        
+        html += `
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        `;
+        
+        resultsContent.innerHTML = html;
+        
+    } catch (error) {
+        console.error('Error loading results by type:', error);
+    }
+}
+
+function getResultTypeName(type) {
+    const types = {
+        's': 'Stage',
+        'ns': 'Non-Stage',
+        'sp': 'Sports',
+        'gs': 'Group Stage',
+        'gns': 'Group Non-Stage',
+        'gsp': 'Group Sports'
+    };
+    return types[type] || type;
+}
+
+async function editResult(type, programCode, slNo) {
+    try {
+        const sheetName = `${type}_result`;
+        const results = await api.getSheet(sheetName);
+        
+        const result = Array.isArray(results) ? 
+            results.find(r => {
+                const rProgramCode = r.program_code || '';
+                const rSlNo = r['sl:no'] || r.sl_no || '';
+                return rProgramCode === programCode && rSlNo == slNo;
+            }) : null;
+        
+        if (!result) {
+            alert('Result not found');
+            return;
+        }
+        
+        const modal = document.getElementById('editResultModal');
+        const modalContent = document.getElementById('editResultModalContent');
+        
+        if (!modal || !modalContent) return;
+        
+        const isGroup = type.startsWith('g');
+        const positionValues = isGroup ? 
+            {1: 10, 2: 7, 3: 5} : 
+            {1: 3, 2: 2, 3: 1};
+        const gradeValues = {A: 3, B: 2, C: 1};
+        
+        const currentPosition = result.position || '';
+        const currentGrade = result.grade || '';
+        const currentPoints = result.points || 0;
+        
+        modalContent.innerHTML = `
+            <form id="editResultForm" onsubmit="updateResult(event, '${type}', '${programCode}', '${slNo}')">
+                <div class="space-y-4">
+                    <div class="form-group">
+                        <label class="form-label">Program Code</label>
+                        <input type="text" value="${programCode}" class="form-input" readonly>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">SL No</label>
+                        <input type="text" value="${slNo}" class="form-input" readonly>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Name</label>
+                        <input type="text" value="${result.name || ''}" class="form-input" readonly>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="form-group">
+                            <label class="form-label">Position</label>
+                            <select id="editPosition" class="form-select" required>
+                                <option value="">Select position</option>
+                                <option value="1" ${currentPosition == '1' ? 'selected' : ''}>1st (${positionValues[1]} points)</option>
+                                <option value="2" ${currentPosition == '2' ? 'selected' : ''}>2nd (${positionValues[2]} points)</option>
+                                <option value="3" ${currentPosition == '3' ? 'selected' : ''}>3rd (${positionValues[3]} points)</option>
+                                <option value="4" ${currentPosition == '4' ? 'selected' : ''}>4th (0 points)</option>
+                                <option value="5" ${currentPosition == '5' ? 'selected' : ''}>5th (0 points)</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Grade</label>
+                            <select id="editGrade" class="form-select" required>
+                                <option value="">Select grade</option>
+                                <option value="A" ${currentGrade == 'A' ? 'selected' : ''}>A (${gradeValues['A']} points)</option>
+                                <option value="B" ${currentGrade == 'B' ? 'selected' : ''}>B (${gradeValues['B']} points)</option>
+                                <option value="C" ${currentGrade == 'C' ? 'selected' : ''}>C (${gradeValues['C']} points)</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Calculated Points</label>
+                        <input type="text" id="calculatedPoints" class="form-input" readonly value="${currentPoints}">
+                    </div>
+                    
+                    <div id="editResultError" class="alert alert-error hidden"></div>
+                    
+                    <div class="flex justify-end space-x-3">
+                        <button type="button" onclick="closeEditResultModal()" class="btn btn-secondary">
+                            Cancel
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save mr-2"></i>Update Result
+                        </button>
+                    </div>
+                </div>
+            </form>
+        `;
+        
+        // Calculate points on change
+        const positionSelect = document.getElementById('editPosition');
+        const gradeSelect = document.getElementById('editGrade');
+        const pointsInput = document.getElementById('calculatedPoints');
+        
+        function calculatePoints() {
+            const position = positionSelect.value;
+            const grade = gradeSelect.value;
+            
+            if (position && grade) {
+                const positionPoints = positionValues[position] || 0;
+                const gradePoints = gradeValues[grade] || 0;
+                const totalPoints = positionPoints + gradePoints;
+                pointsInput.value = totalPoints;
+            } else {
+                pointsInput.value = currentPoints;
+            }
+        }
+        
+        if (positionSelect) positionSelect.addEventListener('change', calculatePoints);
+        if (gradeSelect) gradeSelect.addEventListener('change', calculatePoints);
+        
+        modal.classList.remove('hidden');
+        
+    } catch (error) {
+        console.error('Error editing result:', error);
+    }
+}
+
+async function updateResult(event, type, programCode, slNo) {
+    event.preventDefault();
+    
+    const position = document.getElementById('editPosition').value;
+    const grade = document.getElementById('editGrade').value;
+    const calculatedPoints = document.getElementById('calculatedPoints').value;
+    
+    if (!position || !grade) {
+        showEditResultError('Please select both position and grade');
+        return;
+    }
+    
+    try {
+        const sheetName = `${type}_result`;
+        
+        // Get the result to update name
+        const results = await api.getSheet(sheetName);
+        const result = Array.isArray(results) ? 
+            results.find(r => {
+                const rProgramCode = r.program_code || '';
+                const rSlNo = r['sl:no'] || r.sl_no || '';
+                return rProgramCode === programCode && rSlNo == slNo;
+            }) : null;
+        
+        if (!result) {
+            showEditResultError('Result not found');
+            return;
+        }
+        
+        // Update data
+        const updateData = {
+            'program_code': programCode,
+            'sl:no': slNo,
+            'name': result.name || '',
+            'position': position,
+            'grade': grade,
+            'points': calculatedPoints
+        };
+        
+        alert(`Update Result:\n\nType: ${type}\nProgram: ${programCode}\nSL No: ${slNo}\nPosition: ${position}\nGrade: ${grade}\nPoints: ${calculatedPoints}\n\nNote: Update functionality requires Google Apps Script implementation for updating existing rows.`);
+        
+        // In a full implementation, you would call an API to update the row
+        // For now, we'll just reload the data
+        closeEditResultModal();
+        await loadResultsByType(type);
+        
+    } catch (error) {
+        console.error('Error updating result:', error);
+        showEditResultError('Error updating result: ' + error.message);
+    }
+}
+
+function showEditResultError(message) {
+    const errorDiv = document.getElementById('editResultError');
+    if (errorDiv) {
+        errorDiv.textContent = message;
+        errorDiv.classList.remove('hidden');
+    } else {
+        alert(message);
+    }
+}
+
+async function addNewResult(type) {
+    try {
+        // Get all registrations for this type
+        let allRegistrations = [];
+        for (let team = 1; team <= 3; team++) {
+            const regSheet = await api.getSheet(`registration_team_${team}`);
+            if (Array.isArray(regSheet)) {
+                regSheet.forEach(reg => {
+                    const programCode = reg.program_code || '';
+                    if (programCode.startsWith(type.charAt(0).toUpperCase())) {
+                        allRegistrations.push({
+                            ...reg,
+                            team: team
+                        });
+                    }
+                });
+            }
+        }
+        
+        if (allRegistrations.length === 0) {
+            alert(`No registrations found for ${getResultTypeName(type)} programs`);
+            return;
+        }
+        
+        // Get unique program codes
+        const programCodes = [...new Set(allRegistrations.map(reg => reg.program_code || '').filter(Boolean))];
+        
+        if (programCodes.length === 0) {
+            alert(`No program codes found for ${getResultTypeName(type)}`);
+            return;
+        }
+        
+        // Show form to add result
+        let programsHtml = '';
+        programCodes.forEach(code => {
+            programsHtml += `<option value="${code}">${code} - ${getProgramType(code)}</option>`;
+        });
+        
+        let registrationsHtml = '';
+        allRegistrations.forEach(reg => {
+            const slNo = reg['sl:no'] || reg.sl_no || '';
+            const name = reg.name || '';
+            const programCode = reg.program_code || '';
+            registrationsHtml += `<option value="${slNo}|${programCode}">${slNo} - ${name} (${programCode})</option>`;
+        });
+        
+        const modal = document.getElementById('editResultModal');
+        const modalContent = document.getElementById('editResultModalContent');
+        
+        if (!modal || !modalContent) return;
+        
+        const isGroup = type.startsWith('g');
+        const positionValues = isGroup ? 
+            {1: 10, 2: 7, 3: 5} : 
+            {1: 3, 2: 2, 3: 1};
+        const gradeValues = {A: 3, B: 2, C: 1};
+        
+        modalContent.innerHTML = `
+            <form id="addResultForm" onsubmit="saveNewResult(event, '${type}')">
+                <div class="space-y-4">
+                    <div class="form-group">
+                        <label class="form-label">Select Registration</label>
+                        <select id="newResultRegistration" class="form-select" required>
+                            <option value="">Select registration</option>
+                            ${registrationsHtml}
+                        </select>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="form-group">
+                            <label class="form-label">Position</label>
+                            <select id="newResultPosition" class="form-select" required>
+                                <option value="">Select position</option>
+                                <option value="1">1st (${positionValues[1]} points)</option>
+                                <option value="2">2nd (${positionValues[2]} points)</option>
+                                <option value="3">3rd (${positionValues[3]} points)</option>
+                                <option value="4">4th (0 points)</option>
+                                <option value="5">5th (0 points)</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Grade</label>
+                            <select id="newResultGrade" class="form-select" required>
+                                <option value="">Select grade</option>
+                                <option value="A">A (${gradeValues['A']} points)</option>
+                                <option value="B">B (${gradeValues['B']} points)</option>
+                                <option value="C">C (${gradeValues['C']} points)</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Calculated Points</label>
+                        <input type="text" id="newResultPoints" class="form-input" readonly>
+                    </div>
+                    
+                    <div id="addResultError" class="alert alert-error hidden"></div>
+                    
+                    <div class="flex justify-end space-x-3">
+                        <button type="button" onclick="closeEditResultModal()" class="btn btn-secondary">
+                            Cancel
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-plus mr-2"></i>Add Result
+                        </button>
+                    </div>
+                </div>
+            </form>
+        `;
+        
+        // Calculate points on change
+        const positionSelect = document.getElementById('newResultPosition');
+        const gradeSelect = document.getElementById('newResultGrade');
+        const pointsInput = document.getElementById('newResultPoints');
+        
+        function calculateNewPoints() {
+            const position = positionSelect.value;
+            const grade = gradeSelect.value;
+            
+            if (position && grade) {
+                const positionPoints = positionValues[position] || 0;
+                const gradePoints = gradeValues[grade] || 0;
+                const totalPoints = positionPoints + gradePoints;
+                pointsInput.value = totalPoints;
+            } else {
+                pointsInput.value = '';
+            }
+        }
+        
+        if (positionSelect) positionSelect.addEventListener('change', calculateNewPoints);
+        if (gradeSelect) gradeSelect.addEventListener('change', calculateNewPoints);
+        
+        modal.classList.remove('hidden');
+        
+    } catch (error) {
+        console.error('Error adding new result:', error);
+        alert('Error: ' + error.message);
+    }
+}
+
+async function saveNewResult(event, type) {
+    event.preventDefault();
+    
+    const registration = document.getElementById('newResultRegistration').value;
+    const position = document.getElementById('newResultPosition').value;
+    const grade = document.getElementById('newResultGrade').value;
+    const calculatedPoints = document.getElementById('newResultPoints').value;
+    
+    const errorDiv = document.getElementById('addResultError');
+    
+    if (!registration) {
+        if (errorDiv) {
+            errorDiv.textContent = 'Please select a registration';
+            errorDiv.classList.remove('hidden');
+        }
+        return;
+    }
+    
+    if (!position || !grade) {
+        if (errorDiv) {
+            errorDiv.textContent = 'Please select both position and grade';
+            errorDiv.classList.remove('hidden');
+        }
+        return;
+    }
+    
+    try {
+        const [slNo, programCode] = registration.split('|');
+        
+        // Find registration details
+        let registrationDetails = null;
+        for (let team = 1; team <= 3; team++) {
+            const regSheet = await api.getSheet(`registration_team_${team}`);
+            if (Array.isArray(regSheet)) {
+                const reg = regSheet.find(r => {
+                    const rSlNo = r['sl:no'] || r.sl_no || '';
+                    const rProgramCode = r.program_code || '';
+                    return rSlNo == slNo && rProgramCode === programCode;
+                });
+                if (reg) {
+                    registrationDetails = { ...reg, team: team };
+                    break;
+                }
+            }
+        }
+        
+        if (!registrationDetails) {
+            if (errorDiv) {
+                errorDiv.textContent = 'Registration not found';
+                errorDiv.classList.remove('hidden');
+            }
+            return;
+        }
+        
+        // Add result
+        const rowData = {
+            'program_code': programCode,
+            'sl:no': slNo,
+            'name': registrationDetails.name || '',
+            'position': position,
+            'grade': grade,
+            'points': calculatedPoints
+        };
+        
+        const result = await api.addRow(`${type}_result`, rowData);
+        
+        if (result && !result.error) {
+            closeEditResultModal();
+            alert('Result added successfully!');
+            await loadResultsByType(type);
+        } else {
+            throw new Error(result?.error || 'Failed to add result');
+        }
+        
+    } catch (error) {
+        console.error('Error saving new result:', error);
+        if (errorDiv) {
+            errorDiv.textContent = 'Error: ' + error.message;
+            errorDiv.classList.remove('hidden');
+        }
+    }
+}
+
+// =============================
+// 📅 Admin Schedule Functions - FIXED
+// =============================
+async function loadAdminSchedule() {
+    try {
+        const schedule = await api.getSheet('schedule');
+        const tableBody = document.getElementById('adminScheduleTableBody');
+        
+        if (!tableBody) return;
+        
+        if (!Array.isArray(schedule) || schedule.length === 0) {
+            tableBody.innerHTML = `
+                <tr>
+                    <td colspan="4" class="text-center py-8 text-gray-500">
+                        No schedule available
+                    </td>
+                </tr>
+            `;
+            return;
+        }
+        
+        let html = '';
+        schedule.forEach(item => {
+            let date;
+            try {
+                date = new Date(item.date || new Date());
+            } catch (e) {
+                date = new Date();
+            }
+            
+            const formattedDate = date.toLocaleDateString('en-US', { 
+                year: 'numeric', 
+                month: 'short', 
+                day: 'numeric' 
+            });
+            
+            const time = item.time || '';
+            const programCode = item.program_code || '';
+            const day = item.day || date.toLocaleDateString('en-US', { weekday: 'long' });
+            
+            html += `
+                <tr>
+                    <td>${formattedDate}</td>
+                    <td>${time}</td>
+                    <td>
+                        <span class="program-code">${programCode}</span>
+                        <div class="text-xs text-gray-500">${day}</div>
+                    </td>
+                    <td>
+                        <button onclick="editSchedule('${item.date || ''}', '${time}', '${programCode}')" 
+                                class="text-blue-600 hover:text-blue-800 mr-2">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button onclick="deleteSchedule('${item.date || ''}', '${time}', '${programCode}')" 
+                                class="text-red-600 hover:text-red-800">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `;
+        });
+        
+        tableBody.innerHTML = html;
+        
+    } catch (error) {
+        console.error('Error loading admin schedule:', error);
+    }
+}
+
+// Handle add schedule form submission
+document.getElementById('addScheduleForm')?.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const date = document.getElementById('scheduleDate').value;
+    const time = document.getElementById('scheduleTime').value;
+    const programCode = document.getElementById('scheduleProgramCode').value.trim().toUpperCase();
+    
+    if (!date || !time || !programCode) {
+        alert('Please fill in all fields');
+        return;
+    }
+    
+    // Validate program code format
+    const validPrefixes = ['S', 'NS', 'SP', 'GS', 'GNS', 'GSP'];
+    const prefix = programCode.match(/^[A-Z]+/)?.[0];
+    const number = programCode.match(/\d+$/)?.[0];
+    
+    if (!prefix || !validPrefixes.includes(prefix) || !number) {
+        alert('Invalid program code format. Examples: S01, NS01, SP01, GS01, GNS01, GSP01');
+        return;
+    }
+    
+    try {
+        // Format date
+        const dateObj = new Date(date);
+        const formattedDate = dateObj.toISOString().split('T')[0];
+        const dayName = dateObj.toLocaleDateString('en-US', { weekday: 'long' });
+        
+        // Add to schedule
+        const rowData = {
+            'date': formattedDate,
+            'day': dayName,
+            'time': time,
+            'program_code': programCode
+        };
+        
+        const result = await api.addRow('schedule', rowData);
+        
+        if (result && !result.error) {
+            alert('Schedule added successfully!');
+            document.getElementById('addScheduleForm').reset();
+            await loadAdminSchedule();
+            await loadSchedule(); // Reload user schedule view
+        } else {
+            throw new Error(result?.error || 'Failed to add schedule');
+        }
+        
+    } catch (error) {
+        console.error('Error adding schedule:', error);
+        alert('Error adding schedule: ' + error.message);
+    }
+});
+
+async function editSchedule(date, time, programCode) {
+    try {
+        const newDate = prompt('Enter new date (YYYY-MM-DD):', date);
+        const newTime = prompt('Enter new time:', time);
+        const newProgramCode = prompt('Enter new program code:', programCode);
+        
+        if (newDate && newTime && newProgramCode) {
+            alert(`Schedule updated:\n\nDate: ${newDate}\nTime: ${newTime}\nProgram Code: ${newProgramCode}\n\nNote: Edit functionality requires Google Apps Script implementation.`);
+            // In a full implementation, you would call an API to update the row
+        }
+    } catch (error) {
+        console.error('Error editing schedule:', error);
+    }
+}
+
+async function deleteSchedule(date, time, programCode) {
+    if (!confirm('Are you sure you want to delete this schedule?')) {
+        return;
+    }
+    
+    try {
+        alert(`Delete Schedule:\n\nDate: ${date}\nTime: ${time}\nProgram Code: ${programCode}\n\nNote: Delete functionality requires Google Apps Script implementation.`);
+        // In a full implementation, you would call an API to delete the row
+    } catch (error) {
+        console.error('Error deleting schedule:', error);
+    }
+}
+
+// =============================
+// 🔐 Change Password Functions - FIXED
+// =============================
 function openChangePasswordModal() {
     const modal = document.getElementById('changePasswordModal');
     if (!modal) return;
@@ -1081,15 +2500,6 @@ function openChangePasswordModal() {
     document.getElementById('changePasswordForm').reset();
     document.getElementById('changePasswordError').classList.add('hidden');
     document.getElementById('changePasswordSuccess').classList.add('hidden');
-    
-    // Close mobile menu if open
-    if (mobileMenuOpen) {
-        closeMobileMenu();
-    }
-}
-
-function closeChangePasswordModal() {
-    document.getElementById('changePasswordModal').classList.add('hidden');
 }
 
 async function changePassword(event) {
@@ -1134,61 +2544,36 @@ async function changePassword(event) {
     }
     
     try {
-        showLoading(true);
-        
-        // First verify current password
-        const loginResult = await api.login(currentUser.ad_no, currentPassword);
-        if (!loginResult.success) {
-            throw new Error('Current password is incorrect');
-        }
-        
         // Update password
         const result = await api.updatePassword(currentUser.ad_no, newPassword);
         
-        showLoading(false);
-        
         if (result && !result.error) {
-            successDiv.textContent = 'Password changed successfully! Logging out...';
+            successDiv.textContent = 'Password changed successfully!';
             successDiv.classList.remove('hidden');
             
             // Clear form
             document.getElementById('changePasswordForm').reset();
             
-            // Logout after 2 seconds
+            // Logout after 3 seconds
             setTimeout(() => {
                 closeChangePasswordModal();
                 logout();
-            }, 2000);
+            }, 3000);
         } else {
             throw new Error(result?.error || 'Failed to update password');
         }
         
     } catch (error) {
-        console.error('❌ Error changing password:', error);
-        showLoading(false);
+        console.error('Error changing password:', error);
         errorDiv.textContent = error.message;
         errorDiv.classList.remove('hidden');
     }
 }
 
 // =============================
-// 🎯 Profile Menu Functions
+// 🚀 Initialization
 // =============================
-
-function toggleProfileMenu() {
-    const profileMenu = document.getElementById('profileMenu');
-    if (profileMenu) {
-        profileMenu.classList.toggle('hidden');
-    }
-}
-
-// =============================
-// 📱 Event Listeners Setup
-// =============================
-
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('🚀 Fest Management System Initialized');
-    
     // Login form
     const loginForm = document.getElementById('loginForm');
     if (loginForm) {
@@ -1207,103 +2592,58 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Mobile menu button
-    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-    if (mobileMenuBtn) {
-        mobileMenuBtn.addEventListener('click', toggleMobileMenu);
-    }
-    
-    // Mobile menu close button
-    const mobileMenuClose = document.getElementById('mobileMenuClose');
-    if (mobileMenuClose) {
-        mobileMenuClose.addEventListener('click', closeMobileMenu);
-    }
-    
-    // Mobile menu overlay
-    const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
-    if (mobileMenuOverlay) {
-        mobileMenuOverlay.addEventListener('click', closeMobileMenu);
-    }
-    
-    // Close profile menu when clicking outside
-    document.addEventListener('click', function(event) {
-        const profileContainer = event.target.closest('.profile-pic-container');
-        const profileMenu = document.getElementById('profileMenu');
-        
-        if (!profileContainer && profileMenu && !profileMenu.classList.contains('hidden')) {
-            profileMenu.classList.add('hidden');
-        }
-    });
-    
-    // Close modals when clicking outside
-    const modals = document.querySelectorAll('.modal');
-    modals.forEach(modal => {
-        modal.addEventListener('click', function(e) {
-            if (e.target === modal) {
-                modal.classList.add('hidden');
-            }
+    // Assign program form
+    const assignProgramForm = document.getElementById('assignProgramForm');
+    if (assignProgramForm) {
+        assignProgramForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            // Handled in the form's own event listener
         });
-    });
+    }
     
-    // Keyboard shortcuts
-    document.addEventListener('keydown', function(e) {
-        // Escape key closes modals and mobile menu
-        if (e.key === 'Escape') {
-            if (mobileMenuOpen) {
-                closeMobileMenu();
-            }
-            
-            document.querySelectorAll('.modal:not(.hidden)').forEach(modal => {
-                modal.classList.add('hidden');
-            });
-            
-            const profileMenu = document.getElementById('profileMenu');
-            if (profileMenu && !profileMenu.classList.contains('hidden')) {
-                profileMenu.classList.add('hidden');
-            }
-        }
-    });
+    // Add schedule form
+    const addScheduleForm = document.getElementById('addScheduleForm');
+    if (addScheduleForm) {
+        addScheduleForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            // Handled in the form's own event listener
+        });
+    }
     
-    // Handle window resize
-    let resizeTimer;
-    window.addEventListener('resize', function() {
-        clearTimeout(resizeTimer);
-        resizeTimer = setTimeout(function() {
-            // Close mobile menu on desktop
-            if (window.innerWidth > 768 && mobileMenuOpen) {
-                closeMobileMenu();
-            }
-        }, 250);
-    });
-    
-    // Prevent mobile zoom on double tap
-    let lastTouchEnd = 0;
-    document.addEventListener('touchend', function(event) {
-        const now = (new Date()).getTime();
-        if (now - lastTouchEnd <= 300) {
-            event.preventDefault();
-        }
-        lastTouchEnd = now;
-    }, false);
+    // Set default page
+    showPage('dashboard');
 });
 
-// =============================
-// 🌐 Global Functions (Window Scope)
-// =============================
+// Admin initialization function
+async function initializeSheets() {
+    try {
+        const result = await api.initializeSheets();
+        if (result && !result.error) {
+            alert('Sheets initialized successfully with sample data!');
+            // Reload the page
+            location.reload();
+        } else {
+            throw new Error(result?.error || 'Failed to initialize sheets');
+        }
+    } catch (error) {
+        console.error('Error initializing sheets:', error);
+        alert('Error initializing sheets: ' + error.message);
+    }
+}
 
-window.login = login;
-window.logout = logout;
+// Export for use in console
+window.initializeSheets = initializeSheets;
 window.showPage = showPage;
-window.toggleProfileMenu = toggleProfileMenu;
+window.logout = logout;
 window.openChangePasswordModal = openChangePasswordModal;
-window.closeChangePasswordModal = closeChangePasswordModal;
-window.toggleMobileMenu = toggleMobileMenu;
-window.closeMobileMenu = closeMobileMenu;
-
-// Make currentUser accessible globally for debugging
-window.currentUser = currentUser;
-window.api = api;
+window.showResultType = function(type) {
+    currentResultType = type;
+    loadResultsByType(type);
+};
 
 console.log('%c🎉 FEST MANAGEMENT SYSTEM LOADED 🎉', 'color: #3b82f6; font-size: 16px; font-weight: bold;');
-console.log('%c📱 Mobile optimized & production ready', 'color: #10b981; font-size: 12px;');
-console.log('%c🔧 Open console and type "api" to access API', 'color: #f59e0b; font-size: 12px;');
+console.log('%cRun initializeSheets() in console to setup sheets', 'color: #059669; font-size: 12px;');
+console.log('%cSample Login:', 'color: #f59e0b; font-size: 12px;');
+console.log('%cAdmin: ADM001 / admin123', 'color: #dc2626;');
+console.log('%cTeam 1 Leader: T1L001 / t1leader', 'color: #3b82f6;');
+console.log('%cTeam 1 Member: T1M001 / t1m001', 'color: #10b981;');
