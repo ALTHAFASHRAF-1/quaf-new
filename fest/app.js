@@ -17,7 +17,7 @@ let mobileMenuOpen = false;
 class GoogleSheetsAPI {
     constructor() {
         // ⚠️ REPLACE WITH YOUR GOOGLE APPS SCRIPT WEB APP URL
-        this.apiUrl = "https://script.google.com/macros/s/AKfycbxA1gSXVQU0kKyEQeNkfzObx8VjXaRuE0qUX6KKdNcg6H9Xos82TLkDCWhj7p20N9RmYA/exec";
+        this.apiUrl = "https://script.google.com/macros/s/AKfycbwF_EwH5GNgixEo3iynpTM8URVxS3a58EUUhtwdGnPeGd41zE0p0Dw4Itp4j3RFa8kTEw/exec";
         this.cache = new Map();
         this.cacheTimeout = 30 * 1000; // 30 seconds
     }
