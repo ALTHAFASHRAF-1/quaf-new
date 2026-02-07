@@ -1,40 +1,52 @@
 // Global variables
 let currentUser = null;
-let googleScriptUrl = 'https://script.google.com/macros/s/AKfycbw4jv2l7Ksh0Nrewmr6SDwl3f7uploLSEqVBkiWmiq8lX0Bcs3XafmaFtPE4wmpISFg/exec'; // Add your Google Apps Script Web App URL here
-
-// Google Apps Script API functions
-async function callGoogleScript(functionName, data = {}) {
-    try {
-        const response = await fetch(`${googleScriptUrl}?action=${functionName}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data)
-        });
-        return await response.json();
-    } catch (error) {
-        console.error('Error calling Google Script:', error);
-        return { success: false, message: 'Network error' };
-    }
-}
+// You'll need to replace this with your actual Google Apps Script Web App URL
+// after deploying the script
+let googleScriptUrl = null;
 
 // DOM Content Loaded
 document.addEventListener('DOMContentLoaded', function() {
-    // Get Google Script URL from query parameter or prompt
-    const urlParams = new URLSearchParams(window.location.search);
-    googleScriptUrl = urlParams.get('scriptUrl') || prompt('Please enter your Google Apps Script Web App URL:');
-    
-    if (!googleScriptUrl) {
-        alert('Google Script URL is required. Please reload the page and provide the URL.');
-        return;
+    // Check if we're running locally or on a server
+    if (window.location.protocol === 'file:') {
+        // Local file system - prompt for URL
+        googleScriptUrl = localStorage.getItem('googleScriptUrl');
+        if (!googleScriptUrl) {
+            googleScriptUrl = prompt('Please enter your Google Apps Script Web App URL:');
+            if (googleScriptUrl) {
+                localStorage.setItem('googleScriptUrl', googleScriptUrl);
+            } else {
+                alert('Google Script URL is required. Please reload the page and provide the URL.');
+                return;
+            }
+        }
+    } else {
+        // Running on a server - try to get from URL or use a default
+        const urlParams = new URLSearchParams(window.location.search);
+        googleScriptUrl = urlParams.get('scriptUrl') || 
+                         localStorage.getItem('googleScriptUrl') ||
+                         'https://script.google.com/macros/s/AKfycbxubdoI3OBXWCxhQ-aZzmwp3Bi0vU48xZPY2ElUspB5opAkFBxtwQElLA8f5aVjEtnA/exec'; // Replace with your URL
     }
+    
+    // Store for future use
+    if (googleScriptUrl) {
+        localStorage.setItem('googleScriptUrl', googleScriptUrl);
+    }
+    
+    // Display current URL (for debugging)
+    console.log('Using Google Script URL:', googleScriptUrl);
     
     // Login functionality
     const loginBtn = document.getElementById('loginBtn');
     if (loginBtn) {
         loginBtn.addEventListener('click', handleLogin);
     }
+    
+    // Allow Enter key to login
+    document.getElementById('password')?.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            handleLogin();
+        }
+    });
     
     // Logout buttons
     document.getElementById('logoutBtn')?.addEventListener('click', logout);
@@ -52,6 +64,26 @@ document.addEventListener('DOMContentLoaded', function() {
     // Leader dashboard - Assign program
     document.getElementById('assignProgramBtn')?.addEventListener('click', assignProgram);
     
+    // Auto-fill program name when code is selected
+    document.getElementById('programCodeSelect')?.addEventListener('change', function() {
+        const programNameMap = {
+            's01': 'Solo Singing',
+            's02': 'Instrumental',
+            'ns01': 'Elocution',
+            'ns02': 'Debate',
+            'sp01': '100m Race',
+            'sp02': 'Long Jump',
+            'gs01': 'Group Dance',
+            'gns01': 'Group Quiz',
+            'gsp01': 'Relay Race'
+        };
+        
+        const programName = document.getElementById('programName');
+        if (this.value && programNameMap[this.value]) {
+            programName.value = programNameMap[this.value];
+        }
+    });
+    
     // Admin dashboard - Add user
     document.getElementById('addUserBtn')?.addEventListener('click', addUser);
     
@@ -65,14 +97,49 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('resultProgramCode')?.addEventListener('change', calculatePoints);
 });
 
+// Google Apps Script API functions
+async function callGoogleScript(functionName, data = {}) {
+    if (!googleScriptUrl) {
+        alert('Google Script URL is not set. Please reload the page.');
+        return { success: false, message: 'Google Script URL not set' };
+    }
+    
+    try {
+        // Add a timestamp to prevent caching
+        const url = `${googleScriptUrl}?action=${functionName}&t=${Date.now()}`;
+        
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data)
+        });
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const result = await response.json();
+        console.log('API Response:', functionName, result);
+        return result;
+    } catch (error) {
+        console.error('Error calling Google Script:', error);
+        return { 
+            success: false, 
+            message: 'Network error: ' + error.message 
+        };
+    }
+}
+
 // Handle login
 async function handleLogin() {
-    const username = document.getElementById('username').value;
+    const username = document.getElementById('username').value.trim();
     const password = document.getElementById('password').value;
     const errorDiv = document.getElementById('loginError');
     
     if (!username || !password) {
-        errorDiv.textContent = 'Please enter username and password';
+        showError(errorDiv, 'Please enter username and password');
         return;
     }
     
@@ -90,6 +157,7 @@ async function handleLogin() {
         
         if (response.success) {
             currentUser = response.user;
+            console.log('Logged in as:', currentUser);
             
             // Hide login screen
             document.getElementById('loginScreen').style.display = 'none';
@@ -103,10 +171,11 @@ async function handleLogin() {
                 showAdminDashboard();
             }
         } else {
-            errorDiv.textContent = response.message || 'Invalid credentials';
+            showError(errorDiv, response.message || 'Invalid credentials');
         }
     } catch (error) {
-        errorDiv.textContent = 'Login failed. Please try again.';
+        showError(errorDiv, 'Login failed. Please try again.');
+        console.error('Login error:', error);
     } finally {
         loginBtn.innerHTML = originalText;
         loginBtn.disabled = false;
@@ -137,6 +206,8 @@ async function showMemberDashboard() {
         if (response.programCount) {
             updatePointsSummary(response.programCount, response.results);
         }
+    } else {
+        alert('Error loading member data: ' + response.message);
     }
 }
 
@@ -163,6 +234,8 @@ async function showLeaderDashboard() {
         
         // Populate member select for assigning programs
         populateMemberSelect(response.teamMembers);
+    } else {
+        alert('Error loading leader data: ' + response.message);
     }
 }
 
@@ -198,16 +271,20 @@ function showPage(pageName) {
     });
     
     // Show selected page
-    document.getElementById(`${pageName}Page`).classList.add('active');
-    
-    // Activate corresponding button
-    document.querySelector(`#${dashboard}Dashboard .sidebar-btn[data-page="${pageName}"]`).classList.add('active');
-    
-    // Load data for specific pages
-    if (dashboard === 'leader' && pageName === 'teamResults') {
-        loadTeamResults();
-    } else if (dashboard === 'admin' && pageName === 'viewAll') {
-        loadAllData();
+    const pageElement = document.getElementById(`${pageName}Page`);
+    if (pageElement) {
+        pageElement.classList.add('active');
+        
+        // Activate corresponding button
+        const button = document.querySelector(`#${dashboard}Dashboard .sidebar-btn[data-page="${pageName}"]`);
+        if (button) button.classList.add('active');
+        
+        // Load data for specific pages
+        if (dashboard === 'leader' && pageName === 'teamResults') {
+            loadTeamResults();
+        } else if (dashboard === 'admin' && pageName === 'viewAll') {
+            loadAllData();
+        }
     }
 }
 
@@ -216,14 +293,21 @@ function updateScheduleTable(scheduleData) {
     const tbody = document.querySelector('#scheduleTable tbody');
     tbody.innerHTML = '';
     
+    if (!scheduleData || scheduleData.length === 0) {
+        const row = document.createElement('tr');
+        row.innerHTML = '<td colspan="5" style="text-align: center;">No schedule data available</td>';
+        tbody.appendChild(row);
+        return;
+    }
+    
     scheduleData.forEach(item => {
         const row = document.createElement('tr');
         row.innerHTML = `
-            <td>${item[0]}</td>
-            <td>${item[1]}</td>
-            <td>${item[2]}</td>
-            <td>${item[3]}</td>
-            <td>${item[4]}</td>
+            <td>${item[0] || ''}</td>
+            <td>${item[1] || ''}</td>
+            <td>${item[2] || ''}</td>
+            <td>${item[3] || ''}</td>
+            <td>${item[4] || ''}</td>
         `;
         tbody.appendChild(row);
     });
@@ -234,12 +318,19 @@ function updateProgramsTable(programs) {
     const tbody = document.querySelector('#programsTable tbody');
     tbody.innerHTML = '';
     
+    if (!programs || programs.length === 0) {
+        const row = document.createElement('tr');
+        row.innerHTML = '<td colspan="3" style="text-align: center;">No programs registered</td>';
+        tbody.appendChild(row);
+        return;
+    }
+    
     programs.forEach(item => {
         const row = document.createElement('tr');
         row.innerHTML = `
-            <td>${item[0]}</td>
-            <td>${item[1]}</td>
-            <td>${item[4]}</td>
+            <td>${item[0] || ''}</td>
+            <td>${item[1] || ''}</td>
+            <td>${item[4] || ''}</td>
         `;
         tbody.appendChild(row);
     });
@@ -250,15 +341,22 @@ function updateResultsTable(results) {
     const tbody = document.querySelector('#resultsTable tbody');
     tbody.innerHTML = '';
     
+    if (!results || results.length === 0) {
+        const row = document.createElement('tr');
+        row.innerHTML = '<td colspan="4" style="text-align: center;">No results available</td>';
+        tbody.appendChild(row);
+        return;
+    }
+    
     let totalPoints = 0;
     
     results.forEach(item => {
         const row = document.createElement('tr');
         row.innerHTML = `
-            <td>${item[0]}</td>
-            <td>${item[2]}</td>
-            <td>${item[3]}</td>
-            <td>${item[4]}</td>
+            <td>${item[0] || ''}</td>
+            <td>${item[2] || ''}</td>
+            <td>${item[3] || ''}</td>
+            <td>${item[4] || ''}</td>
         `;
         tbody.appendChild(row);
         totalPoints += parseInt(item[4]) || 0;
@@ -269,17 +367,20 @@ function updateResultsTable(results) {
 
 // Update points summary
 function updatePointsSummary(programCount, results) {
+    if (!programCount) return;
+    
     document.getElementById('stageCount').textContent = programCount[3] || 0;
     document.getElementById('nonStageCount').textContent = programCount[4] || 0;
     document.getElementById('sportsCount').textContent = programCount[5] || 0;
     document.getElementById('totalPrograms').textContent = programCount[6] || 0;
     
     const statusElement = document.getElementById('programStatus');
-    statusElement.textContent = programCount[7] || 'OK';
-    statusElement.dataset.status = programCount[7] || 'OK';
+    const status = programCount[7] || 'OK';
+    statusElement.textContent = status;
+    statusElement.dataset.status = status;
     
     // Calculate total points from results
-    const totalPoints = results.reduce((sum, result) => sum + (parseInt(result[4]) || 0), 0);
+    const totalPoints = results ? results.reduce((sum, result) => sum + (parseInt(result[4]) || 0), 0) : 0;
     document.getElementById('totalPoints').textContent = totalPoints;
 }
 
@@ -288,16 +389,23 @@ function updateTeamMembersTable(teamMembers, programCounts) {
     const tbody = document.querySelector('#teamMembersTable tbody');
     tbody.innerHTML = '';
     
+    if (!teamMembers || teamMembers.length === 0) {
+        const row = document.createElement('tr');
+        row.innerHTML = '<td colspan="6" style="text-align: center;">No team members found</td>';
+        tbody.appendChild(row);
+        return;
+    }
+    
     teamMembers.forEach(member => {
         const programCount = programCounts?.find(pc => pc[0] === member[0]);
-        const status = programCount ? programCount[7] : 'OK';
+        const status = programCount ? (programCount[7] || 'OK') : 'Check';
         
         const row = document.createElement('tr');
         row.innerHTML = `
-            <td>${member[0]}</td>
-            <td>${member[1]}</td>
-            <td>${member[2]}</td>
-            <td>${member[3]}</td>
+            <td>${member[0] || ''}</td>
+            <td>${member[1] || ''}</td>
+            <td>${member[2] || ''}</td>
+            <td>${member[3] || ''}</td>
             <td>${programCount ? programCount[6] : 0}</td>
             <td><span class="status-badge status-${status.toLowerCase()}">${status}</span></td>
         `;
@@ -310,13 +418,20 @@ function updateTeamProgramsTable(registrations) {
     const tbody = document.querySelector('#teamProgramsTable tbody');
     tbody.innerHTML = '';
     
+    if (!registrations || registrations.length === 0) {
+        const row = document.createElement('tr');
+        row.innerHTML = '<td colspan="4" style="text-align: center;">No team programs registered</td>';
+        tbody.appendChild(row);
+        return;
+    }
+    
     registrations.forEach(item => {
         const row = document.createElement('tr');
         row.innerHTML = `
-            <td>${item[0]}</td>
-            <td>${item[1]}</td>
-            <td>${item[2]}</td>
-            <td>${item[3]}</td>
+            <td>${item[0] || ''}</td>
+            <td>${item[1] || ''}</td>
+            <td>${item[2] || ''}</td>
+            <td>${item[3] || ''}</td>
         `;
         tbody.appendChild(row);
     });
@@ -325,16 +440,20 @@ function updateTeamProgramsTable(registrations) {
 // Populate member select for assigning programs
 function populateMemberSelect(teamMembers) {
     const select = document.getElementById('memberSelect');
+    if (!select) return;
+    
     select.innerHTML = '<option value="">Select a member</option>';
     
     teamMembers.forEach(member => {
-        const option = document.createElement('option');
-        option.value = JSON.stringify({
-            slNo: member[0],
-            name: member[2]
-        });
-        option.textContent = `${member[2]} (${member[3]})`;
-        select.appendChild(option);
+        if (member[3] === 'member') { // Only include members, not leaders
+            const option = document.createElement('option');
+            option.value = JSON.stringify({
+                slNo: member[0],
+                name: member[2]
+            });
+            option.textContent = `${member[2]} (${member[1]})`;
+            select.appendChild(option);
+        }
     });
 }
 
@@ -346,8 +465,7 @@ async function assignProgram() {
     const messageDiv = document.getElementById('assignMessage');
     
     if (!memberSelect.value || !programCodeSelect.value || !programNameInput.value) {
-        messageDiv.textContent = 'Please fill all fields';
-        messageDiv.className = 'message error';
+        showMessage(messageDiv, 'Please fill all fields', 'error');
         return;
     }
     
@@ -363,8 +481,7 @@ async function assignProgram() {
     const response = await callGoogleScript('assignProgram', programData);
     
     if (response.success) {
-        messageDiv.textContent = response.message;
-        messageDiv.className = 'message success';
+        showMessage(messageDiv, response.message, 'success');
         
         // Clear form
         programCodeSelect.value = '';
@@ -379,8 +496,7 @@ async function assignProgram() {
             updateTeamProgramsTable(leaderData.registrations);
         }
     } else {
-        messageDiv.textContent = response.message;
-        messageDiv.className = 'message error';
+        showMessage(messageDiv, response.message, 'error');
     }
 }
 
@@ -405,14 +521,21 @@ function updateTeamResultsTable(results) {
     const tbody = document.querySelector('#teamResultsTable tbody');
     tbody.innerHTML = '';
     
+    if (!results || results.length === 0) {
+        const row = document.createElement('tr');
+        row.innerHTML = '<td colspan="5" style="text-align: center;">No team results available</td>';
+        tbody.appendChild(row);
+        return;
+    }
+    
     results.forEach(item => {
         const row = document.createElement('tr');
         row.innerHTML = `
-            <td>${item[0]}</td>
-            <td>${item[1]}</td>
-            <td>${item[2]}</td>
-            <td>${item[3]}</td>
-            <td>${item[4]}</td>
+            <td>${item[0] || ''}</td>
+            <td>${item[1] || ''}</td>
+            <td>${item[2] || ''}</td>
+            <td>${item[3] || ''}</td>
+            <td>${item[4] || ''}</td>
         `;
         tbody.appendChild(row);
     });
@@ -437,6 +560,8 @@ async function loadAllData() {
         
         // Update all program counts table
         updateAllProgramCountsTable(response.programCounts);
+    } else {
+        alert('Error loading all data: ' + response.message);
     }
 }
 
@@ -445,14 +570,21 @@ function updateAllUsersTable(users) {
     const tbody = document.querySelector('#allUsersTable tbody');
     tbody.innerHTML = '';
     
+    if (!users || users.length === 0) {
+        const row = document.createElement('tr');
+        row.innerHTML = '<td colspan="5" style="text-align: center;">No users found</td>';
+        tbody.appendChild(row);
+        return;
+    }
+    
     users.forEach(user => {
         const row = document.createElement('tr');
         row.innerHTML = `
-            <td>${user[0]}</td>
-            <td>${user[1]}</td>
-            <td>${user[2]}</td>
-            <td>${user[3]}</td>
-            <td>${user[5]}</td>
+            <td>${user[0] || ''}</td>
+            <td>${user[1] || ''}</td>
+            <td>${user[2] || ''}</td>
+            <td>${user[3] || ''}</td>
+            <td>${user[5] || ''}</td>
         `;
         tbody.appendChild(row);
     });
@@ -463,14 +595,21 @@ function updateAdminScheduleTable(schedule) {
     const tbody = document.querySelector('#adminScheduleTable tbody');
     tbody.innerHTML = '';
     
+    if (!schedule || schedule.length === 0) {
+        const row = document.createElement('tr');
+        row.innerHTML = '<td colspan="5" style="text-align: center;">No schedule data available</td>';
+        tbody.appendChild(row);
+        return;
+    }
+    
     schedule.forEach(item => {
         const row = document.createElement('tr');
         row.innerHTML = `
-            <td>${item[0]}</td>
-            <td>${item[1]}</td>
-            <td>${item[2]}</td>
-            <td>${item[3]}</td>
-            <td>${item[4]}</td>
+            <td>${item[0] || ''}</td>
+            <td>${item[1] || ''}</td>
+            <td>${item[2] || ''}</td>
+            <td>${item[3] || ''}</td>
+            <td>${item[4] || ''}</td>
         `;
         tbody.appendChild(row);
     });
@@ -481,14 +620,21 @@ function updateAllResultsTable(results) {
     const tbody = document.querySelector('#allResultsTable tbody');
     tbody.innerHTML = '';
     
+    if (!results || results.length === 0) {
+        const row = document.createElement('tr');
+        row.innerHTML = '<td colspan="5" style="text-align: center;">No results available</td>';
+        tbody.appendChild(row);
+        return;
+    }
+    
     results.forEach(item => {
         const row = document.createElement('tr');
         row.innerHTML = `
-            <td>${item[0]}</td>
-            <td>${item[1]}</td>
-            <td>${item[2]}</td>
-            <td>${item[3]}</td>
-            <td>${item[4]}</td>
+            <td>${item[0] || ''}</td>
+            <td>${item[1] || ''}</td>
+            <td>${item[2] || ''}</td>
+            <td>${item[3] || ''}</td>
+            <td>${item[4] || ''}</td>
         `;
         tbody.appendChild(row);
     });
@@ -499,14 +645,21 @@ function updateAllRegistrationsTable(registrations) {
     const tbody = document.querySelector('#allRegistrationsTable tbody');
     tbody.innerHTML = '';
     
+    if (!registrations || registrations.length === 0) {
+        const row = document.createElement('tr');
+        row.innerHTML = '<td colspan="5" style="text-align: center;">No registrations available</td>';
+        tbody.appendChild(row);
+        return;
+    }
+    
     registrations.forEach(item => {
         const row = document.createElement('tr');
         row.innerHTML = `
-            <td>${item[0]}</td>
-            <td>${item[1]}</td>
-            <td>${item[2]}</td>
-            <td>${item[3]}</td>
-            <td>${item[4]}</td>
+            <td>${item[0] || ''}</td>
+            <td>${item[1] || ''}</td>
+            <td>${item[2] || ''}</td>
+            <td>${item[3] || ''}</td>
+            <td>${item[4] || ''}</td>
         `;
         tbody.appendChild(row);
     });
@@ -517,17 +670,24 @@ function updateAllProgramCountsTable(programCounts) {
     const tbody = document.querySelector('#allProgramCountsTable tbody');
     tbody.innerHTML = '';
     
+    if (!programCounts || programCounts.length === 0) {
+        const row = document.createElement('tr');
+        row.innerHTML = '<td colspan="8" style="text-align: center;">No program counts available</td>';
+        tbody.appendChild(row);
+        return;
+    }
+    
     programCounts.forEach(item => {
         const row = document.createElement('tr');
         row.innerHTML = `
-            <td>${item[0]}</td>
-            <td>${item[1]}</td>
-            <td>${item[2]}</td>
-            <td>${item[3]}</td>
-            <td>${item[4]}</td>
-            <td>${item[5]}</td>
-            <td>${item[6]}</td>
-            <td><span class="status-badge status-${item[7].toLowerCase()}">${item[7]}</span></td>
+            <td>${item[0] || ''}</td>
+            <td>${item[1] || ''}</td>
+            <td>${item[2] || ''}</td>
+            <td>${item[3] || ''}</td>
+            <td>${item[4] || ''}</td>
+            <td>${item[5] || ''}</td>
+            <td>${item[6] || ''}</td>
+            <td><span class="status-badge status-${(item[7] || 'check').toLowerCase()}">${item[7] || 'Check'}</span></td>
         `;
         tbody.appendChild(row);
     });
@@ -535,16 +695,15 @@ function updateAllProgramCountsTable(programCounts) {
 
 // Add user (admin)
 async function addUser() {
-    const adNo = document.getElementById('adNo').value;
-    const userName = document.getElementById('userName').value;
+    const adNo = document.getElementById('adNo').value.trim();
+    const userName = document.getElementById('userName').value.trim();
     const userRole = document.getElementById('userRole').value;
     const userTeam = document.getElementById('userTeam').value;
     const userPassword = document.getElementById('userPassword').value;
     const messageDiv = document.getElementById('userMessage');
     
     if (!adNo || !userName || !userPassword) {
-        messageDiv.textContent = 'Please fill all required fields';
-        messageDiv.className = 'message error';
+        showMessage(messageDiv, 'Please fill all required fields', 'error');
         return;
     }
     
@@ -559,8 +718,7 @@ async function addUser() {
     const response = await callGoogleScript('addUser', userData);
     
     if (response.success) {
-        messageDiv.textContent = response.message;
-        messageDiv.className = 'message success';
+        showMessage(messageDiv, response.message, 'success');
         
         // Clear form
         document.getElementById('adNo').value = '';
@@ -573,23 +731,21 @@ async function addUser() {
             updateAllUsersTable(allData.users);
         }
     } else {
-        messageDiv.textContent = response.message;
-        messageDiv.className = 'message error';
+        showMessage(messageDiv, response.message, 'error');
     }
 }
 
 // Add schedule (admin)
 async function addSchedule() {
     const date = document.getElementById('scheduleDate').value;
-    const day = document.getElementById('scheduleDay').value;
-    const time = document.getElementById('scheduleTime').value;
-    const programCode = document.getElementById('scheduleProgramCode').value;
-    const programName = document.getElementById('scheduleProgramName').value;
+    const day = document.getElementById('scheduleDay').value.trim();
+    const time = document.getElementById('scheduleTime').value.trim();
+    const programCode = document.getElementById('scheduleProgramCode').value.trim();
+    const programName = document.getElementById('scheduleProgramName').value.trim();
     const messageDiv = document.getElementById('scheduleMessage');
     
     if (!date || !day || !time || !programCode || !programName) {
-        messageDiv.textContent = 'Please fill all fields';
-        messageDiv.className = 'message error';
+        showMessage(messageDiv, 'Please fill all fields', 'error');
         return;
     }
     
@@ -604,8 +760,7 @@ async function addSchedule() {
     const response = await callGoogleScript('updateSchedule', scheduleData);
     
     if (response.success) {
-        messageDiv.textContent = response.message;
-        messageDiv.className = 'message success';
+        showMessage(messageDiv, response.message, 'success');
         
         // Clear form
         document.getElementById('scheduleDate').value = '';
@@ -620,8 +775,7 @@ async function addSchedule() {
             updateAdminScheduleTable(allData.schedule);
         }
     } else {
-        messageDiv.textContent = response.message;
-        messageDiv.className = 'message error';
+        showMessage(messageDiv, response.message, 'error');
     }
 }
 
@@ -629,10 +783,13 @@ async function addSchedule() {
 function calculatePoints() {
     const position = parseInt(document.getElementById('resultPosition').value);
     const grade = document.getElementById('resultGrade').value;
-    const programCode = document.getElementById('resultProgramCode').value;
+    const programCode = document.getElementById('resultProgramCode').value.trim();
     const pointsField = document.getElementById('resultPoints');
     
-    if (!position || !grade || !programCode) return;
+    if (!position || !grade || !programCode) {
+        pointsField.value = '';
+        return;
+    }
     
     let positionPoints = 0;
     let gradePoints = 0;
@@ -659,7 +816,7 @@ function calculatePoints() {
 
 // Add result (admin)
 async function addResult() {
-    const programCode = document.getElementById('resultProgramCode').value;
+    const programCode = document.getElementById('resultProgramCode').value.trim();
     const slNo = parseInt(document.getElementById('resultSlNo').value);
     const position = parseInt(document.getElementById('resultPosition').value);
     const grade = document.getElementById('resultGrade').value;
@@ -667,8 +824,7 @@ async function addResult() {
     const messageDiv = document.getElementById('resultMessage');
     
     if (!programCode || !slNo || !position || !grade || !points) {
-        messageDiv.textContent = 'Please fill all fields';
-        messageDiv.className = 'message error';
+        showMessage(messageDiv, 'Please fill all fields', 'error');
         return;
     }
     
@@ -683,8 +839,7 @@ async function addResult() {
     const response = await callGoogleScript('updateResult', resultData);
     
     if (response.success) {
-        messageDiv.textContent = response.message;
-        messageDiv.className = 'message success';
+        showMessage(messageDiv, response.message, 'success');
         
         // Clear form
         document.getElementById('resultProgramCode').value = '';
@@ -697,8 +852,7 @@ async function addResult() {
             updateAllResultsTable(allData.results);
         }
     } else {
-        messageDiv.textContent = response.message;
-        messageDiv.className = 'message error';
+        showMessage(messageDiv, response.message, 'error');
     }
 }
 
@@ -720,12 +874,29 @@ function logout() {
     document.getElementById('loginError').textContent = '';
 }
 
-// Initialize
+// Helper functions
+function showError(element, message) {
+    if (element) {
+        element.textContent = message;
+        element.style.display = 'block';
+        setTimeout(() => {
+            element.style.display = 'none';
+        }, 5000);
+    }
+}
+
+function showMessage(element, message, type) {
+    if (element) {
+        element.textContent = message;
+        element.className = `message ${type}`;
+        element.style.display = 'block';
+        setTimeout(() => {
+            element.style.display = 'none';
+        }, 5000);
+    }
+}
+
+// Initialize on load
 window.onload = function() {
-    // Add enter key support for login
-    document.getElementById('password')?.addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') {
-            handleLogin();
-        }
-    });
+    console.log('Fest Management System loaded');
 };
