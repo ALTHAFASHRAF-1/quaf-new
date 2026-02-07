@@ -5,13 +5,12 @@ let currentTeamTab = 1;
 let currentResultType = 's';
 
 // =============================
-// 📊 Google Sheets Integration - UPDATED
+// 📊 Google Sheets Integration - FIXED
 // =============================
 class GoogleSheetsAPI {
     constructor() {
         // ⚠️ REPLACE THIS URL WITH YOUR GOOGLE APPS SCRIPT WEB APP URL
-        // After deploying the Google Apps Script, copy the Web App URL and paste it here
-        this.apiUrl = "https://script.google.com/macros/s/AKfycbwKB5xmd3tWCcjnp_vw_HUn1HdXZRqMPSK4euLfYrKU36MyV0E44DRhdeybt3MxkfZ2gg/exec";
+        this.apiUrl = "https://script.google.com/macros/s/AKfycbxA1gSXVQU0kKyEQeNkfzObx8VjXaRuE0qUX6KKdNcg6H9Xos82TLkDCWhj7p20N9RmYA/exec";
         this.cache = new Map();
         this.cacheTimeout = 30 * 1000;
     }
@@ -28,39 +27,24 @@ class GoogleSheetsAPI {
         }
 
         try {
-            // Google Apps Script returns JSON directly for GET requests
             const url = `${this.apiUrl}?sheet=${encodeURIComponent(sheetName)}&t=${now}`;
-            
             console.log(`Fetching ${sheetName} from:`, url);
             
-            const response = await fetch(url, {
-                method: 'GET',
-                mode: 'no-cors' // Important for Google Apps Script
-            });
+            const response = await fetch(url);
             
-            // Google Apps Script returns JSON as text
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
+            
             const text = await response.text();
             let data;
             
             try {
                 data = JSON.parse(text);
             } catch (e) {
-                console.warn('Failed to parse JSON, trying to parse as array:', e);
-                // Try to parse as array of arrays
-                if (text && text.trim()) {
-                    const rows = text.split('\n').filter(row => row.trim());
-                    const headers = rows[0].split(',');
-                    data = rows.slice(1).map(row => {
-                        const values = row.split(',');
-                        const obj = {};
-                        headers.forEach((header, index) => {
-                            obj[header.trim()] = values[index] ? values[index].trim() : '';
-                        });
-                        return obj;
-                    });
-                } else {
-                    data = [];
-                }
+                console.error('Failed to parse JSON from', sheetName, ':', e);
+                console.log('Raw response:', text);
+                data = [];
             }
             
             if (useCache && data) {
@@ -70,7 +54,6 @@ class GoogleSheetsAPI {
             return data;
         } catch (error) {
             console.error(`Error fetching ${sheetName}:`, error);
-            // Return empty array to prevent crashes
             return [];
         }
     }
@@ -79,15 +62,13 @@ class GoogleSheetsAPI {
         try {
             console.log(`Adding row to ${sheetName}:`, rowData);
             
+            const formData = new FormData();
+            formData.append('sheet', sheetName);
+            formData.append('data', JSON.stringify(rowData));
+            
             const response = await fetch(this.apiUrl, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: new URLSearchParams({
-                    sheet: sheetName,
-                    data: JSON.stringify(rowData)
-                })
+                body: formData
             });
             
             const text = await response.text();
@@ -111,14 +92,14 @@ class GoogleSheetsAPI {
 
     async updatePassword(username, newPassword) {
         try {
+            const formData = new FormData();
+            formData.append('action', 'updatePassword');
+            formData.append('username', username);
+            formData.append('newPassword', newPassword);
+            
             const response = await fetch(this.apiUrl, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: new URLSearchParams({
-                    action: 'updatePassword',
-                    username: username,
-                    newPassword: newPassword
-                })
+                body: formData
             });
             
             const text = await response.text();
@@ -142,14 +123,14 @@ class GoogleSheetsAPI {
 
     async login(username, password) {
         try {
+            const formData = new FormData();
+            formData.append('action', 'login');
+            formData.append('username', username);
+            formData.append('password', password);
+            
             const response = await fetch(this.apiUrl, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: new URLSearchParams({
-                    action: 'login',
-                    username: username,
-                    password: password
-                })
+                body: formData
             });
             
             const text = await response.text();
@@ -171,10 +152,7 @@ class GoogleSheetsAPI {
 
     async initializeSheets() {
         try {
-            const response = await fetch(`${this.apiUrl}?action=initialize`, {
-                method: 'GET'
-            });
-            
+            const response = await fetch(`${this.apiUrl}?action=initialize`);
             const text = await response.text();
             let result;
             
@@ -198,7 +176,7 @@ class GoogleSheetsAPI {
 const api = new GoogleSheetsAPI();
 
 // =============================
-// 🔑 Authentication - UPDATED
+// 🔑 Authentication - FIXED
 // =============================
 async function login() {
     const username = document.getElementById('username').value.trim();
@@ -215,18 +193,17 @@ async function login() {
     loginBtn.disabled = true;
 
     try {
-        // Use the login API endpoint
         const result = await api.login(username, password);
         
         console.log('Login result:', result);
         
         if (result.success && result.user) {
             currentUser = {
-                ad_no: result.user.ad_no || username,
+                sl_no: result.user.sl_no || result.user['sl:no'] || '0',
+                ad_no: result.user.ad_no || result.user['ad:no'] || username,
                 name: result.user.name || 'User',
                 role: result.user.role?.toLowerCase() || 'member',
-                team: result.user.team || '0',
-                sl_no: result.user.sl_no || result.user.userId || '0'
+                team: result.user.team || '0'
             };
 
             // Show dashboard
@@ -384,7 +361,7 @@ async function showPage(page) {
 }
 
 // =============================
-// 🏠 Dashboard Functions
+// 🏠 Dashboard Functions - FIXED
 // =============================
 async function loadDashboard() {
     if (!currentUser) return;
@@ -398,7 +375,12 @@ async function loadDashboard() {
         const upcomingPrograms = document.getElementById('upcomingPrograms');
 
         // Update dashboard info
-        if (dashboardInfo) dashboardInfo.textContent = `You are ${currentUser.role} of Team ${currentUser.team}`;
+        if (dashboardInfo) {
+            const roleText = currentUser.role === 'admin' ? 'Admin' : 
+                           currentUser.role === 'leader' ? 'Leader' :
+                           currentUser.role === 'assistant' ? 'Assistant' : 'Member';
+            dashboardInfo.textContent = `${roleText} of Team ${currentUser.team}`;
+        }
 
         // Load user's programs
         const registrationSheet = `registration_team_${currentUser.team}`;
@@ -414,8 +396,8 @@ async function loadDashboard() {
         
         if (Array.isArray(registrations) && registrations.length > 0) {
             userPrograms = registrations.filter(reg => {
-                const regSlNo = reg.sl_no || reg['sl_no'] || '';
-                const regName = reg.name || reg['name'] || '';
+                const regSlNo = reg['sl:no'] || reg.sl_no || '';
+                const regName = reg.name || '';
                 return regSlNo == currentUser.sl_no || 
                        regName.toLowerCase() === currentUser.name.toLowerCase();
             });
@@ -424,30 +406,103 @@ async function loadDashboard() {
             allResults.forEach(results => {
                 if (Array.isArray(results) && results.length > 0) {
                     const userResults = results.filter(result => {
-                        const resultSlNo = result.sl_no || result['sl_no'] || '';
-                        const resultName = result.name || result['name'] || '';
+                        const resultSlNo = result['sl:no'] || result.sl_no || '';
+                        const resultName = result.name || '';
                         return resultSlNo == currentUser.sl_no || 
                                resultName.toLowerCase() === currentUser.name.toLowerCase();
                     });
                     
                     userResults.forEach(result => {
-                        const points = parseInt(result.points || result['points'] || 0);
+                        const points = parseInt(result.points || 0);
                         userPoints += isNaN(points) ? 0 : points;
                     });
                 }
             });
         }
         
-        if (totalPrograms) totalPrograms.textContent = userPrograms.length;
-        if (completedPrograms) completedPrograms.textContent = '0';
-        if (totalPoints) totalPoints.textContent = userPoints;
-        if (teamRank) teamRank.textContent = '-';
+        // Count completed programs (programs with results)
+        let completedCount = 0;
+        if (Array.isArray(userPrograms)) {
+            userPrograms.forEach(program => {
+                const programCode = program.program_code || '';
+                // Check if this program has a result
+                const hasResult = allResults.some(results => {
+                    if (!Array.isArray(results)) return false;
+                    return results.some(result => {
+                        const resultSlNo = result['sl:no'] || result.sl_no || '';
+                        const resultProgramCode = result.program_code || '';
+                        return resultSlNo == currentUser.sl_no && resultProgramCode === programCode;
+                    });
+                });
+                if (hasResult) completedCount++;
+            });
+        }
         
-        // Load upcoming programs from schedule
+        if (totalPrograms) totalPrograms.textContent = userPrograms.length;
+        if (completedPrograms) completedPrograms.textContent = completedCount;
+        if (totalPoints) totalPoints.textContent = userPoints;
+        
+        // Calculate team rank
+        const teamPoints = await calculateTeamPoints(currentUser.team);
+        if (teamRank) teamRank.textContent = teamPoints.rank || '-';
+        
+        // Load upcoming programs
         await loadUpcomingPrograms();
 
     } catch (error) {
         console.error('Error loading dashboard:', error);
+    }
+}
+
+async function calculateTeamPoints(teamNumber) {
+    try {
+        const resultSheets = ['s_result', 'ns_result', 'sp_result', 'gs_result', 'gns_result', 'gsp_result'];
+        const allResults = await Promise.all(resultSheets.map(sheet => api.getSheet(sheet)));
+        
+        let teamPoints = 0;
+        const teamTotals = {1: 0, 2: 0, 3: 0};
+        
+        // Calculate points for all teams
+        allResults.forEach(results => {
+            if (Array.isArray(results)) {
+                results.forEach(result => {
+                    const points = parseInt(result.points || 0);
+                    const team = result.team || '';
+                    
+                    if (team && teamTotals[team] !== undefined) {
+                        teamTotals[team] += points;
+                    }
+                });
+            }
+        });
+        
+        // Convert to array for sorting
+        const teamsArray = Object.entries(teamTotals).map(([team, points]) => ({team, points}));
+        teamsArray.sort((a, b) => b.points - a.points);
+        
+        // Find rank
+        let rank = 1;
+        for (let i = 0; i < teamsArray.length; i++) {
+            if (teamsArray[i].team == teamNumber) {
+                // Check if there's a tie
+                if (i > 0 && teamsArray[i].points === teamsArray[i-1].points) {
+                    rank = i; // Same rank as previous
+                } else {
+                    rank = i + 1;
+                }
+                break;
+            }
+        }
+        
+        return {
+            points: teamTotals[teamNumber] || 0,
+            rank: rank,
+            leaderboard: teamsArray
+        };
+        
+    } catch (error) {
+        console.error('Error calculating team points:', error);
+        return { points: 0, rank: '-', leaderboard: [] };
     }
 }
 
@@ -469,12 +524,16 @@ async function loadUpcomingPrograms() {
         
         // Filter upcoming programs (next 7 days)
         const upcoming = schedule.filter(item => {
-            const itemDate = new Date(item.date || item['date'] || today);
-            itemDate.setHours(0, 0, 0, 0);
-            const diffTime = itemDate - today;
-            const diffDays = diffTime / (1000 * 60 * 60 * 24);
-            return diffDays >= 0 && diffDays <= 7;
-        }).slice(0, 5); // Show only next 5
+            try {
+                const itemDate = new Date(item.date || today);
+                itemDate.setHours(0, 0, 0, 0);
+                const diffTime = itemDate - today;
+                const diffDays = diffTime / (1000 * 60 * 60 * 24);
+                return diffDays >= 0 && diffDays <= 7;
+            } catch (e) {
+                return false;
+            }
+        }).slice(0, 5);
         
         if (upcoming.length === 0) {
             upcomingPrograms.innerHTML = '<p class="text-gray-500 text-center py-4">No upcoming programs in next 7 days</p>';
@@ -483,15 +542,21 @@ async function loadUpcomingPrograms() {
         
         let html = '';
         upcoming.forEach(item => {
-            const itemDate = new Date(item.date || item['date'] || new Date());
-            const dayName = itemDate.toLocaleDateString('en-US', { weekday: 'short' });
+            let itemDate;
+            try {
+                itemDate = new Date(item.date || new Date());
+            } catch (e) {
+                itemDate = new Date();
+            }
+            
+            const dayName = item.day || itemDate.toLocaleDateString('en-US', { weekday: 'short' });
             const formattedDate = itemDate.toLocaleDateString('en-US', { 
                 month: 'short', 
                 day: 'numeric' 
             });
             
-            const programCode = item.program_code || item['program_code'] || '';
-            const time = item.time || item['time'] || '';
+            const programCode = item.program_code || '';
+            const time = item.time || '';
             
             html += `
                 <div class="bg-white rounded-lg shadow-sm p-4 border border-gray-200">
@@ -529,7 +594,7 @@ function getProgramType(programCode) {
 }
 
 // =============================
-// 📅 Schedule Functions
+// 📅 Schedule Functions - FIXED
 // =============================
 async function loadSchedule() {
     try {
@@ -549,18 +614,42 @@ async function loadSchedule() {
             return;
         }
         
+        // Get registrations count for each program
+        const registrationsByProgram = {};
+        for (let team = 1; team <= 3; team++) {
+            const regSheet = await api.getSheet(`registration_team_${team}`);
+            if (Array.isArray(regSheet)) {
+                regSheet.forEach(reg => {
+                    const programCode = reg.program_code || '';
+                    if (programCode) {
+                        if (!registrationsByProgram[programCode]) {
+                            registrationsByProgram[programCode] = 0;
+                        }
+                        registrationsByProgram[programCode]++;
+                    }
+                });
+            }
+        }
+        
         let html = '';
         schedule.forEach(item => {
-            const date = new Date(item.date || item['date'] || new Date());
-            const dayName = item.day || item['day'] || date.toLocaleDateString('en-US', { weekday: 'long' });
+            let date;
+            try {
+                date = new Date(item.date || new Date());
+            } catch (e) {
+                date = new Date();
+            }
+            
+            const dayName = item.day || date.toLocaleDateString('en-US', { weekday: 'long' });
             const formattedDate = date.toLocaleDateString('en-US', { 
                 year: 'numeric', 
                 month: 'short', 
                 day: 'numeric' 
             });
             
-            const programCode = item.program_code || item['program_code'] || '';
-            const time = item.time || item['time'] || '';
+            const programCode = item.program_code || '';
+            const time = item.time || '';
+            const registeredCount = registrationsByProgram[programCode] || 0;
             
             html += `
                 <tr>
@@ -575,7 +664,7 @@ async function loadSchedule() {
                             ${getProgramType(programCode)}
                         </span>
                     </td>
-                    <td>Loading...</td>
+                    <td>${registeredCount}</td>
                 </tr>
             `;
         });
@@ -598,7 +687,7 @@ async function loadSchedule() {
 }
 
 // =============================
-// 📋 My Programs Functions
+// 📋 My Programs Functions - FIXED
 // =============================
 async function loadMyPrograms() {
     if (!currentUser) return;
@@ -621,8 +710,8 @@ async function loadMyPrograms() {
         }
         
         const myRegistrations = registrations.filter(reg => {
-            const regSlNo = reg.sl_no || reg['sl_no'] || '';
-            const regName = reg.name || reg['name'] || '';
+            const regSlNo = reg['sl:no'] || reg.sl_no || '';
+            const regName = reg.name || '';
             return regSlNo == currentUser.sl_no || 
                    regName.toLowerCase() === currentUser.name.toLowerCase();
         });
@@ -637,29 +726,58 @@ async function loadMyPrograms() {
             return;
         }
         
+        // Get results to check completion
+        const resultSheets = ['s_result', 'ns_result', 'sp_result', 'gs_result', 'gns_result', 'gsp_result'];
+        const allResults = await Promise.all(resultSheets.map(sheet => api.getSheet(sheet)));
+        
         let html = '';
         myRegistrations.forEach(reg => {
-            const programCode = reg.program_code || reg['program_code'] || '';
-            const programName = reg.program || reg['program'] || getProgramType(programCode);
-            const team = reg.team || reg['team'] || currentUser.team;
-            const slNo = reg.sl_no || reg['sl_no'] || '';
+            const programCode = reg.program_code || '';
+            const programName = reg.program || getProgramType(programCode);
+            const team = reg.team || currentUser.team;
+            const slNo = reg['sl:no'] || reg.sl_no || '';
+            
+            // Check if program has result
+            let hasResult = false;
+            let resultPoints = 0;
+            allResults.forEach(results => {
+                if (Array.isArray(results)) {
+                    const result = results.find(r => {
+                        const rSlNo = r['sl:no'] || r.sl_no || '';
+                        const rProgramCode = r.program_code || '';
+                        return rSlNo == slNo && rProgramCode === programCode;
+                    });
+                    if (result) {
+                        hasResult = true;
+                        resultPoints = parseInt(result.points || 0);
+                    }
+                }
+            });
             
             const programType = getProgramType(programCode);
             const badgeClass = programType.toLowerCase().replace(' ', '');
             
             html += `
-                <div class="program-card">
+                <div class="program-card ${hasResult ? 'border-green-500' : ''}">
                     <div class="flex justify-between items-start mb-3">
                         <div>
                             <span class="program-code">${programCode}</span>
                             <span class="text-sm font-medium text-gray-700 ml-2">${programName}</span>
                         </div>
-                        <span class="badge badge-${badgeClass}">${programType}</span>
+                        <div class="flex items-center space-x-2">
+                            <span class="badge badge-${badgeClass}">${programType}</span>
+                            ${hasResult ? `<span class="text-green-600 font-bold">${resultPoints} pts</span>` : ''}
+                        </div>
                     </div>
                     <div class="text-sm text-gray-600">
                         <div class="flex justify-between">
                             <span>Team: <span class="font-medium">${team}</span></span>
                             <span>SL No: <span class="font-medium">${slNo}</span></span>
+                        </div>
+                        <div class="mt-1">
+                            Status: <span class="font-medium ${hasResult ? 'text-green-600' : 'text-yellow-600'}">
+                                ${hasResult ? 'Completed' : 'Upcoming'}
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -674,7 +792,7 @@ async function loadMyPrograms() {
 }
 
 // =============================
-// 🏆 My Results Functions
+// 🏆 My Results Functions - FIXED
 // =============================
 async function loadMyResults() {
     if (!currentUser) return;
@@ -694,30 +812,33 @@ async function loadMyResults() {
         let stageTotal = 0;
         let nonStageTotal = 0;
         let sportsTotal = 0;
+        let groupTotal = 0;
         let allUserResults = [];
         
         // Process all results
         allResults.forEach((results, index) => {
+            const sheetName = resultSheets[index];
             if (Array.isArray(results) && results.length > 0) {
                 const userResults = results.filter(result => {
-                    const resultSlNo = result.sl_no || result['sl_no'] || '';
-                    const resultName = result.name || result['name'] || '';
+                    const resultSlNo = result['sl:no'] || result.sl_no || '';
+                    const resultName = result.name || '';
                     return resultSlNo == currentUser.sl_no || 
                            resultName.toLowerCase() === currentUser.name.toLowerCase();
                 });
                 
                 userResults.forEach(result => {
-                    const points = parseInt(result.points || result['points'] || 0);
+                    const points = parseInt(result.points || 0);
                     totalPoints += isNaN(points) ? 0 : points;
                     
                     // Categorize points
-                    const sheetName = resultSheets[index];
-                    if (sheetName.startsWith('s') && !sheetName.startsWith('sp') && !sheetName.startsWith('gs')) {
+                    if (sheetName === 's_result') {
                         stageTotal += points;
-                    } else if (sheetName.startsWith('ns') && !sheetName.startsWith('gns')) {
+                    } else if (sheetName === 'ns_result') {
                         nonStageTotal += points;
-                    } else if (sheetName.startsWith('sp') && !sheetName.startsWith('gsp')) {
+                    } else if (sheetName === 'sp_result') {
                         sportsTotal += points;
+                    } else {
+                        groupTotal += points;
                     }
                     
                     allUserResults.push({
@@ -732,7 +853,7 @@ async function loadMyResults() {
         // Update points displays
         totalPointsDisplay.textContent = totalPoints;
         stagePoints.textContent = stageTotal;
-        nonStagePoints.textContent = nonStageTotal;
+        nonStagePoints.textContent = nonStageTotal + sportsTotal;
         
         // Display results
         if (allUserResults.length === 0) {
@@ -747,29 +868,33 @@ async function loadMyResults() {
         
         let html = '';
         allUserResults.forEach(result => {
-            const programCode = result.program_code || result['program_code'] || '';
-            const position = result.position || result['position'] || 'N/A';
-            const grade = result.grade || result['grade'] || 'N/A';
+            const programCode = result.program_code || '';
+            const position = result.position || 'N/A';
+            const grade = result.grade || 'N/A';
             const points = result.points || 0;
+            const type = result.type || '';
             
-            const positionClass = `position-${position}`;
+            const positionClass = position <= 3 ? `position-${position}` : '';
             const programType = getProgramType(programCode);
+            const typeColor = type === 's' ? 'text-yellow-600' : 
+                            type === 'ns' ? 'text-green-600' : 
+                            type === 'sp' ? 'text-blue-600' : 'text-purple-600';
             
             html += `
                 <div class="result-card">
                     <div class="flex justify-between items-center mb-3">
                         <div>
                             <span class="program-code">${programCode}</span>
-                            <span class="text-sm font-medium text-gray-700 ml-2">${programType}</span>
+                            <span class="text-sm font-medium ${typeColor} ml-2">${programType}</span>
                         </div>
                         <div class="flex items-center space-x-3">
-                            <div class="${positionClass} position-badge">${position}</div>
+                            ${position <= 3 ? `<div class="${positionClass} position-badge">${position}</div>` : ''}
                             <span class="text-lg font-bold text-green-600">${points} pts</span>
                         </div>
                     </div>
                     <div class="text-sm text-gray-600">
                         <div class="flex justify-between">
-                            <span>Grade: <span class="font-medium">${grade}</span></span>
+                            <span>Grade: <span class="font-medium ${grade === 'A' ? 'text-green-600' : grade === 'B' ? 'text-yellow-600' : 'text-orange-600'}">${grade}</span></span>
                             <span>Position: <span class="font-medium">${position}</span></span>
                         </div>
                     </div>
@@ -785,7 +910,7 @@ async function loadMyResults() {
 }
 
 // =============================
-// 👥 Team Members Functions (Leader/Assistant)
+// 👥 Team Members Functions (Leader/Assistant) - FIXED
 // =============================
 async function loadTeamMembers() {
     if (!currentUser || (currentUser.role !== 'leader' && currentUser.role !== 'assistant')) {
@@ -796,13 +921,13 @@ async function loadTeamMembers() {
         // Load all team members
         const users = await api.getSheet('user_credentials');
         const teamMembers = users.filter(user => {
-            const userTeam = user.team || user['team'] || '';
-            const userRole = (user.role || user['role'] || '').toLowerCase();
+            const userTeam = user.team || '';
+            const userRole = (user.role || '').toLowerCase();
             return userTeam == currentUser.team && 
                    ['member', 'leader', 'assistant'].includes(userRole);
         });
         
-        // Load program count for each member
+        // Load program count
         const programCounts = await api.getSheet('program_count');
         
         const tableBody = document.getElementById('teamMembersTableBody');
@@ -821,33 +946,39 @@ async function loadTeamMembers() {
         
         let html = '';
         teamMembers.forEach(member => {
-            const slNo = member.sl_no || member['sl_no'] || '';
-            const name = member.name || member['name'] || '';
-            const role = (member.role || member['role'] || '').toLowerCase();
+            const slNo = member['sl:no'] || member.sl_no || '';
+            const name = member.name || '';
+            const role = (member.role || '').toLowerCase();
+            const adNo = member['ad:no'] || member.ad_no || '';
             
             // Find program count for this member
             let countData = null;
             if (Array.isArray(programCounts) && programCounts.length > 0) {
                 countData = programCounts.find(pc => {
-                    const pcSlNo = pc.sl_no || pc['sl_no'] || '';
+                    const pcSlNo = pc['sl:no'] || pc.sl_no || '';
                     return pcSlNo == slNo;
                 });
             }
             
-            const stageCount = countData ? (countData.s || countData['s'] || 0) : 0;
-            const nonStageCount = countData ? (countData.ns || countData['ns'] || 0) : 0;
-            const sportsCount = countData ? (countData.sp || countData['sp'] || 0) : 0;
-            const totalCount = countData ? (parseInt(countData.count || countData['count'] || 0)) : 0;
+            const stageCount = countData ? (parseInt(countData.s || 0)) : 0;
+            const nonStageCount = countData ? (parseInt(countData.ns || 0)) : 0;
+            const sportsCount = countData ? (parseInt(countData.sp || 0)) : 0;
+            const totalCount = countData ? (parseInt(countData.count || 0)) : 0;
             
             // Check if member meets minimum requirements
-            const hasWarning = stageCount < 1 || nonStageCount < 1 || sportsCount < 1;
+            const meetsStage = stageCount >= 1;
+            const meetsNonStage = nonStageCount >= 1;
+            const meetsSports = sportsCount >= 1;
+            const meetsTotal = totalCount <= 12;
+            
+            const hasWarning = !meetsStage || !meetsNonStage || !meetsSports || !meetsTotal;
             
             html += `
                 <tr class="${hasWarning ? 'program-warning' : ''}">
                     <td>${slNo}</td>
                     <td>
                         <div class="font-medium">${name}</div>
-                        <div class="text-xs text-gray-500">${role}</div>
+                        <div class="text-xs text-gray-500">${adNo}</div>
                     </td>
                     <td>
                         <span class="${role === 'leader' ? 'role-leader' : 
@@ -856,13 +987,16 @@ async function loadTeamMembers() {
                             ${role}
                         </span>
                     </td>
-                    <td class="text-center">${stageCount}</td>
-                    <td class="text-center">${nonStageCount}</td>
-                    <td class="text-center">${sportsCount}</td>
-                    <td class="text-center font-bold">${totalCount}</td>
+                    <td class="text-center ${meetsStage ? '' : 'text-red-600'}">${stageCount}</td>
+                    <td class="text-center ${meetsNonStage ? '' : 'text-red-600'}">${nonStageCount}</td>
+                    <td class="text-center ${meetsSports ? '' : 'text-red-600'}">${sportsCount}</td>
+                    <td class="text-center font-bold ${meetsTotal ? '' : 'text-red-600'}">${totalCount}</td>
                     <td>
-                        <button onclick="viewMemberPrograms('${slNo}')" class="text-blue-600 hover:text-blue-800">
+                        <button onclick="viewMemberPrograms('${slNo}')" class="text-blue-600 hover:text-blue-800 mr-2">
                             <i class="fas fa-eye"></i>
+                        </button>
+                        <button onclick="assignProgramToMember('${slNo}', '${name}')" class="text-green-600 hover:text-green-800">
+                            <i class="fas fa-plus"></i>
                         </button>
                     </td>
                 </tr>
@@ -883,19 +1017,159 @@ async function viewMemberPrograms(slNo) {
         
         const memberPrograms = Array.isArray(registrations) ? 
             registrations.filter(reg => {
-                const regSlNo = reg.sl_no || reg['sl_no'] || '';
+                const regSlNo = reg['sl:no'] || reg.sl_no || '';
                 return regSlNo == slNo;
             }) : [];
         
-        alert(`Member SL ${slNo} has ${memberPrograms.length} programs registered.`);
+        // Get user name
+        const users = await api.getSheet('user_credentials');
+        const member = users.find(u => {
+            const userSlNo = u['sl:no'] || u.sl_no || '';
+            return userSlNo == slNo;
+        });
+        
+        const memberName = member ? (member.name || 'Unknown') : 'Unknown';
+        
+        if (memberPrograms.length === 0) {
+            alert(`${memberName} (SL: ${slNo}) has no programs registered.`);
+            return;
+        }
+        
+        let message = `${memberName} (SL: ${slNo}) has ${memberPrograms.length} programs:\n\n`;
+        memberPrograms.forEach((program, index) => {
+            const programCode = program.program_code || '';
+            const programName = program.program || getProgramType(programCode);
+            message += `${index + 1}. ${programCode} - ${programName}\n`;
+        });
+        
+        alert(message);
         
     } catch (error) {
         console.error('Error viewing member programs:', error);
+        alert('Error loading member programs');
+    }
+}
+
+async function assignProgramToMember(slNo, memberName) {
+    try {
+        // Load available programs from schedule
+        const schedule = await api.getSheet('schedule');
+        const programCodes = [...new Set(schedule.map(item => item.program_code || '').filter(Boolean))];
+        
+        // Load member's current programs
+        const registrationSheet = `registration_team_${currentUser.team}`;
+        const registrations = await api.getSheet(registrationSheet);
+        const memberPrograms = Array.isArray(registrations) ? 
+            registrations.filter(reg => {
+                const regSlNo = reg['sl:no'] || reg.sl_no || '';
+                return regSlNo == slNo;
+            }).map(reg => reg.program_code || '') : [];
+        
+        // Filter out already assigned programs
+        const availablePrograms = programCodes.filter(code => !memberPrograms.includes(code));
+        
+        if (availablePrograms.length === 0) {
+            alert(`${memberName} is already registered for all available programs.`);
+            return;
+        }
+        
+        const modal = document.getElementById('assignProgramModal');
+        const modalContent = document.getElementById('assignProgramModalContent');
+        
+        if (!modal || !modalContent) return;
+        
+        let optionsHtml = '';
+        availablePrograms.forEach(code => {
+            optionsHtml += `<option value="${code}">${code} - ${getProgramType(code)}</option>`;
+        });
+        
+        modalContent.innerHTML = `
+            <form id="assignProgramModalForm" onsubmit="assignProgramFromModal(event, '${slNo}', '${memberName}')">
+                <div class="space-y-4">
+                    <div class="form-group">
+                        <label class="form-label">Member</label>
+                        <input type="text" value="${memberName} (SL: ${slNo})" class="form-input" readonly>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Select Program</label>
+                        <select id="modalProgramCode" class="form-select" required>
+                            <option value="">Select a program</option>
+                            ${optionsHtml}
+                        </select>
+                    </div>
+                    
+                    <div id="assignModalError" class="alert alert-error hidden"></div>
+                    
+                    <div class="flex justify-end space-x-3">
+                        <button type="button" onclick="closeAssignProgramModal()" class="btn btn-secondary">
+                            Cancel
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-plus mr-2"></i>Assign Program
+                        </button>
+                    </div>
+                </div>
+            </form>
+        `;
+        
+        modal.classList.remove('hidden');
+        
+    } catch (error) {
+        console.error('Error assigning program:', error);
+        alert('Error loading programs');
+    }
+}
+
+async function assignProgramFromModal(event, slNo, memberName) {
+    event.preventDefault();
+    
+    const programCode = document.getElementById('modalProgramCode').value;
+    const errorDiv = document.getElementById('assignModalError');
+    
+    if (!programCode) {
+        if (errorDiv) {
+            errorDiv.textContent = 'Please select a program';
+            errorDiv.classList.remove('hidden');
+        }
+        return;
+    }
+    
+    try {
+        // Get program type
+        const programType = getProgramType(programCode);
+        
+        // Add registration
+        const rowData = {
+            'program_code': programCode,
+            'program': programType + ' Program',
+            'sl:no': slNo,
+            'name': memberName,
+            'team': currentUser.team
+        };
+        
+        const result = await api.addRow(`registration_team_${currentUser.team}`, rowData);
+        
+        if (result && !result.error) {
+            closeAssignProgramModal();
+            alert('Program assigned successfully!');
+            await loadTeamMembers();
+            await loadAssignPrograms();
+        } else {
+            throw new Error(result?.error || 'Failed to assign program');
+        }
+        
+    } catch (error) {
+        console.error('Error assigning program from modal:', error);
+        if (errorDiv) {
+            errorDiv.textContent = 'Error: ' + error.message;
+            errorDiv.classList.remove('hidden');
+        }
     }
 }
 
 // =============================
-// 📝 Assign Programs Functions (Leader/Assistant)
+// 📝 Assign Programs Functions (Leader/Assistant) - FIXED
 // =============================
 async function loadAssignPrograms() {
     if (!currentUser || (currentUser.role !== 'leader' && currentUser.role !== 'assistant')) {
@@ -906,8 +1180,8 @@ async function loadAssignPrograms() {
         // Load team members for dropdown
         const users = await api.getSheet('user_credentials');
         const teamMembers = users.filter(user => {
-            const userTeam = user.team || user['team'] || '';
-            const userRole = (user.role || user['role'] || '').toLowerCase();
+            const userTeam = user.team || '';
+            const userRole = (user.role || '').toLowerCase();
             return userTeam == currentUser.team && userRole === 'member';
         });
         
@@ -916,17 +1190,18 @@ async function loadAssignPrograms() {
         
         memberSelect.innerHTML = '<option value="">Select member</option>';
         teamMembers.forEach(member => {
-            const slNo = member.sl_no || member['sl_no'] || '';
-            const name = member.name || member['name'] || '';
+            const slNo = member['sl:no'] || member.sl_no || '';
+            const name = member.name || '';
+            const adNo = member['ad:no'] || member.ad_no || '';
             const option = document.createElement('option');
             option.value = slNo;
-            option.textContent = `${slNo} - ${name}`;
+            option.textContent = `${slNo} - ${name} (${adNo})`;
             memberSelect.appendChild(option);
         });
         
         // Load program codes from schedule
         const schedule = await api.getSheet('schedule');
-        const programCodes = [...new Set(schedule.map(item => item.program_code || item['program_code'] || '').filter(Boolean))];
+        const programCodes = [...new Set(schedule.map(item => item.program_code || '').filter(Boolean))];
         
         const programCodeSelect = document.getElementById('programCodeSelect');
         if (!programCodeSelect) return;
@@ -969,27 +1244,35 @@ async function loadAssignedPrograms() {
         
         let html = '';
         registrations.forEach(reg => {
-            const slNo = reg.sl_no || reg['sl_no'] || '';
-            const programCode = reg.program_code || reg['program_code'] || '';
+            const slNo = reg['sl:no'] || reg.sl_no || '';
+            const programCode = reg.program_code || '';
+            const programName = reg.program || getProgramType(programCode);
             
             const member = users.find(u => {
-                const userSlNo = u.sl_no || u['sl_no'] || '';
+                const userSlNo = u['sl:no'] || u.sl_no || '';
                 return userSlNo == slNo;
             });
             
-            const memberName = member ? (member.name || member['name'] || 'Unknown') : 'Unknown';
+            const memberName = member ? (member.name || 'Unknown') : 'Unknown';
+            const memberAdNo = member ? (member['ad:no'] || member.ad_no || '') : '';
             
             html += `
-                <div class="program-card">
-                    <div class="flex justify-between items-center">
+                <div class="program-card mb-3">
+                    <div class="flex justify-between items-start">
                         <div>
                             <div class="font-medium">${memberName}</div>
-                            <div class="text-sm text-gray-600">SL No: ${slNo}</div>
+                            <div class="text-sm text-gray-600">SL: ${slNo} | AD: ${memberAdNo}</div>
                         </div>
                         <div class="text-right">
                             <div class="program-code">${programCode}</div>
-                            <div class="text-xs text-gray-500">${getProgramType(programCode)}</div>
+                            <div class="text-xs text-gray-500">${programName}</div>
                         </div>
+                    </div>
+                    <div class="mt-2">
+                        <button onclick="removeAssignment('${slNo}', '${programCode}')" 
+                                class="text-red-600 hover:text-red-800 text-sm">
+                            <i class="fas fa-trash mr-1"></i> Remove
+                        </button>
                     </div>
                 </div>
             `;
@@ -1018,8 +1301,8 @@ document.getElementById('assignProgramForm')?.addEventListener('submit', async f
         // Get member details
         const users = await api.getSheet('user_credentials');
         const member = users.find(u => {
-            const userSlNo = u.sl_no || u['sl_no'] || '';
-            const userTeam = u.team || u['team'] || '';
+            const userSlNo = u['sl:no'] || u.sl_no || '';
+            const userTeam = u.team || '';
             return userSlNo == memberSlNo && userTeam == currentUser.team;
         });
         
@@ -1028,14 +1311,16 @@ document.getElementById('assignProgramForm')?.addEventListener('submit', async f
             return;
         }
         
+        const memberName = member.name || '';
+        
         // Check if already registered
         const registrationSheet = `registration_team_${currentUser.team}`;
         const registrations = await api.getSheet(registrationSheet);
         
         const alreadyRegistered = Array.isArray(registrations) ? 
             registrations.some(reg => {
-                const regSlNo = reg.sl_no || reg['sl_no'] || '';
-                const regProgramCode = reg.program_code || reg['program_code'] || '';
+                const regSlNo = reg['sl:no'] || reg.sl_no || '';
+                const regProgramCode = reg.program_code || '';
                 return regSlNo == memberSlNo && regProgramCode === programCode;
             }) : false;
         
@@ -1046,16 +1331,15 @@ document.getElementById('assignProgramForm')?.addEventListener('submit', async f
         
         // Get program type
         const programType = getProgramType(programCode);
-        const memberName = member.name || member['name'] || '';
         
         // Add registration
-        const rowData = [
-            programCode,
-            programType,
-            memberSlNo,
-            memberName,
-            currentUser.team
-        ];
+        const rowData = {
+            'program_code': programCode,
+            'program': programType + ' Program',
+            'sl:no': memberSlNo,
+            'name': memberName,
+            'team': currentUser.team
+        };
         
         const result = await api.addRow(registrationSheet, rowData);
         
@@ -1063,6 +1347,7 @@ document.getElementById('assignProgramForm')?.addEventListener('submit', async f
             alert('Program assigned successfully!');
             document.getElementById('assignProgramForm').reset();
             await loadAssignedPrograms();
+            await loadTeamMembers();
         } else {
             throw new Error(result?.error || 'Failed to assign program');
         }
@@ -1073,13 +1358,27 @@ document.getElementById('assignProgramForm')?.addEventListener('submit', async f
     }
 });
 
+async function removeAssignment(slNo, programCode) {
+    if (!confirm('Are you sure you want to remove this assignment?')) {
+        return;
+    }
+    
+    try {
+        alert(`Removing assignment:\nSL No: ${slNo}\nProgram: ${programCode}\n\nNote: Delete functionality requires Google Apps Script implementation.`);
+        // In a full implementation, you would call an API to delete the row
+    } catch (error) {
+        console.error('Error removing assignment:', error);
+        alert('Error removing assignment');
+    }
+}
+
 // =============================
-// 🏢 All Teams Functions (Admin)
+// 🏢 All Teams Functions (Admin) - FIXED
 // =============================
 async function loadAllTeams() {
     try {
         // Set default team tab
-        showTeamTab(1);
+        window.showTeamTab(1);
         await loadTeamData(1);
         
     } catch (error) {
@@ -1092,7 +1391,7 @@ async function loadTeamData(teamNumber) {
         // Load team members
         const users = await api.getSheet('user_credentials');
         const teamMembers = users.filter(user => {
-            const userTeam = user.team || user['team'] || '';
+            const userTeam = user.team || '';
             return userTeam == teamNumber.toString();
         });
         
@@ -1112,17 +1411,21 @@ async function loadTeamData(teamNumber) {
             return;
         }
         
+        // Get program counts
+        const programCounts = await api.getSheet('program_count');
+        
         let html = `
-            <div class="mb-4">
-                <h4 class="font-bold text-gray-800 mb-2">Team ${teamNumber} Members (${teamMembers.length})</h4>
+            <div class="mb-6">
+                <h4 class="font-bold text-gray-800 mb-4">Team ${teamNumber} Members (${teamMembers.length})</h4>
                 <div class="table-container">
                     <table class="data-table">
                         <thead>
                             <tr>
                                 <th>SL No</th>
                                 <th>Name</th>
-                                <th>Role</th>
                                 <th>Admission No</th>
+                                <th>Role</th>
+                                <th>Programs</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -1130,15 +1433,26 @@ async function loadTeamData(teamNumber) {
         `;
         
         teamMembers.forEach(member => {
-            const slNo = member.sl_no || member['sl_no'] || '';
-            const name = member.name || member['name'] || '';
-            const role = (member.role || member['role'] || '').toLowerCase();
-            const adNo = member.ad_no || member['ad_no'] || '';
+            const slNo = member['sl:no'] || member.sl_no || '';
+            const name = member.name || '';
+            const adNo = member['ad:no'] || member.ad_no || '';
+            const role = (member.role || '').toLowerCase();
+            
+            // Find program count
+            let programCount = 0;
+            if (Array.isArray(programCounts)) {
+                const countData = programCounts.find(pc => {
+                    const pcSlNo = pc['sl:no'] || pc.sl_no || '';
+                    return pcSlNo == slNo;
+                });
+                programCount = countData ? parseInt(countData.count || 0) : 0;
+            }
             
             html += `
                 <tr>
                     <td>${slNo}</td>
                     <td>${name}</td>
+                    <td>${adNo}</td>
                     <td>
                         <span class="${role === 'admin' ? 'role-admin' : 
                                      role === 'leader' ? 'role-leader' : 
@@ -1147,11 +1461,15 @@ async function loadTeamData(teamNumber) {
                             ${role}
                         </span>
                     </td>
-                    <td>${adNo}</td>
+                    <td class="text-center">${programCount}</td>
                     <td>
-                        <button onclick="adminViewMember('${teamNumber}', '${slNo}')" 
+                        <button onclick="adminViewMemberDetails('${teamNumber}', '${slNo}')" 
                                 class="text-blue-600 hover:text-blue-800 mr-2">
-                            <i class="fas fa-edit"></i>
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <button onclick="adminAssignProgram('${teamNumber}', '${slNo}', '${name}')" 
+                                class="text-green-600 hover:text-green-800">
+                            <i class="fas fa-plus"></i>
                         </button>
                     </td>
                 </tr>
@@ -1165,7 +1483,7 @@ async function loadTeamData(teamNumber) {
             </div>
             
             <div>
-                <h4 class="font-bold text-gray-800 mb-2">Team ${teamNumber} Registrations</h4>
+                <h4 class="font-bold text-gray-800 mb-4">Team ${teamNumber} Registrations</h4>
         `;
         
         if (!Array.isArray(registrations) || registrations.length === 0) {
@@ -1177,7 +1495,7 @@ async function loadTeamData(teamNumber) {
                         <thead>
                             <tr>
                                 <th>Program Code</th>
-                                <th>Program</th>
+                                <th>Program Type</th>
                                 <th>SL No</th>
                                 <th>Name</th>
                                 <th>Actions</th>
@@ -1187,15 +1505,15 @@ async function loadTeamData(teamNumber) {
             `;
             
             registrations.forEach(reg => {
-                const programCode = reg.program_code || reg['program_code'] || '';
-                const programName = reg.program || reg['program'] || getProgramType(programCode);
-                const slNo = reg.sl_no || reg['sl_no'] || '';
-                const name = reg.name || reg['name'] || '';
+                const programCode = reg.program_code || '';
+                const programType = getProgramType(programCode);
+                const slNo = reg['sl:no'] || reg.sl_no || '';
+                const name = reg.name || '';
                 
                 html += `
                     <tr>
                         <td>${programCode}</td>
-                        <td>${programName}</td>
+                        <td>${programType}</td>
                         <td>${slNo}</td>
                         <td>${name}</td>
                         <td>
@@ -1223,20 +1541,140 @@ async function loadTeamData(teamNumber) {
     }
 }
 
-async function adminViewMember(teamNumber, slNo) {
+async function adminViewMemberDetails(teamNumber, slNo) {
     try {
         const users = await api.getSheet('user_credentials');
         const member = users.find(u => {
-            const userTeam = u.team || u['team'] || '';
-            const userSlNo = u.sl_no || u['sl_no'] || '';
+            const userTeam = u.team || '';
+            const userSlNo = u['sl:no'] || u.sl_no || '';
             return userTeam == teamNumber.toString() && userSlNo == slNo;
         });
         
-        if (member) {
-            alert(`Member Details:\n\nSL No: ${member.sl_no}\nName: ${member.name}\nRole: ${member.role}\nAdmission No: ${member.ad_no}\nTeam: ${member.team}`);
+        if (!member) {
+            alert('Member not found');
+            return;
         }
+        
+        // Get member's programs
+        const regSheet = await api.getSheet(`registration_team_${teamNumber}`);
+        const memberPrograms = Array.isArray(regSheet) ? 
+            regSheet.filter(reg => {
+                const regSlNo = reg['sl:no'] || reg.sl_no || '';
+                return regSlNo == slNo;
+            }) : [];
+        
+        // Get program count
+        const programCounts = await api.getSheet('program_count');
+        let countData = null;
+        if (Array.isArray(programCounts)) {
+            countData = programCounts.find(pc => {
+                const pcSlNo = pc['sl:no'] || pc.sl_no || '';
+                return pcSlNo == slNo;
+            });
+        }
+        
+        let message = `Member Details:\n\n`;
+        message += `SL No: ${member['sl:no'] || member.sl_no || ''}\n`;
+        message += `Name: ${member.name || ''}\n`;
+        message += `Admission No: ${member['ad:no'] || member.ad_no || ''}\n`;
+        message += `Role: ${member.role || ''}\n`;
+        message += `Team: ${member.team || ''}\n\n`;
+        
+        if (countData) {
+            message += `Program Count:\n`;
+            message += `Stage: ${countData.s || 0}\n`;
+            message += `Non-Stage: ${countData.ns || 0}\n`;
+            message += `Sports: ${countData.sp || 0}\n`;
+            message += `Total: ${countData.count || 0}/12\n\n`;
+        }
+        
+        message += `Registered Programs (${memberPrograms.length}):\n`;
+        if (memberPrograms.length === 0) {
+            message += `None\n`;
+        } else {
+            memberPrograms.forEach((program, index) => {
+                const programCode = program.program_code || '';
+                const programName = program.program || getProgramType(programCode);
+                message += `${index + 1}. ${programCode} - ${programName}\n`;
+            });
+        }
+        
+        alert(message);
+        
     } catch (error) {
-        console.error('Error viewing member:', error);
+        console.error('Error viewing member details:', error);
+    }
+}
+
+async function adminAssignProgram(teamNumber, slNo, memberName) {
+    try {
+        // Load available programs from schedule
+        const schedule = await api.getSheet('schedule');
+        const programCodes = [...new Set(schedule.map(item => item.program_code || '').filter(Boolean))];
+        
+        // Load member's current programs
+        const registrationSheet = `registration_team_${teamNumber}`;
+        const registrations = await api.getSheet(registrationSheet);
+        const memberPrograms = Array.isArray(registrations) ? 
+            registrations.filter(reg => {
+                const regSlNo = reg['sl:no'] || reg.sl_no || '';
+                return regSlNo == slNo;
+            }).map(reg => reg.program_code || '') : [];
+        
+        // Filter out already assigned programs
+        const availablePrograms = programCodes.filter(code => !memberPrograms.includes(code));
+        
+        if (availablePrograms.length === 0) {
+            alert(`${memberName} is already registered for all available programs.`);
+            return;
+        }
+        
+        let programList = availablePrograms.map(code => `${code} - ${getProgramType(code)}`).join('\n');
+        const selectedCode = prompt(
+            `Assign program to ${memberName} (Team ${teamNumber})\n\n` +
+            `Available programs:\n${programList}\n\n` +
+            `Enter program code:`
+        );
+        
+        if (!selectedCode) return;
+        
+        const programCode = selectedCode.trim().toUpperCase();
+        
+        if (!availablePrograms.includes(programCode)) {
+            alert(`Invalid program code. Please select from available programs.`);
+            return;
+        }
+        
+        // Check if already registered
+        if (memberPrograms.includes(programCode)) {
+            alert('This member is already registered for this program');
+            return;
+        }
+        
+        // Get program type
+        const programType = getProgramType(programCode);
+        
+        // Add registration
+        const rowData = {
+            'program_code': programCode,
+            'program': programType + ' Program',
+            'sl:no': slNo,
+            'name': memberName,
+            'team': teamNumber
+        };
+        
+        const result = await api.addRow(registrationSheet, rowData);
+        
+        if (result && !result.error) {
+            alert('Program assigned successfully!');
+            await loadTeamData(teamNumber);
+        } else {
+            throw new Error(result?.error || 'Failed to assign program');
+        }
+        
+    } catch (error) {
+        console.error('Error assigning program as admin:', error);
+        alert('Error assigning program: ' + error.message);
     }
 }
 
@@ -1246,14 +1684,15 @@ async function adminRemoveRegistration(teamNumber, programCode, slNo) {
     }
     
     try {
-        alert(`Removing registration:\nTeam: ${teamNumber}\nProgram: ${programCode}\nSL No: ${slNo}\n\nNote: This feature requires Google Apps Script implementation for deletion.`);
+        alert(`Removing registration:\nTeam: ${teamNumber}\nProgram: ${programCode}\nSL No: ${slNo}\n\nNote: Delete functionality requires Google Apps Script implementation.`);
+        // In a full implementation, you would call an API to delete the row
     } catch (error) {
         console.error('Error removing registration:', error);
     }
 }
 
 // =============================
-// 🧮 Program Count Functions (Admin)
+// 🧮 Program Count Functions (Admin) - FIXED
 // =============================
 async function loadProgramCount() {
     try {
@@ -1273,15 +1712,28 @@ async function loadProgramCount() {
             return;
         }
         
+        // Get user names for better display
+        const users = await api.getSheet('user_credentials');
+        
         let html = '';
         programCounts.forEach(pc => {
-            const slNo = pc.sl_no || pc['sl_no'] || '';
-            const name = pc.name || pc['name'] || '';
-            const team = pc.team || pc['team'] || '';
-            const stageCount = parseInt(pc.s || pc['s'] || 0);
-            const nonStageCount = parseInt(pc.ns || pc['ns'] || 0);
-            const sportsCount = parseInt(pc.sp || pc['sp'] || 0);
-            const totalCount = parseInt(pc.count || pc['count'] || 0);
+            const slNo = pc['sl:no'] || pc.sl_no || '';
+            const name = pc.name || '';
+            const team = pc.team || '';
+            const stageCount = parseInt(pc.s || 0);
+            const nonStageCount = parseInt(pc.ns || 0);
+            const sportsCount = parseInt(pc.sp || 0);
+            const totalCount = parseInt(pc.count || 0);
+            
+            // Find user role
+            let role = '';
+            if (Array.isArray(users)) {
+                const user = users.find(u => {
+                    const userSlNo = u['sl:no'] || u.sl_no || '';
+                    return userSlNo == slNo;
+                });
+                role = user ? (user.role || '').toLowerCase() : '';
+            }
             
             // Check requirements
             const meetsStage = stageCount >= 1;
@@ -1292,8 +1744,14 @@ async function loadProgramCount() {
             const hasWarning = !meetsStage || !meetsNonStage || !meetsSports || !meetsTotal;
             
             let status = '';
+            let statusDetails = [];
+            if (!meetsStage) statusDetails.push('Stage < 1');
+            if (!meetsNonStage) statusDetails.push('Non-Stage < 1');
+            if (!meetsSports) statusDetails.push('Sports < 1');
+            if (!meetsTotal) statusDetails.push('Total > 12');
+            
             if (hasWarning) {
-                status = '<span class="text-red-600 font-medium">⚠️ Check</span>';
+                status = `<span class="text-red-600 font-medium" title="${statusDetails.join(', ')}">⚠️ Needs ${statusDetails.length} fix(es)</span>`;
             } else {
                 status = '<span class="text-green-600 font-medium">✓ OK</span>';
             }
@@ -1301,14 +1759,17 @@ async function loadProgramCount() {
             html += `
                 <tr class="${hasWarning ? 'program-warning' : ''}">
                     <td>${slNo}</td>
-                    <td>${name}</td>
+                    <td>
+                        <div class="font-medium">${name}</div>
+                        <div class="text-xs text-gray-500">${role}</div>
+                    </td>
                     <td>
                         <span class="team-${team} team-badge">Team ${team}</span>
                     </td>
-                    <td class="text-center ${meetsStage ? '' : 'text-red-600'}">${stageCount}</td>
-                    <td class="text-center ${meetsNonStage ? '' : 'text-red-600'}">${nonStageCount}</td>
-                    <td class="text-center ${meetsSports ? '' : 'text-red-600'}">${sportsCount}</td>
-                    <td class="text-center font-bold ${meetsTotal ? '' : 'text-red-600'}">${totalCount}</td>
+                    <td class="text-center ${meetsStage ? '' : 'text-red-600 font-bold'}">${stageCount}</td>
+                    <td class="text-center ${meetsNonStage ? '' : 'text-red-600 font-bold'}">${nonStageCount}</td>
+                    <td class="text-center ${meetsSports ? '' : 'text-red-600 font-bold'}">${sportsCount}</td>
+                    <td class="text-center font-bold ${meetsTotal ? '' : 'text-red-600'}">${totalCount}/12</td>
                     <td class="text-center">${status}</td>
                 </tr>
             `;
@@ -1322,7 +1783,7 @@ async function loadProgramCount() {
 }
 
 // =============================
-// 🏅 Manage Results Functions (Admin)
+// 🏅 Manage Results Functions (Admin) - FIXED
 // =============================
 async function loadManageResults() {
     try {
@@ -1351,9 +1812,31 @@ async function loadResultsByType(type) {
             return;
         }
         
+        // Get registrations for this type
+        const registrations = [];
+        for (let team = 1; team <= 3; team++) {
+            const regSheet = await api.getSheet(`registration_team_${team}`);
+            if (Array.isArray(regSheet)) {
+                regSheet.forEach(reg => {
+                    const programCode = reg.program_code || '';
+                    if (programCode.startsWith(type.charAt(0).toUpperCase())) {
+                        registrations.push({
+                            ...reg,
+                            team: team
+                        });
+                    }
+                });
+            }
+        }
+        
         let html = `
             <div class="mb-4">
-                <h4 class="font-bold text-gray-800 mb-2">${getResultTypeName(type)} Results</h4>
+                <h4 class="font-bold text-gray-800 mb-4">${getResultTypeName(type)} Results</h4>
+                <div class="mb-4">
+                    <button onclick="addNewResult('${type}')" class="btn btn-primary">
+                        <i class="fas fa-plus mr-2"></i>Add New Result
+                    </button>
+                </div>
                 <div class="table-container">
                     <table class="data-table">
                         <thead>
@@ -1361,6 +1844,7 @@ async function loadResultsByType(type) {
                                 <th>Program Code</th>
                                 <th>SL No</th>
                                 <th>Name</th>
+                                <th>Team</th>
                                 <th>Position</th>
                                 <th>Grade</th>
                                 <th>Points</th>
@@ -1371,12 +1855,23 @@ async function loadResultsByType(type) {
         `;
         
         results.forEach(result => {
-            const programCode = result.program_code || result['program_code'] || '';
-            const slNo = result.sl_no || result['sl_no'] || '';
-            const name = result.name || result['name'] || '';
-            const position = result.position || result['position'] || 'N/A';
-            const grade = result.grade || result['grade'] || 'N/A';
-            const points = result.points || result['points'] || '0';
+            const programCode = result.program_code || '';
+            const slNo = result['sl:no'] || result.sl_no || '';
+            const name = result.name || '';
+            const position = result.position || 'N/A';
+            const grade = result.grade || 'N/A';
+            const points = result.points || '0';
+            
+            // Find team
+            let team = '';
+            const registration = registrations.find(reg => {
+                const regSlNo = reg['sl:no'] || reg.sl_no || '';
+                const regProgramCode = reg.program_code || '';
+                return regSlNo == slNo && regProgramCode === programCode;
+            });
+            if (registration) {
+                team = registration.team || '';
+            }
             
             html += `
                 <tr>
@@ -1384,9 +1879,10 @@ async function loadResultsByType(type) {
                     <td>${slNo}</td>
                     <td>${name}</td>
                     <td>
-                        <div class="${position <= 3 ? `position-${position} position-badge inline-flex` : ''}">
-                            ${position}
-                        </div>
+                        ${team ? `<span class="team-${team} team-badge">Team ${team}</span>` : ''}
+                    </td>
+                    <td>
+                        ${position <= 3 ? `<div class="position-${position} position-badge inline-flex">${position}</div>` : position}
                     </td>
                     <td>
                         <span class="font-medium ${grade === 'A' ? 'text-green-600' : 
@@ -1410,12 +1906,6 @@ async function loadResultsByType(type) {
                         </tbody>
                     </table>
                 </div>
-            </div>
-            
-            <div>
-                <button onclick="addNewResult('${type}')" class="btn btn-primary">
-                    <i class="fas fa-plus mr-2"></i>Add New Result
-                </button>
             </div>
         `;
         
@@ -1445,8 +1935,8 @@ async function editResult(type, programCode, slNo) {
         
         const result = Array.isArray(results) ? 
             results.find(r => {
-                const rProgramCode = r.program_code || r['program_code'] || '';
-                const rSlNo = r.sl_no || r['sl_no'] || '';
+                const rProgramCode = r.program_code || '';
+                const rSlNo = r['sl:no'] || r.sl_no || '';
                 return rProgramCode === programCode && rSlNo == slNo;
             }) : null;
         
@@ -1466,8 +1956,9 @@ async function editResult(type, programCode, slNo) {
             {1: 3, 2: 2, 3: 1};
         const gradeValues = {A: 3, B: 2, C: 1};
         
-        const currentPosition = result.position || result['position'] || '';
-        const currentGrade = result.grade || result['grade'] || '';
+        const currentPosition = result.position || '';
+        const currentGrade = result.grade || '';
+        const currentPoints = result.points || 0;
         
         modalContent.innerHTML = `
             <form id="editResultForm" onsubmit="updateResult(event, '${type}', '${programCode}', '${slNo}')">
@@ -1484,7 +1975,7 @@ async function editResult(type, programCode, slNo) {
                     
                     <div class="form-group">
                         <label class="form-label">Name</label>
-                        <input type="text" value="${result.name || result['name'] || ''}" class="form-input" readonly>
+                        <input type="text" value="${result.name || ''}" class="form-input" readonly>
                     </div>
                     
                     <div class="grid grid-cols-2 gap-4">
@@ -1513,7 +2004,7 @@ async function editResult(type, programCode, slNo) {
                     
                     <div class="form-group">
                         <label class="form-label">Calculated Points</label>
-                        <input type="text" id="calculatedPoints" class="form-input" readonly>
+                        <input type="text" id="calculatedPoints" class="form-input" readonly value="${currentPoints}">
                     </div>
                     
                     <div id="editResultError" class="alert alert-error hidden"></div>
@@ -1545,15 +2036,12 @@ async function editResult(type, programCode, slNo) {
                 const totalPoints = positionPoints + gradePoints;
                 pointsInput.value = totalPoints;
             } else {
-                pointsInput.value = '';
+                pointsInput.value = currentPoints;
             }
         }
         
         if (positionSelect) positionSelect.addEventListener('change', calculatePoints);
         if (gradeSelect) gradeSelect.addEventListener('change', calculatePoints);
-        
-        // Calculate initial points
-        calculatePoints();
         
         modal.classList.remove('hidden');
         
@@ -1575,8 +2063,36 @@ async function updateResult(event, type, programCode, slNo) {
     }
     
     try {
-        alert(`Update Result:\n\nType: ${type}\nProgram: ${programCode}\nSL No: ${slNo}\nPosition: ${position}\nGrade: ${grade}\nPoints: ${calculatedPoints}\n\nNote: Update functionality requires Google Apps Script implementation.`);
+        const sheetName = `${type}_result`;
         
+        // Get the result to update name
+        const results = await api.getSheet(sheetName);
+        const result = Array.isArray(results) ? 
+            results.find(r => {
+                const rProgramCode = r.program_code || '';
+                const rSlNo = r['sl:no'] || r.sl_no || '';
+                return rProgramCode === programCode && rSlNo == slNo;
+            }) : null;
+        
+        if (!result) {
+            showEditResultError('Result not found');
+            return;
+        }
+        
+        // Update data
+        const updateData = {
+            'program_code': programCode,
+            'sl:no': slNo,
+            'name': result.name || '',
+            'position': position,
+            'grade': grade,
+            'points': calculatedPoints
+        };
+        
+        alert(`Update Result:\n\nType: ${type}\nProgram: ${programCode}\nSL No: ${slNo}\nPosition: ${position}\nGrade: ${grade}\nPoints: ${calculatedPoints}\n\nNote: Update functionality requires Google Apps Script implementation for updating existing rows.`);
+        
+        // In a full implementation, you would call an API to update the row
+        // For now, we'll just reload the data
         closeEditResultModal();
         await loadResultsByType(type);
         
@@ -1598,39 +2114,230 @@ function showEditResultError(message) {
 
 async function addNewResult(type) {
     try {
-        // Get registrations for this type
-        const programCodes = [];
-        for (let i = 1; i <= 3; i++) {
-            const registrations = await api.getSheet(`registration_team_${i}`);
-            if (Array.isArray(registrations)) {
-                registrations.forEach(reg => {
-                    const regProgramCode = reg.program_code || reg['program_code'] || '';
-                    if (regProgramCode.startsWith(type)) {
-                        programCodes.push({
-                            code: regProgramCode,
-                            sl_no: reg.sl_no || reg['sl_no'] || '',
-                            name: reg.name || reg['name'] || '',
-                            team: reg.team || reg['team'] || ''
+        // Get all registrations for this type
+        let allRegistrations = [];
+        for (let team = 1; team <= 3; team++) {
+            const regSheet = await api.getSheet(`registration_team_${team}`);
+            if (Array.isArray(regSheet)) {
+                regSheet.forEach(reg => {
+                    const programCode = reg.program_code || '';
+                    if (programCode.startsWith(type.charAt(0).toUpperCase())) {
+                        allRegistrations.push({
+                            ...reg,
+                            team: team
                         });
                     }
                 });
             }
         }
         
-        if (programCodes.length === 0) {
+        if (allRegistrations.length === 0) {
             alert(`No registrations found for ${getResultTypeName(type)} programs`);
             return;
         }
         
-        alert(`Add New ${getResultTypeName(type)} Result\n\nAvailable Programs: ${programCodes.length}\n\nNote: This feature requires form implementation.`);
+        // Get unique program codes
+        const programCodes = [...new Set(allRegistrations.map(reg => reg.program_code || '').filter(Boolean))];
+        
+        if (programCodes.length === 0) {
+            alert(`No program codes found for ${getResultTypeName(type)}`);
+            return;
+        }
+        
+        // Show form to add result
+        let programsHtml = '';
+        programCodes.forEach(code => {
+            programsHtml += `<option value="${code}">${code} - ${getProgramType(code)}</option>`;
+        });
+        
+        let registrationsHtml = '';
+        allRegistrations.forEach(reg => {
+            const slNo = reg['sl:no'] || reg.sl_no || '';
+            const name = reg.name || '';
+            const programCode = reg.program_code || '';
+            registrationsHtml += `<option value="${slNo}|${programCode}">${slNo} - ${name} (${programCode})</option>`;
+        });
+        
+        const modal = document.getElementById('editResultModal');
+        const modalContent = document.getElementById('editResultModalContent');
+        
+        if (!modal || !modalContent) return;
+        
+        const isGroup = type.startsWith('g');
+        const positionValues = isGroup ? 
+            {1: 10, 2: 7, 3: 5} : 
+            {1: 3, 2: 2, 3: 1};
+        const gradeValues = {A: 3, B: 2, C: 1};
+        
+        modalContent.innerHTML = `
+            <form id="addResultForm" onsubmit="saveNewResult(event, '${type}')">
+                <div class="space-y-4">
+                    <div class="form-group">
+                        <label class="form-label">Select Registration</label>
+                        <select id="newResultRegistration" class="form-select" required>
+                            <option value="">Select registration</option>
+                            ${registrationsHtml}
+                        </select>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="form-group">
+                            <label class="form-label">Position</label>
+                            <select id="newResultPosition" class="form-select" required>
+                                <option value="">Select position</option>
+                                <option value="1">1st (${positionValues[1]} points)</option>
+                                <option value="2">2nd (${positionValues[2]} points)</option>
+                                <option value="3">3rd (${positionValues[3]} points)</option>
+                                <option value="4">4th (0 points)</option>
+                                <option value="5">5th (0 points)</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Grade</label>
+                            <select id="newResultGrade" class="form-select" required>
+                                <option value="">Select grade</option>
+                                <option value="A">A (${gradeValues['A']} points)</option>
+                                <option value="B">B (${gradeValues['B']} points)</option>
+                                <option value="C">C (${gradeValues['C']} points)</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Calculated Points</label>
+                        <input type="text" id="newResultPoints" class="form-input" readonly>
+                    </div>
+                    
+                    <div id="addResultError" class="alert alert-error hidden"></div>
+                    
+                    <div class="flex justify-end space-x-3">
+                        <button type="button" onclick="closeEditResultModal()" class="btn btn-secondary">
+                            Cancel
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-plus mr-2"></i>Add Result
+                        </button>
+                    </div>
+                </div>
+            </form>
+        `;
+        
+        // Calculate points on change
+        const positionSelect = document.getElementById('newResultPosition');
+        const gradeSelect = document.getElementById('newResultGrade');
+        const pointsInput = document.getElementById('newResultPoints');
+        
+        function calculateNewPoints() {
+            const position = positionSelect.value;
+            const grade = gradeSelect.value;
+            
+            if (position && grade) {
+                const positionPoints = positionValues[position] || 0;
+                const gradePoints = gradeValues[grade] || 0;
+                const totalPoints = positionPoints + gradePoints;
+                pointsInput.value = totalPoints;
+            } else {
+                pointsInput.value = '';
+            }
+        }
+        
+        if (positionSelect) positionSelect.addEventListener('change', calculateNewPoints);
+        if (gradeSelect) gradeSelect.addEventListener('change', calculateNewPoints);
+        
+        modal.classList.remove('hidden');
         
     } catch (error) {
         console.error('Error adding new result:', error);
+        alert('Error: ' + error.message);
+    }
+}
+
+async function saveNewResult(event, type) {
+    event.preventDefault();
+    
+    const registration = document.getElementById('newResultRegistration').value;
+    const position = document.getElementById('newResultPosition').value;
+    const grade = document.getElementById('newResultGrade').value;
+    const calculatedPoints = document.getElementById('newResultPoints').value;
+    
+    const errorDiv = document.getElementById('addResultError');
+    
+    if (!registration) {
+        if (errorDiv) {
+            errorDiv.textContent = 'Please select a registration';
+            errorDiv.classList.remove('hidden');
+        }
+        return;
+    }
+    
+    if (!position || !grade) {
+        if (errorDiv) {
+            errorDiv.textContent = 'Please select both position and grade';
+            errorDiv.classList.remove('hidden');
+        }
+        return;
+    }
+    
+    try {
+        const [slNo, programCode] = registration.split('|');
+        
+        // Find registration details
+        let registrationDetails = null;
+        for (let team = 1; team <= 3; team++) {
+            const regSheet = await api.getSheet(`registration_team_${team}`);
+            if (Array.isArray(regSheet)) {
+                const reg = regSheet.find(r => {
+                    const rSlNo = r['sl:no'] || r.sl_no || '';
+                    const rProgramCode = r.program_code || '';
+                    return rSlNo == slNo && rProgramCode === programCode;
+                });
+                if (reg) {
+                    registrationDetails = { ...reg, team: team };
+                    break;
+                }
+            }
+        }
+        
+        if (!registrationDetails) {
+            if (errorDiv) {
+                errorDiv.textContent = 'Registration not found';
+                errorDiv.classList.remove('hidden');
+            }
+            return;
+        }
+        
+        // Add result
+        const rowData = {
+            'program_code': programCode,
+            'sl:no': slNo,
+            'name': registrationDetails.name || '',
+            'position': position,
+            'grade': grade,
+            'points': calculatedPoints
+        };
+        
+        const result = await api.addRow(`${type}_result`, rowData);
+        
+        if (result && !result.error) {
+            closeEditResultModal();
+            alert('Result added successfully!');
+            await loadResultsByType(type);
+        } else {
+            throw new Error(result?.error || 'Failed to add result');
+        }
+        
+    } catch (error) {
+        console.error('Error saving new result:', error);
+        if (errorDiv) {
+            errorDiv.textContent = 'Error: ' + error.message;
+            errorDiv.classList.remove('hidden');
+        }
     }
 }
 
 // =============================
-// 📅 Admin Schedule Functions
+// 📅 Admin Schedule Functions - FIXED
 // =============================
 async function loadAdminSchedule() {
     try {
@@ -1652,15 +2359,22 @@ async function loadAdminSchedule() {
         
         let html = '';
         schedule.forEach(item => {
-            const date = new Date(item.date || item['date'] || new Date());
+            let date;
+            try {
+                date = new Date(item.date || new Date());
+            } catch (e) {
+                date = new Date();
+            }
+            
             const formattedDate = date.toLocaleDateString('en-US', { 
                 year: 'numeric', 
                 month: 'short', 
                 day: 'numeric' 
             });
             
-            const time = item.time || item['time'] || '';
-            const programCode = item.program_code || item['program_code'] || '';
+            const time = item.time || '';
+            const programCode = item.program_code || '';
+            const day = item.day || date.toLocaleDateString('en-US', { weekday: 'long' });
             
             html += `
                 <tr>
@@ -1668,14 +2382,14 @@ async function loadAdminSchedule() {
                     <td>${time}</td>
                     <td>
                         <span class="program-code">${programCode}</span>
-                        <span class="text-xs text-gray-500 ml-2">${getProgramType(programCode)}</span>
+                        <div class="text-xs text-gray-500">${day}</div>
                     </td>
                     <td>
-                        <button onclick="editSchedule('${item.date || item['date']}', '${time}', '${programCode}')" 
+                        <button onclick="editSchedule('${item.date || ''}', '${time}', '${programCode}')" 
                                 class="text-blue-600 hover:text-blue-800 mr-2">
                             <i class="fas fa-edit"></i>
                         </button>
-                        <button onclick="deleteSchedule('${item.date || item['date']}', '${time}', '${programCode}')" 
+                        <button onclick="deleteSchedule('${item.date || ''}', '${time}', '${programCode}')" 
                                 class="text-red-600 hover:text-red-800">
                             <i class="fas fa-trash"></i>
                         </button>
@@ -1721,7 +2435,12 @@ document.getElementById('addScheduleForm')?.addEventListener('submit', async fun
         const dayName = dateObj.toLocaleDateString('en-US', { weekday: 'long' });
         
         // Add to schedule
-        const rowData = [formattedDate, dayName, time, programCode];
+        const rowData = {
+            'date': formattedDate,
+            'day': dayName,
+            'time': time,
+            'program_code': programCode
+        };
         
         const result = await api.addRow('schedule', rowData);
         
@@ -1729,6 +2448,7 @@ document.getElementById('addScheduleForm')?.addEventListener('submit', async fun
             alert('Schedule added successfully!');
             document.getElementById('addScheduleForm').reset();
             await loadAdminSchedule();
+            await loadSchedule(); // Reload user schedule view
         } else {
             throw new Error(result?.error || 'Failed to add schedule');
         }
@@ -1741,7 +2461,14 @@ document.getElementById('addScheduleForm')?.addEventListener('submit', async fun
 
 async function editSchedule(date, time, programCode) {
     try {
-        alert(`Edit Schedule:\n\nDate: ${date}\nTime: ${time}\nProgram Code: ${programCode}\n\nNote: This feature requires edit implementation.`);
+        const newDate = prompt('Enter new date (YYYY-MM-DD):', date);
+        const newTime = prompt('Enter new time:', time);
+        const newProgramCode = prompt('Enter new program code:', programCode);
+        
+        if (newDate && newTime && newProgramCode) {
+            alert(`Schedule updated:\n\nDate: ${newDate}\nTime: ${newTime}\nProgram Code: ${newProgramCode}\n\nNote: Edit functionality requires Google Apps Script implementation.`);
+            // In a full implementation, you would call an API to update the row
+        }
     } catch (error) {
         console.error('Error editing schedule:', error);
     }
@@ -1753,14 +2480,15 @@ async function deleteSchedule(date, time, programCode) {
     }
     
     try {
-        alert(`Delete Schedule:\n\nDate: ${date}\nTime: ${time}\nProgram Code: ${programCode}\n\nNote: This feature requires delete implementation.`);
+        alert(`Delete Schedule:\n\nDate: ${date}\nTime: ${time}\nProgram Code: ${programCode}\n\nNote: Delete functionality requires Google Apps Script implementation.`);
+        // In a full implementation, you would call an API to delete the row
     } catch (error) {
         console.error('Error deleting schedule:', error);
     }
 }
 
 // =============================
-// 🔐 Change Password Functions
+// 🔐 Change Password Functions - FIXED
 // =============================
 function openChangePasswordModal() {
     const modal = document.getElementById('changePasswordModal');
@@ -1869,6 +2597,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (assignProgramForm) {
         assignProgramForm.addEventListener('submit', function(e) {
             e.preventDefault();
+            // Handled in the form's own event listener
         });
     }
     
@@ -1877,6 +2606,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (addScheduleForm) {
         addScheduleForm.addEventListener('submit', function(e) {
             e.preventDefault();
+            // Handled in the form's own event listener
         });
     }
     
@@ -1890,6 +2620,8 @@ async function initializeSheets() {
         const result = await api.initializeSheets();
         if (result && !result.error) {
             alert('Sheets initialized successfully with sample data!');
+            // Reload the page
+            location.reload();
         } else {
             throw new Error(result?.error || 'Failed to initialize sheets');
         }
@@ -1904,6 +2636,14 @@ window.initializeSheets = initializeSheets;
 window.showPage = showPage;
 window.logout = logout;
 window.openChangePasswordModal = openChangePasswordModal;
+window.showResultType = function(type) {
+    currentResultType = type;
+    loadResultsByType(type);
+};
 
 console.log('%c🎉 FEST MANAGEMENT SYSTEM LOADED 🎉', 'color: #3b82f6; font-size: 16px; font-weight: bold;');
 console.log('%cRun initializeSheets() in console to setup sheets', 'color: #059669; font-size: 12px;');
+console.log('%cSample Login:', 'color: #f59e0b; font-size: 12px;');
+console.log('%cAdmin: ADM001 / admin123', 'color: #dc2626;');
+console.log('%cTeam 1 Leader: T1L001 / t1leader', 'color: #3b82f6;');
+console.log('%cTeam 1 Member: T1M001 / t1m001', 'color: #10b981;');
