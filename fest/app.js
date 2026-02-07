@@ -25,7 +25,7 @@ detectMobile();
 class EnhancedGoogleSheetsAPI {
     constructor() {
         // ⚠️ UPDATE THIS WITH YOUR WEB APP URL
-        this.apiUrl = "https://script.google.com/macros/s/AKfycbxA1gSXVQU0kKyEQeNkfzObx8VjXaRuE0qUX6KKdNcg6H9Xos82TLkDCWhj7p20N9RmYA/exec";
+        this.apiUrl = "https://script.google.com/macros/s/AKfycbySFN89KAy9HVjTgWgVeczvXnLSUpTGc5Jd1kSnc6PinL2PPXZ-9MofieE3M695yeHozA/exec";
         this.cache = new Map();
         this.cacheTimeout = 30 * 1000; // 30 seconds
         this.retryCount = 3;
