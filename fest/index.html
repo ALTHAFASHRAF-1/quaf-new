@@ -54,6 +54,20 @@
         display: none !important;
     }
 
+    /* Profile picture fallback */
+    .profile-pic-fallback {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.2rem;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+    }
+
     /* Mobile-first responsive navigation */
     .nav-btn {
         padding: 0.5rem 1rem;
@@ -1312,7 +1326,8 @@
                 </div>
             </div>
         </div>
-    </script>
+    </div>
+
     <script src="app.js"></script>
 
     <script>
@@ -1324,8 +1339,8 @@
 
         function showProfileFallback(img) {
             const fallback = document.getElementById('profileFallback');
-            img.style.display = 'none';
-            fallback.classList.remove('hidden');
+            if (img) img.style.display = 'none';
+            if (fallback) fallback.classList.remove('hidden');
         }
 
         function closeChangePasswordModal() {
@@ -1364,27 +1379,32 @@
             const tabs = ['team1Tab', 'team2Tab', 'team3Tab'];
             tabs.forEach((tabId, index) => {
                 const tab = document.getElementById(tabId);
+                if (!tab) return;
+                
                 if (index + 1 === teamNumber) {
-                    tab.classList.add('border-b-2', teamNumber === 1 ? 'border-red-600' : teamNumber === 2 ? 'border-blue-600' : 'border-green-600');
+                    tab.classList.add('border-b-2');
+                    tab.classList.add(teamNumber === 1 ? 'border-red-600' : teamNumber === 2 ? 'border-blue-600' : 'border-green-600');
                     tab.classList.add(teamNumber === 1 ? 'text-red-600' : teamNumber === 2 ? 'text-blue-600' : 'text-green-600');
                 } else {
                     tab.classList.remove('border-b-2', 'border-red-600', 'border-blue-600', 'border-green-600');
                     tab.classList.remove('text-red-600', 'text-blue-600', 'text-green-600');
                 }
             });
-            // Load team data
-            if (typeof loadTeamData === 'function') {
-                loadTeamData(teamNumber);
-            }
         }
 
         // Result type function
         function showResultType(type) {
-            // Load results data for the selected type
-            if (typeof loadResultsByType === 'function') {
-                loadResultsByType(type);
-            }
+            // This will be handled in app.js
         }
+
+        // Make functions available globally
+        window.toggleProfileMenu = toggleProfileMenu;
+        window.showProfileFallback = showProfileFallback;
+        window.closeChangePasswordModal = closeChangePasswordModal;
+        window.closeAssignProgramModal = closeAssignProgramModal;
+        window.closeEditResultModal = closeEditResultModal;
+        window.showTeamTab = showTeamTab;
+        window.showResultType = showResultType;
     </script>
 </body>
 </html>
