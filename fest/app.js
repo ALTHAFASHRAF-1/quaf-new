@@ -10,7 +10,7 @@ let currentResultType = 's';
 class GoogleSheetsAPI {
     constructor() {
         // ⚠️ REPLACE THIS URL WITH YOUR GOOGLE APPS SCRIPT WEB APP URL
-        this.apiUrl = "https://script.google.com/macros/s/AKfycbxA1gSXVQU0kKyEQeNkfzObx8VjXaRuE0qUX6KKdNcg6H9Xos82TLkDCWhj7p20N9RmYA/exec";
+        this.apiUrl = "https://script.google.com/macros/s/AKfycbz7d6rp5yVtFGtQxIjoFadi6Qbriz1mgbRvi7FUTwtIHSf2N1_YAgtY6XVHKUoLKyyn5g/exec";
         this.cache = new Map();
         this.cacheTimeout = 30 * 1000;
     }
