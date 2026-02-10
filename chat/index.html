@@ -15,13 +15,10 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     
     <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
-    <!-- Emoji Picker CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/emoji-picker-element@1.13.0/index.css">
     
     <style>
     * {
@@ -363,14 +360,14 @@
                                 <label for="username" class="block text-sm font-medium text-[#d1d7db] mb-2">Admission Number</label>
                                 <input type="text" id="username" name="username" required
                                     class="w-full px-4 py-3 bg-[#2a3942] border border-[#3d4b54] rounded-lg text-white placeholder-[#8696a0] focus:outline-none focus:ring-2 focus:ring-[#25D366] focus:border-transparent"
-                                    placeholder="Enter your admission number">
+                                    placeholder="Enter admission number">
                             </div>
                             
                             <div>
                                 <label for="password" class="block text-sm font-medium text-[#d1d7db] mb-2">Password</label>
                                 <input type="password" id="password" name="password" required
                                     class="w-full px-4 py-3 bg-[#2a3942] border border-[#3d4b54] rounded-lg text-white placeholder-[#8696a0] focus:outline-none focus:ring-2 focus:ring-[#25D366] focus:border-transparent"
-                                    placeholder="Enter your password">
+                                    placeholder="Enter password">
                             </div>
 
                             <div id="loginError" class="bg-red-500/20 border border-red-500/30 rounded-lg p-3 text-red-300 text-sm hidden"></div>
@@ -525,7 +522,7 @@
                             </button>
 
                             <!-- Hidden File Input -->
-                            <input type="file" id="fileInput" class="hidden" multiple 
+                            <input type="file" id="fileInput" class="hidden" 
                                    onchange="handleFileSelect(event)">
 
                             <!-- Message Input -->
@@ -545,9 +542,11 @@
                             </button>
                         </div>
 
-                        <!-- Emoji Picker -->
-                        <div id="emojiPickerContainer" class="emoji-picker-container">
-                            <emoji-picker id="emojiPicker"></emoji-picker>
+                        <!-- Emoji Picker (Simple emoji list) -->
+                        <div id="emojiPickerContainer" class="emoji-picker-container bg-[#2a3942] rounded-lg p-3 shadow-lg">
+                            <div class="grid grid-cols-8 gap-1 max-h-40 overflow-y-auto">
+                                <!-- Common emojis will be added by JavaScript -->
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -589,7 +588,7 @@
                             </button>
 
                             <!-- Hidden Mobile File Input -->
-                            <input type="file" id="mobileFileInput" class="hidden" multiple 
+                            <input type="file" id="mobileFileInput" class="hidden"
                                    onchange="handleMobileFileSelect(event)">
 
                             <!-- Mobile Message Input -->
@@ -610,8 +609,10 @@
                         </div>
 
                         <!-- Mobile Emoji Picker -->
-                        <div id="mobileEmojiPickerContainer" class="emoji-picker-container">
-                            <emoji-picker id="mobileEmojiPicker"></emoji-picker>
+                        <div id="mobileEmojiPickerContainer" class="emoji-picker-container bg-[#2a3942] rounded-lg p-3 shadow-lg">
+                            <div class="grid grid-cols-8 gap-1 max-h-40 overflow-y-auto">
+                                <!-- Common emojis will be added by JavaScript -->
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -643,14 +644,14 @@
                             <label for="newPassword" class="block text-sm font-medium text-[#d1d7db] mb-2">New Password</label>
                             <input type="password" id="newPassword" 
                                    class="w-full px-4 py-3 bg-[#2a3942] border border-[#3d4b54] rounded-lg text-white placeholder-[#8696a0] focus:outline-none focus:ring-2 focus:ring-[#25D366] focus:border-transtransparent"
-                                   required minlength="6">
+                                   required minlength="4">
                         </div>
                         
                         <div>
                             <label for="confirmPassword" class="block text-sm font-medium text-[#d1d7db] mb-2">Confirm New Password</label>
                             <input type="password" id="confirmPassword" 
                                    class="w-full px-4 py-3 bg-[#2a3942] border border-[#3d4b54] rounded-lg text-white placeholder-[#8696a0] focus:outline-none focus:ring-2 focus:ring-[#25D366] focus:border-transtransparent"
-                                   required minlength="6">
+                                   required minlength="4">
                         </div>
                     </div>
                     
@@ -702,244 +703,6 @@
     </div>
 
     <!-- Scripts -->
-    <script type="module" src="https://cdn.jsdelivr.net/npm/emoji-picker-element@1.13.0/index.js"></script>
-    
-    <script>
-        // Global variables
-        let currentUser = null;
-        let currentChat = null;
-        let chatRefreshInterval = null;
-        let messageRefreshInterval = null;
-        let allUsers = [];
-
-        // Profile menu functions
-        function toggleProfileMenu() {
-            const profileMenu = document.getElementById('profileMenu');
-            profileMenu.classList.toggle('hidden');
-        }
-
-        function showProfileFallback(img) {
-            const fallback = document.getElementById('profileFallback');
-            if (img) img.style.display = 'none';
-            if (fallback) fallback.classList.remove('hidden');
-        }
-
-        function showMenuProfileFallback(img) {
-            const fallback = document.getElementById('menuProfileFallback');
-            if (img) img.style.display = 'none';
-            if (fallback) fallback.classList.remove('hidden');
-        }
-
-        // Modal functions
-        function openChangePasswordModal() {
-            const modal = document.getElementById('changePasswordModal');
-            modal.classList.remove('hidden');
-            
-            // Reset form
-            document.getElementById('changePasswordForm').reset();
-            document.getElementById('changePasswordError').classList.add('hidden');
-            document.getElementById('changePasswordSuccess').classList.add('hidden');
-            
-            // Close profile menu
-            toggleProfileMenu();
-        }
-
-        function closeChangePasswordModal() {
-            document.getElementById('changePasswordModal').classList.add('hidden');
-        }
-
-        function showNewChatModal() {
-            document.getElementById('newChatModal').classList.remove('hidden');
-            loadUsersForNewChat();
-        }
-
-        function closeNewChatModal() {
-            document.getElementById('newChatModal').classList.add('hidden');
-        }
-
-        // Textarea auto-resize
-        function autoResizeTextarea(textarea) {
-            textarea.style.height = 'auto';
-            textarea.style.height = textarea.scrollHeight + 'px';
-            
-            // Limit max height
-            if (textarea.scrollHeight > 120) {
-                textarea.style.height = '120px';
-                textarea.style.overflowY = 'auto';
-            } else {
-                textarea.style.overflowY = 'hidden';
-            }
-        }
-
-        // Emoji picker functions
-        function toggleEmojiPicker() {
-            const pickerContainer = document.getElementById('emojiPickerContainer');
-            pickerContainer.classList.toggle('show');
-            
-            // Close other picker if open
-            const mobilePicker = document.getElementById('mobileEmojiPickerContainer');
-            mobilePicker.classList.remove('show');
-            
-            // Setup emoji picker
-            const picker = document.getElementById('emojiPicker');
-            if (picker) {
-                picker.addEventListener('emoji-click', event => {
-                    const messageInput = document.getElementById('messageInput');
-                    if (messageInput) {
-                        messageInput.value += event.detail.unicode;
-                        messageInput.focus();
-                        autoResizeTextarea(messageInput);
-                    }
-                    pickerContainer.classList.remove('show');
-                });
-            }
-        }
-
-        function toggleMobileEmojiPicker() {
-            const pickerContainer = document.getElementById('mobileEmojiPickerContainer');
-            pickerContainer.classList.toggle('show');
-            
-            // Close other picker if open
-            const desktopPicker = document.getElementById('emojiPickerContainer');
-            desktopPicker.classList.remove('show');
-            
-            // Setup emoji picker
-            const picker = document.getElementById('mobileEmojiPicker');
-            if (picker) {
-                picker.addEventListener('emoji-click', event => {
-                    const messageInput = document.getElementById('mobileMessageInput');
-                    if (messageInput) {
-                        messageInput.value += event.detail.unicode;
-                        messageInput.focus();
-                        autoResizeTextarea(messageInput);
-                    }
-                    pickerContainer.classList.remove('show');
-                });
-            }
-        }
-
-        // Close modals and pickers when clicking outside
-        document.addEventListener('click', function(event) {
-            // Profile menu
-            const profileMenu = document.getElementById('profileMenu');
-            const profileButton = event.target.closest('button[onclick="toggleProfileMenu()"]');
-            if (!profileButton && profileMenu && !profileMenu.classList.contains('hidden') && 
-                !profileMenu.contains(event.target)) {
-                profileMenu.classList.add('hidden');
-            }
-
-            // Emoji pickers
-            const emojiPickers = ['emojiPickerContainer', 'mobileEmojiPickerContainer'];
-            emojiPickers.forEach(pickerId => {
-                const picker = document.getElementById(pickerId);
-                const emojiButton = event.target.closest('button[onclick*="toggleEmojiPicker"]');
-                if (picker && !picker.contains(event.target) && !emojiButton) {
-                    picker.classList.remove('show');
-                }
-            });
-
-            // Modals
-            const modals = ['changePasswordModal', 'newChatModal'];
-            modals.forEach(modalId => {
-                const modal = document.getElementById(modalId);
-                if (modal && event.target === modal) {
-                    modal.classList.add('hidden');
-                }
-            });
-        });
-
-        // Mobile chat functions
-        function closeMobileChat() {
-            document.getElementById('mobileChatArea').classList.add('hidden');
-            document.getElementById('sidebar').classList.remove('hidden');
-        }
-
-        // File handling
-        function handleFileSelect(event) {
-            const files = event.target.files;
-            if (files.length > 0) {
-                showFilePreview(files, 'filePreview');
-            }
-        }
-
-        function handleMobileFileSelect(event) {
-            const files = event.target.files;
-            if (files.length > 0) {
-                showFilePreview(files, 'mobileFilePreview');
-            }
-        }
-
-        function showFilePreview(files, containerId) {
-            const container = document.getElementById(containerId);
-            container.innerHTML = '';
-            
-            Array.from(files).forEach(file => {
-                const preview = document.createElement('div');
-                preview.className = 'file-preview';
-                
-                let icon = 'fa-file';
-                if (file.type.startsWith('image/')) icon = 'fa-image';
-                else if (file.type.startsWith('video/')) icon = 'fa-video';
-                else if (file.type.startsWith('audio/')) icon = 'fa-music';
-                
-                preview.innerHTML = `
-                    <div class="file-icon">
-                        <i class="fas ${icon}"></i>
-                    </div>
-                    <div class="flex-1">
-                        <div class="text-sm font-medium text-white truncate">${file.name}</div>
-                        <div class="text-xs text-[#8696a0]">${formatFileSize(file.size)}</div>
-                    </div>
-                    <button onclick="removeFilePreview(this, '${containerId}')" class="text-[#8696a0] hover:text-white">
-                        <i class="fas fa-times"></i>
-                    </button>
-                `;
-                
-                container.appendChild(preview);
-                container.classList.remove('hidden');
-            });
-        }
-
-        function removeFilePreview(button, containerId) {
-            const container = document.getElementById(containerId);
-            button.closest('.file-preview').remove();
-            
-            if (container.children.length === 0) {
-                container.classList.add('hidden');
-            }
-            
-            // Clear file input
-            const fileInput = containerId.includes('mobile') ? 
-                document.getElementById('mobileFileInput') : 
-                document.getElementById('fileInput');
-            fileInput.value = '';
-        }
-
-        function formatFileSize(bytes) {
-            if (bytes === 0) return '0 Bytes';
-            const k = 1024;
-            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-            const i = Math.floor(Math.log(bytes) / Math.log(k));
-            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-        }
-
-        // Make functions available globally
-        window.toggleProfileMenu = toggleProfileMenu;
-        window.showProfileFallback = showProfileFallback;
-        window.showMenuProfileFallback = showMenuProfileFallback;
-        window.openChangePasswordModal = openChangePasswordModal;
-        window.closeChangePasswordModal = closeChangePasswordModal;
-        window.showNewChatModal = showNewChatModal;
-        window.closeNewChatModal = closeNewChatModal;
-        window.toggleEmojiPicker = toggleEmojiPicker;
-        window.toggleMobileEmojiPicker = toggleMobileEmojiPicker;
-        window.closeMobileChat = closeMobileChat;
-        window.handleFileSelect = handleFileSelect;
-        window.handleMobileFileSelect = handleMobileFileSelect;
-        window.removeFilePreview = removeFilePreview;
-        window.autoResizeTextarea = autoResizeTextarea;
-    </script>
-    
     <script src="app.js"></script>
 </body>
 </html>
