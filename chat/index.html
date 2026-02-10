@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon32x32.png">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+
+    <!-- Primary Meta Tags -->
+    <title>WhatsApp Style Chat</title>
+    <meta name="title" content="WhatsApp Style Chat">
+    <meta name="description" content="Real-time chat application with Google Sheets backend">
+
+    <!-- Tailwind CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Emoji Picker CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/emoji-picker-element@1.13.0/index.css">
+    
+    <style>
+    * {
+        box-sizing: border-box;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        margin: 0;
+        padding: 0;
+        -webkit-tap-highlight-color: transparent;
+    }
+    
+    :root {
+        --primary-color: #25D366;
+        --secondary-color: #128C7E;
+        --accent-color: #34B7F1;
+        --chat-bg: #0c1317;
+        --message-out: #005c4b;
+        --message-in: #202c33;
+        --text-light: #e9edef;
+        --text-dark: #d1d7db;
+        --border-color: #303d45;
+    }
+    
+    body {
+        font-family: 'Inter', 'Poppins', sans-serif;
+        line-height: 1.6;
+        background: var(--chat-bg);
+        min-height: 100vh;
+        -webkit-text-size-adjust: 100%;
+        -moz-text-size-adjust: 100%;
+        -ms-text-size-adjust: 100%;
+        text-size-adjust: 100%;
+    }
+
+    .hidden {
+        display: none !important;
+    }
+
+    /* WhatsApp Theme */
+    .whatsapp-bg {
+        background: var(--chat-bg);
+    }
+
+    .whatsapp-green {
+        background-color: var(--primary-color);
+    }
+
+    .whatsapp-teal {
+        background-color: var(--secondary-color);
+    }
+
+    .message-out {
+        background-color: var(--message-out);
+        color: white;
+        border-radius: 7.5px 0 7.5px 7.5px;
+        max-width: 65%;
+        margin-left: auto;
+    }
+
+    .message-in {
+        background-color: var(--message-in);
+        color: var(--text-light);
+        border-radius: 0 7.5px 7.5px 7.5px;
+        max-width: 65%;
+    }
+
+    .typing-indicator {
+        display: inline-flex;
+        padding: 8px 12px;
+        background-color: var(--message-in);
+        border-radius: 18px;
+        align-items: center;
+    }
+
+    .typing-dot {
+        width: 4px;
+        height: 4px;
+        border-radius: 50%;
+        background-color: var(--text-dark);
+        margin: 0 1px;
+        animation: typing 1.4s infinite;
+    }
+
+    .typing-dot:nth-child(2) {
+        animation-delay: 0.2s;
+    }
+
+    .typing-dot:nth-child(3) {
+        animation-delay: 0.4s;
+    }
+
+    @keyframes typing {
+        0%, 60%, 100% {
+            transform: translateY(0);
+            opacity: 0.4;
+        }
+        30% {
+            transform: translateY(-4px);
+            opacity: 1;
+        }
+    }
+
+    /* Chat container */
+    .chat-container {
+        height: calc(100vh - 120px);
+        overflow-y: auto;
+        scroll-behavior: smooth;
+    }
+
+    /* Profile picture */
+    .profile-pic {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .profile-pic-fallback {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 16px;
+        font-weight: 500;
+    }
+
+    /* Chat list item */
+    .chat-item {
+        transition: background-color 0.2s ease;
+        cursor: pointer;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .chat-item:hover, .chat-item.active {
+        background-color: #202c33;
+    }
+
+    /* Message input */
+    .message-input {
+        background-color: #2a3942;
+        border: none;
+        color: white;
+        border-radius: 8px;
+        padding: 9px 12px;
+        font-size: 15px;
+        resize: none;
+        max-height: 120px;
+    }
+
+    .message-input:focus {
+        outline: none;
+        box-shadow: 0 0 0 2px rgba(37, 211, 102, 0.2);
+    }
+
+    /* Attachment button */
+    .attach-btn {
+        color: #8696a0;
+        cursor: pointer;
+        padding: 8px;
+        border-radius: 50%;
+        transition: background-color 0.2s ease;
+    }
+
+    .attach-btn:hover {
+        background-color: rgba(134, 150, 160, 0.1);
+    }
+
+    /* Emoji picker */
+    .emoji-picker-container {
+        position: absolute;
+        bottom: 70px;
+        right: 20px;
+        z-index: 1000;
+        display: none;
+    }
+
+    .emoji-picker-container.show {
+        display: block;
+    }
+
+    /* File upload preview */
+    .file-preview {
+        background-color: #2a3942;
+        border-radius: 8px;
+        padding: 12px;
+        margin: 8px 0;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .file-icon {
+        width: 40px;
+        height: 40px;
+        background: var(--accent-color);
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 20px;
+    }
+
+    /* Online indicator */
+    .online-indicator {
+        width: 10px;
+        height: 10px;
+        background-color: var(--primary-color);
+        border-radius: 50%;
+        position: absolute;
+        bottom: 2px;
+        right: 2px;
+        border: 2px solid var(--chat-bg);
+    }
+
+    /* Message time */
+    .message-time {
+        font-size: 11px;
+        color: rgba(255, 255, 255, 0.6);
+        margin-top: 3px;
+    }
+
+    /* Scrollbar styling */
+    .chat-container::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .chat-container::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    .chat-container::-webkit-scrollbar-thumb {
+        background: rgba(134, 150, 160, 0.3);
+        border-radius: 3px;
+    }
+
+    .chat-container::-webkit-scrollbar-thumb:hover {
+        background: rgba(134, 150, 160, 0.5);
+    }
+
+    /* Loading animation */
+    .loading-dots {
+        display: inline-flex;
+        gap: 4px;
+    }
+
+    .loading-dots span {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background-color: var(--primary-color);
+        animation: loading 1.4s infinite;
+    }
+
+    .loading-dots span:nth-child(2) {
+        animation-delay: 0.2s;
+    }
+
+    .loading-dots span:nth-child(3) {
+        animation-delay: 0.4s;
+    }
+
+    @keyframes loading {
+        0%, 100% {
+            opacity: 0.2;
+            transform: scale(0.8);
+        }
+        50% {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+    /* Mobile responsive */
+    @media (max-width: 768px) {
+        .chat-container {
+            height: calc(100vh - 140px);
+        }
+        
+        .profile-pic, .profile-pic-fallback {
+            width: 36px;
+            height: 36px;
+        }
+        
+        .message-out, .message-in {
+            max-width: 85%;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .chat-container {
+            height: calc(100vh - 160px);
+        }
+        
+        .profile-pic, .profile-pic-fallback {
+            width: 32px;
+            height: 32px;
+        }
+        
+        .message-out, .message-in {
+            max-width: 90%;
+        }
+    }
+
+    /* Safe area insets for mobile */
+    @supports (padding: max(0px)) {
+        body {
+            padding-top: env(safe-area-inset-top);
+            padding-bottom: env(safe-area-inset-bottom);
+            padding-left: env(safe-area-inset-left);
+            padding-right: env(safe-area-inset-right);
+        }
+    }
+    </style>
+</head>
+<body class="whatsapp-bg text-white">
+    <!-- Login Page -->
+    <div id="loginPage" class="min-h-screen flex items-center justify-center p-4">
+        <div class="bg-[#202c33] rounded-2xl shadow-2xl w-full max-w-md">
+            <div class="p-6 md:p-8">
+                <!-- Login Section -->
+                <div id="loginSection">
+                    <div class="text-center mb-6">
+                        <div class="w-16 h-16 bg-gradient-to-br from-[#25D366] to-[#128C7E] rounded-2xl mx-auto mb-4 flex items-center justify-center">
+                            <i class="fab fa-whatsapp text-white text-2xl"></i>
+                        </div>
+                        <h1 class="text-2xl font-bold text-white">WhatsApp Chat</h1>
+                        <p class="text-[#8696a0] mt-2">Connect with your friends</p>
+                    </div>
+
+                    <form id="loginForm">
+                        <div class="space-y-4">
+                            <div>
+                                <label for="username" class="block text-sm font-medium text-[#d1d7db] mb-2">Admission Number</label>
+                                <input type="text" id="username" name="username" required
+                                    class="w-full px-4 py-3 bg-[#2a3942] border border-[#3d4b54] rounded-lg text-white placeholder-[#8696a0] focus:outline-none focus:ring-2 focus:ring-[#25D366] focus:border-transparent"
+                                    placeholder="Enter your admission number">
+                            </div>
+                            
+                            <div>
+                                <label for="password" class="block text-sm font-medium text-[#d1d7db] mb-2">Password</label>
+                                <input type="password" id="password" name="password" required
+                                    class="w-full px-4 py-3 bg-[#2a3942] border border-[#3d4b54] rounded-lg text-white placeholder-[#8696a0] focus:outline-none focus:ring-2 focus:ring-[#25D366] focus:border-transparent"
+                                    placeholder="Enter your password">
+                            </div>
+
+                            <div id="loginError" class="bg-red-500/20 border border-red-500/30 rounded-lg p-3 text-red-300 text-sm hidden"></div>
+
+                            <button type="submit" class="w-full bg-[#00a884] hover:bg-[#008f74] text-white font-medium py-3 px-4 rounded-lg transition duration-200 flex items-center justify-center">
+                                <i class="fas fa-sign-in-alt mr-2"></i>Sign In
+                            </button>
+                        </div>
+                    </form>
+
+                    <div class="text-center mt-4">
+                        <p class="text-[#8696a0] text-sm">Contact admin if you forgot your password</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chat Dashboard Container -->
+    <div id="dashboardContainer" class="hidden min-h-screen">
+        <!-- Header -->
+        <header class="bg-[#202c33] border-b border-[#303d45]">
+            <div class="container mx-auto px-4 py-3">
+                <div class="flex justify-between items-center">
+                    <!-- Logo and Title -->
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 bg-gradient-to-br from-[#25D366] to-[#128C7E] rounded-lg flex items-center justify-center">
+                            <i class="fab fa-whatsapp text-white"></i>
+                        </div>
+                        <div>
+                            <h1 class="text-lg font-bold text-white">WhatsApp Chat</h1>
+                            <p id="welcomeUser" class="text-xs text-[#8696a0]">Welcome</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Profile Section -->
+                    <div class="relative">
+                        <button onclick="toggleProfileMenu()" class="focus:outline-none focus:ring-2 focus:ring-[#25D366] focus:ring-opacity-50 rounded-full">
+                            <div class="relative">
+                                <img id="profilePic" src="" alt="Profile" class="profile-pic" onerror="showProfileFallback(this)">
+                                <div id="profileFallback" class="profile-pic-fallback">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                            </div>
+                        </button>
+                        
+                        <!-- Profile Dropdown Menu -->
+                        <div id="profileMenu" class="absolute top-full right-0 mt-2 w-64 bg-[#233138] rounded-lg shadow-xl border border-[#303d45] z-50 hidden">
+                            <div class="p-4 border-b border-[#303d45]">
+                                <div class="flex items-center space-x-3">
+                                    <div class="relative">
+                                        <img id="menuProfilePic" src="" alt="Profile" class="profile-pic" onerror="showMenuProfileFallback(this)">
+                                        <div id="menuProfileFallback" class="profile-pic-fallback">
+                                            <i class="fas fa-user"></i>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div id="profileName" class="font-medium text-white">User Name</div>
+                                        <div id="profileAdNo" class="text-sm text-[#8696a0]">@admission_no</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="py-2">
+                                <button onclick="openChangePasswordModal()" class="w-full text-left px-4 py-3 hover:bg-[#202c33] flex items-center text-white">
+                                    <i class="fas fa-key text-[#8696a0] mr-3"></i>
+                                    Change Password
+                                </button>
+                                <button onclick="logout()" class="w-full text-left px-4 py-3 hover:bg-[#202c33] flex items-center text-red-400">
+                                    <i class="fas fa-sign-out-alt mr-3"></i>
+                                    Logout
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Chat Interface -->
+        <main class="container mx-auto max-w-7xl h-[calc(100vh-73px)]">
+            <div class="flex h-full">
+                <!-- Sidebar - Chat List -->
+                <div id="sidebar" class="w-full md:w-1/3 lg:w-1/4 bg-[#111b21] border-r border-[#303d45] flex flex-col">
+                    <!-- Search Bar -->
+                    <div class="p-4 border-b border-[#303d45]">
+                        <div class="relative">
+                            <input type="text" id="searchChats" 
+                                   class="w-full px-4 py-2 pl-10 bg-[#202c33] border border-[#3d4b54] rounded-lg text-white placeholder-[#8696a0] focus:outline-none focus:ring-2 focus:ring-[#25D366] focus:border-transparent"
+                                   placeholder="Search or start new chat">
+                            <i class="fas fa-search absolute left-3 top-3 text-[#8696a0]"></i>
+                        </div>
+                    </div>
+
+                    <!-- Chat List -->
+                    <div id="chatList" class="flex-1 overflow-y-auto">
+                        <!-- Chats will be loaded here -->
+                        <div class="text-center py-8">
+                            <div class="loading-dots inline-block">
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                            </div>
+                            <p class="text-[#8696a0] mt-2">Loading chats...</p>
+                        </div>
+                    </div>
+
+                    <!-- New Chat Button -->
+                    <div class="p-4 border-t border-[#303d45]">
+                        <button onclick="showNewChatModal()" 
+                                class="w-full bg-[#00a884] hover:bg-[#008f74] text-white font-medium py-3 px-4 rounded-lg transition duration-200 flex items-center justify-center">
+                            <i class="fas fa-plus mr-2"></i>New Chat
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Main Chat Area -->
+                <div id="chatArea" class="hidden md:flex flex-col flex-1 bg-[#0c1317]">
+                    <!-- Chat Header -->
+                    <div id="chatHeader" class="p-4 border-b border-[#303d45] bg-[#202c33]">
+                        <!-- Selected chat header will be loaded here -->
+                        <div class="text-center py-4">
+                            <p class="text-[#8696a0]">Select a chat to start messaging</p>
+                        </div>
+                    </div>
+
+                    <!-- Messages Container -->
+                    <div id="messagesContainer" class="chat-container p-4 flex-1">
+                        <!-- Messages will be loaded here -->
+                        <div class="text-center py-8">
+                            <i class="fab fa-whatsapp text-4xl text-[#303d45] mb-3"></i>
+                            <p class="text-[#8696a0]">Select a chat to view messages</p>
+                        </div>
+                    </div>
+
+                    <!-- Message Input Area -->
+                    <div id="messageInputArea" class="hidden p-4 border-t border-[#303d45] bg-[#202c33]">
+                        <!-- File Preview -->
+                        <div id="filePreview" class="hidden"></div>
+
+                        <!-- Input Form -->
+                        <div class="flex items-end space-x-2">
+                            <!-- Emoji Button -->
+                            <button onclick="toggleEmojiPicker()" 
+                                    class="attach-btn">
+                                <i class="far fa-smile text-xl"></i>
+                            </button>
+
+                            <!-- Attachment Button -->
+                            <button onclick="document.getElementById('fileInput').click()" 
+                                    class="attach-btn">
+                                <i class="fas fa-paperclip text-xl"></i>
+                            </button>
+
+                            <!-- Hidden File Input -->
+                            <input type="file" id="fileInput" class="hidden" multiple 
+                                   onchange="handleFileSelect(event)">
+
+                            <!-- Message Input -->
+                            <div class="flex-1 relative">
+                                <textarea id="messageInput" 
+                                          class="message-input w-full"
+                                          placeholder="Type a message"
+                                          rows="1"
+                                          oninput="autoResizeTextarea(this)"></textarea>
+                            </div>
+
+                            <!-- Send Button -->
+                            <button onclick="sendMessage()" 
+                                    id="sendButton"
+                                    class="bg-[#00a884] hover:bg-[#008f74] text-white rounded-full w-10 h-10 flex items-center justify-center transition duration-200">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </div>
+
+                        <!-- Emoji Picker -->
+                        <div id="emojiPickerContainer" class="emoji-picker-container">
+                            <emoji-picker id="emojiPicker"></emoji-picker>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mobile Chat Area (Full Screen) -->
+                <div id="mobileChatArea" class="md:hidden flex-col flex-1 bg-[#0c1317] hidden">
+                    <!-- Back Button and Chat Header -->
+                    <div class="p-4 border-b border-[#303d45] bg-[#202c33] flex items-center">
+                        <button onclick="closeMobileChat()" class="mr-3">
+                            <i class="fas fa-arrow-left text-white"></i>
+                        </button>
+                        <div id="mobileChatHeader" class="flex-1">
+                            <!-- Mobile chat header will be loaded here -->
+                        </div>
+                    </div>
+
+                    <!-- Mobile Messages Container -->
+                    <div id="mobileMessagesContainer" class="chat-container p-4 flex-1">
+                        <!-- Messages will be loaded here -->
+                    </div>
+
+                    <!-- Mobile Message Input Area -->
+                    <div id="mobileMessageInputArea" class="hidden p-4 border-t border-[#303d45] bg-[#202c33]">
+                        <!-- Mobile File Preview -->
+                        <div id="mobileFilePreview" class="hidden"></div>
+
+                        <!-- Mobile Input Form -->
+                        <div class="flex items-end space-x-2">
+                            <!-- Mobile Emoji Button -->
+                            <button onclick="toggleMobileEmojiPicker()" 
+                                    class="attach-btn">
+                                <i class="far fa-smile text-xl"></i>
+                            </button>
+
+                            <!-- Mobile Attachment Button -->
+                            <button onclick="document.getElementById('mobileFileInput').click()" 
+                                    class="attach-btn">
+                                <i class="fas fa-paperclip text-xl"></i>
+                            </button>
+
+                            <!-- Hidden Mobile File Input -->
+                            <input type="file" id="mobileFileInput" class="hidden" multiple 
+                                   onchange="handleMobileFileSelect(event)">
+
+                            <!-- Mobile Message Input -->
+                            <div class="flex-1 relative">
+                                <textarea id="mobileMessageInput" 
+                                          class="message-input w-full"
+                                          placeholder="Type a message"
+                                          rows="1"
+                                          oninput="autoResizeTextarea(this)"></textarea>
+                            </div>
+
+                            <!-- Mobile Send Button -->
+                            <button onclick="sendMobileMessage()" 
+                                    id="mobileSendButton"
+                                    class="bg-[#00a884] hover:bg-[#008f74] text-white rounded-full w-10 h-10 flex items-center justify-center transition duration-200">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </div>
+
+                        <!-- Mobile Emoji Picker -->
+                        <div id="mobileEmojiPickerContainer" class="emoji-picker-container">
+                            <emoji-picker id="mobileEmojiPicker"></emoji-picker>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Change Password Modal -->
+    <div id="changePasswordModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 hidden">
+        <div class="bg-[#202c33] rounded-lg w-full max-w-md">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-bold text-white">Change Password</h3>
+                    <button onclick="closeChangePasswordModal()" class="text-[#8696a0] hover:text-white">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                
+                <form id="changePasswordForm">
+                    <div class="space-y-4">
+                        <div>
+                            <label for="currentPassword" class="block text-sm font-medium text-[#d1d7db] mb-2">Current Password</label>
+                            <input type="password" id="currentPassword" 
+                                   class="w-full px-4 py-3 bg-[#2a3942] border border-[#3d4b54] rounded-lg text-white placeholder-[#8696a0] focus:outline-none focus:ring-2 focus:ring-[#25D366] focus:border-transtransparent"
+                                   required>
+                        </div>
+                        
+                        <div>
+                            <label for="newPassword" class="block text-sm font-medium text-[#d1d7db] mb-2">New Password</label>
+                            <input type="password" id="newPassword" 
+                                   class="w-full px-4 py-3 bg-[#2a3942] border border-[#3d4b54] rounded-lg text-white placeholder-[#8696a0] focus:outline-none focus:ring-2 focus:ring-[#25D366] focus:border-transtransparent"
+                                   required minlength="6">
+                        </div>
+                        
+                        <div>
+                            <label for="confirmPassword" class="block text-sm font-medium text-[#d1d7db] mb-2">Confirm New Password</label>
+                            <input type="password" id="confirmPassword" 
+                                   class="w-full px-4 py-3 bg-[#2a3942] border border-[#3d4b54] rounded-lg text-white placeholder-[#8696a0] focus:outline-none focus:ring-2 focus:ring-[#25D366] focus:border-transtransparent"
+                                   required minlength="6">
+                        </div>
+                    </div>
+                    
+                    <div id="changePasswordError" class="bg-red-500/20 border border-red-500/30 rounded-lg p-3 text-red-300 text-sm mt-4 hidden"></div>
+                    <div id="changePasswordSuccess" class="bg-green-500/20 border border-green-500/30 rounded-lg p-3 text-green-300 text-sm mt-4 hidden"></div>
+                    
+                    <div class="flex justify-end space-x-3 mt-6">
+                        <button type="button" onclick="closeChangePasswordModal()" 
+                                class="px-4 py-2 bg-[#2a3942] hover:bg-[#3d4b54] text-white rounded-lg transition duration-200">
+                            Cancel
+                        </button>
+                        <button type="submit" 
+                                class="px-4 py-2 bg-[#00a884] hover:bg-[#008f74] text-white rounded-lg transition duration-200 flex items-center">
+                            <i class="fas fa-key mr-2"></i>Change Password
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- New Chat Modal -->
+    <div id="newChatModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 hidden">
+        <div class="bg-[#202c33] rounded-lg w-full max-w-md max-h-[80vh] flex flex-col">
+            <div class="p-6 border-b border-[#303d45]">
+                <div class="flex justify-between items-center">
+                    <h3 class="text-lg font-bold text-white">New Chat</h3>
+                    <button onclick="closeNewChatModal()" class="text-[#8696a0] hover:text-white">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="flex-1 overflow-y-auto p-4">
+                <!-- Users List -->
+                <div id="usersList" class="space-y-2">
+                    <!-- Users will be loaded here -->
+                    <div class="text-center py-4">
+                        <div class="loading-dots inline-block">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                        <p class="text-[#8696a0] mt-2">Loading users...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script type="module" src="https://cdn.jsdelivr.net/npm/emoji-picker-element@1.13.0/index.js"></script>
+    
+    <script>
+        // Global variables
+        let currentUser = null;
+        let currentChat = null;
+        let chatRefreshInterval = null;
+        let messageRefreshInterval = null;
+        let allUsers = [];
+
+        // Profile menu functions
+        function toggleProfileMenu() {
+            const profileMenu = document.getElementById('profileMenu');
+            profileMenu.classList.toggle('hidden');
+        }
+
+        function showProfileFallback(img) {
+            const fallback = document.getElementById('profileFallback');
+            if (img) img.style.display = 'none';
+            if (fallback) fallback.classList.remove('hidden');
+        }
+
+        function showMenuProfileFallback(img) {
+            const fallback = document.getElementById('menuProfileFallback');
+            if (img) img.style.display = 'none';
+            if (fallback) fallback.classList.remove('hidden');
+        }
+
+        // Modal functions
+        function openChangePasswordModal() {
+            const modal = document.getElementById('changePasswordModal');
+            modal.classList.remove('hidden');
+            
+            // Reset form
+            document.getElementById('changePasswordForm').reset();
+            document.getElementById('changePasswordError').classList.add('hidden');
+            document.getElementById('changePasswordSuccess').classList.add('hidden');
+            
+            // Close profile menu
+            toggleProfileMenu();
+        }
+
+        function closeChangePasswordModal() {
+            document.getElementById('changePasswordModal').classList.add('hidden');
+        }
+
+        function showNewChatModal() {
+            document.getElementById('newChatModal').classList.remove('hidden');
+            loadUsersForNewChat();
+        }
+
+        function closeNewChatModal() {
+            document.getElementById('newChatModal').classList.add('hidden');
+        }
+
+        // Textarea auto-resize
+        function autoResizeTextarea(textarea) {
+            textarea.style.height = 'auto';
+            textarea.style.height = textarea.scrollHeight + 'px';
+            
+            // Limit max height
+            if (textarea.scrollHeight > 120) {
+                textarea.style.height = '120px';
+                textarea.style.overflowY = 'auto';
+            } else {
+                textarea.style.overflowY = 'hidden';
+            }
+        }
+
+        // Emoji picker functions
+        function toggleEmojiPicker() {
+            const pickerContainer = document.getElementById('emojiPickerContainer');
+            pickerContainer.classList.toggle('show');
+            
+            // Close other picker if open
+            const mobilePicker = document.getElementById('mobileEmojiPickerContainer');
+            mobilePicker.classList.remove('show');
+            
+            // Setup emoji picker
+            const picker = document.getElementById('emojiPicker');
+            if (picker) {
+                picker.addEventListener('emoji-click', event => {
+                    const messageInput = document.getElementById('messageInput');
+                    if (messageInput) {
+                        messageInput.value += event.detail.unicode;
+                        messageInput.focus();
+                        autoResizeTextarea(messageInput);
+                    }
+                    pickerContainer.classList.remove('show');
+                });
+            }
+        }
+
+        function toggleMobileEmojiPicker() {
+            const pickerContainer = document.getElementById('mobileEmojiPickerContainer');
+            pickerContainer.classList.toggle('show');
+            
+            // Close other picker if open
+            const desktopPicker = document.getElementById('emojiPickerContainer');
+            desktopPicker.classList.remove('show');
+            
+            // Setup emoji picker
+            const picker = document.getElementById('mobileEmojiPicker');
+            if (picker) {
+                picker.addEventListener('emoji-click', event => {
+                    const messageInput = document.getElementById('mobileMessageInput');
+                    if (messageInput) {
+                        messageInput.value += event.detail.unicode;
+                        messageInput.focus();
+                        autoResizeTextarea(messageInput);
+                    }
+                    pickerContainer.classList.remove('show');
+                });
+            }
+        }
+
+        // Close modals and pickers when clicking outside
+        document.addEventListener('click', function(event) {
+            // Profile menu
+            const profileMenu = document.getElementById('profileMenu');
+            const profileButton = event.target.closest('button[onclick="toggleProfileMenu()"]');
+            if (!profileButton && profileMenu && !profileMenu.classList.contains('hidden') && 
+                !profileMenu.contains(event.target)) {
+                profileMenu.classList.add('hidden');
+            }
+
+            // Emoji pickers
+            const emojiPickers = ['emojiPickerContainer', 'mobileEmojiPickerContainer'];
+            emojiPickers.forEach(pickerId => {
+                const picker = document.getElementById(pickerId);
+                const emojiButton = event.target.closest('button[onclick*="toggleEmojiPicker"]');
+                if (picker && !picker.contains(event.target) && !emojiButton) {
+                    picker.classList.remove('show');
+                }
+            });
+
+            // Modals
+            const modals = ['changePasswordModal', 'newChatModal'];
+            modals.forEach(modalId => {
+                const modal = document.getElementById(modalId);
+                if (modal && event.target === modal) {
+                    modal.classList.add('hidden');
+                }
+            });
+        });
+
+        // Mobile chat functions
+        function closeMobileChat() {
+            document.getElementById('mobileChatArea').classList.add('hidden');
+            document.getElementById('sidebar').classList.remove('hidden');
+        }
+
+        // File handling
+        function handleFileSelect(event) {
+            const files = event.target.files;
+            if (files.length > 0) {
+                showFilePreview(files, 'filePreview');
+            }
+        }
+
+        function handleMobileFileSelect(event) {
+            const files = event.target.files;
+            if (files.length > 0) {
+                showFilePreview(files, 'mobileFilePreview');
+            }
+        }
+
+        function showFilePreview(files, containerId) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+            
+            Array.from(files).forEach(file => {
+                const preview = document.createElement('div');
+                preview.className = 'file-preview';
+                
+                let icon = 'fa-file';
+                if (file.type.startsWith('image/')) icon = 'fa-image';
+                else if (file.type.startsWith('video/')) icon = 'fa-video';
+                else if (file.type.startsWith('audio/')) icon = 'fa-music';
+                
+                preview.innerHTML = `
+                    <div class="file-icon">
+                        <i class="fas ${icon}"></i>
+                    </div>
+                    <div class="flex-1">
+                        <div class="text-sm font-medium text-white truncate">${file.name}</div>
+                        <div class="text-xs text-[#8696a0]">${formatFileSize(file.size)}</div>
+                    </div>
+                    <button onclick="removeFilePreview(this, '${containerId}')" class="text-[#8696a0] hover:text-white">
+                        <i class="fas fa-times"></i>
+                    </button>
+                `;
+                
+                container.appendChild(preview);
+                container.classList.remove('hidden');
+            });
+        }
+
+        function removeFilePreview(button, containerId) {
+            const container = document.getElementById(containerId);
+            button.closest('.file-preview').remove();
+            
+            if (container.children.length === 0) {
+                container.classList.add('hidden');
+            }
+            
+            // Clear file input
+            const fileInput = containerId.includes('mobile') ? 
+                document.getElementById('mobileFileInput') : 
+                document.getElementById('fileInput');
+            fileInput.value = '';
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        // Make functions available globally
+        window.toggleProfileMenu = toggleProfileMenu;
+        window.showProfileFallback = showProfileFallback;
+        window.showMenuProfileFallback = showMenuProfileFallback;
+        window.openChangePasswordModal = openChangePasswordModal;
+        window.closeChangePasswordModal = closeChangePasswordModal;
+        window.showNewChatModal = showNewChatModal;
+        window.closeNewChatModal = closeNewChatModal;
+        window.toggleEmojiPicker = toggleEmojiPicker;
+        window.toggleMobileEmojiPicker = toggleMobileEmojiPicker;
+        window.closeMobileChat = closeMobileChat;
+        window.handleFileSelect = handleFileSelect;
+        window.handleMobileFileSelect = handleMobileFileSelect;
+        window.removeFilePreview = removeFilePreview;
+        window.autoResizeTextarea = autoResizeTextarea;
+    </script>
+    
+    <script src="app.js"></script>
+</body>
+</html>
