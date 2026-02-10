@@ -7,7 +7,7 @@
 class GoogleSheetsAPI {
     constructor() {
         // ⚠️ REPLACE THIS URL WITH YOUR GOOGLE APPS SCRIPT WEB APP URL
-        this.apiUrl = "https://script.google.com/macros/s/AKfycbxYcwMzDlpYOVQU-_AdxiHdvS7-BWLISH0wiEZ3s1h4lGePdnpCmqeDaK1ewFtj8Pil/exec";
+        this.apiUrl = "https://script.google.com/macros/s/AKfycbyJdASfNpqL-yR5CvL226QQ264uH411o_YUOMS400Cz71r4Opy3L0LHH4poPZSXJr2R/exec";
     }
 
     async getSheet(sheetName) {
@@ -361,11 +361,10 @@ async function getLastMessage(adNo) {
         for (let i = messages.length - 1; i >= 0; i--) {
             const msg = messages[i];
             // Check if this is a conversation with the target user
-            if ((msg.send_msg && msg.send_msg.trim() !== '') || 
-                (msg.reply_msg && msg.reply_msg.trim() !== '')) {
+            if (msg['send_msg_ad:no'] === adNo || msg['reply_msg_ad:no'] === adNo) {
                 return {
                     text: msg.send_msg || msg.reply_msg || '',
-                    time: msg.time || msg.time_1 || ''
+                    time: msg.send_msg_time || msg.reply_msg_time || ''
                 };
             }
         }
@@ -453,10 +452,7 @@ async function loadMessages() {
     try {
         const messages = await api.getSheet(currentUser.ad_no);
         const chatMessages = messages.filter(msg => 
-            (msg.send_msg && msg.send_msg.trim() !== '') || 
-            (msg.reply_msg && msg.reply_msg.trim() !== '') ||
-            (msg.send_file && msg.send_file.trim() !== '') ||
-            (msg.reply_file && msg.reply_file.trim() !== '')
+            (msg['send_msg_ad:no'] === currentChat.adNo || msg['reply_msg_ad:no'] === currentChat.adNo)
         );
         
         // Update messages container
@@ -498,11 +494,11 @@ function updateMessagesContainer(messages, isMobile = false) {
     let lastDate = '';
     
     messages.forEach(msg => {
-        const isOutgoing = (msg.send_msg && msg.send_msg.trim() !== '') || (msg.send_file && msg.send_file.trim() !== '');
+        const isOutgoing = msg['send_msg_ad:no'] === currentChat.adNo;
         const messageClass = isOutgoing ? 'message-out' : 'message-in';
         const messageText = isOutgoing ? msg.send_msg : msg.reply_msg;
         const fileUrl = isOutgoing ? msg.send_file : msg.reply_file;
-        const messageTime = isOutgoing ? (msg.time || msg.time_2) : (msg.time_1 || msg.time_3);
+        const messageTime = isOutgoing ? msg.send_msg_time : msg.reply_msg_time;
         
         // Display date separator if date changed
         const messageDate = messageTime ? messageTime.split(' ')[0] : '';
@@ -634,12 +630,13 @@ async function sendMessageInternal(message, files, isMobile = false) {
                 const uploadResult = await api.uploadFile(file);
                 if (uploadResult.success && uploadResult.fileUrl) {
                     fileLinks.push(uploadResult.fileUrl);
-                    fileMessage += `File: ${file.name}\n`;
                 }
             }
         }
 
-        const currentTime = new Date().toLocaleTimeString('en-US', { 
+        const currentTime = new Date().toLocaleString('en-US', { 
+            month: 'short',
+            day: 'numeric',
             hour: '2-digit', 
             minute: '2-digit',
             hour12: true 
@@ -647,27 +644,38 @@ async function sendMessageInternal(message, files, isMobile = false) {
 
         // Prepare message data for sender (current user)
         const senderRow = {
+            'send_msg_ad:no': currentChat.adNo,
             'send_msg': message || '',
-            'time': message ? currentTime : '',
+            'send_msg_time': message ? currentTime : '',
+            'reply_msg_ad:no': '',
             'reply_msg': '',
-            'time_1': '',
+            'reply_msg_time': '',
+            'send_file_ad:no': fileLinks.length > 0 ? currentChat.adNo : '',
             'send_file': fileLinks.length > 0 ? fileLinks.join(', ') : '',
-            'time_2': fileLinks.length > 0 ? currentTime : '',
+            'send_file_time': fileLinks.length > 0 ? currentTime : '',
+            'reply_file_ad:no': '',
             'reply_file': '',
-            'time_3': ''
+            'reply_file_time': ''
         };
 
         // Prepare message data for receiver
         const receiverRow = {
+            'send_msg_ad:no': '',
             'send_msg': '',
-            'time': '',
+            'send_msg_time': '',
+            'reply_msg_ad:no': currentUser.ad_no,
             'reply_msg': message || '',
-            'time_1': message ? currentTime : '',
+            'reply_msg_time': message ? currentTime : '',
+            'send_file_ad:no': '',
             'send_file': '',
-            'time_2': '',
+            'send_file_time': '',
+            'reply_file_ad:no': fileLinks.length > 0 ? currentUser.ad_no : '',
             'reply_file': fileLinks.length > 0 ? fileLinks.join(', ') : '',
-            'time_3': fileLinks.length > 0 ? currentTime : ''
+            'reply_file_time': fileLinks.length > 0 ? currentTime : ''
         };
+
+        console.log('Sending to sender sheet:', senderRow);
+        console.log('Sending to receiver sheet:', receiverRow);
 
         // Send to both sheets
         await api.addRow(currentUser.ad_no, senderRow);
