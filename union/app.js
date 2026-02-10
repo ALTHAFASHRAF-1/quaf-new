@@ -689,16 +689,16 @@ function toggleSubjectTasks(subject) {
 function getSubjectIcon(subject) {
     const subjectLower = subject.toLowerCase();
     if (subjectLower.includes('quaf')) return 'fas fa-scroll';
-    if (subjectLower.includes('arabic-wing')) return 'fas fa-scroll';
-    if (subjectLower.includes('urdu-wing')) return 'fas fa-scroll';
-    if (subjectLower.includes('english-wing')) return 'fas fa-scroll';
-    if (subjectLower.includes('malayalam-wing')) return 'fas fa-scroll';
-    if (subjectLower.includes('media-wing')) return 'fas fa-scroll';
-    if (subjectLower.includes('sigma-wing')) return 'fas fa-scroll';
-    if (subjectLower.includes('art-wing')) return 'fas fa-scroll';
-    if (subjectLower.includes('oration-wing')) return 'fas fa-scroll';
-    if (subjectLower.includes('gk-wing')) return 'fas fa-scroll';
-    if (subjectLower.includes('himaya-wing')) return 'fas fa-scroll';
+    if (subjectLower.includes('arabic_wing')) return 'fas fa-scroll';
+    if (subjectLower.includes('urdu_wing')) return 'fas fa-scroll';
+    if (subjectLower.includes('english_wing')) return 'fas fa-scroll';
+    if (subjectLower.includes('malayalam_wing')) return 'fas fa-scroll';
+    if (subjectLower.includes('media_wing')) return 'fas fa-scroll';
+    if (subjectLower.includes('sigma_wing')) return 'fas fa-scroll';
+    if (subjectLower.includes('art_wing')) return 'fas fa-scroll';
+    if (subjectLower.includes('oration_wing')) return 'fas fa-scroll';
+    if (subjectLower.includes('gk_wing')) return 'fas fa-scroll';
+    if (subjectLower.includes('himaya_wing')) return 'fas fa-scroll';
     if (subjectLower.includes('class')) return 'fas fa-scroll';
     if (subjectLower.includes('swalah')) return 'fas fa-scroll';
     return 'fas fa-book';
@@ -863,7 +863,7 @@ async function loadAdminData() {
                         const [classNum, subjectsString] = match.slice(1, -1).split('-', 2);
                         if (classNum && subjectsString) {
                             const subjects = subjectsString.toLowerCase() === 'all' 
-                                ? ['quaf', 'arabic-wing', 'urdu-wing', 'english-wing', 'malayalam-wing', 'media-wing', 'sigma-wing', 'art-wing', 'oration-wing', 'gk-wing', 'himaya-wing', 'class', 'swalah']
+                                ? ['quaf', 'arabic_wing', 'urdu_wing', 'english_wing', 'malayalam_wing', 'media_wing', 'sigma_wing', 'art_wing', 'oration_wing', 'gk_wing', 'himaya_wing', 'class', 'swalah']
                                 : subjectsString.split(',').map(s => s.trim().toLowerCase()).filter(s => s);
                             
                             if (subjects.length > 0 && adminClasses.includes(classNum.trim())) {
