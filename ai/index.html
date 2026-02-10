@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no" />
+    <meta name="google-site-verification" content="P9BCmQCGDsbkZutfQgEIkZYmWTdu7SRtPFz4VC4HBJw" />
+    <link rel="shortcut icon" href="https://quaf.tech/images/logo.png" />
+    <title>Quaf Ai</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.min.js"></script>
+     <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <canvas id="matrixCanvas"></canvas>
+    
+    <div class="game-container">
+        <div id="startScreen" class="text-center">
+            <h1 class="text-4xl md:text-6xl font-bold text-green-400 mb-8 text-center">
+                <i class="fas fa-terminal mr-4"></i>
+                Quaf Ethical Hacker
+            </h1>
+            <button class="start-btn" onclick="startGame()">
+                <i class="fas fa-play mr-2"></i>
+                Enter
+            </button>
+        </div>
+        
+        <div id="securityPanel" class="security-panel hidden">
+            <div class="security-title">
+                <i class="fas fa-lock mb-2"></i><br />
+                SECURITY ACCESS REQUIRED
+            </div>
+            <div class="text-green-400 mb-4">Enter authorization code to proceed:</div>
+            <input type="password" class="pin-input" id="pinInput" placeholder="•••••••••" maxlength="9" inputmode="text" pattern="[0-9]*" />
+            <br />
+            <button class="submit-btn" onclick="checkPin()">
+                <i class="fas fa-key mr-2"></i>
+                AUTHORIZE
+            </button>
+            <div id="warningMessage" class="warning-text hidden">
+                <i class="fas fa-exclamation-triangle"></i>
+                ACCESS DENIED - SECURITY BREACH DETECTED
+            </div>
+        </div>
+    </div>
+    
+    <!-- Single Command Interface (merged and fixed) -->
+    <div id="commandInterface" class="command-interface hidden">
+        <div class="command-header">
+            <i class="fas fa-terminal mr-2"></i>
+            HACKER COMMAND INTERFACE - SYSTEM ACCESS GRANTED
+        </div>
+        <div class="terminal" id="terminal">
+            <div class="command-output" id="commandOutput">
+SYSTEM INITIALIZED...
+WELCOME TO THE HACKER TERMINAL
+PLEASE ENTER YOUR FIRST COMMAND TO BEGIN...
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            </div>
+        </div>
+        <div class="command-input-container">
+            <span class="command-prompt">QUAF@TERMINAL:~$</span>
+            <input type="text" class="command-input" id="commandInput" placeholder="Enter command..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
+            
+            <!-- File Upload Section -->
+            <div class="file-upload-container">
+                <button class="file-upload-btn" onclick="document.getElementById('fileInput').click()">
+                    📎
+                </button>
+                <input type="file" id="fileInput" class="file-upload-input" onchange="handleFileUpload(event)" accept="*/*" style="display: none;">
+                <div id="fileUploadProgress" class="file-upload-progress" style="display: none;"></div>
+            </div>
+            
+            <button class="exit-btn" onclick="exitCommandInterface()">
+                <i class="fas fa-times mr-2"></i>
+                EXIT
+            </button>
+        </div>
+    </div>
+    
+    <!-- Quiz System -->
+    <div id="quizContainer" class="quiz-container hidden">
+        <div class="quiz-header">
+            <i class="fas fa-brain mr-2"></i>
+            HACKER KNOWLEDGE ASSESSMENT SYSTEM
+        </div>
+        
+        <!-- Subject Selection -->
+        <div id="subjectSelection">
+            <div class="quiz-progress">
+                <div class="quiz-stats">
+                    <span>SUBJECTS COMPLETED: <span id="completedCount">0</span>/16</span>
+                    <span>TOTAL SCORE: <span id="totalScore">0</span></span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="overallProgress"></div>
+                </div>
+            </div>
+            
+            <div class="subjects-grid" id="subjectsGrid">
+                <!-- Subject buttons will be generated here -->
+            </div>
+        </div>
+        
+        <!-- Question Interface -->
+        <div id="questionInterface" class="hidden">
+            <div class="quiz-progress">
+                <div class="quiz-stats">
+                    <span>QUESTION: <span id="currentQuestion">1</span>/20</span>
+                    <span>SCORE: <span id="currentScore">0</span>/20</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="questionProgress"></div>
+                </div>
+            </div>
+            
+            <div class="question-container">
+                <div class="question-header" id="questionHeader">
+                    QUESTION 1 OF 20
+                </div>
+                <div class="question-text" id="questionText">
+                    <!-- Question will be loaded here -->
+                </div>
+                <div class="options-container" id="optionsContainer">
+                    <!-- Options will be loaded here -->
+                </div>
+            </div>
+        </div>
+        
+        <!-- Results Interface -->
+        <div id="resultsInterface" class="hidden">
+            <div class="results-container">
+                <div class="results-header">
+                    <i class="fas fa-trophy mr-2"></i>
+                    ASSESSMENT COMPLETE
+                </div>
+                
+                <div class="chart-container">
+                    <canvas id="resultsChart" style="height: 400px;"></canvas>
+                </div>
+                
+                <div class="total-score">
+                    TOTAL SCORE: <span id="finalTotalScore">0</span>/320
+                    <br>
+                    ACCURACY: <span id="finalAccuracy">0</span>%
+                </div>
+                
+                <div class="replay-buttons">
+                    <button class="replay-btn" onclick="restartQuiz()">
+                        <i class="fas fa-redo mr-2"></i>
+                        YES - RESTART
+                    </button>
+                    <button class="replay-btn no" onclick="exitQuiz()">
+                        <i class="fas fa-times mr-2"></i>
+                        NO - EXIT
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <button class="exit-btn" onclick="exitQuiz()" style="position: absolute; top: 2rem; right: 2rem;">
+            <i class="fas fa-times mr-2"></i>
+            EXIT QUIZ
+        </button>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
