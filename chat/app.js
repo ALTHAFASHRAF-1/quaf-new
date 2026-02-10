@@ -7,7 +7,7 @@
 class GoogleSheetsAPI {
     constructor() {
         // ⚠️ REPLACE THIS URL WITH YOUR GOOGLE APPS SCRIPT WEB APP URL
-        this.apiUrl = "https://script.google.com/macros/s/AKfycbwFTDifpbJuA5l-iJNxRnFIJm2D9iG-duhaxyzE-krb00d75NKPeoQvY1tjZrYlFX-h/exec";
+        this.apiUrl = "https://script.google.com/macros/s/AKfycbxYcwMzDlpYOVQU-_AdxiHdvS7-BWLISH0wiEZ3s1h4lGePdnpCmqeDaK1ewFtj8Pil/exec";
     }
 
     async getSheet(sheetName) {
@@ -114,6 +114,45 @@ class GoogleSheetsAPI {
             return { error: error.message };
         }
     }
+
+    async uploadFile(file) {
+        try {
+            const url = this.apiUrl;
+            const formData = new FormData();
+            formData.append('action', 'uploadFile');
+            formData.append('filename', file.name);
+            formData.append('fileType', file.type);
+            
+            // Convert file to base64
+            const reader = new FileReader();
+            return new Promise((resolve, reject) => {
+                reader.onload = async function(e) {
+                    const base64Content = e.target.result.split(',')[1];
+                    formData.append('fileContent', base64Content);
+                    
+                    const response = await fetch(url, {
+                        method: 'POST',
+                        body: formData
+                    });
+                    
+                    const resultText = await response.text();
+                    let result;
+                    
+                    try {
+                        result = JSON.parse(resultText);
+                    } catch (e) {
+                        result = { success: false, error: 'Invalid server response' };
+                    }
+                    
+                    resolve(result);
+                };
+                reader.readAsDataURL(file);
+            });
+        } catch (error) {
+            console.error('Error uploading file:', error);
+            return { success: false, error: error.message };
+        }
+    }
 }
 
 const api = new GoogleSheetsAPI();
@@ -125,6 +164,8 @@ let currentUser = null;
 let currentChat = null;
 let allUsers = [];
 let refreshInterval = null;
+let selectedFiles = [];
+let mobileSelectedFiles = [];
 const EMOJIS = ['😀', '😃', '😄', '😁', '😆', '😅', '😂', '🤣', '😊', '😇', '🙂', '🙃', '😉', '😌', '😍', '🥰', '😘', '😗', '😙', '😚', '😋', '😛', '😝', '😜', '🤪', '🤨', '🧐', '🤓', '😎', '🤩', '🥳', '😏', '😒', '😞', '😔', '😟', '😕', '🙁', '☹️', '😣', '😖', '😫', '😩', '🥺', '😢', '😭', '😤', '😠', '😡', '🤬', '🤯', '😳', '🥵', '🥶', '😱', '😨', '😰', '😥', '😓', '🤗', '🤔', '🤭', '🤫', '🤥', '😶', '😐', '😑', '😬', '🙄', '😯', '😦', '😧', '😮', '😲', '🥱', '😴', '🤤', '😪', '😵', '🤐', '🥴', '🤢', '🤮', '🤧', '😷', '🤒', '🤕', '🤑', '🤠', '😈', '👿', '👹', '👺', '🤡', '💩', '👻', '💀', '☠️', '👽', '👾', '🤖', '🎃', '😺', '😸', '😹', '😻', '😼', '😽', '🙀', '😿', '😾'];
 
 // =============================
@@ -196,6 +237,8 @@ function showLoginError(message) {
 function logout() {
     currentUser = null;
     currentChat = null;
+    selectedFiles = [];
+    mobileSelectedFiles = [];
     
     // Stop refresh interval
     if (refreshInterval) {
@@ -208,8 +251,8 @@ function logout() {
     document.getElementById('dashboardContainer').classList.add('hidden');
     document.getElementById('username').value = '';
     document.getElementById('password').value = '';
-    document.getElementById('chatList').innerHTML = '<div class="text-center py-8"><div class="loading-dots inline-block"><span></span><span></span><span></span></div><p class="text-[#8696a0] mt-2">Loading chats...</p></div>';
-    document.getElementById('messagesContainer').innerHTML = '<div class="text-center py-8"><i class="fab fa-whatsapp text-4xl text-[#303d45] mb-3"></i><p class="text-[#8696a0]">Select a chat to view messages</p></div>';
+    document.getElementById('chatList').innerHTML = '<div class="text-center py-8"><div class="loading-dots inline-block"><span></span><span></span><span></span></div><p class="text-gray-600 mt-2">Loading chats...</p></div>';
+    document.getElementById('messagesContainer').innerHTML = '<div class="text-center py-8"><i class="fab fa-whatsapp text-4xl text-gray-300 mb-3"></i><p class="text-gray-600">Select a chat to view messages</p></div>';
     document.getElementById('messageInputArea').classList.add('hidden');
     showLoginError('');
 }
@@ -235,56 +278,13 @@ function updateUserUI() {
     const profilePic = document.getElementById('profilePic');
     const menuProfilePic = document.getElementById('menuProfilePic');
     
-    if (profilePic) {
-        profilePic.src = profileUrl;
-        profilePic.onerror = function() {
-            this.style.display = 'none';
-            const fallback = document.getElementById('profileFallback');
-            if (fallback) {
-                fallback.classList.remove('hidden');
-                fallback.textContent = currentUser.name.charAt(0).toUpperCase();
-            }
-        };
-    }
-    
-    if (menuProfilePic) {
-        menuProfilePic.src = profileUrl;
-        menuProfilePic.onerror = function() {
-            this.style.display = 'none';
-            const fallback = document.getElementById('menuProfileFallback');
-            if (fallback) {
-                fallback.classList.remove('hidden');
-                fallback.textContent = currentUser.name.charAt(0).toUpperCase();
-            }
-        };
-    }
+    if (profilePic) profilePic.src = profileUrl;
+    if (menuProfilePic) menuProfilePic.src = profileUrl;
 }
 
 function toggleProfileMenu() {
     const profileMenu = document.getElementById('profileMenu');
     profileMenu.classList.toggle('hidden');
-}
-
-function showProfileFallback(img) {
-    img.style.display = 'none';
-    const fallback = document.getElementById('profileFallback');
-    if (fallback) {
-        fallback.classList.remove('hidden');
-        if (currentUser) {
-            fallback.textContent = currentUser.name.charAt(0).toUpperCase();
-        }
-    }
-}
-
-function showMenuProfileFallback(img) {
-    img.style.display = 'none';
-    const fallback = document.getElementById('menuProfileFallback');
-    if (fallback) {
-        fallback.classList.remove('hidden');
-        if (currentUser) {
-            fallback.textContent = currentUser.name.charAt(0).toUpperCase();
-        }
-    }
 }
 
 // =============================
@@ -306,8 +306,8 @@ async function loadChatList() {
         if (allUsers.length === 0) {
             chatList.innerHTML = `
                 <div class="text-center py-8">
-                    <i class="fas fa-comments text-3xl text-[#8696a0] mb-3"></i>
-                    <p class="text-[#8696a0]">No other users found</p>
+                    <i class="fas fa-comments text-3xl text-gray-400 mb-3"></i>
+                    <p class="text-gray-600">No other users found</p>
                 </div>
             `;
             return;
@@ -325,15 +325,15 @@ async function loadChatList() {
                         <div class="relative">
                             <img src="https://quaf.tech/pic/${adNo}.jpg" alt="${name}" 
                                  class="profile-pic" 
-                                 onerror="this.onerror=null; this.style.display='none'; this.nextElementSibling.classList.remove('hidden')">
-                            <div class="profile-pic-fallback hidden">${name.charAt(0).toUpperCase()}</div>
+                                 onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSIyMCIgY3k9IjIwIiByPSIyMCIgZmlsbD0iI0VCRUJFQiIvPjxwYXRoIGQ9Ik0yMCAxMUMyMi4yMDYgMTEgMjQgMTIuNzk0IDI0IDE1QzI0IDE3LjIwNiAyMi4yMDYgMTkgMjAgMTlDMTcuNzk0IDE5IDE2IDE3LjIwNiAxNiAxNUMxNiAxMi43OTQgMTcuNzk0IDExIDIwIDExWk0yMCAyMUMyMy44NiAyMSAyNyAyNC4xNCAyNyAyOEgyM0gyN0MyNyAzMS44NiAyMy44NiAzNSAyMCAzNUMxNi4xNCAzNSAxMyAzMS44NiAxMyAyOEgxN0gxM0MxMyAyNC4xNCAxNi4xNCAyMSAyMCAyMVoiIGZpbGw9IiM5Nzk3OTciLz48L3N2Zz4='">
+                            <div class="online-indicator"></div>
                         </div>
                         <div class="flex-1 min-w-0">
                             <div class="flex justify-between items-start">
-                                <h4 class="font-medium text-white truncate">${name}</h4>
-                                <span class="text-xs text-[#8696a0]">${lastMessage.time || ''}</span>
+                                <h4 class="font-medium text-gray-800 truncate">${name}</h4>
+                                <span class="text-xs text-gray-500">${lastMessage.time || ''}</span>
                             </div>
-                            <p class="text-sm text-[#8696a0] truncate">${lastMessage.text || 'Start chatting...'}</p>
+                            <p class="text-sm text-gray-600 truncate">${lastMessage.text || 'Start chatting...'}</p>
                         </div>
                     </div>
                 </div>
@@ -346,7 +346,7 @@ async function loadChatList() {
         chatList.innerHTML = `
             <div class="text-center py-8">
                 <i class="fas fa-exclamation-triangle text-3xl text-red-500 mb-3"></i>
-                <p class="text-red-400">Error loading chats</p>
+                <p class="text-red-500">Error loading chats</p>
             </div>
         `;
     }
@@ -377,6 +377,11 @@ async function getLastMessage(adNo) {
 
 async function openChat(adNo, name) {
     currentChat = { adNo, name };
+    
+    // Highlight active chat
+    document.querySelectorAll('.chat-item').forEach(item => {
+        item.classList.remove('active');
+    });
     
     // Update UI for desktop
     updateChatHeader(adNo, name);
@@ -412,12 +417,12 @@ function updateChatHeader(adNo, name) {
             <div class="relative">
                 <img src="https://quaf.tech/pic/${adNo}.jpg" alt="${name}" 
                      class="profile-pic" 
-                     onerror="this.onerror=null; this.style.display='none'; this.nextElementSibling.classList.remove('hidden')">
-                <div class="profile-pic-fallback hidden">${name.charAt(0).toUpperCase()}</div>
+                     onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSIyMCIgY3k9IjIwIiByPSIyMCIgZmlsbD0iI0VCRUJFQiIvPjxwYXRoIGQ9Ik0yMCAxMUMyMi4yMDYgMTEgMjQgMTIuNzk0IDI0IDE1QzI0IDE3LjIwNiAyMi4yMDYgMTkgMjAgMTlDMTcuNzk0IDE5IDE2IDE3LjIwNiAxNiAxNUMxNiAxMi43OTQgMTcuNzk0IDExIDIwIDExWk0yMCAyMUMyMy44NiAyMSAyNyAyNC4xNCAyNyAyOEgyM0gyN0MyNyAzMS44NiAyMy44NiAzNSAyMCAzNUMxNi4xNCAzNSAxMyAzMS44NiAxMyAyOEgxN0gxM0MxMyAyNC4xNCAxNi4xNCAyMSAyMCAyMVoiIGZpbGw9IiM5Nzk3OTciLz48L3N2Zz4='">
+                <div class="online-indicator"></div>
             </div>
             <div>
-                <h3 class="font-bold text-white">${name}</h3>
-                <p class="text-xs text-[#8696a0]">Online</p>
+                <h3 class="font-bold text-gray-800">${name}</h3>
+                <p class="text-xs text-gray-600">Online</p>
             </div>
         </div>
     `;
@@ -431,12 +436,12 @@ function updateMobileChatHeader(adNo, name) {
             <div class="relative">
                 <img src="https://quaf.tech/pic/${adNo}.jpg" alt="${name}" 
                      class="profile-pic" 
-                     onerror="this.onerror=null; this.style.display='none'; this.nextElementSibling.classList.remove('hidden')">
-                <div class="profile-pic-fallback hidden">${name.charAt(0).toUpperCase()}</div>
+                     onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSIyMCIgY3k9IjIwIiByPSIyMCIgZmlsbD0iI0VCRUJFQiIvPjxwYXRoIGQ9Ik0yMCAxMUMyMi4yMDYgMTEgMjQgMTIuNzk0IDI0IDE1QzI0IDE3LjIwNiAyMi4yMDYgMTkgMjAgMTlDMTcuNzk0IDE5IDE2IDE3LjIwNiAxZTE2IDE1QzE2IDEyLjc5NCAxNy43OTQgMTEgMjAgMTFaTTIwIDIxQzIzLjg2IDIxIDI3IDI0LjE0IDI3IDI4SDIzSDI3QzI3IDMxLjg2IDIzLjg2IDM1IDIwIDM1QzE2LjE0IDM1IDEzIDMxLjg2IDEzIDI4SDE3SDEzQzEzIDI0LjE0IDE2LjE0IDIxIDIwIDIxWiIgZmlsbD0iIzk3OTc5NyIvPjwvc3ZnPg==='">
+                <div class="online-indicator"></div>
             </div>
             <div>
-                <h3 class="font-bold text-white">${name}</h3>
-                <p class="text-xs text-[#8696a0]">Online</p>
+                <h3 class="font-bold text-gray-800">${name}</h3>
+                <p class="text-xs text-gray-600">Online</p>
             </div>
         </div>
     `;
@@ -449,7 +454,9 @@ async function loadMessages() {
         const messages = await api.getSheet(currentUser.ad_no);
         const chatMessages = messages.filter(msg => 
             (msg.send_msg && msg.send_msg.trim() !== '') || 
-            (msg.reply_msg && msg.reply_msg.trim() !== '')
+            (msg.reply_msg && msg.reply_msg.trim() !== '') ||
+            (msg.send_file && msg.send_file.trim() !== '') ||
+            (msg.reply_file && msg.reply_file.trim() !== '')
         );
         
         // Update messages container
@@ -463,7 +470,7 @@ async function loadMessages() {
             container.innerHTML = `
                 <div class="text-center py-8">
                     <i class="fas fa-exclamation-triangle text-3xl text-red-500 mb-3"></i>
-                    <p class="text-red-400">Error loading messages</p>
+                    <p class="text-red-500">Error loading messages</p>
                 </div>
             `;
         }
@@ -479,45 +486,67 @@ function updateMessagesContainer(messages, isMobile = false) {
     if (messages.length === 0) {
         container.innerHTML = `
             <div class="text-center py-8">
-                <i class="fas fa-comment-slash text-4xl text-[#303d45] mb-3"></i>
-                <p class="text-[#8696a0]">No messages yet</p>
-                <p class="text-sm text-[#8696a0] mt-1">Send a message to start the conversation</p>
+                <i class="fas fa-comment-slash text-4xl text-gray-300 mb-3"></i>
+                <p class="text-gray-600">No messages yet</p>
+                <p class="text-sm text-gray-500 mt-1">Send a message to start the conversation</p>
             </div>
         `;
         return;
     }
 
     let html = '';
+    let lastDate = '';
+    
     messages.forEach(msg => {
-        const isOutgoing = msg.send_msg && msg.send_msg.trim() !== '';
-        const messageClass = isOutgoing ? 'message-out ml-auto' : 'message-in';
+        const isOutgoing = (msg.send_msg && msg.send_msg.trim() !== '') || (msg.send_file && msg.send_file.trim() !== '');
+        const messageClass = isOutgoing ? 'message-out' : 'message-in';
         const messageText = isOutgoing ? msg.send_msg : msg.reply_msg;
-        const messageTime = isOutgoing ? msg.time : msg.time_1;
+        const fileUrl = isOutgoing ? msg.send_file : msg.reply_file;
+        const messageTime = isOutgoing ? (msg.time || msg.time_2) : (msg.time_1 || msg.time_3);
         
-        if (messageText && messageText.startsWith('File:')) {
+        // Display date separator if date changed
+        const messageDate = messageTime ? messageTime.split(' ')[0] : '';
+        if (messageDate && messageDate !== lastDate) {
+            html += `
+                <div class="flex justify-center my-4">
+                    <span class="bg-gray-200 text-gray-700 text-xs px-3 py-1 rounded-full">${messageDate}</span>
+                </div>
+            `;
+            lastDate = messageDate;
+        }
+        
+        if (fileUrl && fileUrl.trim() !== '') {
             // File message
-            const fileName = messageText.replace('File: ', '');
+            const fileName = fileUrl.split('/').pop();
+            const isImage = /\.(jpg|jpeg|png|gif|webp)$/i.test(fileName);
+            const isVideo = /\.(mp4|mov|avi|wmv)$/i.test(fileName);
+            const isAudio = /\.(mp3|wav|ogg)$/i.test(fileName);
             
             html += `
                 <div class="mb-4 ${messageClass} p-3">
                     <div class="flex items-center space-x-3">
                         <div class="file-icon">
-                            <i class="fas fa-file"></i>
+                            ${isImage ? '<i class="fas fa-image"></i>' : 
+                              isVideo ? '<i class="fas fa-video"></i>' : 
+                              isAudio ? '<i class="fas fa-music"></i>' : 
+                              '<i class="fas fa-file"></i>'}
                         </div>
                         <div class="flex-1">
-                            <div class="text-white font-medium">${fileName}</div>
-                            <div class="text-xs text-[#8696a0] mt-1">Click to download</div>
+                            <div class="text-gray-800 font-medium truncate">${fileName}</div>
+                            <a href="${fileUrl}" target="_blank" class="text-xs text-blue-500 hover:text-blue-700 mt-1 inline-block">
+                                <i class="fas fa-download mr-1"></i>Download
+                            </a>
                         </div>
                     </div>
-                    <div class="message-time text-right">${messageTime || ''}</div>
+                    <div class="message-time">${messageTime || ''}</div>
                 </div>
             `;
-        } else {
+        } else if (messageText && messageText.trim() !== '') {
             // Text message
             html += `
                 <div class="mb-4 ${messageClass} p-3">
-                    <div class="text-white whitespace-pre-wrap break-words">${messageText || ''}</div>
-                    <div class="message-time text-right">${messageTime || ''}</div>
+                    <div class="text-gray-800 whitespace-pre-wrap break-words">${messageText}</div>
+                    <div class="message-time">${messageTime || ''}</div>
                 </div>
             `;
         }
@@ -535,92 +564,112 @@ function updateMessagesContainer(messages, isMobile = false) {
 async function sendMessage() {
     const messageInput = document.getElementById('messageInput');
     const message = messageInput.value.trim();
-    const fileInput = document.getElementById('fileInput');
     
-    await sendMessageInternal(message, fileInput);
-    
-    // Clear inputs
-    messageInput.value = '';
-    messageInput.style.height = 'auto';
-    if (fileInput) fileInput.value = '';
-    
-    // Hide file preview
-    const filePreview = document.getElementById('filePreview');
-    if (filePreview) {
-        filePreview.classList.add('hidden');
-        filePreview.innerHTML = '';
+    if (message || selectedFiles.length > 0) {
+        await sendMessageInternal(message, selectedFiles, false);
+        
+        // Clear inputs
+        messageInput.value = '';
+        messageInput.style.height = 'auto';
+        selectedFiles = [];
+        
+        // Hide file preview
+        const filePreview = document.getElementById('filePreview');
+        if (filePreview) {
+            filePreview.classList.add('hidden');
+            filePreview.innerHTML = '';
+        }
+        
+        // Reset file input
+        const fileInput = document.getElementById('fileInput');
+        if (fileInput) fileInput.value = '';
     }
 }
 
 async function sendMobileMessage() {
     const messageInput = document.getElementById('mobileMessageInput');
     const message = messageInput.value.trim();
-    const fileInput = document.getElementById('mobileFileInput');
     
-    await sendMessageInternal(message, fileInput);
-    
-    // Clear inputs
-    messageInput.value = '';
-    messageInput.style.height = 'auto';
-    if (fileInput) fileInput.value = '';
-    
-    // Hide file preview
-    const filePreview = document.getElementById('mobileFilePreview');
-    if (filePreview) {
-        filePreview.classList.add('hidden');
-        filePreview.innerHTML = '';
+    if (message || mobileSelectedFiles.length > 0) {
+        await sendMessageInternal(message, mobileSelectedFiles, true);
+        
+        // Clear inputs
+        messageInput.value = '';
+        messageInput.style.height = 'auto';
+        mobileSelectedFiles = [];
+        
+        // Hide file preview
+        const filePreview = document.getElementById('mobileFilePreview');
+        if (filePreview) {
+            filePreview.classList.add('hidden');
+            filePreview.innerHTML = '';
+        }
+        
+        // Reset file input
+        const fileInput = document.getElementById('mobileFileInput');
+        if (fileInput) fileInput.value = '';
     }
 }
 
-async function sendMessageInternal(message, fileInput) {
-    if (!currentChat || (!message && (!fileInput || fileInput.files.length === 0))) {
+async function sendMessageInternal(message, files, isMobile = false) {
+    if (!currentChat || (!message && files.length === 0)) {
         return;
     }
 
-    const sendButton = document.getElementById('sendButton') || 
-                       document.getElementById('mobileSendButton');
+    const sendButton = isMobile ? 
+        document.getElementById('mobileSendButton') : 
+        document.getElementById('sendButton');
     const originalText = sendButton.innerHTML;
     
     try {
         sendButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
         sendButton.disabled = true;
 
-        let messageText = message;
-        let isFile = false;
+        let fileLinks = [];
+        let fileMessage = '';
         
-        if (fileInput && fileInput.files.length > 0) {
-            // For file upload, you need to implement actual file upload to Google Drive
-            // This is a simplified version
-            const file = fileInput.files[0];
-            messageText = `File: ${file.name}`;
-            isFile = true;
+        // Upload files if any
+        if (files.length > 0) {
+            for (const file of files) {
+                const uploadResult = await api.uploadFile(file);
+                if (uploadResult.success && uploadResult.fileUrl) {
+                    fileLinks.push(uploadResult.fileUrl);
+                    fileMessage += `File: ${file.name}\n`;
+                }
+            }
         }
 
-        // Add to sender's sheet (current user)
+        const currentTime = new Date().toLocaleTimeString('en-US', { 
+            hour: '2-digit', 
+            minute: '2-digit',
+            hour12: true 
+        });
+
+        // Prepare message data for sender (current user)
         const senderRow = {
-            'send_msg': messageText,
-            'time': new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }),
+            'send_msg': message || '',
+            'time': message ? currentTime : '',
             'reply_msg': '',
             'time_1': '',
-            'send_file': isFile ? messageText : '',
-            'time_2': isFile ? new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }) : '',
+            'send_file': fileLinks.length > 0 ? fileLinks.join(', ') : '',
+            'time_2': fileLinks.length > 0 ? currentTime : '',
             'reply_file': '',
             'time_3': ''
         };
 
-        // Add to receiver's sheet (chat user)
+        // Prepare message data for receiver
         const receiverRow = {
             'send_msg': '',
             'time': '',
-            'reply_msg': messageText,
-            'time_1': new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }),
+            'reply_msg': message || '',
+            'time_1': message ? currentTime : '',
             'send_file': '',
             'time_2': '',
-            'reply_file': isFile ? messageText : '',
-            'time_3': isFile ? new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }) : ''
+            'reply_file': fileLinks.length > 0 ? fileLinks.join(', ') : '',
+            'time_3': fileLinks.length > 0 ? currentTime : ''
         };
 
-        // Send both rows
+        // Send to both sheets
         await api.addRow(currentUser.ad_no, senderRow);
         await api.addRow(currentChat.adNo, receiverRow);
 
@@ -643,28 +692,32 @@ async function sendMessageInternal(message, fileInput) {
 // 🗃️ File Handling Functions
 // =============================
 function handleFileSelect(event) {
-    const files = event.target.files;
-    if (files.length > 0) {
-        showFilePreview(files, 'filePreview');
-    }
+    const files = Array.from(event.target.files);
+    selectedFiles = selectedFiles.concat(files);
+    showFilePreview(selectedFiles, 'filePreview');
 }
 
 function handleMobileFileSelect(event) {
-    const files = event.target.files;
-    if (files.length > 0) {
-        showFilePreview(files, 'mobileFilePreview');
-    }
+    const files = Array.from(event.target.files);
+    mobileSelectedFiles = mobileSelectedFiles.concat(files);
+    showFilePreview(mobileSelectedFiles, 'mobileFilePreview');
 }
 
 function showFilePreview(files, containerId) {
     const container = document.getElementById(containerId);
     if (!container) return;
     
+    if (files.length === 0) {
+        container.classList.add('hidden');
+        container.innerHTML = '';
+        return;
+    }
+    
     container.innerHTML = '';
     
-    Array.from(files).forEach(file => {
+    files.forEach((file, index) => {
         const preview = document.createElement('div');
-        preview.className = 'file-preview';
+        preview.className = 'file-preview mb-2';
         
         let icon = 'fa-file';
         if (file.type.startsWith('image/')) icon = 'fa-image';
@@ -679,10 +732,10 @@ function showFilePreview(files, containerId) {
                 <i class="fas ${icon}"></i>
             </div>
             <div class="flex-1">
-                <div class="text-sm font-medium text-white truncate">${file.name}</div>
-                <div class="text-xs text-[#8696a0]">${formatFileSize(file.size)}</div>
+                <div class="text-sm font-medium text-gray-800 truncate">${file.name}</div>
+                <div class="text-xs text-gray-600">${formatFileSize(file.size)}</div>
             </div>
-            <button onclick="removeFilePreview(this, '${containerId}')" class="text-[#8696a0] hover:text-white">
+            <button onclick="removeFilePreview(${index}, '${containerId}')" class="text-gray-500 hover:text-gray-700">
                 <i class="fas fa-times"></i>
             </button>
         `;
@@ -693,21 +746,14 @@ function showFilePreview(files, containerId) {
     container.classList.remove('hidden');
 }
 
-function removeFilePreview(button, containerId) {
-    const container = document.getElementById(containerId);
-    if (!container) return;
-    
-    button.closest('.file-preview').remove();
-    
-    if (container.children.length === 0) {
-        container.classList.add('hidden');
+function removeFilePreview(index, containerId) {
+    if (containerId.includes('mobile')) {
+        mobileSelectedFiles.splice(index, 1);
+        showFilePreview(mobileSelectedFiles, containerId);
+    } else {
+        selectedFiles.splice(index, 1);
+        showFilePreview(selectedFiles, containerId);
     }
-    
-    // Clear file input
-    const fileInput = containerId.includes('mobile') ? 
-        document.getElementById('mobileFileInput') : 
-        document.getElementById('fileInput');
-    if (fileInput) fileInput.value = '';
 }
 
 function formatFileSize(bytes) {
@@ -753,15 +799,19 @@ function initializeEmojiPicker(pickerContainer) {
     const grid = pickerContainer.querySelector('.grid');
     EMOJIS.forEach(emoji => {
         const button = document.createElement('button');
-        button.className = 'text-lg hover:bg-[#202c33] rounded p-1';
+        button.className = 'text-lg hover:bg-gray-100 rounded p-1';
         button.textContent = emoji;
         button.onclick = function() {
             const messageInput = pickerContainer.id.includes('mobile') ? 
                 document.getElementById('mobileMessageInput') : 
                 document.getElementById('messageInput');
             if (messageInput) {
-                messageInput.value += emoji;
+                const cursorPos = messageInput.selectionStart;
+                const textBefore = messageInput.value.substring(0, cursorPos);
+                const textAfter = messageInput.value.substring(cursorPos);
+                messageInput.value = textBefore + emoji + textAfter;
                 messageInput.focus();
+                messageInput.selectionStart = messageInput.selectionEnd = cursorPos + emoji.length;
                 autoResizeTextarea(messageInput);
             }
             pickerContainer.classList.remove('show');
@@ -777,6 +827,15 @@ function closeMobileChat() {
     document.getElementById('mobileChatArea').classList.add('hidden');
     document.getElementById('sidebar').classList.remove('hidden');
     document.getElementById('mobileMessageInputArea').classList.add('hidden');
+    currentChat = null;
+    
+    // Clear file selections
+    mobileSelectedFiles = [];
+    const mobileFilePreview = document.getElementById('mobileFilePreview');
+    if (mobileFilePreview) {
+        mobileFilePreview.classList.add('hidden');
+        mobileFilePreview.innerHTML = '';
+    }
 }
 
 // =============================
@@ -794,7 +853,7 @@ function startAutoRefresh() {
                 await loadMessages();
             }
         }
-    }, 5000); // Refresh every 5 seconds
+    }, 3000); // Refresh every 3 seconds
 }
 
 // =============================
@@ -827,8 +886,8 @@ async function loadUsersForNewChat() {
         if (allUsers.length === 0) {
             usersList.innerHTML = `
                 <div class="text-center py-8">
-                    <i class="fas fa-users text-3xl text-[#8696a0] mb-3"></i>
-                    <p class="text-[#8696a0]">No other users found</p>
+                    <i class="fas fa-users text-3xl text-gray-400 mb-3"></i>
+                    <p class="text-gray-600">No other users found</p>
                 </div>
             `;
             return;
@@ -840,17 +899,17 @@ async function loadUsersForNewChat() {
             const name = user.name || 'Unknown User';
             
             html += `
-                <div class="chat-item p-3 rounded-lg hover:bg-[#202c33] cursor-pointer" onclick="startNewChat('${adNo}', '${name.replace(/'/g, "\\'")}')">
+                <div class="chat-item p-3 rounded-lg hover:bg-gray-50 cursor-pointer" onclick="startNewChat('${adNo}', '${name.replace(/'/g, "\\'")}')">
                     <div class="flex items-center space-x-3">
                         <div class="relative">
                             <img src="https://quaf.tech/pic/${adNo}.jpg" alt="${name}" 
                                  class="profile-pic" 
-                                 onerror="this.onerror=null; this.style.display='none'; this.nextElementSibling.classList.remove('hidden')">
-                            <div class="profile-pic-fallback hidden">${name.charAt(0).toUpperCase()}</div>
+                                 onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSIyMCIgY3k9IjIwIiByPSIyMCIgZmlsbD0iI0VCRUJFQiIvPjxwYXRoIGQ9Ik0yMCAxMUMyMi4yMDYgMTEgMjQgMTIuNzk0IDI0IDE1QzI0IDE3LjIwNiAyMi4yMDYgMTkgMjAgMTlDMTcuNzk0IDE5IDE2IDE3LjIwNiAxNiAxNUMxNiAxMi43OTQgMTcuNzk0IDExIDIwIDExWk0yMCAyMUMyMy44NiAyMSAyNyAyNC4xNCAyNyAyOEgyM0gyN0MyNyAzMS44NiAyMy44NiAzNSAyMCAzNUMxNi4xNCAzNSAxMyAzMS44NiAxMyAyOEgxN0gxM0MxMyAyNC4xNCAxNi4xNCAyMSAyMCAyMVoiIGZpbGw9IiM5Nzk3OTciLz48L3N2Zz4='">
+                            <div class="online-indicator"></div>
                         </div>
                         <div class="flex-1">
-                            <h4 class="font-medium text-white">${name}</h4>
-                            <p class="text-sm text-[#8696a0]">${adNo}</p>
+                            <h4 class="font-medium text-gray-800">${name}</h4>
+                            <p class="text-sm text-gray-600">${adNo}</p>
                         </div>
                     </div>
                 </div>
@@ -864,7 +923,7 @@ async function loadUsersForNewChat() {
         usersList.innerHTML = `
             <div class="text-center py-8">
                 <i class="fas fa-exclamation-triangle text-3xl text-red-500 mb-3"></i>
-                <p class="text-red-400">Error loading users</p>
+                <p class="text-red-500">Error loading users</p>
             </div>
         `;
     }
@@ -1074,16 +1133,28 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     
     // Initialize emoji pickers
-    initializeEmojiPicker(document.getElementById('emojiPickerContainer'));
-    initializeEmojiPicker(document.getElementById('mobileEmojiPickerContainer'));
+    const desktopPicker = document.getElementById('emojiPickerContainer');
+    const mobilePicker = document.getElementById('mobileEmojiPickerContainer');
+    
+    if (desktopPicker) {
+        const desktopGrid = desktopPicker.querySelector('.grid');
+        if (desktopGrid && desktopGrid.children.length === 0) {
+            initializeEmojiPicker(desktopPicker);
+        }
+    }
+    
+    if (mobilePicker) {
+        const mobileGrid = mobilePicker.querySelector('.grid');
+        if (mobileGrid && mobileGrid.children.length === 0) {
+            initializeEmojiPicker(mobilePicker);
+        }
+    }
 });
 
 // Make functions available globally
 window.login = login;
 window.logout = logout;
 window.toggleProfileMenu = toggleProfileMenu;
-window.showProfileFallback = showProfileFallback;
-window.showMenuProfileFallback = showMenuProfileFallback;
 window.openChangePasswordModal = openChangePasswordModal;
 window.closeChangePasswordModal = closeChangePasswordModal;
 window.showNewChatModal = showNewChatModal;
