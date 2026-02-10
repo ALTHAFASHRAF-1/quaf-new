@@ -7,7 +7,7 @@
 class GoogleSheetsAPI {
     constructor() {
         // ⚠️ REPLACE THIS URL WITH YOUR GOOGLE APPS SCRIPT WEB APP URL
-        this.apiUrl = "https://script.google.com/macros/s/AKfycbyJdASfNpqL-yR5CvL226QQ264uH411o_YUOMS400Cz71r4Opy3L0LHH4poPZSXJr2R/exec";
+        this.apiUrl = "https://script.google.com/macros/s/AKfycbyHsnlh3LFr993ePr7hJhsOxgWbDgIiWUsC09XF1yfGVq90pifYJSdkoXibFMCcGpNb/exec";
     }
 
     async getSheet(sheetName) {
@@ -38,6 +38,8 @@ class GoogleSheetsAPI {
 
     async addRow(sheetName, rowData) {
         try {
+            console.log(`Adding row to ${sheetName}:`, rowData);
+            
             const url = this.apiUrl;
             const formData = new FormData();
             formData.append('sheet', sheetName);
@@ -49,7 +51,14 @@ class GoogleSheetsAPI {
             });
             
             const result = await response.text();
-            return { success: true, message: result };
+            console.log(`Add row result for ${sheetName}:`, result);
+            
+            // Try to parse JSON, but if it fails, return as-is
+            try {
+                return JSON.parse(result);
+            } catch (e) {
+                return { success: true, message: result };
+            }
         } catch (error) {
             console.error('Error adding row:', error);
             return { error: error.message };
@@ -70,8 +79,9 @@ class GoogleSheetsAPI {
             });
             
             const resultText = await response.text();
-            let result;
+            console.log('Login raw response:', resultText);
             
+            let result;
             try {
                 result = JSON.parse(resultText);
             } catch (e) {
@@ -117,6 +127,8 @@ class GoogleSheetsAPI {
 
     async uploadFile(file) {
         try {
+            console.log('Uploading file:', file.name, file.type, file.size);
+            
             const url = this.apiUrl;
             const formData = new FormData();
             formData.append('action', 'uploadFile');
@@ -124,27 +136,37 @@ class GoogleSheetsAPI {
             formData.append('fileType', file.type);
             
             // Convert file to base64
-            const reader = new FileReader();
             return new Promise((resolve, reject) => {
+                const reader = new FileReader();
                 reader.onload = async function(e) {
                     const base64Content = e.target.result.split(',')[1];
                     formData.append('fileContent', base64Content);
                     
-                    const response = await fetch(url, {
-                        method: 'POST',
-                        body: formData
-                    });
-                    
-                    const resultText = await response.text();
-                    let result;
-                    
                     try {
-                        result = JSON.parse(resultText);
-                    } catch (e) {
-                        result = { success: false, error: 'Invalid server response' };
+                        const response = await fetch(url, {
+                            method: 'POST',
+                            body: formData
+                        });
+                        
+                        const resultText = await response.text();
+                        console.log('Upload raw response:', resultText);
+                        
+                        let result;
+                        try {
+                            result = JSON.parse(resultText);
+                        } catch (e) {
+                            result = { success: false, error: 'Invalid server response' };
+                        }
+                        
+                        resolve(result);
+                    } catch (error) {
+                        console.error('Upload fetch error:', error);
+                        resolve({ success: false, error: error.message });
                     }
-                    
-                    resolve(result);
+                };
+                reader.onerror = function(error) {
+                    console.error('FileReader error:', error);
+                    resolve({ success: false, error: 'Failed to read file' });
                 };
                 reader.readAsDataURL(file);
             });
@@ -358,18 +380,43 @@ async function getLastMessage(adNo) {
         if (!messages || messages.length === 0) return {};
         
         // Find messages with this user
-        for (let i = messages.length - 1; i >= 0; i--) {
-            const msg = messages[i];
-            // Check if this is a conversation with the target user
-            if (msg['send_msg_ad:no'] === adNo || msg['reply_msg_ad:no'] === adNo) {
-                return {
-                    text: msg.send_msg || msg.reply_msg || '',
-                    time: msg.send_msg_time || msg.reply_msg_time || ''
-                };
-            }
+        const userMessages = messages.filter(msg => 
+            (msg['send_msg_ad:no'] === adNo && msg['send_msg']) ||
+            (msg['reply_msg_ad:no'] === adNo && msg['reply_msg']) ||
+            (msg['send_file_ad:no'] === adNo && msg['send_file']) ||
+            (msg['reply_file_ad:no'] === adNo && msg['reply_file'])
+        );
+        
+        if (userMessages.length === 0) return {};
+        
+        // Get the most recent message
+        const lastMsg = userMessages[userMessages.length - 1];
+        
+        if (lastMsg['send_msg_ad:no'] === adNo && lastMsg['send_msg']) {
+            return {
+                text: lastMsg.send_msg,
+                time: lastMsg.send_msg_time || ''
+            };
+        } else if (lastMsg['reply_msg_ad:no'] === adNo && lastMsg['reply_msg']) {
+            return {
+                text: lastMsg.reply_msg,
+                time: lastMsg.reply_msg_time || ''
+            };
+        } else if (lastMsg['send_file_ad:no'] === adNo && lastMsg['send_file']) {
+            return {
+                text: '📎 File',
+                time: lastMsg.send_file_time || ''
+            };
+        } else if (lastMsg['reply_file_ad:no'] === adNo && lastMsg['reply_file']) {
+            return {
+                text: '📎 File',
+                time: lastMsg.reply_file_time || ''
+            };
         }
+        
         return {};
     } catch (error) {
+        console.error('Error getting last message:', error);
         return {};
     }
 }
@@ -385,6 +432,7 @@ async function openChat(adNo, name) {
     // Update UI for desktop
     updateChatHeader(adNo, name);
     document.getElementById('messageInputArea').classList.remove('hidden');
+    document.getElementById('chatArea').classList.remove('hidden');
     
     // Update UI for mobile
     updateMobileChatHeader(adNo, name);
@@ -416,7 +464,7 @@ function updateChatHeader(adNo, name) {
             <div class="relative">
                 <img src="https://quaf.tech/pic/${adNo}.jpg" alt="${name}" 
                      class="profile-pic" 
-                     onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSIyMCIgY3k9IjIwIiByPSIyMCIgZmlsbD0iI0VCRUJFQiIvPjxwYXRoIGQ9Ik0yMCAxMUMyMi4yMDYgMTEgMjQgMTIuNzk0IDI0IDE1QzI0IDE3LjIwNiAyMi4yMDYgMTkgMjAgMTlDMTcuNzk0IDE5IDE2IDE3LjIwNiAxNiAxNUMxNiAxMi43OTQgMTcuNzk0IDExIDIwIDExWk0yMCAyMUMyMy44NiAyMSAyNyAyNC4xNCAyNyAyOEgyM0gyN0MyNyAzMS44NiAyMy44NiAzNSAyMCAzNUMxNi4xNCAzNSAxMyAzMS44NiAxMyAyOEgxN0gxM0MxMyAyNC4xNCAxNi4xNCAyMSAyMCAyMVoiIGZpbGw9IiM5Nzk3OTciLz48L3N2Zz4='">
+                     onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSIyMCIgY3k9IjIwIiByPSIyMCIgZmlsbD0iI0VCRUJFQiIvPjxwYXRoIGQ9Ik0yMCAxMUMyMi4yMDYgMTEgMjQgMTIuNzk0IDI0IDE1QzI0IDE3LjIwNiAyMi4yMDYgMTkgMjAgMTlDMTcuNzk0IDE9IDE2IDE3LjIwNiAxNiAxNUMxNiAxMi43OTQgMTcuNzk0IDExIDIwIDExWk0yMCAyMUMyMy44NiAyMSAyNyAyNC4xNCAyNyAyOEgyM0gyN0MyNyAzMS44NiAyMy44NiAzNSAyMCAzNUMxNi4xNCAzNSAxMyAzMS44NiAxMyAyOEgxN0gxM0MxMyAyNC4xNCAxNi4xNCAyMSAyMCAyMVoiIGZpbGw9IiM5Nzk3OTciLz48L3N2Zz4='">
                 <div class="online-indicator"></div>
             </div>
             <div>
@@ -452,7 +500,10 @@ async function loadMessages() {
     try {
         const messages = await api.getSheet(currentUser.ad_no);
         const chatMessages = messages.filter(msg => 
-            (msg['send_msg_ad:no'] === currentChat.adNo || msg['reply_msg_ad:no'] === currentChat.adNo)
+            (msg['send_msg_ad:no'] === currentChat.adNo) ||
+            (msg['reply_msg_ad:no'] === currentChat.adNo) ||
+            (msg['send_file_ad:no'] === currentChat.adNo) ||
+            (msg['reply_file_ad:no'] === currentChat.adNo)
         );
         
         // Update messages container
@@ -493,15 +544,42 @@ function updateMessagesContainer(messages, isMobile = false) {
     let html = '';
     let lastDate = '';
     
-    messages.forEach(msg => {
-        const isOutgoing = msg['send_msg_ad:no'] === currentChat.adNo;
+    // Sort messages by time
+    const sortedMessages = messages.sort((a, b) => {
+        const getTime = (msg) => {
+            return msg.send_msg_time || msg.reply_msg_time || msg.send_file_time || msg.reply_file_time || '';
+        };
+        return new Date(getTime(a)) - new Date(getTime(b));
+    });
+    
+    sortedMessages.forEach(msg => {
+        // Check if this is an outgoing message (sent by current user to currentChat user)
+        const isOutgoingMsg = msg['send_msg_ad:no'] === currentChat.adNo;
+        const isOutgoingFile = msg['send_file_ad:no'] === currentChat.adNo;
+        const isOutgoing = isOutgoingMsg || isOutgoingFile;
+        
         const messageClass = isOutgoing ? 'message-out' : 'message-in';
-        const messageText = isOutgoing ? msg.send_msg : msg.reply_msg;
-        const fileUrl = isOutgoing ? msg.send_file : msg.reply_file;
-        const messageTime = isOutgoing ? msg.send_msg_time : msg.reply_msg_time;
+        
+        let messageText = '';
+        let fileUrl = '';
+        let messageTime = '';
+        
+        if (isOutgoingMsg) {
+            messageText = msg.send_msg || '';
+            messageTime = msg.send_msg_time || '';
+        } else if (msg['reply_msg_ad:no'] === currentChat.adNo) {
+            messageText = msg.reply_msg || '';
+            messageTime = msg.reply_msg_time || '';
+        } else if (isOutgoingFile) {
+            fileUrl = msg.send_file || '';
+            messageTime = msg.send_file_time || '';
+        } else if (msg['reply_file_ad:no'] === currentChat.adNo) {
+            fileUrl = msg.reply_file || '';
+            messageTime = msg.reply_file_time || '';
+        }
         
         // Display date separator if date changed
-        const messageDate = messageTime ? messageTime.split(' ')[0] : '';
+        const messageDate = messageTime ? messageTime.split(',')[0] : '';
         if (messageDate && messageDate !== lastDate) {
             html += `
                 <div class="flex justify-center my-4">
@@ -513,36 +591,48 @@ function updateMessagesContainer(messages, isMobile = false) {
         
         if (fileUrl && fileUrl.trim() !== '') {
             // File message
-            const fileName = fileUrl.split('/').pop();
-            const isImage = /\.(jpg|jpeg|png|gif|webp)$/i.test(fileName);
-            const isVideo = /\.(mp4|mov|avi|wmv)$/i.test(fileName);
-            const isAudio = /\.(mp3|wav|ogg)$/i.test(fileName);
+            const fileName = fileUrl.split('/').pop() || 'File';
+            const isImage = /\.(jpg|jpeg|png|gif|webp|bmp)$/i.test(fileName);
+            const isVideo = /\.(mp4|mov|avi|wmv|flv|mkv|webm)$/i.test(fileName);
+            const isAudio = /\.(mp3|wav|ogg|m4a|flac)$/i.test(fileName);
+            const isPDF = /\.(pdf)$/i.test(fileName);
+            const isDocument = /\.(doc|docx|txt|rtf)$/i.test(fileName);
+            const isSpreadsheet = /\.(xls|xlsx|csv)$/i.test(fileName);
+            
+            let icon = 'fa-file';
+            if (isImage) icon = 'fa-image';
+            else if (isVideo) icon = 'fa-video';
+            else if (isAudio) icon = 'fa-music';
+            else if (isPDF) icon = 'fa-file-pdf';
+            else if (isDocument) icon = 'fa-file-word';
+            else if (isSpreadsheet) icon = 'fa-file-excel';
             
             html += `
-                <div class="mb-4 ${messageClass} p-3">
-                    <div class="flex items-center space-x-3">
-                        <div class="file-icon">
-                            ${isImage ? '<i class="fas fa-image"></i>' : 
-                              isVideo ? '<i class="fas fa-video"></i>' : 
-                              isAudio ? '<i class="fas fa-music"></i>' : 
-                              '<i class="fas fa-file"></i>'}
+                <div class="mb-4 ${isOutgoing ? 'ml-auto' : ''}" style="max-width: 65%;">
+                    <div class="${messageClass} p-3">
+                        <div class="flex items-center space-x-3">
+                            <div class="file-icon">
+                                <i class="fas ${icon}"></i>
+                            </div>
+                            <div class="flex-1">
+                                <div class="text-gray-800 font-medium truncate">${fileName}</div>
+                                <a href="${fileUrl}" target="_blank" class="text-xs text-blue-500 hover:text-blue-700 mt-1 inline-block">
+                                    <i class="fas fa-download mr-1"></i>Download (${formatFileSizeFromUrl(fileUrl)})
+                                </a>
+                            </div>
                         </div>
-                        <div class="flex-1">
-                            <div class="text-gray-800 font-medium truncate">${fileName}</div>
-                            <a href="${fileUrl}" target="_blank" class="text-xs text-blue-500 hover:text-blue-700 mt-1 inline-block">
-                                <i class="fas fa-download mr-1"></i>Download
-                            </a>
-                        </div>
+                        <div class="message-time">${messageTime || ''}</div>
                     </div>
-                    <div class="message-time">${messageTime || ''}</div>
                 </div>
             `;
         } else if (messageText && messageText.trim() !== '') {
             // Text message
             html += `
-                <div class="mb-4 ${messageClass} p-3">
-                    <div class="text-gray-800 whitespace-pre-wrap break-words">${messageText}</div>
-                    <div class="message-time">${messageTime || ''}</div>
+                <div class="mb-4 ${isOutgoing ? 'ml-auto' : ''}" style="max-width: 65%;">
+                    <div class="${messageClass} p-3">
+                        <div class="text-gray-800 whitespace-pre-wrap break-words">${messageText}</div>
+                        <div class="message-time">${messageTime || ''}</div>
+                    </div>
                 </div>
             `;
         }
@@ -552,6 +642,11 @@ function updateMessagesContainer(messages, isMobile = false) {
     
     // Scroll to bottom
     container.scrollTop = container.scrollHeight;
+}
+
+function formatFileSizeFromUrl(url) {
+    // This is a placeholder. In a real app, you'd need to get the file size from the server.
+    return 'File';
 }
 
 // =============================
@@ -622,14 +717,19 @@ async function sendMessageInternal(message, files, isMobile = false) {
         sendButton.disabled = true;
 
         let fileLinks = [];
-        let fileMessage = '';
         
         // Upload files if any
         if (files.length > 0) {
             for (const file of files) {
+                console.log('Uploading file:', file.name);
                 const uploadResult = await api.uploadFile(file);
+                console.log('Upload result:', uploadResult);
+                
                 if (uploadResult.success && uploadResult.fileUrl) {
                     fileLinks.push(uploadResult.fileUrl);
+                } else {
+                    console.error('File upload failed:', uploadResult);
+                    alert(`Failed to upload ${file.name}: ${uploadResult.error || 'Unknown error'}`);
                 }
             }
         }
@@ -642,44 +742,186 @@ async function sendMessageInternal(message, files, isMobile = false) {
             hour12: true 
         });
 
-        // Prepare message data for sender (current user)
-        const senderRow = {
-            'send_msg_ad:no': currentChat.adNo,
-            'send_msg': message || '',
-            'send_msg_time': message ? currentTime : '',
-            'reply_msg_ad:no': '',
-            'reply_msg': '',
-            'reply_msg_time': '',
-            'send_file_ad:no': fileLinks.length > 0 ? currentChat.adNo : '',
-            'send_file': fileLinks.length > 0 ? fileLinks.join(', ') : '',
-            'send_file_time': fileLinks.length > 0 ? currentTime : '',
-            'reply_file_ad:no': '',
-            'reply_file': '',
-            'reply_file_time': ''
-        };
+        console.log('Current time:', currentTime);
+        console.log('File links:', fileLinks);
 
-        // Prepare message data for receiver
-        const receiverRow = {
-            'send_msg_ad:no': '',
-            'send_msg': '',
-            'send_msg_time': '',
-            'reply_msg_ad:no': currentUser.ad_no,
-            'reply_msg': message || '',
-            'reply_msg_time': message ? currentTime : '',
-            'send_file_ad:no': '',
-            'send_file': '',
-            'send_file_time': '',
-            'reply_file_ad:no': fileLinks.length > 0 ? currentUser.ad_no : '',
-            'reply_file': fileLinks.length > 0 ? fileLinks.join(', ') : '',
-            'reply_file_time': fileLinks.length > 0 ? currentTime : ''
-        };
+        // ===========================================
+        // SENDER'S SHEET (Current User)
+        // ===========================================
+        let senderRow = {};
+        
+        if (message && fileLinks.length === 0) {
+            // Only text message
+            senderRow = {
+                'send_msg_ad:no': currentChat.adNo,
+                'send_msg': message,
+                'send_msg_time': currentTime,
+                'reply_msg_ad:no': '',
+                'reply_msg': '',
+                'reply_msg_time': '',
+                'send_file_ad:no': '',
+                'send_file': '',
+                'send_file_time': '',
+                'reply_file_ad:no': '',
+                'reply_file': '',
+                'reply_file_time': ''
+            };
+        } else if (fileLinks.length > 0 && !message) {
+            // Only file(s)
+            senderRow = {
+                'send_msg_ad:no': '',
+                'send_msg': '',
+                'send_msg_time': '',
+                'reply_msg_ad:no': '',
+                'reply_msg': '',
+                'reply_msg_time': '',
+                'send_file_ad:no': currentChat.adNo,
+                'send_file': fileLinks.join(', '),
+                'send_file_time': currentTime,
+                'reply_file_ad:no': '',
+                'reply_file': '',
+                'reply_file_time': ''
+            };
+        } else if (fileLinks.length > 0 && message) {
+            // Both text and file(s)
+            // Send as separate rows for clarity
+            const textRow = {
+                'send_msg_ad:no': currentChat.adNo,
+                'send_msg': message,
+                'send_msg_time': currentTime,
+                'reply_msg_ad:no': '',
+                'reply_msg': '',
+                'reply_msg_time': '',
+                'send_file_ad:no': '',
+                'send_file': '',
+                'send_file_time': '',
+                'reply_file_ad:no': '',
+                'reply_file': '',
+                'reply_file_time': ''
+            };
+            
+            const fileRow = {
+                'send_msg_ad:no': '',
+                'send_msg': '',
+                'send_msg_time': '',
+                'reply_msg_ad:no': '',
+                'reply_msg': '',
+                'reply_msg_time': '',
+                'send_file_ad:no': currentChat.adNo,
+                'send_file': fileLinks.join(', '),
+                'send_file_time': currentTime,
+                'reply_file_ad:no': '',
+                'reply_file': '',
+                'reply_file_time': ''
+            };
+            
+            // Send text row
+            console.log('Sending text row to sender:', textRow);
+            const textResult = await api.addRow(currentUser.ad_no, textRow);
+            console.log('Text row result:', textResult);
+            
+            // Send file row
+            console.log('Sending file row to sender:', fileRow);
+            const fileResult = await api.addRow(currentUser.ad_no, fileRow);
+            console.log('File row result:', fileResult);
+            
+            senderRow = fileRow; // For receiver use
+        }
 
-        console.log('Sending to sender sheet:', senderRow);
-        console.log('Sending to receiver sheet:', receiverRow);
+        // ===========================================
+        // RECEIVER'S SHEET (Chat User)
+        // ===========================================
+        let receiverRow = {};
+        
+        if (message && fileLinks.length === 0) {
+            // Only text message
+            receiverRow = {
+                'send_msg_ad:no': '',
+                'send_msg': '',
+                'send_msg_time': '',
+                'reply_msg_ad:no': currentUser.ad_no,
+                'reply_msg': message,
+                'reply_msg_time': currentTime,
+                'send_file_ad:no': '',
+                'send_file': '',
+                'send_file_time': '',
+                'reply_file_ad:no': '',
+                'reply_file': '',
+                'reply_file_time': ''
+            };
+        } else if (fileLinks.length > 0 && !message) {
+            // Only file(s)
+            receiverRow = {
+                'send_msg_ad:no': '',
+                'send_msg': '',
+                'send_msg_time': '',
+                'reply_msg_ad:no': '',
+                'reply_msg': '',
+                'reply_msg_time': '',
+                'send_file_ad:no': '',
+                'send_file': '',
+                'send_file_time': '',
+                'reply_file_ad:no': currentUser.ad_no,
+                'reply_file': fileLinks.join(', '),
+                'reply_file_time': currentTime
+            };
+        } else if (fileLinks.length > 0 && message) {
+            // Both text and file(s) - send as separate rows
+            const textRow = {
+                'send_msg_ad:no': '',
+                'send_msg': '',
+                'send_msg_time': '',
+                'reply_msg_ad:no': currentUser.ad_no,
+                'reply_msg': message,
+                'reply_msg_time': currentTime,
+                'send_file_ad:no': '',
+                'send_file': '',
+                'send_file_time': '',
+                'reply_file_ad:no': '',
+                'reply_file': '',
+                'reply_file_time': ''
+            };
+            
+            const fileRow = {
+                'send_msg_ad:no': '',
+                'send_msg': '',
+                'send_msg_time': '',
+                'reply_msg_ad:no': '',
+                'reply_msg': '',
+                'reply_msg_time': '',
+                'send_file_ad:no': '',
+                'send_file': '',
+                'send_file_time': '',
+                'reply_file_ad:no': currentUser.ad_no,
+                'reply_file': fileLinks.join(', '),
+                'reply_file_time': currentTime
+            };
+            
+            // Send text row to receiver
+            console.log('Sending text row to receiver:', textRow);
+            const textResult = await api.addRow(currentChat.adNo, textRow);
+            console.log('Text row to receiver result:', textResult);
+            
+            // Send file row to receiver
+            console.log('Sending file row to receiver:', fileRow);
+            const fileResult = await api.addRow(currentChat.adNo, fileRow);
+            console.log('File row to receiver result:', fileResult);
+            
+            receiverRow = fileRow; // For reference
+        }
 
-        // Send to both sheets
-        await api.addRow(currentUser.ad_no, senderRow);
-        await api.addRow(currentChat.adNo, receiverRow);
+        // If we have a single row (not separate text/file), send it
+        if (Object.keys(senderRow).length > 0 && !(fileLinks.length > 0 && message)) {
+            console.log('Sending single row to sender:', senderRow);
+            const senderResult = await api.addRow(currentUser.ad_no, senderRow);
+            console.log('Sender result:', senderResult);
+        }
+        
+        if (Object.keys(receiverRow).length > 0 && !(fileLinks.length > 0 && message)) {
+            console.log('Sending single row to receiver:', receiverRow);
+            const receiverResult = await api.addRow(currentChat.adNo, receiverRow);
+            console.log('Receiver result:', receiverResult);
+        }
 
         // Reload messages
         await loadMessages();
