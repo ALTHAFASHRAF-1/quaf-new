@@ -7,7 +7,7 @@
 class GoogleSheetsAPI {
     constructor() {
         // ⚠️ REPLACE THIS URL WITH YOUR GOOGLE APPS SCRIPT WEB APP URL
-        this.apiUrl = "https://script.google.com/macros/s/AKfycbyHsnlh3LFr993ePr7hJhsOxgWbDgIiWUsC09XF1yfGVq90pifYJSdkoXibFMCcGpNb/exec";
+        this.apiUrl = "https://script.google.com/macros/s/AKfycbzag4pIytqvgpN6OQhsGS0Ecdp0_7Kuui6hpUJLHgA0X2-t8ZLivGdaWJEfLJAIExcr/exec";
     }
 
     async getSheet(sheetName) {
