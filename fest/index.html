@@ -111,22 +111,6 @@
     }
 
     /* ===== MOBILE-FIRST RESPONSIVE DESIGN ===== */
-
-    /* Profile Picture Styles */
-    .profile-pic-fallback {
-        width: 100%;
-        height: 100%;
-        border-radius: 50%;
-        background: linear-gradient(135deg, #3b82f6, #1d4ed8);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: white;
-        font-size: 1.2rem;
-        border: 2px solid rgba(255, 255, 255, 0.3);
-    }
-
-    /* Mobile Menu System */
     .mobile-menu-btn {
         display: none;
         flex-direction: column;
@@ -162,7 +146,6 @@
         transform: translateY(-9px) rotate(-45deg);
     }
 
-    /* Mobile Menu Overlay */
     .mobile-menu-overlay {
         position: fixed;
         top: 0;
@@ -182,7 +165,6 @@
         visibility: visible;
     }
 
-    /* Mobile Menu Sidebar */
     .mobile-menu-sidebar {
         position: fixed;
         top: 0;
@@ -299,20 +281,6 @@
         color: #60a5fa;
     }
 
-    /* Desktop Navigation */
-    .desktop-nav {
-        display: flex;
-        gap: 0.25rem;
-        overflow-x: auto;
-        scrollbar-width: none;
-        -ms-overflow-style: none;
-    }
-
-    .desktop-nav::-webkit-scrollbar {
-        display: none;
-    }
-
-    /* Responsive Navigation */
     @media (max-width: 768px) {
         .mobile-menu-btn {
             display: flex;
@@ -323,7 +291,7 @@
         }
     }
 
-    /* Header Responsive Styles */
+    /* Header Styles */
     .header-content {
         display: flex;
         justify-content: space-between;
@@ -391,6 +359,19 @@
         border: 2px solid rgba(255, 255, 255, 0.3);
     }
 
+    .profile-pic-fallback {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.2rem;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+    }
+
     @media (max-width: 640px) {
         .header-logo {
             gap: 0.5rem;
@@ -420,27 +401,6 @@
         }
     }
 
-    @media (max-width: 480px) {
-        .header-title {
-            font-size: 0.875rem;
-        }
-        
-        .profile-pic-container {
-            width: 32px;
-            height: 32px;
-        }
-        
-        .mobile-menu-sidebar {
-            width: 240px;
-            left: -240px;
-        }
-        
-        .mobile-nav-btn {
-            padding: 0.875rem 1.25rem;
-            font-size: 0.9375rem;
-        }
-    }
-
     /* ===== PAGE CONTENT ===== */
     .page-content {
         padding: 1.5rem 0;
@@ -461,12 +421,6 @@
     @media (max-width: 768px) {
         .page-content {
             padding: 1rem 0;
-        }
-    }
-
-    @media (max-width: 480px) {
-        .page-content {
-            padding: 0.75rem 0;
         }
     }
 
@@ -494,31 +448,6 @@
     .dashboard-card i {
         font-size: 2.5rem;
         margin-bottom: 1rem;
-    }
-
-    @media (max-width: 768px) {
-        .dashboard-card {
-            padding: 1.25rem;
-            border-radius: 12px;
-            min-height: 160px;
-        }
-        
-        .dashboard-card i {
-            font-size: 2rem;
-        }
-    }
-
-    @media (max-width: 480px) {
-        .dashboard-card {
-            padding: 1rem;
-            border-radius: 10px;
-            min-height: 140px;
-        }
-        
-        .dashboard-card i {
-            font-size: 1.75rem;
-            margin-bottom: 0.75rem;
-        }
     }
 
     /* ===== STATS CARDS ===== */
@@ -552,55 +481,12 @@
         line-height: 1.2;
     }
 
-    @media (max-width: 768px) {
-        .stat-card {
-            padding: 1rem;
-            border-radius: 10px;
-        }
-        
-        .stat-value {
-            font-size: 1.5rem;
-        }
-    }
-
-    @media (max-width: 480px) {
-        .stat-card {
-            padding: 0.875rem;
-            border-radius: 8px;
-        }
-        
-        .stat-value {
-            font-size: 1.25rem;
-        }
-        
-        .stat-label {
-            font-size: 0.6875rem;
-        }
-    }
-
     /* ===== GRID SYSTEM ===== */
     .grid {
         display: grid;
         gap: 1rem;
     }
 
-    .grid-cols-1 {
-        grid-template-columns: 1fr;
-    }
-
-    .grid-cols-2 {
-        grid-template-columns: repeat(2, 1fr);
-    }
-
-    .grid-cols-3 {
-        grid-template-columns: repeat(3, 1fr);
-    }
-
-    .grid-cols-4 {
-        grid-template-columns: repeat(4, 1fr);
-    }
-
-    /* Mobile-first grid adjustments */
     @media (max-width: 640px) {
         .grid-cols-2,
         .grid-cols-3,
@@ -631,14 +517,6 @@
         box-shadow: var(--shadow-soft);
         margin: 0 -0.5rem;
         padding: 0 0.5rem;
-    }
-
-    @media (max-width: 768px) {
-        .table-container {
-            margin: 0 -0.75rem;
-            padding: 0 0.75rem;
-            border-radius: 0;
-        }
     }
 
     .data-table {
@@ -672,12 +550,13 @@
         background: #f9fafb;
     }
 
-    .data-table tr:last-child td {
-        border-bottom: none;
-    }
-
-    /* Hide less important columns on mobile */
     @media (max-width: 768px) {
+        .table-container {
+            margin: 0 -0.75rem;
+            padding: 0 0.75rem;
+            border-radius: 0;
+        }
+        
         .data-table th,
         .data-table td {
             padding: 0.75rem 0.5rem;
@@ -686,14 +565,6 @@
         
         .hide-mobile {
             display: none;
-        }
-    }
-
-    @media (max-width: 480px) {
-        .data-table th,
-        .data-table td {
-            padding: 0.625rem 0.375rem;
-            font-size: 0.75rem;
         }
     }
 
@@ -722,18 +593,6 @@
         font-weight: 600;
         display: inline-block;
         color: var(--text-dark);
-    }
-
-    @media (max-width: 768px) {
-        .program-card {
-            padding: 1rem;
-            border-radius: 10px;
-        }
-        
-        .program-code {
-            font-size: 0.8125rem;
-            padding: 0.25rem 0.5rem;
-        }
     }
 
     /* ===== BUTTONS ===== */
@@ -777,34 +636,16 @@
         box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
     }
 
-    .btn-success:hover {
-        background: linear-gradient(135deg, #059669, #047857);
-        transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
-    }
-
     .btn-danger {
         background: linear-gradient(135deg, #ef4444, #dc2626);
         color: white;
         box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
     }
 
-    .btn-danger:hover {
-        background: linear-gradient(135deg, #dc2626, #b91c1c);
-        transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
-    }
-
     .btn-secondary {
         background: #6b7280;
         color: white;
         box-shadow: 0 2px 8px rgba(107, 114, 128, 0.3);
-    }
-
-    .btn-secondary:hover {
-        background: #4b5563;
-        transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(107, 114, 128, 0.4);
     }
 
     /* Navigation Buttons */
@@ -835,33 +676,6 @@
 
     .nav-btn i {
         margin-right: 0.5rem;
-    }
-
-    @media (max-width: 768px) {
-        .nav-btn {
-            padding: 0.5rem 0.75rem;
-            font-size: 0.8125rem;
-        }
-        
-        .btn {
-            padding: 0.625rem 1.25rem;
-            font-size: 0.8125rem;
-            border-radius: 6px;
-        }
-    }
-
-    @media (max-width: 480px) {
-        .nav-btn {
-            padding: 0.5rem 0.625rem;
-            font-size: 0.75rem;
-        }
-        
-        .btn {
-            padding: 0.5rem 1rem;
-            font-size: 0.75rem;
-            min-height: 40px;
-            min-width: 40px;
-        }
     }
 
     /* ===== FORM STYLES ===== */
@@ -911,21 +725,6 @@
         padding-right: 2.5rem;
     }
 
-    .form-select:focus {
-        outline: none;
-        border-color: #3b82f6;
-        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-    }
-
-    @media (max-width: 768px) {
-        .form-input,
-        .form-select {
-            padding: 0.75rem;
-            font-size: 0.8125rem;
-            min-height: 44px;
-        }
-    }
-
     /* ===== MODAL STYLES ===== */
     .modal {
         position: fixed;
@@ -966,28 +765,6 @@
         }
     }
 
-    @media (max-width: 768px) {
-        .modal {
-            padding: 0.75rem;
-        }
-        
-        .modal-content {
-            border-radius: 12px;
-            max-height: 85vh;
-        }
-    }
-
-    @media (max-width: 480px) {
-        .modal {
-            padding: 0.5rem;
-        }
-        
-        .modal-content {
-            border-radius: 10px;
-            max-height: 80vh;
-        }
-    }
-
     /* ===== ALERTS ===== */
     .alert {
         padding: 1rem;
@@ -1023,13 +800,6 @@
         color: #92400e;
     }
 
-    @media (max-width: 768px) {
-        .alert {
-            padding: 0.875rem;
-            font-size: 0.8125rem;
-        }
-    }
-
     /* ===== ROLE & TEAM BADGES ===== */
     .role-member { color: #6b7280; }
     .role-leader { color: #3b82f6; }
@@ -1049,21 +819,6 @@
     .team-2 { background-color: #dbeafe; color: #1d4ed8; }
     .team-3 { background-color: #d1fae5; color: #047857; }
 
-    /* ===== LOADING SPINNER ===== */
-    .loading-spinner {
-        display: inline-block;
-        width: 1.25rem;
-        height: 1.25rem;
-        border: 2px solid #f3f4f6;
-        border-radius: 50%;
-        border-top-color: #3b82f6;
-        animation: spin 1s ease-in-out infinite;
-    }
-
-    @keyframes spin {
-        to { transform: rotate(360deg); }
-    }
-
     /* ===== POINTS DISPLAY ===== */
     .points-display {
         font-size: 1.75rem;
@@ -1078,12 +833,6 @@
         text-transform: uppercase;
         letter-spacing: 0.05em;
         line-height: 1.2;
-    }
-
-    @media (max-width: 768px) {
-        .points-display {
-            font-size: 1.5rem;
-        }
     }
 
     /* ===== PROGRAM TYPE BADGES ===== */
@@ -1194,31 +943,31 @@
         padding: 2rem;
     }
 
-    @media (max-width: 640px) {
-        .login-container {
-            border-radius: 20px;
-        }
-        
-        .login-header,
-        .login-body {
-            padding: 1.5rem;
-        }
-        
-        .login-icon {
-            width: 64px;
-            height: 64px;
-        }
+    /* ===== LOADING SPINNER ===== */
+    .loading-spinner {
+        display: inline-block;
+        width: 1.25rem;
+        height: 1.25rem;
+        border: 2px solid #f3f4f6;
+        border-radius: 50%;
+        border-top-color: #3b82f6;
+        animation: spin 1s ease-in-out infinite;
     }
 
-    @media (max-width: 480px) {
-        .login-container {
-            border-radius: 16px;
-        }
-        
-        .login-header,
-        .login-body {
-            padding: 1.25rem;
-        }
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+
+    /* ===== ERROR STATES ===== */
+    .program-warning {
+        background-color: #fef3c7 !important;
+        border-color: #f59e0b !important;
+        animation: pulseWarning 2s infinite;
+    }
+
+    @keyframes pulseWarning {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.8; }
     }
 
     /* ===== ACCESSIBILITY ===== */
@@ -1232,30 +981,13 @@
         }
     }
 
-    /* Focus styles for accessibility */
+    /* Focus styles */
     button:focus-visible,
     input:focus-visible,
     select:focus-visible,
     textarea:focus-visible {
         outline: 2px solid #3b82f6;
         outline-offset: 2px;
-    }
-
-    /* Prevent zoom on input focus on mobile */
-    @media (max-width: 768px) {
-        input[type="text"],
-        input[type="password"],
-        input[type="email"],
-        input[type="number"],
-        select,
-        textarea {
-            font-size: 16px !important;
-        }
-    }
-
-    /* Smooth scrolling */
-    html {
-        scroll-behavior: smooth;
     }
 
     /* Custom scrollbar */
@@ -1274,10 +1006,6 @@
         border-radius: 4px;
     }
 
-    ::-webkit-scrollbar-thumb:hover {
-        background: #a8a8a8;
-    }
-
     /* Safe area insets for modern mobile devices */
     @supports (padding: max(0px)) {
         .container,
@@ -1285,138 +1013,28 @@
             padding-left: max(1rem, env(safe-area-inset-left));
             padding-right: max(1rem, env(safe-area-inset-right));
         }
-        
-        #mobileMenuSidebar {
-            padding-left: env(safe-area-inset-left);
-            padding-right: env(safe-area-inset-right);
-        }
-        
-        #loginPage {
-            padding-left: max(1rem, env(safe-area-inset-left));
-            padding-right: max(1rem, env(safe-area-inset-right));
-        }
     }
 
-    /* Dark mode support */
-    @media (prefers-color-scheme: dark) {
-        :root {
-            --text-dark: #f9fafb;
-            --text-light: #d1d5db;
-            --bg-light: #1f2937;
-        }
-        
-        body {
-            background: linear-gradient(135deg, #111827 0%, #1f2937 100%);
-        }
-        
-        .dashboard-card,
-        .stat-card,
-        .program-card,
-        .table-container,
-        .modal-content,
-        .form-input,
-        .form-select {
-            background: #374151;
-            border-color: #4b5563;
-            color: #f9fafb;
-        }
-        
-        .form-input,
-        .form-select {
-            background: #4b5563;
-            color: #f9fafb;
-            border-color: #6b7280;
-        }
-        
-        .form-label {
-            color: #f9fafb;
-        }
-        
-        .data-table th {
-            background: #4b5563;
-            color: #f9fafb;
-            border-color: #6b7280;
-        }
-        
-        .data-table td {
-            color: #d1d5db;
-            border-color: #6b7280;
-        }
-        
-        .data-table tr:hover {
-            background: #4b5563;
-        }
-        
-        .program-code {
-            background: #4b5563;
-            color: #f9fafb;
-        }
-        
-        .nav-btn {
-            color: #d1d5db;
-        }
-        
-        .nav-btn:hover {
-            background-color: rgba(255, 255, 255, 0.1);
-            color: #60a5fa;
-        }
+    /* Desktop Navigation */
+    .desktop-nav {
+        display: flex;
+        gap: 0.25rem;
+        overflow-x: auto;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
     }
 
-    /* ===== PRINT STYLES ===== */
-    @media print {
-        .mobile-menu-btn,
-        .profile-pic-container,
-        .desktop-nav,
-        .btn,
-        button {
-            display: none !important;
-        }
-        
-        .dashboard-card {
-            break-inside: avoid;
-            page-break-inside: avoid;
-        }
-        
-        body {
-            background: white !important;
-            color: black !important;
-        }
-        
-        .table-container {
-            box-shadow: none !important;
-            border: 1px solid #ccc !important;
-        }
+    .desktop-nav::-webkit-scrollbar {
+        display: none;
     }
 
-    /* ===== PERFORMANCE OPTIMIZATIONS ===== */
-    .will-change-transform {
-        will-change: transform;
-    }
-
-    .backface-hidden {
-        backface-visibility: hidden;
-    }
-
-    /* ===== ERROR STATES ===== */
-    .program-warning {
-        background-color: #fef3c7 !important;
-        border-color: #f59e0b !important;
-        animation: pulseWarning 2s infinite;
-    }
-
-    @keyframes pulseWarning {
-        0%, 100% { opacity: 1; }
-        50% { opacity: 0.8; }
-    }
-
-    /* ===== TYPOGRAPHY UTILITIES ===== */
+    /* Text Utilities */
     .text-xs { font-size: 0.75rem; }
     .text-sm { font-size: 0.875rem; }
     .text-base { font-size: 1rem; }
     .text-lg { font-size: 1.125rem; }
     .text-xl { font-size: 1.25rem; }
     .text-2xl { font-size: 1.5rem; }
-    .text-3xl { font-size: 1.875rem; }
 
     .font-light { font-weight: 300; }
     .font-normal { font-weight: 400; }
@@ -1424,52 +1042,7 @@
     .font-semibold { font-weight: 600; }
     .font-bold { font-weight: 700; }
 
-    /* Text colors */
-    .text-gray-600 { color: #4b5563; }
-    .text-gray-700 { color: #374151; }
-    .text-gray-800 { color: #1f2937; }
-    .text-red-600 { color: #dc2626; }
-    .text-green-600 { color: #059669; }
-    .text-blue-600 { color: #2563eb; }
-    .text-yellow-600 { color: #d97706; }
-    .text-purple-600 { color: #7c3aed; }
-
-    /* Background colors */
-    .bg-gray-50 { background-color: #f9fafb; }
-    .bg-gray-100 { background-color: #f3f4f6; }
-    .bg-red-50 { background-color: #fef2f2; }
-    .bg-green-50 { background-color: #f0fdf4; }
-    .bg-blue-50 { background-color: #eff6ff; }
-    .bg-yellow-50 { background-color: #fefce8; }
-    .bg-purple-50 { background-color: #f5f3ff; }
-
-    /* Spacing utilities */
-    .p-4 { padding: 1rem; }
-    .p-6 { padding: 1.5rem; }
-    .p-8 { padding: 2rem; }
-
-    .px-4 { padding-left: 1rem; padding-right: 1rem; }
-    .py-4 { padding-top: 1rem; padding-bottom: 1rem; }
-
-    .m-4 { margin: 1rem; }
-    .mx-auto { margin-left: auto; margin-right: auto; }
-
-    .mb-2 { margin-bottom: 0.5rem; }
-    .mb-4 { margin-bottom: 1rem; }
-    .mb-6 { margin-bottom: 1.5rem; }
-    .mb-8 { margin-bottom: 2rem; }
-
-    .mt-2 { margin-top: 0.5rem; }
-    .mt-4 { margin-top: 1rem; }
-    .mt-6 { margin-top: 1.5rem; }
-    .mt-8 { margin-top: 2rem; }
-
-    .gap-2 { gap: 0.5rem; }
-    .gap-4 { gap: 1rem; }
-    .gap-6 { gap: 1.5rem; }
-    .gap-8 { gap: 2rem; }
-
-    /* Flex utilities */
+    /* Flex Utilities */
     .flex { display: flex; }
     .flex-col { flex-direction: column; }
     .items-center { align-items: center; }
@@ -1479,104 +1052,63 @@
     .flex-1 { flex: 1 1 0%; }
     .flex-shrink-0 { flex-shrink: 0; }
 
-    /* Border utilities */
-    .border { border-width: 1px; }
-    .border-2 { border-width: 2px; }
-    .border-gray-200 { border-color: #e5e7eb; }
-    .border-gray-300 { border-color: #d1d5db; }
+    /* Spacing Utilities */
+    .mb-2 { margin-bottom: 0.5rem; }
+    .mb-4 { margin-bottom: 1rem; }
+    .mb-6 { margin-bottom: 1.5rem; }
+    .mt-2 { margin-top: 0.5rem; }
+    .mt-4 { margin-top: 1rem; }
+    .mt-6 { margin-top: 1.5rem; }
+    .p-4 { padding: 1rem; }
+    .p-6 { padding: 1.5rem; }
 
-    /* Rounded utilities */
-    .rounded { border-radius: 0.375rem; }
-    .rounded-lg { border-radius: 0.5rem; }
-    .rounded-xl { border-radius: 0.75rem; }
-    .rounded-2xl { border-radius: 1rem; }
-    .rounded-full { border-radius: 9999px; }
-
-    /* Shadow utilities */
+    /* Shadow Utilities */
     .shadow-sm { box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); }
     .shadow { box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06); }
     .shadow-md { box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); }
-    .shadow-lg { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); }
 
-    /* Width/Height utilities */
-    .w-full { width: 100%; }
-    .h-full { height: 100%; }
-    .min-h-screen { min-height: 100vh; }
+    /* Rounded Utilities */
+    .rounded { border-radius: 0.375rem; }
+    .rounded-lg { border-radius: 0.5rem; }
+    .rounded-xl { border-radius: 0.75rem; }
 
-    /* Display utilities */
+    /* Display Utilities */
     .block { display: block; }
     .inline-block { display: inline-block; }
-    .inline-flex { display: inline-flex; }
 
     /* Text alignment */
     .text-left { text-align: left; }
     .text-center { text-align: center; }
     .text-right { text-align: right; }
 
-    /* Overflow utilities */
-    .overflow-hidden { overflow: hidden; }
-    .overflow-x-auto { overflow-x: auto; }
-    .overflow-y-auto { overflow-y: auto; }
-
-    /* Position utilities */
+    /* Position Utilities */
     .relative { position: relative; }
     .absolute { position: absolute; }
     .fixed { position: fixed; }
-    .sticky { position: sticky; }
 
-    /* Z-index utilities */
+    /* Z-index Utilities */
     .z-10 { z-index: 10; }
     .z-20 { z-index: 20; }
     .z-30 { z-index: 30; }
     .z-50 { z-index: 50; }
 
-    /* Opacity utilities */
+    /* Opacity Utilities */
     .opacity-0 { opacity: 0; }
-    .opacity-50 { opacity: 0.5; }
-    .opacity-75 { opacity: 0.75; }
     .opacity-100 { opacity: 1; }
 
-    /* Transition utilities */
-    .transition-all { transition-property: all; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); transition-duration: 150ms; }
-    .transition-colors { transition-property: background-color, border-color, color, fill, stroke; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); transition-duration: 150ms; }
-    .transition-transform { transition-property: transform; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); transition-duration: 150ms; }
+    /* Width/Height Utilities */
+    .w-full { width: 100%; }
+    .h-full { height: 100%; }
+    .min-h-screen { min-height: 100vh; }
 
-    /* Transform utilities */
-    .transform { transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y)); }
-    .translate-y-0 { --tw-translate-y: 0px; }
-    .translate-y-1 { --tw-translate-y: 0.25rem; }
-    .translate-y-2 { --tw-translate-y: 0.5rem; }
-    .scale-95 { --tw-scale-x: .95; --tw-scale-y: .95; }
-    .scale-100 { --tw-scale-x: 1; --tw-scale-y: 1; }
+    /* Overflow Utilities */
+    .overflow-hidden { overflow: hidden; }
+    .overflow-x-auto { overflow-x: auto; }
 
-    /* Animation utilities */
-    .animate-spin { animation: spin 1s linear infinite; }
-    .animate-pulse { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
-
-    /* Responsive utilities */
-    @media (min-width: 640px) {
-        .sm\:block { display: block !important; }
-        .sm\:hidden { display: none !important; }
-        .sm\:flex { display: flex !important; }
-        .sm\:grid-cols-2 { grid-template-columns: repeat(2, 1fr) !important; }
-    }
-
-    @media (min-width: 768px) {
-        .md\:block { display: block !important; }
-        .md\:hidden { display: none !important; }
-        .md\:flex { display: flex !important; }
-        .md\:grid-cols-2 { grid-template-columns: repeat(2, 1fr) !important; }
-        .md\:grid-cols-3 { grid-template-columns: repeat(3, 1fr) !important; }
-        .md\:grid-cols-4 { grid-template-columns: repeat(4, 1fr) !important; }
-    }
-
-    @media (min-width: 1024px) {
-        .lg\:block { display: block !important; }
-        .lg\:hidden { display: none !important; }
-        .lg\:flex { display: flex !important; }
-        .lg\:grid-cols-3 { grid-template-columns: repeat(3, 1fr) !important; }
-        .lg\:grid-cols-4 { grid-template-columns: repeat(4, 1fr) !important; }
-    }
+    /* Border Utilities */
+    .border { border-width: 1px; }
+    .border-2 { border-width: 2px; }
+    .border-gray-200 { border-color: #e5e7eb; }
     </style>
 </head>
 <body>
@@ -1614,14 +1146,14 @@
                             <div>
                                 <label for="username" class="form-label">Admission Number</label>
                                 <input type="text" id="username" name="username" required
-                                    class="form-input" placeholder="Enter your admission number"
+                                    class="form-input" placeholder="Enter admission number"
                                     autocomplete="username">
                             </div>
                             
                             <div>
                                 <label for="password" class="form-label">Password</label>
                                 <input type="password" id="password" name="password" required
-                                    class="form-input" placeholder="Enter your password"
+                                    class="form-input" placeholder="Enter password"
                                     autocomplete="current-password">
                             </div>
 
@@ -1855,7 +1387,6 @@
                 <div class="mt-8">
                     <h3 class="text-lg font-bold text-gray-800 mb-4">Upcoming Programs</h3>
                     <div id="upcomingPrograms" class="space-y-3">
-                        <!-- Upcoming programs will be loaded here -->
                         <div class="text-center py-8 text-gray-500">
                             <i class="fas fa-calendar text-3xl mb-3 opacity-50"></i>
                             <p>Loading upcoming programs...</p>
@@ -1885,7 +1416,6 @@
                                 </tr>
                             </thead>
                             <tbody id="scheduleTableBody">
-                                <!-- Schedule data will be loaded here -->
                                 <tr>
                                     <td colspan="6" class="text-center py-8 text-gray-500">
                                         <i class="fas fa-spinner fa-spin mr-2"></i>
@@ -1906,7 +1436,6 @@
                 </div>
 
                 <div id="myProgramsList" class="space-y-4">
-                    <!-- Programs will be loaded here -->
                     <div class="text-center py-8 text-gray-500">
                         <i class="fas fa-clipboard-list text-3xl mb-3 opacity-50"></i>
                         <p>Loading your programs...</p>
@@ -1939,7 +1468,6 @@
 
                 <!-- Results List -->
                 <div class="space-y-4" id="resultsList">
-                    <!-- Results will be loaded here -->
                     <div class="text-center py-8 text-gray-500">
                         <i class="fas fa-chart-line text-3xl mb-3 opacity-50"></i>
                         <p>Loading your results...</p>
@@ -1970,7 +1498,6 @@
                                 </tr>
                             </thead>
                             <tbody id="teamMembersTableBody">
-                                <!-- Team members will be loaded here -->
                                 <tr>
                                     <td colspan="8" class="text-center py-8 text-gray-500">
                                         <i class="fas fa-spinner fa-spin mr-2"></i>
@@ -2022,7 +1549,6 @@
                     <div>
                         <h3 class="text-lg font-bold text-gray-800 mb-4">Currently Assigned Programs</h3>
                         <div id="assignedProgramsList">
-                            <!-- Assigned programs will be loaded here -->
                             <div class="text-center py-8 text-gray-500">
                                 <i class="fas fa-tasks text-3xl mb-3 opacity-50"></i>
                                 <p>Loading assigned programs...</p>
@@ -2057,7 +1583,6 @@
 
                     <!-- Team Content -->
                     <div id="teamContent">
-                        <!-- Team data will be loaded here -->
                         <div class="text-center py-8 text-gray-500">
                             <i class="fas fa-spinner fa-spin mr-2"></i>
                             Loading team data...
@@ -2089,7 +1614,6 @@
                                 </tr>
                             </thead>
                             <tbody id="programCountTableBody">
-                                <!-- Program count data will be loaded here -->
                                 <tr>
                                     <td colspan="8" class="text-center py-8 text-gray-500">
                                         <i class="fas fa-spinner fa-spin mr-2"></i>
@@ -2136,7 +1660,6 @@
 
                     <!-- Results Content -->
                     <div id="resultsContent">
-                        <!-- Results management will be loaded here -->
                         <div class="text-center py-8 text-gray-500">
                             <i class="fas fa-spinner fa-spin mr-2"></i>
                             Loading results...
@@ -2194,7 +1717,6 @@
                                     </tr>
                                 </thead>
                                 <tbody id="adminScheduleTableBody">
-                                    <!-- Schedule data will be loaded here -->
                                     <tr>
                                         <td colspan="4" class="text-center py-8 text-gray-500">
                                             <i class="fas fa-spinner fa-spin mr-2"></i>
@@ -2274,7 +1796,6 @@
                 </div>
                 
                 <div id="assignProgramModalContent">
-                    <!-- Modal content will be loaded here -->
                     <div class="text-center py-8 text-gray-500">
                         <i class="fas fa-spinner fa-spin mr-2"></i>
                         Loading...
@@ -2296,7 +1817,6 @@
                 </div>
                 
                 <div id="editResultModalContent">
-                    <!-- Modal content will be loaded here -->
                     <div class="text-center py-8 text-gray-500">
                         <i class="fas fa-spinner fa-spin mr-2"></i>
                         Loading...
