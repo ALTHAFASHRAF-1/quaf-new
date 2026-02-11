@@ -1,4 +1,4 @@
-// Configuration
+ // Configuration
 const CONFIG = {
     APPSCRIPT_URL: 'https://script.google.com/macros/s/AKfycbzFrvkkYipPuEs9iMdNqQXyX6oFV8UojvGxyRbm3Oquwh7M_uRJKMSw-uM_m-kEO4Bz/exec',
     HEADINGS: ['zuhr', 'asr', 'magrib', 'isha', 'subh', 'thahajjud', 'zuha', 'swalath_count', 'ravathib']
