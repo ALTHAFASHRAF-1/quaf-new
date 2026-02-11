@@ -1,193 +1,610 @@
-// Google Apps Script Web App URL (Replace with your own)
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxAkg6BussSxaSQysmZQUj_h77LV3Qr_NRGfMqw8xf2b3o-VdKVKEpXAVuaJPOwzYOh/exec';
+// 🌐 Global Variables
+let currentUser = null;
+let currentSheetName = null;
+let selectedDate = null;
+let selectedADNo = null;
 
-// DOM Elements
-const loginForm = document.getElementById('loginForm');
-const adnoSelect = document.getElementById('adno');
-const dateInput = document.getElementById('date');
-const passwordInput = document.getElementById('password');
-const submitBtn = document.getElementById('submitBtn');
-const btnText = document.getElementById('btnText');
-const errorMessages = {
-    adno: document.getElementById('adnoError'),
-    date: document.getElementById('dateError'),
-    password: document.getElementById('passwordError')
-};
+// =============================
+// 📊 Google Sheets API Configuration
+// =============================
+class GoogleSheetsAPI {
+    constructor() {
+        // IMPORTANT: Replace this URL with your Google Apps Script Web App URL
+        this.apiUrl = "https://script.google.com/macros/s/AKfycbyW5Zk2PEtBW0kgFlWDFG8iBr4gu-TrLSJAoKlaq8sOUNiWyT-g9O9mjAzPyqdxkewA8A/exec";
+        this.cache = new Map();
+        this.cacheTimeout = 60000; // 60 seconds
+    }
 
-// Set today's date as default
-dateInput.valueAsDate = new Date();
-
-// Load admission numbers on page load
-document.addEventListener('DOMContentLoaded', function() {
-    loadAdmissionNumbers();
-});
-
-// Function to load admission numbers from Google Sheets
-async function loadAdmissionNumbers() {
-    try {
-        const response = await fetch(`${SCRIPT_URL}?action=getAdmissionNumbers`);
-        if (!response.ok) throw new Error('Failed to load admission numbers');
+    async getSheet(sheetName, useCache = true) {
+        const cacheKey = sheetName;
+        const now = Date.now();
         
-        const data = await response.json();
-        
-        if (data.success && data.admissionNumbers) {
-            // Clear existing options except the first one
-            while (adnoSelect.options.length > 1) {
-                adnoSelect.remove(1);
+        if (useCache && this.cache.has(cacheKey)) {
+            const cached = this.cache.get(cacheKey);
+            if (now - cached.timestamp < this.cacheTimeout) {
+                return cached.data;
+            }
+        }
+
+        try {
+            const url = `${this.apiUrl}?sheet=${encodeURIComponent(sheetName)}&t=${now}`;
+            const response = await fetch(url, {
+                method: 'GET',
+                headers: { 'Accept': 'application/json' }
+            });
+            
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            
+            const data = await response.json();
+            
+            if (useCache) {
+                this.cache.set(cacheKey, { data, timestamp: now });
             }
             
-            // Add new options
-            data.admissionNumbers.forEach(adno => {
-                const option = document.createElement('option');
-                option.value = adno;
-                option.textContent = adno;
-                adnoSelect.appendChild(option);
+            return data;
+        } catch (error) {
+            console.error(`Error fetching ${sheetName}:`, error);
+            return { error: error.message };
+        }
+    }
+
+    async addRow(sheetName, rowData) {
+        try {
+            const response = await fetch(this.apiUrl, {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: new URLSearchParams({
+                    sheet: sheetName,
+                    data: JSON.stringify(rowData)
+                })
             });
-        } else {
-            throw new Error(data.message || 'Failed to load admission numbers');
+            
+            const result = await response.json();
+            
+            // Clear cache for this sheet
+            this.cache.delete(sheetName);
+            
+            return result;
+        } catch (error) {
+            console.error('Error adding row:', error);
+            return { error: error.message };
+        }
+    }
+
+    async ensureSheetExists(sheetName, headers) {
+        try {
+            const response = await fetch(this.apiUrl, {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: new URLSearchParams({
+                    action: "ensureSheet",
+                    sheet: sheetName,
+                    headers: JSON.stringify(headers)
+                })
+            });
+            
+            const result = await response.json();
+            return result;
+        } catch (error) {
+            console.error('Error ensuring sheet exists:', error);
+            return { error: error.message };
+        }
+    }
+
+    clearCache() {
+        this.cache.clear();
+    }
+}
+
+const api = new GoogleSheetsAPI();
+
+// =============================
+// 🔑 Login Functions
+// =============================
+
+// Load AD numbers on page load
+document.addEventListener('DOMContentLoaded', async function() {
+    await loadADNumbers();
+    
+    // Set max date to today
+    const dateInput = document.getElementById('date');
+    const today = new Date().toISOString().split('T')[0];
+    dateInput.max = today;
+    
+    // Add event listeners for select options
+    initializeSelectOptions();
+    
+    // Add login form submit listener
+    document.getElementById('loginForm').addEventListener('submit', login);
+    
+    // Add worship form submit listener
+    document.getElementById('worshipForm').addEventListener('submit', submitWorshipForm);
+});
+
+async function loadADNumbers() {
+    try {
+        const users = await api.getSheet("user_credentials");
+        const adNoSelect = document.getElementById('adNo');
+        
+        adNoSelect.innerHTML = '<option value="" disabled selected>-- Select AD Number --</option>';
+        
+        if (users && Array.isArray(users) && users.length > 0) {
+            // Sort AD numbers numerically
+            const sortedUsers = users.sort((a, b) => {
+                const numA = parseInt(a['ad:no']) || 0;
+                const numB = parseInt(b['ad:no']) || 0;
+                return numA - numB;
+            });
+            
+            sortedUsers.forEach(user => {
+                const adNo = user['ad:no'] || user.ad_no;
+                const name = user.name || '';
+                if (adNo) {
+                    const option = document.createElement('option');
+                    option.value = adNo;
+                    option.textContent = `${adNo} - ${name}`;
+                    adNoSelect.appendChild(option);
+                }
+            });
         }
     } catch (error) {
-        console.error('Error loading admission numbers:', error);
-        showError('adno', 'Failed to load admission numbers. Please refresh the page.');
+        console.error('Error loading AD numbers:', error);
     }
 }
 
-// Function to show error message
-function showError(field, message) {
-    errorMessages[field].textContent = message;
-    errorMessages[field].style.display = 'block';
+async function login(event) {
+    event.preventDefault();
     
-    // Highlight the input field
-    const inputField = document.getElementById(field);
-    inputField.style.borderColor = '#e74c3c';
-    inputField.style.boxShadow = '0 0 0 3px rgba(231, 76, 60, 0.1)';
-}
-
-// Function to clear error message
-function clearError(field) {
-    errorMessages[field].style.display = 'none';
+    const adNo = document.getElementById('adNo').value;
+    const date = document.getElementById('date').value;
+    const password = document.getElementById('password').value;
     
-    const inputField = document.getElementById(field);
-    inputField.style.borderColor = '#ddd';
-    inputField.style.boxShadow = 'none';
-}
-
-// Function to show loading state
-function showLoading() {
+    // Hide previous error
+    hideLoginError();
+    
+    if (!adNo || !date || !password) {
+        showLoginError('Please fill in all fields');
+        return;
+    }
+    
+    // Show loading state
+    const submitBtn = document.querySelector('#loginForm .submit-btn');
+    const originalText = submitBtn.innerHTML;
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Signing In...';
     submitBtn.disabled = true;
-    btnText.innerHTML = '<div class="loading"></div> Authenticating...';
-}
-
-// Function to hide loading state
-function hideLoading() {
-    submitBtn.disabled = false;
-    btnText.textContent = 'Login to Track';
-}
-
-// Function to validate form
-function validateForm() {
-    let isValid = true;
-    
-    // Clear all errors
-    Object.keys(errorMessages).forEach(field => clearError(field));
-    
-    // Validate admission number
-    if (!adnoSelect.value) {
-        showError('adno', 'Please select your admission number');
-        isValid = false;
-    }
-    
-    // Validate date
-    if (!dateInput.value) {
-        showError('date', 'Please select a date');
-        isValid = false;
-    }
-    
-    // Validate password
-    if (!passwordInput.value) {
-        showError('password', 'Please enter your password');
-        isValid = false;
-    } else if (passwordInput.value.length < 3) {
-        showError('password', 'Password must be at least 3 characters');
-        isValid = false;
-    }
-    
-    return isValid;
-}
-
-// Form submission handler
-loginForm.addEventListener('submit', async function(e) {
-    e.preventDefault();
-    
-    if (!validateForm()) return;
-    
-    showLoading();
     
     try {
-        const formData = {
-            action: 'login',
-            adno: adnoSelect.value,
-            date: dateInput.value,
-            password: passwordInput.value
-        };
+        const users = await api.getSheet("user_credentials", false);
         
-        const response = await fetch(SCRIPT_URL, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(formData)
+        if (!users || users.error || !Array.isArray(users)) {
+            showLoginError('Failed to connect to server');
+            return;
+        }
+        
+        // Find user with matching AD number and password
+        const user = users.find(u => {
+            const userAdNo = String(u['ad:no'] || u.ad_no || '').trim();
+            const userPassword = String(u.pswd || u.password || '').trim();
+            return userAdNo === String(adNo).trim() && userPassword === String(password).trim();
         });
         
-        if (!response.ok) throw new Error('Network response was not ok');
-        
-        const result = await response.json();
-        
-        if (result.success) {
-            // Store session data
-            sessionStorage.setItem('tharbiyya_user', JSON.stringify({
-                adno: adnoSelect.value,
-                date: dateInput.value,
-                name: result.name
-            }));
+        if (user) {
+            // Login successful
+            currentUser = {
+                adNo: adNo,
+                name: user.name || user.full_name || `User ${adNo}`,
+                rawData: user
+            };
             
-            // Redirect to tracking page
-            window.location.href = 'tracking.html';
+            selectedDate = date;
+            selectedADNo = adNo;
+            
+            // Format date for sheet name (DD-MM-YYYY)
+            const dateObj = new Date(date);
+            const day = String(dateObj.getDate()).padStart(2, '0');
+            const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+            const year = dateObj.getFullYear();
+            const formattedDate = `${day}-${month}-${year}`;
+            
+            currentSheetName = `${adNo}-${formattedDate}`;
+            
+            // Ensure the sheet exists with proper headers
+            const headers = ['zuhr', 'asr', 'magrib', 'isha', 'subh', 'thahajjud', 'zuha', 'swalath_count', 'ravathib', 'submission_date'];
+            await api.ensureSheetExists(currentSheetName, headers);
+            
+            // Show dashboard
+            document.getElementById('loginPage').classList.add('hidden');
+            document.getElementById('dashboardPage').classList.remove('hidden');
+            
+            // Update UI
+            document.getElementById('userInfo').innerHTML = `<strong>${currentUser.name}</strong> (AD: ${adNo})`;
+            
+            const formattedDateDisplay = dateObj.toLocaleDateString('en-US', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+            document.querySelector('#selectedDateDisplay span').textContent = formattedDateDisplay;
+            
+            // Clear form and reset password field
+            document.getElementById('password').value = '';
+            
+            // Check if already submitted for this date
+            await checkExistingSubmission();
         } else {
-            throw new Error(result.message || 'Login failed');
+            showLoginError('Invalid AD Number or Password');
         }
     } catch (error) {
         console.error('Login error:', error);
-        showError('password', error.message || 'Invalid credentials. Please try again.');
-        hideLoading();
+        showLoginError('Login failed. Please try again.');
+    } finally {
+        // Restore button state
+        submitBtn.innerHTML = originalText;
+        submitBtn.disabled = false;
     }
-});
+}
 
-// Real-time validation
-adnoSelect.addEventListener('change', () => clearError('adno'));
-dateInput.addEventListener('change', () => clearError('date'));
-passwordInput.addEventListener('input', () => clearError('password'));
+function showLoginError(message) {
+    const errorDiv = document.getElementById('loginError');
+    errorDiv.querySelector('span').textContent = message;
+    errorDiv.classList.remove('hidden');
+}
 
-// Add input event listeners for real-time validation
-const inputs = [adnoSelect, dateInput, passwordInput];
-inputs.forEach(input => {
-    input.addEventListener('focus', function() {
-        this.style.backgroundColor = 'white';
-    });
+function hideLoginError() {
+    document.getElementById('loginError').classList.add('hidden');
+}
+
+function logout() {
+    currentUser = null;
+    currentSheetName = null;
+    selectedDate = null;
+    selectedADNo = null;
     
-    input.addEventListener('blur', function() {
-        if (!this.value) {
-            this.style.backgroundColor = '#f9f9f9';
+    // Reset forms
+    document.getElementById('loginForm').reset();
+    resetWorshipForm();
+    
+    // Hide success/error messages
+    document.getElementById('formSuccess').classList.add('hidden');
+    document.getElementById('formError').classList.add('hidden');
+    
+    // Show login page
+    document.getElementById('dashboardPage').classList.add('hidden');
+    document.getElementById('loginPage').classList.remove('hidden');
+}
+
+// =============================
+// 🕌 Worship Form Functions
+// =============================
+
+function initializeSelectOptions() {
+    // Delegate event listener for select options
+    document.addEventListener('click', function(e) {
+        const option = e.target.closest('.select-option');
+        if (!option) return;
+        
+        const selectGroup = option.closest('.select-group');
+        if (!selectGroup) return;
+        
+        // Get all options in this group
+        const options = selectGroup.querySelectorAll('.select-option');
+        const prayerName = selectGroup.dataset.prayer;
+        
+        // Remove selected class from all options in this group
+        options.forEach(opt => {
+            opt.classList.remove('selected');
+            opt.style.background = '';
+            opt.style.color = '';
+            opt.style.borderColor = '';
+            
+            // Reset icon colors
+            const icon = opt.querySelector('i');
+            if (icon) {
+                if (opt.dataset.value === 'yes') {
+                    icon.className = 'fas fa-check-circle text-green-600';
+                } else {
+                    icon.className = 'fas fa-times-circle text-red-600';
+                }
+            }
+        });
+        
+        // Add selected class to clicked option
+        option.classList.add('selected');
+        
+        // Style for selected state
+        if (option.dataset.value === 'yes') {
+            option.style.background = '#059669';
+            option.style.color = 'white';
+            option.style.borderColor = '#059669';
+            const icon = option.querySelector('i');
+            if (icon) icon.className = 'fas fa-check-circle text-white';
+        } else {
+            option.style.background = '#dc2626';
+            option.style.color = 'white';
+            option.style.borderColor = '#dc2626';
+            const icon = option.querySelector('i');
+            if (icon) icon.className = 'fas fa-times-circle text-white';
+        }
+        
+        // Update hidden input value
+        if (prayerName) {
+            const hiddenInput = document.getElementById(prayerName);
+            if (hiddenInput) {
+                hiddenInput.value = option.dataset.value;
+            }
         }
     });
+}
+
+function resetWorshipForm() {
+    // Reset all select options
+    document.querySelectorAll('.select-group').forEach(group => {
+        const options = group.querySelectorAll('.select-option');
+        const prayerName = group.dataset.prayer;
+        
+        options.forEach(opt => {
+            opt.classList.remove('selected');
+            opt.style.background = '';
+            opt.style.color = '';
+            opt.style.borderColor = '';
+            
+            const icon = opt.querySelector('i');
+            if (icon) {
+                if (opt.dataset.value === 'yes') {
+                    icon.className = 'fas fa-check-circle text-green-600';
+                } else {
+                    icon.className = 'fas fa-times-circle text-red-600';
+                }
+            }
+        });
+        
+        // Clear hidden input
+        if (prayerName) {
+            const hiddenInput = document.getElementById(prayerName);
+            if (hiddenInput) hiddenInput.value = '';
+        }
+    });
+    
+    // Reset number input
+    document.getElementById('swalath_count').value = '';
+    
+    // Enable submit button
+    const submitBtn = document.getElementById('submitWorshipBtn');
+    submitBtn.disabled = false;
+    submitBtn.innerHTML = '<i class="fas fa-check-double"></i> Submit Today\'s Worship';
+}
+
+async function checkExistingSubmission() {
+    try {
+        const data = await api.getSheet(currentSheetName);
+        
+        if (data && Array.isArray(data) && data.length > 0) {
+            // Sort by submission date to get the latest
+            const sorted = data.sort((a, b) => {
+                const dateA = a.submission_date || '';
+                const dateB = b.submission_date || '';
+                return dateB.localeCompare(dateA);
+            });
+            
+            const latest = sorted[0];
+            
+            // Pre-fill form with existing data
+            if (latest.zuhr) {
+                const zuhrSelect = document.querySelector('[data-prayer="zuhr"]');
+                const yesOption = zuhrSelect?.querySelector('[data-value="yes"]');
+                const noOption = zuhrSelect?.querySelector('[data-value="no"]');
+                
+                if (latest.zuhr === 'yes' && yesOption) {
+                    yesOption.click();
+                } else if (latest.zuhr === 'no' && noOption) {
+                    noOption.click();
+                }
+            }
+            
+            if (latest.asr) {
+                const asrSelect = document.querySelector('[data-prayer="asr"]');
+                const yesOption = asrSelect?.querySelector('[data-value="yes"]');
+                const noOption = asrSelect?.querySelector('[data-value="no"]');
+                
+                if (latest.asr === 'yes' && yesOption) {
+                    yesOption.click();
+                } else if (latest.asr === 'no' && noOption) {
+                    noOption.click();
+                }
+            }
+            
+            if (latest.magrib) {
+                const magribSelect = document.querySelector('[data-prayer="magrib"]');
+                const yesOption = magribSelect?.querySelector('[data-value="yes"]');
+                const noOption = magribSelect?.querySelector('[data-value="no"]');
+                
+                if (latest.magrib === 'yes' && yesOption) {
+                    yesOption.click();
+                } else if (latest.magrib === 'no' && noOption) {
+                    noOption.click();
+                }
+            }
+            
+            if (latest.isha) {
+                const ishaSelect = document.querySelector('[data-prayer="isha"]');
+                const yesOption = ishaSelect?.querySelector('[data-value="yes"]');
+                const noOption = ishaSelect?.querySelector('[data-value="no"]');
+                
+                if (latest.isha === 'yes' && yesOption) {
+                    yesOption.click();
+                } else if (latest.isha === 'no' && noOption) {
+                    noOption.click();
+                }
+            }
+            
+            if (latest.subh) {
+                const subhSelect = document.querySelector('[data-prayer="subh"]');
+                const yesOption = subhSelect?.querySelector('[data-value="yes"]');
+                const noOption = subhSelect?.querySelector('[data-value="no"]');
+                
+                if (latest.subh === 'yes' && yesOption) {
+                    yesOption.click();
+                } else if (latest.subh === 'no' && noOption) {
+                    noOption.click();
+                }
+            }
+            
+            if (latest.thahajjud) {
+                const thahajjudSelect = document.querySelector('[data-prayer="thahajjud"]');
+                const yesOption = thahajjudSelect?.querySelector('[data-value="yes"]');
+                const noOption = thahajjudSelect?.querySelector('[data-value="no"]');
+                
+                if (latest.thahajjud === 'yes' && yesOption) {
+                    yesOption.click();
+                } else if (latest.thahajjud === 'no' && noOption) {
+                    noOption.click();
+                }
+            }
+            
+            if (latest.zuha) {
+                const zuhaSelect = document.querySelector('[data-prayer="zuha"]');
+                const yesOption = zuhaSelect?.querySelector('[data-value="yes"]');
+                const noOption = zuhaSelect?.querySelector('[data-value="no"]');
+                
+                if (latest.zuha === 'yes' && yesOption) {
+                    yesOption.click();
+                } else if (latest.zuha === 'no' && noOption) {
+                    noOption.click();
+                }
+            }
+            
+            if (latest.swalath_count) {
+                document.getElementById('swalath_count').value = latest.swalath_count;
+            }
+            
+            if (latest.ravathib) {
+                const ravathibSelect = document.querySelector('[data-prayer="ravathib"]');
+                const yesOption = ravathibSelect?.querySelector('[data-value="yes"]');
+                const noOption = ravathibSelect?.querySelector('[data-value="no"]');
+                
+                if (latest.ravathib === 'yes' && yesOption) {
+                    yesOption.click();
+                } else if (latest.ravathib === 'no' && noOption) {
+                    noOption.click();
+                }
+            }
+            
+            // Show success message with existing data
+            showFormSuccess('Your previous submission has been loaded. You can update it below.');
+        }
+    } catch (error) {
+        console.error('Error checking existing submission:', error);
+    }
+}
+
+async function submitWorshipForm(event) {
+    event.preventDefault();
+    
+    // Hide previous messages
+    hideFormMessages();
+    
+    // Validate form
+    const zuhr = document.getElementById('zuhr').value;
+    const asr = document.getElementById('asr').value;
+    const magrib = document.getElementById('magrib').value;
+    const isha = document.getElementById('isha').value;
+    const subh = document.getElementById('subh').value;
+    const thahajjud = document.getElementById('thahajjud').value;
+    const zuha = document.getElementById('zuha').value;
+    const swalath_count = document.getElementById('swalath_count').value;
+    const ravathib = document.getElementById('ravathib').value;
+    
+    if (!zuhr || !asr || !magrib || !isha || !subh || !thahajjud || !zuha || !swalath_count || !ravathib) {
+        showFormError('Please fill in all fields');
+        return;
+    }
+    
+    // Show loading state
+    const submitBtn = document.getElementById('submitWorshipBtn');
+    const originalText = submitBtn.innerHTML;
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
+    submitBtn.disabled = true;
+    
+    try {
+        // Prepare row data
+        const now = new Date();
+        const formattedNow = `${now.toLocaleDateString('en-GB')} ${now.toLocaleTimeString('en-GB')}`;
+        
+        const rowData = [
+            zuhr,
+            asr,
+            magrib,
+            isha,
+            subh,
+            thahajjud,
+            zuha,
+            swalath_count,
+            ravathib,
+            formattedNow
+        ];
+        
+        // Add row to sheet
+        const result = await api.addRow(currentSheetName, rowData);
+        
+        if (result && result.success) {
+            showFormSuccess('Your worship data has been submitted successfully!');
+            
+            // Reload the form with new data
+            await checkExistingSubmission();
+        } else {
+            throw new Error(result?.error || 'Failed to submit data');
+        }
+    } catch (error) {
+        console.error('Error submitting form:', error);
+        showFormError('Submission failed. Please try again.');
+    } finally {
+        // Restore button state
+        submitBtn.innerHTML = originalText;
+        submitBtn.disabled = false;
+    }
+}
+
+function showFormSuccess(message) {
+    const successDiv = document.getElementById('formSuccess');
+    successDiv.querySelector('span').textContent = message;
+    successDiv.classList.remove('hidden');
+    
+    // Auto hide after 5 seconds
+    setTimeout(() => {
+        successDiv.classList.add('hidden');
+    }, 5000);
+}
+
+function showFormError(message) {
+    const errorDiv = document.getElementById('formError');
+    errorDiv.querySelector('span').textContent = message;
+    errorDiv.classList.remove('hidden');
+}
+
+function hideFormMessages() {
+    document.getElementById('formSuccess').classList.add('hidden');
+    document.getElementById('formError').classList.add('hidden');
+}
+
+// =============================
+// 🔒 Security & Optimization
+// =============================
+
+// Disable right-click
+document.addEventListener("contextmenu", function(e) {
+    e.preventDefault();
 });
 
-// Function to check if user is already logged in (for tracking page)
-function checkLogin() {
-    const user = sessionStorage.getItem('tharbiyya_user');
-    if (!user) {
-        window.location.href = 'index.html';
-        return null;
+// Disable inspect shortcuts
+document.addEventListener("keydown", function(e) {
+    if (e.key === "F12" || 
+        (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J" || e.key === "C")) ||
+        (e.ctrlKey && (e.key === "u" || e.key === "U" || e.key === "s" || e.key === "S"))) {
+        e.preventDefault();
     }
-    return JSON.parse(user);
-}
+});
+
+// Console welcome message
+console.log('%c🌙 Tharbiyya - Daily Worship Tracker 🌙', 'color: #059669; font-size: 16px; font-weight: bold;');
+console.log('%cSystem Loaded Successfully', 'color: #1f2937; font-size: 12px;');
