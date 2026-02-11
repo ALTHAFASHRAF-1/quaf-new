@@ -5,12 +5,12 @@ let currentTeamTab = 1;
 let currentResultType = 's';
 
 // =============================
-// 📊 Google Sheets Integration - FIXED
+// 📊 Google Sheets Integration
 // =============================
 class GoogleSheetsAPI {
     constructor() {
         // ⚠️ REPLACE THIS URL WITH YOUR GOOGLE APPS SCRIPT WEB APP URL
-        this.apiUrl = "https://script.google.com/macros/s/AKfycbyTU2d5WCxcnI4rKjL50Q7RUaosqYUWX6EqsOp12MW9jPOdfvTT5MzdoGJsFGZPMEn7RA/exec";
+        this.apiUrl = "https://script.google.com/macros/s/AKfycbwPsxzCkOvrZQitFuWT7i2y9KWBC5SzWMdywgq3vB-C8a6zBdPr8FsWJ8ngXKSrvdZzxg/exec";
         this.cache = new Map();
         this.cacheTimeout = 30 * 1000;
     }
@@ -176,7 +176,7 @@ class GoogleSheetsAPI {
 const api = new GoogleSheetsAPI();
 
 // =============================
-// 🔑 Authentication - FIXED
+// 🔑 Authentication
 // =============================
 async function login() {
     const username = document.getElementById('username').value.trim();
@@ -304,6 +304,11 @@ function updateUIForRole() {
         if (leaderDashboardCards) leaderDashboardCards.classList.add('hidden');
         if (adminDashboardCards) adminDashboardCards.classList.add('hidden');
     }
+    
+    // Load mobile navigation
+    if (typeof loadMobileNavigation === 'function') {
+        loadMobileNavigation();
+    }
 }
 
 // =============================
@@ -321,6 +326,16 @@ async function showPage(page) {
         }
         
         currentPage = page;
+        
+        // Update mobile navigation active state
+        if (typeof loadMobileNavigation === 'function') {
+            loadMobileNavigation();
+        }
+        
+        // Close mobile menu if open
+        if (typeof closeMobileMenu === 'function' && window.mobileMenuOpen) {
+            closeMobileMenu();
+        }
         
         // Load page-specific data
         switch (page) {
@@ -361,7 +376,7 @@ async function showPage(page) {
 }
 
 // =============================
-// 🏠 Dashboard Functions - FIXED
+// 🏠 Dashboard Functions
 // =============================
 async function loadDashboard() {
     if (!currentUser) return;
@@ -594,7 +609,7 @@ function getProgramType(programCode) {
 }
 
 // =============================
-// 📅 Schedule Functions - FIXED
+// 📅 Schedule Functions
 // =============================
 async function loadSchedule() {
     try {
@@ -687,7 +702,7 @@ async function loadSchedule() {
 }
 
 // =============================
-// 📋 My Programs Functions - FIXED
+// 📋 My Programs Functions
 // =============================
 async function loadMyPrograms() {
     if (!currentUser) return;
@@ -792,7 +807,7 @@ async function loadMyPrograms() {
 }
 
 // =============================
-// 🏆 My Results Functions - FIXED
+// 🏆 My Results Functions
 // =============================
 async function loadMyResults() {
     if (!currentUser) return;
@@ -881,7 +896,7 @@ async function loadMyResults() {
                             type === 'sp' ? 'text-blue-600' : 'text-purple-600';
             
             html += `
-                <div class="result-card">
+                <div class="bg-white rounded-lg p-4 shadow-sm border border-gray-200">
                     <div class="flex justify-between items-center mb-3">
                         <div>
                             <span class="program-code">${programCode}</span>
@@ -910,7 +925,7 @@ async function loadMyResults() {
 }
 
 // =============================
-// 👥 Team Members Functions (Leader/Assistant) - FIXED
+// 👥 Team Members Functions (Leader/Assistant)
 // =============================
 async function loadTeamMembers() {
     if (!currentUser || (currentUser.role !== 'leader' && currentUser.role !== 'assistant')) {
@@ -1169,7 +1184,7 @@ async function assignProgramFromModal(event, slNo, memberName) {
 }
 
 // =============================
-// 📝 Assign Programs Functions (Leader/Assistant) - FIXED
+// 📝 Assign Programs Functions (Leader/Assistant)
 // =============================
 async function loadAssignPrograms() {
     if (!currentUser || (currentUser.role !== 'leader' && currentUser.role !== 'assistant')) {
@@ -1373,7 +1388,7 @@ async function removeAssignment(slNo, programCode) {
 }
 
 // =============================
-// 🏢 All Teams Functions (Admin) - FIXED
+// 🏢 All Teams Functions (Admin)
 // =============================
 async function loadAllTeams() {
     try {
@@ -1692,7 +1707,7 @@ async function adminRemoveRegistration(teamNumber, programCode, slNo) {
 }
 
 // =============================
-// 🧮 Program Count Functions (Admin) - FIXED
+// 🧮 Program Count Functions (Admin)
 // =============================
 async function loadProgramCount() {
     try {
@@ -1783,7 +1798,7 @@ async function loadProgramCount() {
 }
 
 // =============================
-// 🏅 Manage Results Functions (Admin) - FIXED
+// 🏅 Manage Results Functions (Admin)
 // =============================
 async function loadManageResults() {
     try {
@@ -2337,7 +2352,7 @@ async function saveNewResult(event, type) {
 }
 
 // =============================
-// 📅 Admin Schedule Functions - FIXED
+// 📅 Admin Schedule Functions
 // =============================
 async function loadAdminSchedule() {
     try {
@@ -2488,7 +2503,7 @@ async function deleteSchedule(date, time, programCode) {
 }
 
 // =============================
-// 🔐 Change Password Functions - FIXED
+// 🔐 Change Password Functions
 // =============================
 function openChangePasswordModal() {
     const modal = document.getElementById('changePasswordModal');
@@ -2647,152 +2662,3 @@ console.log('%cSample Login:', 'color: #f59e0b; font-size: 12px;');
 console.log('%cAdmin: ADM001 / admin123', 'color: #dc2626;');
 console.log('%cTeam 1 Leader: T1L001 / t1leader', 'color: #3b82f6;');
 console.log('%cTeam 1 Member: T1M001 / t1m001', 'color: #10b981;');
-
-// =============================
-// 📱 Mobile Responsive Functions
-// =============================
-
-// Update the updateUIForRole function to load mobile navigation
-function updateUIForRole() {
-    if (!currentUser) return;
-
-    const welcomeUser = document.getElementById('welcomeUser');
-    const profileName = document.getElementById('profileName');
-    const profileUsername = document.getElementById('profileUsername');
-    const profileRole = document.getElementById('profileRole');
-    const profileTeam = document.getElementById('profileTeam');
-    const leaderNav = document.getElementById('leaderNav');
-    const adminNav = document.getElementById('adminNav');
-    const leaderDashboardCards = document.getElementById('leaderDashboardCards');
-    const adminDashboardCards = document.getElementById('adminDashboardCards');
-
-    // Update welcome message
-    const roleDisplay = currentUser.role.charAt(0).toUpperCase() + currentUser.role.slice(1);
-    if (welcomeUser) welcomeUser.textContent = `Welcome, ${currentUser.name} (${roleDisplay})`;
-    
-    // Update profile info
-    if (profileName) profileName.textContent = currentUser.name;
-    if (profileUsername) profileUsername.textContent = `@${currentUser.ad_no}`;
-    if (profileRole) {
-        profileRole.textContent = roleDisplay;
-        profileRole.className = 'text-xs px-2 py-1 bg-white/20 rounded-full ' + 
-            (currentUser.role === 'admin' ? 'role-admin' : 
-             currentUser.role === 'leader' ? 'role-leader' : 
-             currentUser.role === 'assistant' ? 'role-assistant' : 'role-member');
-    }
-    
-    if (profileTeam) {
-        profileTeam.textContent = `Team ${currentUser.team}`;
-        profileTeam.className = 'text-xs px-2 py-1 bg-white/20 rounded-full ml-1 team-' + currentUser.team;
-    }
-    
-    // Show/hide navigation based on role
-    if (currentUser.role === 'admin') {
-        if (adminNav) adminNav.classList.remove('hidden');
-        if (leaderNav) leaderNav.classList.add('hidden');
-        if (adminDashboardCards) adminDashboardCards.classList.remove('hidden');
-        if (leaderDashboardCards) leaderDashboardCards.classList.add('hidden');
-    } else if (currentUser.role === 'leader' || currentUser.role === 'assistant') {
-        if (leaderNav) leaderNav.classList.remove('hidden');
-        if (adminNav) adminNav.classList.add('hidden');
-        if (leaderDashboardCards) leaderDashboardCards.classList.remove('hidden');
-        if (adminDashboardCards) adminDashboardCards.classList.add('hidden');
-    } else {
-        if (leaderNav) leaderNav.classList.add('hidden');
-        if (adminNav) adminNav.classList.add('hidden');
-        if (leaderDashboardCards) leaderDashboardCards.classList.add('hidden');
-        if (adminDashboardCards) adminDashboardCards.classList.add('hidden');
-    }
-    
-    // Load mobile navigation
-    if (typeof loadMobileNavigation === 'function') {
-        loadMobileNavigation();
-    }
-}
-
-// Update the showPage function to handle mobile menu
-async function showPage(page) {
-    try {
-        // Hide all pages
-        document.querySelectorAll('.page-content').forEach(p => p.classList.add('hidden'));
-        
-        // Show selected page
-        const pageElement = document.getElementById(page + 'Page');
-        if (pageElement) {
-            pageElement.classList.remove('hidden');
-        }
-        
-        currentPage = page;
-        
-        // Update mobile navigation active state
-        if (typeof loadMobileNavigation === 'function') {
-            loadMobileNavigation();
-        }
-        
-        // Close mobile menu if open
-        if (typeof closeMobileMenu === 'function' && window.mobileMenuOpen) {
-            closeMobileMenu();
-        }
-        
-        // Load page-specific data
-        switch (page) {
-            case 'dashboard':
-                await loadDashboard();
-                break;
-            case 'schedule':
-                await loadSchedule();
-                break;
-            case 'programs':
-                await loadMyPrograms();
-                break;
-            case 'results':
-                await loadMyResults();
-                break;
-            case 'teamMembers':
-                await loadTeamMembers();
-                break;
-            case 'assignPrograms':
-                await loadAssignPrograms();
-                break;
-            case 'allTeams':
-                await loadAllTeams();
-                break;
-            case 'programCount':
-                await loadProgramCount();
-                break;
-            case 'manageResults':
-                await loadManageResults();
-                break;
-            case 'adminSchedule':
-                await loadAdminSchedule();
-                break;
-        }
-    } catch (error) {
-        console.error('Error showing page:', error);
-    }
-}
-
-// Update tables for mobile view
-function optimizeTablesForMobile() {
-    // This function can be called to optimize table display for mobile
-    const isMobile = window.innerWidth <= 768;
-    
-    // Add mobile-specific classes to tables
-    document.querySelectorAll('.data-table').forEach(table => {
-        if (isMobile) {
-            table.classList.add('text-sm');
-        } else {
-            table.classList.remove('text-sm');
-        }
-    });
-}
-
-// Call this on window resize
-window.addEventListener('resize', function() {
-    optimizeTablesForMobile();
-});
-
-// Initialize on load
-document.addEventListener('DOMContentLoaded', function() {
-    optimizeTablesForMobile();
-});
