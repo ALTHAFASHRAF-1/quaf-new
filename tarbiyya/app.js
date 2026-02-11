@@ -1,176 +1,193 @@
- // Configuration
-const CONFIG = {
-    APPSCRIPT_URL: 'https://script.google.com/macros/s/AKfycbzFrvkkYipPuEs9iMdNqQXyX6oFV8UojvGxyRbm3Oquwh7M_uRJKMSw-uM_m-kEO4Bz/exec',
-    HEADINGS: ['zuhr', 'asr', 'magrib', 'isha', 'subh', 'thahajjud', 'zuha', 'swalath_count', 'ravathib']
-};
+// Google Apps Script Web App URL (Replace with your own)
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxAkg6BussSxaSQysmZQUj_h77LV3Qr_NRGfMqw8xf2b3o-VdKVKEpXAVuaJPOwzYOh/exec';
 
 // DOM Elements
-let loginForm, adnoSelect, dateInput, passwordInput, submitBtn, btnText, messageDiv;
+const loginForm = document.getElementById('loginForm');
+const adnoSelect = document.getElementById('adno');
+const dateInput = document.getElementById('date');
+const passwordInput = document.getElementById('password');
+const submitBtn = document.getElementById('submitBtn');
+const btnText = document.getElementById('btnText');
+const errorMessages = {
+    adno: document.getElementById('adnoError'),
+    date: document.getElementById('dateError'),
+    password: document.getElementById('passwordError')
+};
 
-// Initialize the application
+// Set today's date as default
+dateInput.valueAsDate = new Date();
+
+// Load admission numbers on page load
 document.addEventListener('DOMContentLoaded', function() {
-    // Get DOM elements
-    loginForm = document.getElementById('loginForm');
-    adnoSelect = document.getElementById('adno');
-    dateInput = document.getElementById('date');
-    passwordInput = document.getElementById('password');
-    submitBtn = document.getElementById('submitBtn');
-    btnText = document.getElementById('btnText');
-    messageDiv = document.getElementById('message');
-    
-    // Set default date to today
-    const today = new Date();
-    dateInput.value = today.toISOString().split('T')[0];
-    
-    // Set max date to today
-    dateInput.max = today.toISOString().split('T')[0];
-    
-    // Load admission numbers from Google Sheets
     loadAdmissionNumbers();
-    
-    // Form submission handler
-    loginForm.addEventListener('submit', handleLogin);
 });
 
-// Load admission numbers from Google Sheets
+// Function to load admission numbers from Google Sheets
 async function loadAdmissionNumbers() {
     try {
-        // Show loading state
-        const originalText = adnoSelect.innerHTML;
-        adnoSelect.innerHTML = '<option value="">Loading admission numbers...</option>';
+        const response = await fetch(`${SCRIPT_URL}?action=getAdmissionNumbers`);
+        if (!response.ok) throw new Error('Failed to load admission numbers');
         
-        // Call Google Apps Script to get admission numbers
-        const response = await fetch(`${CONFIG.APPSCRIPT_URL}?action=getAdmissionNumbers`);
+        const data = await response.json();
         
-        if (response.ok) {
-            const data = await response.json();
-            
-            if (data.success && data.admissionNumbers) {
-                // Clear the select
-                adnoSelect.innerHTML = '<option value="">Select your admission number</option>';
-                
-                // Add admission numbers
-                data.admissionNumbers.forEach(adno => {
-                    const option = document.createElement('option');
-                    option.value = adno;
-                    option.textContent = adno;
-                    adnoSelect.appendChild(option);
-                });
-            } else {
-                throw new Error('Failed to load admission numbers');
+        if (data.success && data.admissionNumbers) {
+            // Clear existing options except the first one
+            while (adnoSelect.options.length > 1) {
+                adnoSelect.remove(1);
             }
+            
+            // Add new options
+            data.admissionNumbers.forEach(adno => {
+                const option = document.createElement('option');
+                option.value = adno;
+                option.textContent = adno;
+                adnoSelect.appendChild(option);
+            });
         } else {
-            throw new Error('Network response was not ok');
+            throw new Error(data.message || 'Failed to load admission numbers');
         }
     } catch (error) {
         console.error('Error loading admission numbers:', error);
-        adnoSelect.innerHTML = '<option value="">Error loading. Please refresh.</option>';
-        
-        // Show error message
-        showMessage('Error loading admission numbers. Please try again.', 'error');
+        showError('adno', 'Failed to load admission numbers. Please refresh the page.');
     }
 }
 
-// Handle login form submission
-async function handleLogin(event) {
-    event.preventDefault();
+// Function to show error message
+function showError(field, message) {
+    errorMessages[field].textContent = message;
+    errorMessages[field].style.display = 'block';
     
-    // Get form values
-    const adno = adnoSelect.value;
-    const date = dateInput.value;
-    const password = passwordInput.value;
+    // Highlight the input field
+    const inputField = document.getElementById(field);
+    inputField.style.borderColor = '#e74c3c';
+    inputField.style.boxShadow = '0 0 0 3px rgba(231, 76, 60, 0.1)';
+}
+
+// Function to clear error message
+function clearError(field) {
+    errorMessages[field].style.display = 'none';
     
-    // Validate form
-    if (!adno || !date || !password) {
-        showMessage('Please fill in all fields', 'error');
-        return;
+    const inputField = document.getElementById(field);
+    inputField.style.borderColor = '#ddd';
+    inputField.style.boxShadow = 'none';
+}
+
+// Function to show loading state
+function showLoading() {
+    submitBtn.disabled = true;
+    btnText.innerHTML = '<div class="loading"></div> Authenticating...';
+}
+
+// Function to hide loading state
+function hideLoading() {
+    submitBtn.disabled = false;
+    btnText.textContent = 'Login to Track';
+}
+
+// Function to validate form
+function validateForm() {
+    let isValid = true;
+    
+    // Clear all errors
+    Object.keys(errorMessages).forEach(field => clearError(field));
+    
+    // Validate admission number
+    if (!adnoSelect.value) {
+        showError('adno', 'Please select your admission number');
+        isValid = false;
     }
     
-    // Show loading state
-    submitBtn.disabled = true;
-    btnText.innerHTML = '<div class="loading"></div> Processing...';
+    // Validate date
+    if (!dateInput.value) {
+        showError('date', 'Please select a date');
+        isValid = false;
+    }
+    
+    // Validate password
+    if (!passwordInput.value) {
+        showError('password', 'Please enter your password');
+        isValid = false;
+    } else if (passwordInput.value.length < 3) {
+        showError('password', 'Password must be at least 3 characters');
+        isValid = false;
+    }
+    
+    return isValid;
+}
+
+// Form submission handler
+loginForm.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    if (!validateForm()) return;
+    
+    showLoading();
     
     try {
-        // Call Google Apps Script to validate login and create sheet
-        const response = await fetch(CONFIG.APPSCRIPT_URL, {
+        const formData = {
+            action: 'login',
+            adno: adnoSelect.value,
+            date: dateInput.value,
+            password: passwordInput.value
+        };
+        
+        const response = await fetch(SCRIPT_URL, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({
-                action: 'login',
-                adno: adno,
-                date: date,
-                password: password
-            })
+            body: JSON.stringify(formData)
         });
         
-        if (response.ok) {
-            const data = await response.json();
+        if (!response.ok) throw new Error('Network response was not ok');
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            // Store session data
+            sessionStorage.setItem('tharbiyya_user', JSON.stringify({
+                adno: adnoSelect.value,
+                date: dateInput.value,
+                name: result.name
+            }));
             
-            if (data.success) {
-                // Store user data in localStorage
-                localStorage.setItem('tharbiyya_user', JSON.stringify({
-                    adno: adno,
-                    date: date,
-                    sheetName: data.sheetName
-                }));
-                
-                // Show success message
-                showMessage('Login successful! Redirecting...', 'success');
-                
-                // Redirect to tracking page after a delay
-                setTimeout(() => {
-                    window.location.href = 'tracking.html';
-                }, 1500);
-            } else {
-                throw new Error(data.message || 'Login failed');
-            }
+            // Redirect to tracking page
+            window.location.href = 'tracking.html';
         } else {
-            throw new Error('Network response was not ok');
+            throw new Error(result.message || 'Login failed');
         }
     } catch (error) {
-        console.error('Error during login:', error);
-        showMessage(error.message || 'Login failed. Please try again.', 'error');
-    } finally {
-        // Reset button state
-        submitBtn.disabled = false;
-        btnText.textContent = 'Submit & Continue';
+        console.error('Login error:', error);
+        showError('password', error.message || 'Invalid credentials. Please try again.');
+        hideLoading();
     }
-}
+});
 
-// Show message to user
-function showMessage(text, type) {
-    messageDiv.textContent = text;
-    messageDiv.className = `message ${type}`;
-    messageDiv.style.display = 'block';
-    
-    // Auto-hide success messages after 5 seconds
-    if (type === 'success') {
-        setTimeout(() => {
-            messageDiv.style.display = 'none';
-        }, 5000);
-    }
-    
-    // Auto-hide error messages after 8 seconds
-    if (type === 'error') {
-        setTimeout(() => {
-            messageDiv.style.display = 'none';
-        }, 8000);
-    }
-}
+// Real-time validation
+adnoSelect.addEventListener('change', () => clearError('adno'));
+dateInput.addEventListener('change', () => clearError('date'));
+passwordInput.addEventListener('input', () => clearError('password'));
 
-// Check if user is already logged in when accessing other pages
+// Add input event listeners for real-time validation
+const inputs = [adnoSelect, dateInput, passwordInput];
+inputs.forEach(input => {
+    input.addEventListener('focus', function() {
+        this.style.backgroundColor = 'white';
+    });
+    
+    input.addEventListener('blur', function() {
+        if (!this.value) {
+            this.style.backgroundColor = '#f9f9f9';
+        }
+    });
+});
+
+// Function to check if user is already logged in (for tracking page)
 function checkLogin() {
-    const user = localStorage.getItem('tharbiyya_user');
-    if (!user && !window.location.pathname.endsWith('login.html')) {
-        window.location.href = 'login.html';
+    const user = sessionStorage.getItem('tharbiyya_user');
+    if (!user) {
+        window.location.href = 'index.html';
+        return null;
     }
-    return user ? JSON.parse(user) : null;
-}
-
-// Logout function
-function logout() {
-    localStorage.removeItem('tharbiyya_user');
-    window.location.href = 'login.html';
+    return JSON.parse(user);
 }
