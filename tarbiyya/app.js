@@ -10,7 +10,7 @@ let selectedADNo = null;
 class GoogleSheetsAPI {
     constructor() {
         // IMPORTANT: Replace this URL with your Google Apps Script Web App URL
-        this.apiUrl = "https://script.google.com/macros/s/AKfycbyW5Zk2PEtBW0kgFlWDFG8iBr4gu-TrLSJAoKlaq8sOUNiWyT-g9O9mjAzPyqdxkewA8A/exec";
+        this.apiUrl = "https://script.google.com/macros/s/AKfycbyzsR21XdEx9X-6nIz6oQqMBrHvNCe4pE78NsNTBIaUwaw-X42_7zDXJ_lqoppAoexTXg/exec";
         this.cache = new Map();
         this.cacheTimeout = 60000; // 60 seconds
     }
@@ -208,8 +208,22 @@ async function login(event) {
             
             currentSheetName = `${adNo}-${formattedDate}`;
             
-            // Ensure the sheet exists with proper headers
-            const headers = ['zuhr', 'asr', 'magrib', 'isha', 'subh', 'thahajjud', 'zuha', 'swalath_count', 'ravathib', 'submission_date'];
+            // Complete headers array with all 20 worship practices
+            const headers = [
+                // Fardh Prayers (5)
+                'zuhr', 'asr', 'magrib', 'isha', 'subh',
+                // Nafl Prayers (4)
+                'thahajjud', 'zuha', 'swalath_count', 'ravathib',
+                // Quran & Dhikr (4)
+                'qirath_pages', 'surah_mulk', 'surah_vaqia', 'isthigfar_count',
+                // Purification & Hygiene (4)
+                'misvak_count', 'dua_after_vuzu', 'all_time_vuzu', 'haddad',
+                // Sunnah Practices (2)
+                'halal_haircut', 'amama',
+                // Timestamp
+                'submission_date'
+            ];
+            
             await api.ensureSheetExists(currentSheetName, headers);
             
             // Show dashboard
@@ -297,16 +311,6 @@ function initializeSelectOptions() {
             opt.style.background = '';
             opt.style.color = '';
             opt.style.borderColor = '';
-            
-            // Reset icon colors
-            const icon = opt.querySelector('i');
-            if (icon) {
-                if (opt.dataset.value === 'yes') {
-                    icon.className = 'fas fa-check-circle text-green-600';
-                } else {
-                    icon.className = 'fas fa-times-circle text-red-600';
-                }
-            }
         });
         
         // Add selected class to clicked option
@@ -317,14 +321,10 @@ function initializeSelectOptions() {
             option.style.background = '#059669';
             option.style.color = 'white';
             option.style.borderColor = '#059669';
-            const icon = option.querySelector('i');
-            if (icon) icon.className = 'fas fa-check-circle text-white';
         } else {
             option.style.background = '#dc2626';
             option.style.color = 'white';
             option.style.borderColor = '#dc2626';
-            const icon = option.querySelector('i');
-            if (icon) icon.className = 'fas fa-times-circle text-white';
         }
         
         // Update hidden input value
@@ -348,15 +348,6 @@ function resetWorshipForm() {
             opt.style.background = '';
             opt.style.color = '';
             opt.style.borderColor = '';
-            
-            const icon = opt.querySelector('i');
-            if (icon) {
-                if (opt.dataset.value === 'yes') {
-                    icon.className = 'fas fa-check-circle text-green-600';
-                } else {
-                    icon.className = 'fas fa-times-circle text-red-600';
-                }
-            }
         });
         
         // Clear hidden input
@@ -366,8 +357,12 @@ function resetWorshipForm() {
         }
     });
     
-    // Reset number input
-    document.getElementById('swalath_count').value = '';
+    // Reset all number inputs
+    const numberInputs = ['swalath_count', 'qirath_pages', 'isthigfar_count', 'misvak_count'];
+    numberInputs.forEach(id => {
+        const input = document.getElementById(id);
+        if (input) input.value = '';
+    });
     
     // Enable submit button
     const submitBtn = document.getElementById('submitWorshipBtn');
@@ -389,89 +384,48 @@ async function checkExistingSubmission() {
             
             const latest = sorted[0];
             
-            // Pre-fill form with existing data
+            // Load Fardh Prayers
             if (latest.zuhr) {
-                const zuhrSelect = document.querySelector('[data-prayer="zuhr"]');
-                const yesOption = zuhrSelect?.querySelector('[data-value="yes"]');
-                const noOption = zuhrSelect?.querySelector('[data-value="no"]');
-                
-                if (latest.zuhr === 'yes' && yesOption) {
-                    yesOption.click();
-                } else if (latest.zuhr === 'no' && noOption) {
-                    noOption.click();
-                }
+                const selectGroup = document.querySelector('[data-prayer="zuhr"]');
+                if (latest.zuhr === 'yes') selectGroup?.querySelector('[data-value="yes"]')?.click();
+                else if (latest.zuhr === 'no') selectGroup?.querySelector('[data-value="no"]')?.click();
             }
             
             if (latest.asr) {
-                const asrSelect = document.querySelector('[data-prayer="asr"]');
-                const yesOption = asrSelect?.querySelector('[data-value="yes"]');
-                const noOption = asrSelect?.querySelector('[data-value="no"]');
-                
-                if (latest.asr === 'yes' && yesOption) {
-                    yesOption.click();
-                } else if (latest.asr === 'no' && noOption) {
-                    noOption.click();
-                }
+                const selectGroup = document.querySelector('[data-prayer="asr"]');
+                if (latest.asr === 'yes') selectGroup?.querySelector('[data-value="yes"]')?.click();
+                else if (latest.asr === 'no') selectGroup?.querySelector('[data-value="no"]')?.click();
             }
             
             if (latest.magrib) {
-                const magribSelect = document.querySelector('[data-prayer="magrib"]');
-                const yesOption = magribSelect?.querySelector('[data-value="yes"]');
-                const noOption = magribSelect?.querySelector('[data-value="no"]');
-                
-                if (latest.magrib === 'yes' && yesOption) {
-                    yesOption.click();
-                } else if (latest.magrib === 'no' && noOption) {
-                    noOption.click();
-                }
+                const selectGroup = document.querySelector('[data-prayer="magrib"]');
+                if (latest.magrib === 'yes') selectGroup?.querySelector('[data-value="yes"]')?.click();
+                else if (latest.magrib === 'no') selectGroup?.querySelector('[data-value="no"]')?.click();
             }
             
             if (latest.isha) {
-                const ishaSelect = document.querySelector('[data-prayer="isha"]');
-                const yesOption = ishaSelect?.querySelector('[data-value="yes"]');
-                const noOption = ishaSelect?.querySelector('[data-value="no"]');
-                
-                if (latest.isha === 'yes' && yesOption) {
-                    yesOption.click();
-                } else if (latest.isha === 'no' && noOption) {
-                    noOption.click();
-                }
+                const selectGroup = document.querySelector('[data-prayer="isha"]');
+                if (latest.isha === 'yes') selectGroup?.querySelector('[data-value="yes"]')?.click();
+                else if (latest.isha === 'no') selectGroup?.querySelector('[data-value="no"]')?.click();
             }
             
             if (latest.subh) {
-                const subhSelect = document.querySelector('[data-prayer="subh"]');
-                const yesOption = subhSelect?.querySelector('[data-value="yes"]');
-                const noOption = subhSelect?.querySelector('[data-value="no"]');
-                
-                if (latest.subh === 'yes' && yesOption) {
-                    yesOption.click();
-                } else if (latest.subh === 'no' && noOption) {
-                    noOption.click();
-                }
+                const selectGroup = document.querySelector('[data-prayer="subh"]');
+                if (latest.subh === 'yes') selectGroup?.querySelector('[data-value="yes"]')?.click();
+                else if (latest.subh === 'no') selectGroup?.querySelector('[data-value="no"]')?.click();
             }
             
+            // Load Nafl Prayers
             if (latest.thahajjud) {
-                const thahajjudSelect = document.querySelector('[data-prayer="thahajjud"]');
-                const yesOption = thahajjudSelect?.querySelector('[data-value="yes"]');
-                const noOption = thahajjudSelect?.querySelector('[data-value="no"]');
-                
-                if (latest.thahajjud === 'yes' && yesOption) {
-                    yesOption.click();
-                } else if (latest.thahajjud === 'no' && noOption) {
-                    noOption.click();
-                }
+                const selectGroup = document.querySelector('[data-prayer="thahajjud"]');
+                if (latest.thahajjud === 'yes') selectGroup?.querySelector('[data-value="yes"]')?.click();
+                else if (latest.thahajjud === 'no') selectGroup?.querySelector('[data-value="no"]')?.click();
             }
             
             if (latest.zuha) {
-                const zuhaSelect = document.querySelector('[data-prayer="zuha"]');
-                const yesOption = zuhaSelect?.querySelector('[data-value="yes"]');
-                const noOption = zuhaSelect?.querySelector('[data-value="no"]');
-                
-                if (latest.zuha === 'yes' && yesOption) {
-                    yesOption.click();
-                } else if (latest.zuha === 'no' && noOption) {
-                    noOption.click();
-                }
+                const selectGroup = document.querySelector('[data-prayer="zuha"]');
+                if (latest.zuha === 'yes') selectGroup?.querySelector('[data-value="yes"]')?.click();
+                else if (latest.zuha === 'no') selectGroup?.querySelector('[data-value="no"]')?.click();
             }
             
             if (latest.swalath_count) {
@@ -479,18 +433,69 @@ async function checkExistingSubmission() {
             }
             
             if (latest.ravathib) {
-                const ravathibSelect = document.querySelector('[data-prayer="ravathib"]');
-                const yesOption = ravathibSelect?.querySelector('[data-value="yes"]');
-                const noOption = ravathibSelect?.querySelector('[data-value="no"]');
-                
-                if (latest.ravathib === 'yes' && yesOption) {
-                    yesOption.click();
-                } else if (latest.ravathib === 'no' && noOption) {
-                    noOption.click();
-                }
+                const selectGroup = document.querySelector('[data-prayer="ravathib"]');
+                if (latest.ravathib === 'yes') selectGroup?.querySelector('[data-value="yes"]')?.click();
+                else if (latest.ravathib === 'no') selectGroup?.querySelector('[data-value="no"]')?.click();
             }
             
-            // Show success message with existing data
+            // Load Quran & Dhikr
+            if (latest.qirath_pages) {
+                document.getElementById('qirath_pages').value = latest.qirath_pages;
+            }
+            
+            if (latest.surah_mulk) {
+                const selectGroup = document.querySelector('[data-prayer="surah_mulk"]');
+                if (latest.surah_mulk === 'yes') selectGroup?.querySelector('[data-value="yes"]')?.click();
+                else if (latest.surah_mulk === 'no') selectGroup?.querySelector('[data-value="no"]')?.click();
+            }
+            
+            if (latest.surah_vaqia) {
+                const selectGroup = document.querySelector('[data-prayer="surah_vaqia"]');
+                if (latest.surah_vaqia === 'yes') selectGroup?.querySelector('[data-value="yes"]')?.click();
+                else if (latest.surah_vaqia === 'no') selectGroup?.querySelector('[data-value="no"]')?.click();
+            }
+            
+            if (latest.isthigfar_count) {
+                document.getElementById('isthigfar_count').value = latest.isthigfar_count;
+            }
+            
+            // Load Purification & Hygiene
+            if (latest.misvak_count) {
+                document.getElementById('misvak_count').value = latest.misvak_count;
+            }
+            
+            if (latest.dua_after_vuzu) {
+                const selectGroup = document.querySelector('[data-prayer="dua_after_vuzu"]');
+                if (latest.dua_after_vuzu === 'yes') selectGroup?.querySelector('[data-value="yes"]')?.click();
+                else if (latest.dua_after_vuzu === 'no') selectGroup?.querySelector('[data-value="no"]')?.click();
+            }
+            
+            if (latest.all_time_vuzu) {
+                const selectGroup = document.querySelector('[data-prayer="all_time_vuzu"]');
+                if (latest.all_time_vuzu === 'yes') selectGroup?.querySelector('[data-value="yes"]')?.click();
+                else if (latest.all_time_vuzu === 'no') selectGroup?.querySelector('[data-value="no"]')?.click();
+            }
+            
+            if (latest.haddad) {
+                const selectGroup = document.querySelector('[data-prayer="haddad"]');
+                if (latest.haddad === 'yes') selectGroup?.querySelector('[data-value="yes"]')?.click();
+                else if (latest.haddad === 'no') selectGroup?.querySelector('[data-value="no"]')?.click();
+            }
+            
+            // Load Sunnah Practices
+            if (latest.halal_haircut) {
+                const selectGroup = document.querySelector('[data-prayer="halal_haircut"]');
+                if (latest.halal_haircut === 'yes') selectGroup?.querySelector('[data-value="yes"]')?.click();
+                else if (latest.halal_haircut === 'no') selectGroup?.querySelector('[data-value="no"]')?.click();
+            }
+            
+            if (latest.amama) {
+                const selectGroup = document.querySelector('[data-prayer="amama"]');
+                if (latest.amama === 'yes') selectGroup?.querySelector('[data-value="yes"]')?.click();
+                else if (latest.amama === 'no') selectGroup?.querySelector('[data-value="no"]')?.click();
+            }
+            
+            // Show success message
             showFormSuccess('Your previous submission has been loaded. You can update it below.');
         }
     } catch (error) {
@@ -504,18 +509,42 @@ async function submitWorshipForm(event) {
     // Hide previous messages
     hideFormMessages();
     
-    // Validate form
+    // Get all form values
+    // Fardh Prayers
     const zuhr = document.getElementById('zuhr').value;
     const asr = document.getElementById('asr').value;
     const magrib = document.getElementById('magrib').value;
     const isha = document.getElementById('isha').value;
     const subh = document.getElementById('subh').value;
+    
+    // Nafl Prayers
     const thahajjud = document.getElementById('thahajjud').value;
     const zuha = document.getElementById('zuha').value;
     const swalath_count = document.getElementById('swalath_count').value;
     const ravathib = document.getElementById('ravathib').value;
     
-    if (!zuhr || !asr || !magrib || !isha || !subh || !thahajjud || !zuha || !swalath_count || !ravathib) {
+    // Quran & Dhikr
+    const qirath_pages = document.getElementById('qirath_pages').value;
+    const surah_mulk = document.getElementById('surah_mulk').value;
+    const surah_vaqia = document.getElementById('surah_vaqia').value;
+    const isthigfar_count = document.getElementById('isthigfar_count').value;
+    
+    // Purification & Hygiene
+    const misvak_count = document.getElementById('misvak_count').value;
+    const dua_after_vuzu = document.getElementById('dua_after_vuzu').value;
+    const all_time_vuzu = document.getElementById('all_time_vuzu').value;
+    const haddad = document.getElementById('haddad').value;
+    
+    // Sunnah Practices
+    const halal_haircut = document.getElementById('halal_haircut').value;
+    const amama = document.getElementById('amama').value;
+    
+    // Validate all required fields (20 total)
+    if (!zuhr || !asr || !magrib || !isha || !subh ||
+        !thahajjud || !zuha || !swalath_count || !ravathib ||
+        !qirath_pages || !surah_mulk || !surah_vaqia || !isthigfar_count ||
+        !misvak_count || !dua_after_vuzu || !all_time_vuzu || !haddad ||
+        !halal_haircut || !amama) {
         showFormError('Please fill in all fields');
         return;
     }
@@ -527,20 +556,22 @@ async function submitWorshipForm(event) {
     submitBtn.disabled = true;
     
     try {
-        // Prepare row data
+        // Prepare row data with all 20 fields + timestamp
         const now = new Date();
         const formattedNow = `${now.toLocaleDateString('en-GB')} ${now.toLocaleTimeString('en-GB')}`;
         
         const rowData = [
-            zuhr,
-            asr,
-            magrib,
-            isha,
-            subh,
-            thahajjud,
-            zuha,
-            swalath_count,
-            ravathib,
+            // Fardh Prayers (5)
+            zuhr, asr, magrib, isha, subh,
+            // Nafl Prayers (4)
+            thahajjud, zuha, swalath_count, ravathib,
+            // Quran & Dhikr (4)
+            qirath_pages, surah_mulk, surah_vaqia, isthigfar_count,
+            // Purification & Hygiene (4)
+            misvak_count, dua_after_vuzu, all_time_vuzu, haddad,
+            // Sunnah Practices (2)
+            halal_haircut, amama,
+            // Timestamp (1)
             formattedNow
         ];
         
@@ -606,5 +637,5 @@ document.addEventListener("keydown", function(e) {
 });
 
 // Console welcome message
-console.log('%c🌙 Tharbiyya - Daily Worship Tracker 🌙', 'color: #059669; font-size: 16px; font-weight: bold;');
-console.log('%cSystem Loaded Successfully', 'color: #1f2937; font-size: 12px;');
+console.log('%c🌙 Tharbiyya - Complete Daily Worship Tracker 🌙', 'color: #059669; font-size: 16px; font-weight: bold;');
+console.log('%c20 Worship Practices Loaded Successfully', 'color: #1f2937; font-size: 12px;');
