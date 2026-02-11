@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Sitemap: https://quaf.tech/sitemap.xml
+
+# Block specific directories if needed
+# Disallow: /private/
+# Disallow: /admin/
