@@ -56,7 +56,7 @@
         
         /* Dashboard Container */
         .dashboard-container {
-            max-width: 800px;
+            max-width: 1200px;
             width: 100%;
             margin: 0 auto;
             background: white;
@@ -247,6 +247,23 @@
             box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.1);
         }
         
+        /* Section Headers */
+        .section-header {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 1.25rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid #e5e7eb;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .section-header i {
+            color: #059669;
+        }
+        
         /* Success Message */
         .success-message {
             background: #f0fdf4;
@@ -320,16 +337,38 @@
             margin-bottom: 1.5rem;
             border: 1px solid #e7e5e4;
         }
+        
+        /* Form Grid Layout */
+        .form-section {
+            margin-bottom: 2rem;
+        }
+        
+        /* Responsive Adjustments */
+        @media (max-width: 640px) {
+            .prayer-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .dashboard-container {
+                padding: 1.5rem 1rem;
+            }
+            
+            .section-header {
+                font-size: 1.1rem;
+            }
+        }
     </style>
 </head>
 <body>
     <!-- Login Page -->
     <div id="loginPage" class="login-container">
         <div class="text-center mb-8">
-            
+            <div class="inline-flex items-center justify-center w-16 h-16 bg-emerald-50 rounded-2xl mb-4">
+                <i class="fas fa-mosque text-3xl text-emerald-600"></i>
+            </div>
             <h1 class="text-2xl md:text-3xl font-bold text-gray-900 mb-2">Tharbiyya</h1>
-            
-            <p class="arabic-text text-emerald-600 text-lg mt-2">حاسبوا أنفسكم قبل أن تحاسبوا</p>
+            <p class="text-gray-600 text-sm md:text-base">Daily Worship Tracker</p>
+            <p class="arabic-text text-emerald-600 text-lg mt-2">وَتَعَاوَنُوا عَلَى الْبِرِّ وَالتَّقْوَىٰ</p>
         </div>
         
         <form id="loginForm">
@@ -382,7 +421,7 @@
         <!-- Header -->
         <div class="flex items-center justify-between mb-6">
             <div>
-                <h2 class="text-xl md:text-2xl font-bold text-gray-900">Daily Tracker</h2>
+                <h2 class="text-xl md:text-2xl font-bold text-gray-900">Daily Worship Tracker</h2>
                 <p id="userInfo" class="text-sm text-gray-600 mt-1"></p>
             </div>
             <button onclick="logout()" class="logout-btn">
@@ -411,34 +450,26 @@
         
         <!-- Worship Form -->
         <form id="worshipForm">
-            <!-- Salah (Prayers) Section -->
-            <div class="mb-6">
-                <h3 class="text-lg font-semibold text-gray-800 mb-3 flex items-center gap-2">
-                    <i class="fas fa-pray text-emerald-600"></i>
-                    Daily Prayers
+            <!-- SECTION 1: FARDH PRAYERS (5 Daily Prayers) -->
+            <div class="form-section">
+                <h3 class="section-header">
+                    <i class="fas fa-pray"></i>
+                    Fardh Prayers - الصلوات الخمس
                 </h3>
                 
                 <div class="prayer-grid">
                     <!-- Zuhr -->
                     <div class="prayer-card">
                         <div class="prayer-header">
-                            <div class="prayer-icon">
-                                <i class="fas fa-sun"></i>
-                            </div>
+                            <div class="prayer-icon"></div>
                             <div>
                                 <div class="prayer-title">Zuhr</div>
                                 <div class="prayer-arabic">الظهر</div>
                             </div>
                         </div>
                         <div class="select-group" data-prayer="zuhr">
-                            <button type="button" class="select-option" data-value="yes">
-                                <i class="fas fa-check-circle text-green-600"></i>
-                                Yes
-                            </button>
-                            <button type="button" class="select-option" data-value="no">
-                                <i class="fas fa-times-circle text-red-600"></i>
-                                No
-                            </button>
+                            <button type="button" class="select-option" data-value="yes">Yes</button>
+                            <button type="button" class="select-option" data-value="no">No</button>
                         </div>
                         <input type="hidden" name="zuhr" id="zuhr" required>
                     </div>
@@ -446,23 +477,15 @@
                     <!-- Asr -->
                     <div class="prayer-card">
                         <div class="prayer-header">
-                            <div class="prayer-icon">
-                                <i class="fas fa-cloud-sun"></i>
-                            </div>
+                            <div class="prayer-icon"></div>
                             <div>
                                 <div class="prayer-title">Asr</div>
                                 <div class="prayer-arabic">العصر</div>
                             </div>
                         </div>
                         <div class="select-group" data-prayer="asr">
-                            <button type="button" class="select-option" data-value="yes">
-                                <i class="fas fa-check-circle text-green-600"></i>
-                                Yes
-                            </button>
-                            <button type="button" class="select-option" data-value="no">
-                                <i class="fas fa-times-circle text-red-600"></i>
-                                No
-                            </button>
+                            <button type="button" class="select-option" data-value="yes">Yes</button>
+                            <button type="button" class="select-option" data-value="no">No</button>
                         </div>
                         <input type="hidden" name="asr" id="asr" required>
                     </div>
@@ -470,23 +493,15 @@
                     <!-- Magrib -->
                     <div class="prayer-card">
                         <div class="prayer-header">
-                            <div class="prayer-icon">
-                                <i class="fas fa-sunset"></i>
-                            </div>
+                            <div class="prayer-icon"></div>
                             <div>
                                 <div class="prayer-title">Magrib</div>
                                 <div class="prayer-arabic">المغرب</div>
                             </div>
                         </div>
                         <div class="select-group" data-prayer="magrib">
-                            <button type="button" class="select-option" data-value="yes">
-                                <i class="fas fa-check-circle text-green-600"></i>
-                                Yes
-                            </button>
-                            <button type="button" class="select-option" data-value="no">
-                                <i class="fas fa-times-circle text-red-600"></i>
-                                No
-                            </button>
+                            <button type="button" class="select-option" data-value="yes">Yes</button>
+                            <button type="button" class="select-option" data-value="no">No</button>
                         </div>
                         <input type="hidden" name="magrib" id="magrib" required>
                     </div>
@@ -494,23 +509,15 @@
                     <!-- Isha -->
                     <div class="prayer-card">
                         <div class="prayer-header">
-                            <div class="prayer-icon">
-                                <i class="fas fa-moon"></i>
-                            </div>
+                            <div class="prayer-icon"></div>
                             <div>
                                 <div class="prayer-title">Isha</div>
                                 <div class="prayer-arabic">العشاء</div>
                             </div>
                         </div>
                         <div class="select-group" data-prayer="isha">
-                            <button type="button" class="select-option" data-value="yes">
-                                <i class="fas fa-check-circle text-green-600"></i>
-                                Yes
-                            </button>
-                            <button type="button" class="select-option" data-value="no">
-                                <i class="fas fa-times-circle text-red-600"></i>
-                                No
-                            </button>
+                            <button type="button" class="select-option" data-value="yes">Yes</button>
+                            <button type="button" class="select-option" data-value="no">No</button>
                         </div>
                         <input type="hidden" name="isha" id="isha" required>
                     </div>
@@ -518,57 +525,41 @@
                     <!-- Subh (Fajr) -->
                     <div class="prayer-card">
                         <div class="prayer-header">
-                            <div class="prayer-icon">
-                                <i class="fas fa-cloud-moon"></i>
-                            </div>
+                            <div class="prayer-icon"></div>
                             <div>
                                 <div class="prayer-title">Subh</div>
                                 <div class="prayer-arabic">الصبح</div>
                             </div>
                         </div>
                         <div class="select-group" data-prayer="subh">
-                            <button type="button" class="select-option" data-value="yes">
-                                <i class="fas fa-check-circle text-green-600"></i>
-                                Yes
-                            </button>
-                            <button type="button" class="select-option" data-value="no">
-                                <i class="fas fa-times-circle text-red-600"></i>
-                                No
-                            </button>
+                            <button type="button" class="select-option" data-value="yes">Yes</button>
+                            <button type="button" class="select-option" data-value="no">No</button>
                         </div>
                         <input type="hidden" name="subh" id="subh" required>
                     </div>
                 </div>
             </div>
             
-            <!-- Nafl Prayers Section -->
-            <div class="mb-6">
-                <h3 class="text-lg font-semibold text-gray-800 mb-3 flex items-center gap-2">
-                    <i class="fas fa-star text-emerald-600"></i>
-                    Voluntary Prayers
+            <!-- SECTION 2: NAFL PRAYERS (Voluntary) -->
+            <div class="form-section">
+                <h3 class="section-header">
+                    <i class="fas fa-star"></i>
+                    Nafl Prayers - النوافل
                 </h3>
                 
                 <div class="prayer-grid">
                     <!-- Thahajjud -->
                     <div class="prayer-card">
                         <div class="prayer-header">
-                            <div class="prayer-icon">
-                                <i class="fas fa-moon"></i>
-                            </div>
+                            <div class="prayer-icon"></div>
                             <div>
                                 <div class="prayer-title">Thahajjud</div>
                                 <div class="prayer-arabic">التهجد</div>
                             </div>
                         </div>
                         <div class="select-group" data-prayer="thahajjud">
-                            <button type="button" class="select-option" data-value="yes">
-                                <i class="fas fa-check-circle text-green-600"></i>
-                                Yes
-                            </button>
-                            <button type="button" class="select-option" data-value="no">
-                                <i class="fas fa-times-circle text-red-600"></i>
-                                No
-                            </button>
+                            <button type="button" class="select-option" data-value="yes">Yes</button>
+                            <button type="button" class="select-option" data-value="no">No</button>
                         </div>
                         <input type="hidden" name="thahajjud" id="thahajjud" required>
                     </div>
@@ -576,67 +567,224 @@
                     <!-- Zuha (Duha) -->
                     <div class="prayer-card">
                         <div class="prayer-header">
-                            <div class="prayer-icon">
-                                <i class="fas fa-sun"></i>
-                            </div>
+                            <div class="prayer-icon"></div>
                             <div>
                                 <div class="prayer-title">Zuha</div>
                                 <div class="prayer-arabic">الضحى</div>
                             </div>
                         </div>
                         <div class="select-group" data-prayer="zuha">
-                            <button type="button" class="select-option" data-value="yes">
-                                <i class="fas fa-check-circle text-green-600"></i>
-                                Yes
-                            </button>
-                            <button type="button" class="select-option" data-value="no">
-                                <i class="fas fa-times-circle text-red-600"></i>
-                                No
-                            </button>
+                            <button type="button" class="select-option" data-value="yes">Yes</button>
+                            <button type="button" class="select-option" data-value="no">No</button>
                         </div>
                         <input type="hidden" name="zuha" id="zuha" required>
+                    </div>
+                    
+                    <!-- Swalath Count -->
+                    <div class="prayer-card">
+                        <div class="prayer-header">
+                            <div class="prayer-icon"></div>
+                            <div>
+                                <div class="prayer-title">Swalath Count</div>
+                                <div class="prayer-arabic">عدد الصلوات</div>
+                            </div>
+                        </div>
+                        <input type="number" id="swalath_count" name="swalath_count" min="0" max="1000" placeholder="Enter count" required class="number-input">
+                    </div>
+                    
+                    <!-- Ravathib -->
+                    <div class="prayer-card">
+                        <div class="prayer-header">
+                            <div class="prayer-icon"></div>
+                            <div>
+                                <div class="prayer-title">Ravathib</div>
+                                <div class="prayer-arabic">الرواتب</div>
+                            </div>
+                        </div>
+                        <div class="select-group" data-prayer="ravathib">
+                            <button type="button" class="select-option" data-value="yes">Yes</button>
+                            <button type="button" class="select-option" data-value="no">No</button>
+                        </div>
+                        <input type="hidden" name="ravathib" id="ravathib" required>
                     </div>
                 </div>
             </div>
             
-            <!-- Swalath Count & Ravathib -->
-            <div class="prayer-grid mb-6">
-                <!-- Swalath Count -->
-                <div class="prayer-card">
-                    <div class="prayer-header">
-                        <div class="prayer-icon">
-                            <i class="fas fa-praying-hands"></i>
-                        </div>
-                        <div>
-                            <div class="prayer-title">Swalath Count</div>
-                            <div class="prayer-arabic">عدد الصلوات</div>
-                        </div>
-                    </div>
-                    <input type="number" id="swalath_count" name="swalath_count" min="0" max="1000" placeholder="Enter count" required class="number-input">
-                </div>
+            <!-- SECTION 3: QURAN & DHIKR -->
+            <div class="form-section">
+                <h3 class="section-header">
+                    <i class="fas fa-book"></i>
+                    Quran & Dhikr - القرآن والذكر
+                </h3>
                 
-                <!-- Ravathib -->
-                <div class="prayer-card">
-                    <div class="prayer-header">
-                        <div class="prayer-icon">
-                            <i class="fas fa-clock"></i>
+                <div class="prayer-grid">
+                    <!-- Qirath Pages Count -->
+                    <div class="prayer-card">
+                        <div class="prayer-header">
+                            <div class="prayer-icon"></div>
+                            <div>
+                                <div class="prayer-title">Qirath Pages</div>
+                                <div class="prayer-arabic">عدد صفحات القراءة</div>
+                            </div>
                         </div>
-                        <div>
-                            <div class="prayer-title">Ravathib</div>
-                            <div class="prayer-arabic">الرواتب</div>
+                        <input type="number" id="qirath_pages" name="qirath_pages" min="0" max="100" placeholder="Pages read" required class="number-input">
+                    </div>
+                    
+                    <!-- Surah Mulk -->
+                    <div class="prayer-card">
+                        <div class="prayer-header">
+                            <div class="prayer-icon"></div>
+                            <div>
+                                <div class="prayer-title">Surah Mulk</div>
+                                <div class="prayer-arabic">سورة الملك</div>
+                            </div>
                         </div>
+                        <div class="select-group" data-prayer="surah_mulk">
+                            <button type="button" class="select-option" data-value="yes">Yes</button>
+                            <button type="button" class="select-option" data-value="no">No</button>
+                        </div>
+                        <input type="hidden" name="surah_mulk" id="surah_mulk" required>
                     </div>
-                    <div class="select-group" data-prayer="ravathib">
-                        <button type="button" class="select-option" data-value="yes">
-                            <i class="fas fa-check-circle text-green-600"></i>
-                            Yes
-                        </button>
-                        <button type="button" class="select-option" data-value="no">
-                            <i class="fas fa-times-circle text-red-600"></i>
-                            No
-                        </button>
+                    
+                    <!-- Surah Vaqia -->
+                    <div class="prayer-card">
+                        <div class="prayer-header">
+                            <div class="prayer-icon"></div>
+                            <div>
+                                <div class="prayer-title">Surah Vaqia</div>
+                                <div class="prayer-arabic">سورة الواقعة</div>
+                            </div>
+                        </div>
+                        <div class="select-group" data-prayer="surah_vaqia">
+                            <button type="button" class="select-option" data-value="yes">Yes</button>
+                            <button type="button" class="select-option" data-value="no">No</button>
+                        </div>
+                        <input type="hidden" name="surah_vaqia" id="surah_vaqia" required>
                     </div>
-                    <input type="hidden" name="ravathib" id="ravathib" required>
+                    
+                    <!-- Isthigfar Count -->
+                    <div class="prayer-card">
+                        <div class="prayer-header">
+                            <div class="prayer-icon"></div>
+                            <div>
+                                <div class="prayer-title">Isthigfar Count</div>
+                                <div class="prayer-arabic">عدد الاستغفار</div>
+                            </div>
+                        </div>
+                        <input type="number" id="isthigfar_count" name="isthigfar_count" min="0" max="10000" placeholder="Enter count" required class="number-input">
+                    </div>
+                </div>
+            </div>
+            
+            <!-- SECTION 4: PURIFICATION & HYGIENE -->
+            <div class="form-section">
+                <h3 class="section-header">
+                    <i class="fas fa-water"></i>
+                    Purification - الطهارة
+                </h3>
+                
+                <div class="prayer-grid">
+                    <!-- Misvak Count -->
+                    <div class="prayer-card">
+                        <div class="prayer-header">
+                            <div class="prayer-icon"></div>
+                            <div>
+                                <div class="prayer-title">Misvak Count</div>
+                                <div class="prayer-arabic">عدد المسواك</div>
+                            </div>
+                        </div>
+                        <input type="number" id="misvak_count" name="misvak_count" min="0" max="50" placeholder="Times used" required class="number-input">
+                    </div>
+                    
+                    <!-- Dua After Vuzu -->
+                    <div class="prayer-card">
+                        <div class="prayer-header">
+                            <div class="prayer-icon"></div>
+                            <div>
+                                <div class="prayer-title">Dua After Vuzu</div>
+                                <div class="prayer-arabic">دعاء بعد الوضوء</div>
+                            </div>
+                        </div>
+                        <div class="select-group" data-prayer="dua_after_vuzu">
+                            <button type="button" class="select-option" data-value="yes">Yes</button>
+                            <button type="button" class="select-option" data-value="no">No</button>
+                        </div>
+                        <input type="hidden" name="dua_after_vuzu" id="dua_after_vuzu" required>
+                    </div>
+                    
+                    <!-- All Time Vuzu -->
+                    <div class="prayer-card">
+                        <div class="prayer-header">
+                            <div class="prayer-icon"></div>
+                            <div>
+                                <div class="prayer-title">All Time Vuzu</div>
+                                <div class="prayer-arabic">الوضوء الدائم</div>
+                            </div>
+                        </div>
+                        <div class="select-group" data-prayer="all_time_vuzu">
+                            <button type="button" class="select-option" data-value="yes">Yes</button>
+                            <button type="button" class="select-option" data-value="no">No</button>
+                        </div>
+                        <input type="hidden" name="all_time_vuzu" id="all_time_vuzu" required>
+                    </div>
+                    
+                    <!-- Haddād -->
+                    <div class="prayer-card">
+                        <div class="prayer-header">
+                            <div class="prayer-icon"></div>
+                            <div>
+                                <div class="prayer-title">Haddād</div>
+                                <div class="prayer-arabic">الحداد</div>
+                            </div>
+                        </div>
+                        <div class="select-group" data-prayer="haddad">
+                            <button type="button" class="select-option" data-value="yes">Yes</button>
+                            <button type="button" class="select-option" data-value="no">No</button>
+                        </div>
+                        <input type="hidden" name="haddad" id="haddad" required>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- SECTION 5: SUNNAH PRACTICES -->
+            <div class="form-section">
+                <h3 class="section-header">
+                    <i class="fas fa-sun"></i>
+                    Sunnah Practices - السنن
+                </h3>
+                
+                <div class="prayer-grid">
+                    <!-- Halal Haircut -->
+                    <div class="prayer-card">
+                        <div class="prayer-header">
+                            <div class="prayer-icon"></div>
+                            <div>
+                                <div class="prayer-title">Halal Haircut</div>
+                                <div class="prayer-arabic">الحلاق الشرعي</div>
+                            </div>
+                        </div>
+                        <div class="select-group" data-prayer="halal_haircut">
+                            <button type="button" class="select-option" data-value="yes">Yes</button>
+                            <button type="button" class="select-option" data-value="no">No</button>
+                        </div>
+                        <input type="hidden" name="halal_haircut" id="halal_haircut" required>
+                    </div>
+                    
+                    <!-- Amama in All Pray Times -->
+                    <div class="prayer-card">
+                        <div class="prayer-header">
+                            <div class="prayer-icon"></div>
+                            <div>
+                                <div class="prayer-title">Amama in All Prayers</div>
+                                <div class="prayer-arabic">العمامة في الصلوات</div>
+                            </div>
+                        </div>
+                        <div class="select-group" data-prayer="amama">
+                            <button type="button" class="select-option" data-value="yes">Yes</button>
+                            <button type="button" class="select-option" data-value="no">No</button>
+                        </div>
+                        <input type="hidden" name="amama" id="amama" required>
+                    </div>
                 </div>
             </div>
             
