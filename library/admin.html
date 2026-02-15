@@ -24,9 +24,12 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            position: sticky;
+            position: fixed;
             top: 0;
+            left: 0;
+            right: 0;
             z-index: 1000;
+            height: 70px;
         }
 
         .nav-left {
@@ -69,7 +72,7 @@
         }
 
         .main-content {
-            padding: 30px;
+            padding: 90px 30px 30px 30px;
         }
 
         .admin-header {
@@ -132,17 +135,46 @@
             background: #7f8c8d;
         }
 
-        .history-table {
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-item {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        .stat-value {
+            color: #333;
+            font-size: 28px;
+            font-weight: 600;
+        }
+
+        .table-container {
             background: white;
             border-radius: 15px;
-            padding: 20px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            overflow-x: auto;
+            overflow: auto;
+            max-height: calc(100vh - 280px);
+            position: relative;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
+            min-width: 1400px;
         }
 
         th {
@@ -153,8 +185,9 @@
             color: #555;
             border-bottom: 2px solid #dee2e6;
             position: sticky;
-            top: 70px;
-            background: #f8f9fa;
+            top: 0;
+            z-index: 10;
+            box-shadow: 0 2px 2px -1px rgba(0,0,0,0.1);
         }
 
         td {
@@ -199,40 +232,6 @@
             margin: 10px 0;
             padding: 20px;
         }
-
-        .stats-card {
-            background: white;
-            border-radius: 10px;
-            padding: 15px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-
-        .stat-item {
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 8px;
-            text-align: center;
-        }
-
-        .stat-label {
-            color: #666;
-            font-size: 14px;
-            margin-bottom: 5px;
-        }
-
-        .stat-value {
-            color: #333;
-            font-size: 24px;
-            font-weight: 600;
-        }
     </style>
 </head>
 <body>
@@ -258,8 +257,7 @@
             <!-- Stats will be populated by JavaScript -->
         </div>
 
-        <div class="history-table">
-            <h3>All Members History</h3>
+        <div class="table-container">
             <table id="adminHistoryTable">
                 <thead>
                     <tr>
@@ -288,11 +286,35 @@
 
     <script>
         // REPLACE WITH YOUR ACTUAL GOOGLE APPS SCRIPT URL
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwlcCVyrQFHB43GrnN3M1_B_3xFFxuEvR5btLWpYNFn0_-gGdbD_PLajIWL7X5ujSUJRw/exec';
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz9a1NTrbMFtZneFHIvPLDsVhJFL1C77pmF2cW3Bz6NPBdh8JZFfkoXU-XU3YVqnX_4Cw/exec';
         
         let currentUser = null;
 
-        // Check authentication on page load
+        // Format date function for Indian time (12-hour format)
+        function formatIndianDate(dateString) {
+            if (!dateString) return '';
+            
+            const date = new Date(dateString);
+            if (isNaN(date.getTime())) return dateString;
+            
+            const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            
+            const dayName = days[date.getDay()];
+            const monthName = months[date.getMonth()];
+            const day = date.getDate();
+            const year = date.getFullYear();
+            
+            // Format time in 12-hour format
+            let hours = date.getHours();
+            const minutes = date.getMinutes().toString().padStart(2, '0');
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+            hours = hours % 12;
+            hours = hours ? hours : 12; // 0 should be 12
+            
+            return `${dayName} ${monthName} ${day} ${year} ${hours}:${minutes} ${ampm}`;
+        }
+
         window.onload = function() {
             const user = sessionStorage.getItem('currentUser');
             if (!user) {
@@ -302,7 +324,6 @@
             
             currentUser = JSON.parse(user);
             
-            // Redirect if member tries to access admin page
             if (currentUser.role !== 'admin') {
                 window.location.href = 'member.html';
                 return;
@@ -315,14 +336,13 @@
             loadAllMembersHistory();
         };
 
-        // Load all members history (ALL members, regardless of class)
         async function loadAllMembersHistory() {
             try {
                 document.getElementById('adminHistoryBody').innerHTML = '<tr><td colspan="14" class="loading">Loading...</td></tr>';
                 
                 const formData = new URLSearchParams();
                 formData.append('action', 'getAllMembersHistory');
-                formData.append('adminClass', currentUser.class); // Still pass class but backend will ignore for filtering
+                formData.append('adminClass', currentUser.class);
 
                 const response = await fetch(SCRIPT_URL, {
                     method: 'POST',
@@ -360,6 +380,8 @@
                 else if (item.status === 'checkin') statusClass = 'status-checkin';
                 else if (item.status === 'renew') statusClass = 'status-renew';
                 
+                const formattedDate = formatIndianDate(item.date);
+                
                 html += '<tr>';
                 html += `<td>${item.full_name || ''}</td>`;
                 html += `<td>${item.username || ''}</td>`;
@@ -373,7 +395,7 @@
                 html += `<td>${item.publisher || ''}</td>`;
                 html += `<td>${item.pages || ''}</td>`;
                 html += `<td class="${statusClass}">${item.status || ''}</td>`;
-                html += `<td>${item.date || ''}</td>`;
+                html += `<td>${formattedDate}</td>`;
                 html += `<td class="${isOverdue ? 'fine-red' : ''}">₹${fine}</td>`;
                 html += '</tr>';
             });
@@ -381,7 +403,6 @@
             tbody.innerHTML = html;
         }
 
-        // Search barcode
         async function searchBarcode() {
             const barcode = document.getElementById('barcodeSearch').value.trim();
             if (!barcode) {
@@ -420,7 +441,6 @@
             displayAllMembersHistory(response);
         }
 
-        // Update statistics
         function updateStats(history) {
             const totalBooks = history.length;
             const checkedOut = history.filter(item => item.status === 'checkout').length;
@@ -460,7 +480,6 @@
             `;
         }
 
-        // Logout function
         function logout() {
             sessionStorage.removeItem('currentUser');
             window.location.href = 'login.html';
