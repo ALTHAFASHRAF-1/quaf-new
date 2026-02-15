@@ -154,6 +154,7 @@
             border-radius: 5px;
             cursor: pointer;
             font-size: 12px;
+            transition: background 0.3s;
         }
 
         .edit-btn:hover {
@@ -364,6 +365,7 @@
                     <option value="">Select Status</option>
                     <option value="checkin">Check In</option>
                     <option value="renew">Renew</option>
+                    <option value="checkout">Check Out Again</option>
                 </select>
             </div>
             <button class="submit-btn" onclick="updateStatus()">Update Status</button>
@@ -372,8 +374,8 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
     <script>
-        // HARDCODE YOUR GOOGLE APPS SCRIPT URL HERE
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxwBYueXGVLK_ijjCTRLywIChnauZuOJJsM8QDkoXZEsejhJRpLsg84Trkl8lvOreRClg/exec'; // REPLACE WITH YOUR ACTUAL URL
+        // REPLACE WITH YOUR ACTUAL GOOGLE APPS SCRIPT URL
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwlcCVyrQFHB43GrnN3M1_B_3xFFxuEvR5btLWpYNFn0_-gGdbD_PLajIWL7X5ujSUJRw/exec';
         
         // CSV URL for book catalog
         const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSsY1-Sdub2yQ-1z9WlpTA0TJOrKcxePFMNIbh4xVc5p3E-P417w56Ggsn4z5Vv8LAJjuYT8O8226Tb/pub?gid=1411745735&single=true&output=csv';
@@ -476,11 +478,8 @@
                 html += `<td>${item.date || ''}</td>`;
                 html += `<td class="${isOverdue ? 'fine-red' : ''}">₹${fine}</td>`;
                 html += `<td>`;
-                if (item.status === 'checkout') {
-                    html += `<button class="edit-btn" onclick="openEditModal(${item.rowIndex}, '${item.barcode}', '${item.title}', '${item.status}')">Edit</button>`;
-                } else {
-                    html += `-`;
-                }
+                // Show edit button for all statuses (allow multiple edits)
+                html += `<button class="edit-btn" onclick="openEditModal(${item.rowIndex}, '${item.barcode}', '${item.title}', '${item.status}')">Edit</button>`;
                 html += `</td>`;
                 html += '</tr>';
             });
@@ -510,7 +509,7 @@
         }
 
         function fetchBookDetails() {
-            const barcode = document.getElementById('checkoutBarcode').value;
+            const barcode = document.getElementById('checkoutBarcode').value.trim();
             const book = booksData.find(b => b.barcode === barcode);
             
             if (book) {
@@ -528,7 +527,7 @@
         }
 
         async function submitCheckout() {
-            const barcode = document.getElementById('checkoutBarcode').value;
+            const barcode = document.getElementById('checkoutBarcode').value.trim();
             
             if (!barcode) {
                 alert('Please enter barcode');
