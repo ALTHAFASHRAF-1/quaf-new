@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
+    <title>QUAF library · search</title>
+    <!-- PapaParse for robust CSV parsing -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+        }
+
+        body {
+            background: #f4f7fc;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ----- STICKY NAVBAR (solid, always on top) ----- */
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: white;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03), 0 1px 2px rgba(0, 0, 0, 0.1);
+            padding: 0.6rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            backdrop-filter: none; /* solid, no blur */
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo-img {
+            height: 42px;
+            width: auto;
+            display: block;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            font-weight: 500;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #1e2b3a;
+            font-size: 1.1rem;
+            padding: 0.4rem 0.2rem;
+            border-bottom: 2px solid transparent;
+            transition: 0.15s;
+        }
+
+        .nav-links a:hover {
+            border-bottom-color: #2a6f97;
+            color: #0a3144;
+        }
+
+        /* ----- SEARCH SECTION: exactly 30% of viewport height ----- */
+        .search-section {
+            height: 30vh;
+            min-height: 260px; /* ensures usability on very small screens */
+            background: linear-gradient(145deg, #ffffff 0%, #f0f4fa 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem 1.5rem;
+            box-shadow: inset 0 -1px 0 #d9e2ec, 0 4px 10px rgba(0,0,0,0.02);
+        }
+
+        .search-container {
+            width: 100%;
+            max-width: 1000px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.2rem;
+        }
+
+        .search-box-wrapper {
+            width: 70%;
+            min-width: 260px;
+            display: flex;
+            gap: 0.6rem;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        #searchInput {
+            flex: 1 1 250px;
+            padding: 0.9rem 1.5rem;
+            font-size: 1.1rem;
+            border: 2px solid #cbd5e1;
+            border-radius: 60px;
+            outline: none;
+            background: white;
+            transition: 0.2s;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+        }
+
+        #searchInput:focus {
+            border-color: #2c6e9c;
+            box-shadow: 0 4px 12px rgba(44,110,156,0.15);
+        }
+
+        #searchBtn {
+            background: #1f4a6e;
+            color: white;
+            border: none;
+            padding: 0.9rem 2.2rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 60px;
+            cursor: pointer;
+            transition: 0.15s;
+            white-space: nowrap;
+            border: 2px solid #1f4a6e;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+        }
+
+        #searchBtn:hover {
+            background: #123753;
+            border-color: #123753;
+            transform: scale(1.02);
+        }
+
+        /* ----- radio options (tick one) ----- */
+        .tick-options {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1.2rem 1.8rem;
+            background: rgba(255,255,255,0.7);
+            padding: 0.8rem 2rem;
+            border-radius: 60px;
+            backdrop-filter: blur(2px);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+        }
+
+        .tick-options label {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 1rem;
+            color: #1e3b4f;
+            font-weight: 500;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .tick-options input[type="radio"] {
+            accent-color: #1f4a6e;
+            width: 1.1rem;
+            height: 1.1rem;
+            margin: 0;
+            cursor: pointer;
+        }
+
+        /* ----- TABLE SECTION (remaining height, scrollable) ----- */
+        .table-wrapper {
+            flex: 1;
+            background: white;
+            padding: 1.8rem 1.5rem 2.5rem 1.5rem;
+            overflow-x: auto;
+            border-top: 1px solid #dde7f0;
+        }
+
+        .table-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            border-radius: 24px;
+            background: white;
+            box-shadow: 0 12px 30px rgba(0,20,40,0.06);
+            overflow: auto;
+            border: 1px solid #e2e9f2;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 900px;  /* horizontal scroll on narrow screens, but keeps headings readable */
+            font-size: 0.95rem;
+        }
+
+        th {
+            background: #f0f6fd;
+            color: #0f3144;
+            font-weight: 600;
+            padding: 1rem 0.8rem;
+            white-space: nowrap;
+            text-align: left;
+            border-bottom: 2px solid #bdcfe0;
+            position: sticky;
+            top: 0;
+            background: #f0f6fd;
+            z-index: 10;
+        }
+
+        td {
+            padding: 0.9rem 0.8rem;
+            border-bottom: 1px solid #dae2ec;
+            color: #1a2b39;
+            vertical-align: top;
+            word-break: break-word;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background-color: #f6faff;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 3rem !important;
+            color: #617e9c;
+            font-style: italic;
+            font-size: 1.2rem;
+        }
+
+        .loading-message {
+            text-align: center;
+            padding: 3rem;
+            color: #2f587b;
+            font-weight: 500;
+        }
+
+        /* ----- mobile fine-tuning ----- */
+        @media (max-width: 650px) {
+            .navbar {
+                padding: 0.6rem 1rem;
+            }
+            .nav-links {
+                gap: 1rem;
+            }
+            .nav-links a {
+                font-size: 1rem;
+            }
+            .logo-img {
+                height: 36px;
+            }
+            .search-section {
+                min-height: 280px;
+                height: auto;
+                padding: 1.5rem 0.5rem;
+            }
+            .search-box-wrapper {
+                width: 95%;
+            }
+            #searchInput {
+                padding: 0.75rem 1.2rem;
+                font-size: 1rem;
+            }
+            #searchBtn {
+                padding: 0.75rem 1.5rem;
+                font-size: 1rem;
+            }
+            .tick-options {
+                padding: 0.8rem 1rem;
+                gap: 0.8rem 1.2rem;
+                border-radius: 40px;
+            }
+            .tick-options label {
+                font-size: 0.9rem;
+            }
+            .table-wrapper {
+                padding: 1rem 0.5rem;
+            }
+            .table-container {
+                border-radius: 16px;
+            }
+        }
+
+        /* small height screens: keep sticky nav and search usable */
+        @media (max-height: 600px) {
+            .search-section {
+                height: auto;
+                min-height: 200px;
+            }
+        }
+
+        /* utility */
+        .attribution {
+            font-size: 0.8rem;
+            text-align: center;
+            color: #8ba0b8;
+            margin-top: 0.8rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- SOLID STICKY NAVBAR (logo left, links right) -->
+    <header class="navbar">
+        <div class="logo-area">
+            <img src="https://quaf.tech/images/logo.png" alt="QUAF library logo" class="logo-img" loading="lazy">
+        </div>
+        <nav class="nav-links">
+            <a href="#">Home</a>
+            <a href="#">About</a>
+            <a href="#">Contact</a>
+        </nav>
+    </header>
+
+    <!-- SEARCH SECTION: exactly 30% viewport height with search box + tick options -->
+    <section class="search-section">
+        <div class="search-container">
+            <div class="search-box-wrapper">
+                <input type="text" id="searchInput" placeholder="Search for books ... e.g. india" autocomplete="off">
+                <button id="searchBtn">Search</button>
+            </div>
+
+            <!-- tick options (radio = only one field at a time) -->
+            <div class="tick-options" id="fieldRadios">
+                <label><input type="radio" name="searchField" value="barcode"> barcode</label>
+                <label><input type="radio" name="searchField" value="class_no"> class_no</label>
+                <label><input type="radio" name="searchField" value="class_name"> class_name</label>
+                <label><input type="radio" name="searchField" value="title" checked> title</label>
+                <label><input type="radio" name="searchField" value="author"> author</label>
+                <label><input type="radio" name="searchField" value="item"> item</label>
+                <label><input type="radio" name="searchField" value="publisher"> publisher</label>
+                <label><input type="radio" name="searchField" value="pages"> pages</label>
+            </div>
+        </div>
+    </section>
+
+    <!-- TABLE: shows all books, filtered results appear (only matching, order as in CSV) -->
+    <div class="table-wrapper">
+        <div class="table-container">
+            <table id="data-table">
+                <thead>
+                    <tr id="table-header">
+                        <!-- headers injected by js, but we keep static fallback -->
+                        <th>barcode</th><th>class_no</th><th>class_name</th><th>title</th><th>author</th><th>item</th><th>publisher</th><th>pages</th>
+                    </tr>
+                </thead>
+                <tbody id="table-body">
+                    <tr><td colspan="8" class="loading-message">📚 Loading library catalog ...</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="attribution">source: library collection · google sheets</div>
+    </div>
+
+    <script>
+        (function() {
+            // --- CONFIG ---
+            const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSsY1-Sdub2yQ-1z9WlpTA0TJOrKcxePFMNIbh4xVc5p3E-P417w56Ggsn4z5Vv8LAJjuYT8O8226Tb/pub?gid=1411745735&single=true&output=csv';
+
+            // DOM elements
+            const searchInput = document.getElementById('searchInput');
+            const searchBtn = document.getElementById('searchBtn');
+            const tableBody = document.getElementById('table-body');
+            const tableHeader = document.getElementById('table-header');
+            const radioFields = document.querySelectorAll('input[name="searchField"]');
+
+            // Global storage for parsed data (array of objects)
+            let masterData = [];
+            let headers = ['barcode', 'class_no', 'class_name', 'title', 'author', 'item', 'publisher', 'pages']; // fallback
+
+            // --- fetch and parse CSV using PapaParse ---
+            function loadCSV() {
+                fetch(CSV_URL)
+                    .then(response => {
+                        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                        return response.text();
+                    })
+                    .then(csvText => {
+                        Papa.parse(csvText, {
+                            header: true,
+                            skipEmptyLines: true,
+                            transformHeader: (h) => h.trim(), // clean any extra spaces
+                            complete: (results) => {
+                                // results.data is array of objects with trimmed headers
+                                if (results.data && results.data.length > 0) {
+                                    masterData = results.data;
+                                    // extract actual headers from first object (in case they differ)
+                                    const firstRow = masterData[0];
+                                    if (firstRow) {
+                                        const cols = Object.keys(firstRow);
+                                        if (cols.length >= 8) headers = cols; // use dynamic headers
+                                    }
+                                    renderTable(masterData);
+                                } else {
+                                    // no data, show empty with message
+                                    tableBody.innerHTML = `<tr><td colspan="8" class="no-results">⚠️ No book data found.</td></tr>`;
+                                }
+                            },
+                            error: (error) => {
+                                console.error('Parse error:', error);
+                                tableBody.innerHTML = `<tr><td colspan="8" class="no-results">❌ Failed to parse catalog. Refresh or try later.</td></tr>`;
+                            }
+                        });
+                    })
+                    .catch(err => {
+                        console.error('Fetch error:', err);
+                        tableBody.innerHTML = `<tr><td colspan="8" class="no-results">❌ Could not load data. Check connection.</td></tr>`;
+                    });
+            }
+
+            // --- render table given array of objects (each object has header keys) ---
+            function renderTable(dataArray) {
+                if (!dataArray || dataArray.length === 0) {
+                    tableBody.innerHTML = `<tr><td colspan="8" class="no-results">🔍 No matching books found · try different keywords</td></tr>`;
+                    return;
+                }
+
+                // rebuild header dynamically (ensures correct order & naming)
+                let headerHtml = '';
+                headers.forEach(h => {
+                    headerHtml += `<th>${h}</th>`;
+                });
+                tableHeader.innerHTML = headerHtml;
+
+                // build rows
+                let rowsHtml = '';
+                for (let row of dataArray) {
+                    rowsHtml += '<tr>';
+                    headers.forEach(h => {
+                        // handle missing keys gracefully
+                        let cellValue = row[h] !== undefined && row[h] !== null ? row[h] : '';
+                        // if pages might be number, keep as is; escape HTML
+                        cellValue = String(cellValue).trim();
+                        rowsHtml += `<td>${cellValue || '—'}</td>`;
+                    });
+                    rowsHtml += '</tr>';
+                }
+                tableBody.innerHTML = rowsHtml;
+            }
+
+            // --- filter masterData based on selected field & search term (case‑insensitive substring) ---
+            function performSearch() {
+                const term = searchInput.value.trim();
+                // find which radio is checked
+                let selectedField = 'title'; // default
+                for (let radio of radioFields) {
+                    if (radio.checked) {
+                        selectedField = radio.value;
+                        break;
+                    }
+                }
+
+                if (term === '') {
+                    // empty search: show all books (original order)
+                    renderTable(masterData);
+                    return;
+                }
+
+                // filter (case‑insensitive, partial match)
+                const lowerTerm = term.toLowerCase();
+                const filtered = masterData.filter(item => {
+                    const fieldValue = item[selectedField];
+                    // handle numbers, null, undefined
+                    const strValue = fieldValue !== undefined && fieldValue !== null ? String(fieldValue) : '';
+                    return strValue.toLowerCase().includes(lowerTerm);
+                });
+
+                renderTable(filtered);
+            }
+
+            // --- event listeners ---
+            searchBtn.addEventListener('click', performSearch);
+
+            // optional: allow enter key in input
+            searchInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    performSearch();
+                }
+            });
+
+            // initial load
+            loadCSV();
+
+            // (optional) if you want to preserve radio state across refresh, no need.
+
+            // small fix: adjust header if CSV load changes header order, but we already update in render
+        })();
+    </script>
+
+    <!-- tiny safeguard: if JS fails, show fallback message (already handled) -->
+</body>
+</html>
