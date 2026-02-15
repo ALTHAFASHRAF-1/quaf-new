@@ -111,12 +111,12 @@
     </div>
 
     <script>
-        // HARDCODE YOUR GOOGLE APPS SCRIPT URL HERE
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxwBYueXGVLK_ijjCTRLywIChnauZuOJJsM8QDkoXZEsejhJRpLsg84Trkl8lvOreRClg/exec'; // REPLACE WITH YOUR ACTUAL URL
+        // REPLACE WITH YOUR ACTUAL GOOGLE APPS SCRIPT URL
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwlcCVyrQFHB43GrnN3M1_B_3xFFxuEvR5btLWpYNFn0_-gGdbD_PLajIWL7X5ujSUJRw/exec';
 
         async function login() {
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value.trim();
             const loading = document.getElementById('loading');
             const errorDiv = document.getElementById('loginError');
 
