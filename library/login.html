@@ -9,11 +9,11 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
         }
 
         body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(145deg, #2b3a67 0%, #1a2a4f 100%);
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -21,93 +21,172 @@
             padding: 20px;
         }
 
-        .login-card {
+        .login-container {
             background: white;
-            border-radius: 20px;
-            padding: 40px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            border-radius: 24px;
+            padding: 40px 35px;
             width: 100%;
-            max-width: 400px;
+            max-width: 420px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), 0 5px 15px rgba(0, 0, 0, 0.2);
         }
 
-        .login-card h2 {
+        .logo {
             text-align: center;
-            color: #333;
-            margin-bottom: 30px;
+            margin-bottom: 35px;
+        }
+
+        .logo h1 {
+            color: #1a2a4f;
             font-size: 28px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
         }
 
-        .input-group {
-            margin-bottom: 20px;
+        .logo p {
+            color: #666;
+            font-size: 15px;
+            margin-top: 8px;
+            font-weight: 400;
         }
 
-        .input-group label {
+        .form-group {
+            margin-bottom: 22px;
+        }
+
+        .form-group label {
             display: block;
             margin-bottom: 8px;
-            color: #555;
+            color: #444;
+            font-size: 14px;
             font-weight: 500;
         }
 
-        .input-group input {
+        .form-group input {
             width: 100%;
-            padding: 12px 15px;
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
-            font-size: 16px;
-            transition: border-color 0.3s;
+            padding: 14px 16px;
+            border: 2px solid #e8ecf2;
+            border-radius: 12px;
+            font-size: 15px;
+            transition: all 0.2s ease;
+            background: #fafbfc;
         }
 
-        .input-group input:focus {
+        .form-group input:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: #2b3a67;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(43, 58, 103, 0.1);
+        }
+
+        .form-group input::placeholder {
+            color: #aaa;
+            font-size: 14px;
         }
 
         .login-btn {
             width: 100%;
-            padding: 14px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 15px;
+            background: #2b3a67;
             color: white;
             border: none;
-            border-radius: 10px;
-            font-size: 18px;
+            border-radius: 12px;
+            font-size: 16px;
             font-weight: 600;
             cursor: pointer;
-            transition: transform 0.2s;
+            transition: all 0.2s ease;
+            margin-top: 12px;
+            letter-spacing: 0.3px;
         }
 
         .login-btn:hover {
+            background: #1a2a4f;
             transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(26, 42, 79, 0.2);
         }
 
-        .error-message {
-            color: #e74c3c;
+        .login-btn:active {
+            transform: translateY(0);
+        }
+
+        .login-btn:disabled {
+            background: #99a4b9;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .message {
             text-align: center;
-            margin-top: 15px;
+            margin-top: 20px;
+            min-height: 24px;
+        }
+
+        .error {
+            color: #dc3545;
             font-size: 14px;
+            font-weight: 500;
+            background: #ffebee;
+            padding: 10px;
+            border-radius: 8px;
+            display: inline-block;
+            width: 100%;
         }
 
         .loading {
-            display: none;
+            color: #2b3a67;
+            font-size: 14px;
+            font-weight: 500;
+            background: #e8ecf2;
+            padding: 10px;
+            border-radius: 8px;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .footer {
             text-align: center;
-            margin-top: 15px;
-            color: #666;
+            margin-top: 30px;
+            color: #888;
+            font-size: 13px;
+            border-top: 1px solid #e8ecf2;
+            padding-top: 20px;
+        }
+
+        .footer a {
+            color: #2b3a67;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
 <body>
-    <div class="login-card">
-        <h2>Library Login</h2>
-        <div class="input-group">
-            <label>Username</label>
-            <input type="text" id="username" placeholder="Enter username">
+    <div class="login-container">
+        <div class="logo">
+            <h1>📚 Library Management</h1>
+            <p>Sign in to your account</p>
         </div>
-        <div class="input-group">
-            <label>Password</label>
-            <input type="password" id="password" placeholder="Enter password">
+
+        <div class="form-group">
+            <label for="username">Username</label>
+            <input type="text" id="username" placeholder="Enter your username" autocomplete="off">
         </div>
-        <button class="login-btn" onclick="login()">Login</button>
-        <div class="loading" id="loading">Processing...</div>
-        <div class="error-message" id="loginError"></div>
+
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" placeholder="Enter your password">
+        </div>
+
+        <button class="login-btn" onclick="login()" id="loginBtn">Sign In</button>
+
+        <div class="message" id="message"></div>
+
+        <div class="footer">
+            <p>Demo credentials: <br> admin/admin123 or nasik/987</p>
+        </div>
     </div>
 
     <script>
@@ -117,16 +196,22 @@
         async function login() {
             const username = document.getElementById('username').value.trim();
             const password = document.getElementById('password').value.trim();
-            const loading = document.getElementById('loading');
-            const errorDiv = document.getElementById('loginError');
+            const messageDiv = document.getElementById('message');
+            const loginBtn = document.getElementById('loginBtn');
 
+            // Clear previous messages
+            messageDiv.innerHTML = '';
+
+            // Validation
             if (!username || !password) {
-                errorDiv.textContent = 'Please enter username and password';
+                messageDiv.innerHTML = '<div class="error">⚠️ Please enter both username and password</div>';
                 return;
             }
 
-            loading.style.display = 'block';
-            errorDiv.textContent = '';
+            // Show loading state
+            loginBtn.disabled = true;
+            loginBtn.textContent = 'Signing in...';
+            messageDiv.innerHTML = '<div class="loading">⏳ Please wait...</div>';
 
             try {
                 const formData = new URLSearchParams();
@@ -142,23 +227,46 @@
                 const data = await response.json();
                 
                 if (data.error) {
-                    errorDiv.textContent = data.error;
+                    messageDiv.innerHTML = `<div class="error">❌ ${data.error}</div>`;
                 } else {
+                    // Store user data
                     sessionStorage.setItem('currentUser', JSON.stringify(data));
-                    if (data.role === 'admin') {
-                        window.location.href = 'admin.html';
-                    } else {
-                        window.location.href = 'member.html';
-                    }
+                    
+                    // Show success message
+                    messageDiv.innerHTML = '<div class="loading" style="background: #d4edda; color: #155724;">✅ Login successful! Redirecting...</div>';
+                    
+                    // Redirect based on role
+                    setTimeout(() => {
+                        if (data.role === 'admin') {
+                            window.location.href = 'admin.html';
+                        } else {
+                            window.location.href = 'member.html';
+                        }
+                    }, 500);
                 }
             } catch (error) {
-                errorDiv.textContent = 'Connection error. Please try again.';
+                messageDiv.innerHTML = '<div class="error">❌ Connection error. Please try again.</div>';
                 console.error('Login error:', error);
             } finally {
-                loading.style.display = 'none';
+                // Reset button
+                loginBtn.disabled = false;
+                loginBtn.textContent = 'Sign In';
+                
+                // Clear loading message if error occurred
+                if (messageDiv.innerHTML.includes('⏳')) {
+                    messageDiv.innerHTML = '';
+                }
             }
         }
 
+        // Allow Enter key to submit
+        document.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                login();
+            }
+        });
+
+        // Check if already logged in
         window.onload = function() {
             const user = sessionStorage.getItem('currentUser');
             if (user) {
