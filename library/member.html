@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library Management System - Member Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: #f5f5f5;
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: white;
+            padding: 15px 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .profile-img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .user-info {
+            font-weight: 500;
+            color: #333;
+        }
+
+        .logout-btn {
+            padding: 8px 20px;
+            background: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: #c0392b;
+        }
+
+        .main-content {
+            padding: 30px;
+        }
+
+        .member-header {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 30px;
+        }
+
+        .checkout-btn {
+            padding: 12px 30px;
+            background: #27ae60;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .checkout-btn:hover {
+            background: #219a52;
+        }
+
+        .history-table {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: #f8f9fa;
+            padding: 15px 10px;
+            text-align: left;
+            font-weight: 600;
+            color: #555;
+            border-bottom: 2px solid #dee2e6;
+        }
+
+        td {
+            padding: 12px 10px;
+            border-bottom: 1px solid #dee2e6;
+            color: #333;
+        }
+
+        tr:hover {
+            background: #f8f9fa;
+        }
+
+        .status-checkout {
+            color: #27ae60;
+            font-weight: 600;
+        }
+
+        .status-checkin {
+            color: #2c3e50;
+            font-weight: 600;
+        }
+
+        .status-renew {
+            color: #3498db;
+            font-weight: 600;
+        }
+
+        .fine-red {
+            color: #e74c3c;
+            font-weight: 600;
+        }
+
+        .edit-btn {
+            padding: 5px 10px;
+            background: #f39c12;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .edit-btn:hover {
+            background: #e67e22;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 2000;
+        }
+
+        .modal-content {
+            background: white;
+            width: 90%;
+            max-width: 500px;
+            margin: 50px auto;
+            border-radius: 15px;
+            padding: 30px;
+            position: relative;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 24px;
+            cursor: pointer;
+            color: #999;
+        }
+
+        .close-modal:hover {
+            color: #333;
+        }
+
+        .modal h3 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+            font-weight: 500;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .form-group input[readonly] {
+            background: #f5f5f5;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 12px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .submit-btn:hover {
+            background: #5a67d8;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+
+        .error-message {
+            color: #e74c3c;
+            text-align: center;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div class="nav-left">
+            <div class="profile-img" id="profileInitial"></div>
+            <span class="user-info" id="userDisplay"></span>
+        </div>
+        <button class="logout-btn" onclick="logout()">Logout</button>
+    </div>
+
+    <div class="main-content">
+        <div class="member-header">
+            <button class="checkout-btn" onclick="openCheckoutModal()">Checkout Book</button>
+        </div>
+        
+        <div class="history-table">
+            <h3>Your Book History</h3>
+            <table id="memberHistoryTable">
+                <thead>
+                    <tr>
+                        <th>Barcode</th>
+                        <th>Class No</th>
+                        <th>Class Name</th>
+                        <th>Title</th>
+                        <th>Author</th>
+                        <th>Item</th>
+                        <th>Publisher</th>
+                        <th>Pages</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                        <th>Fine (₹)</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="memberHistoryBody">
+                    <tr><td colspan="12" class="loading">Loading...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Checkout Modal -->
+    <div class="modal" id="checkoutModal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeCheckoutModal()">&times;</span>
+            <h3>Checkout Book</h3>
+            <div class="form-group">
+                <label>Barcode *</label>
+                <input type="text" id="checkoutBarcode" onblur="fetchBookDetails()" placeholder="Scan or enter barcode">
+            </div>
+            <div class="form-group">
+                <label>Class No</label>
+                <input type="text" id="checkoutClassNo" readonly>
+            </div>
+            <div class="form-group">
+                <label>Class Name</label>
+                <input type="text" id="checkoutClassName" readonly>
+            </div>
+            <div class="form-group">
+                <label>Title</label>
+                <input type="text" id="checkoutTitle" readonly>
+            </div>
+            <div class="form-group">
+                <label>Author</label>
+                <input type="text" id="checkoutAuthor" readonly>
+            </div>
+            <div class="form-group">
+                <label>Item</label>
+                <input type="text" id="checkoutItem" readonly>
+            </div>
+            <div class="form-group">
+                <label>Publisher</label>
+                <input type="text" id="checkoutPublisher" readonly>
+            </div>
+            <div class="form-group">
+                <label>Pages</label>
+                <input type="text" id="checkoutPages" readonly>
+            </div>
+            <button class="submit-btn" onclick="submitCheckout()">Checkout Book</button>
+        </div>
+    </div>
+
+    <!-- Edit Status Modal -->
+    <div class="modal" id="editStatusModal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeEditModal()">&times;</span>
+            <h3>Update Book Status</h3>
+            <div class="form-group">
+                <label>Barcode</label>
+                <input type="text" id="editBarcode" readonly>
+            </div>
+            <div class="form-group">
+                <label>Title</label>
+                <input type="text" id="editTitle" readonly>
+            </div>
+            <div class="form-group">
+                <label>Current Status</label>
+                <input type="text" id="editCurrentStatus" readonly>
+            </div>
+            <div class="form-group">
+                <label>New Status</label>
+                <select id="editNewStatus">
+                    <option value="">Select Status</option>
+                    <option value="checkin">Check In</option>
+                    <option value="renew">Renew</option>
+                </select>
+            </div>
+            <button class="submit-btn" onclick="updateStatus()">Update Status</button>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+    <script>
+        // HARDCODE YOUR GOOGLE APPS SCRIPT URL HERE
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxwBYueXGVLK_ijjCTRLywIChnauZuOJJsM8QDkoXZEsejhJRpLsg84Trkl8lvOreRClg/exec'; // REPLACE WITH YOUR ACTUAL URL
+        
+        // CSV URL for book catalog
+        const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSsY1-Sdub2yQ-1z9WlpTA0TJOrKcxePFMNIbh4xVc5p3E-P417w56Ggsn4z5Vv8LAJjuYT8O8226Tb/pub?gid=1411745735&single=true&output=csv';
+        
+        let currentUser = null;
+        let currentEditRow = null;
+        let booksData = [];
+
+        // Check authentication on page load
+        window.onload = function() {
+            const user = sessionStorage.getItem('currentUser');
+            if (!user) {
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            currentUser = JSON.parse(user);
+            
+            // Redirect if admin tries to access member page
+            if (currentUser.role !== 'member') {
+                window.location.href = 'admin.html';
+                return;
+            }
+            
+            document.getElementById('profileInitial').textContent = currentUser.full_name.charAt(0).toUpperCase();
+            document.getElementById('userDisplay').textContent = `${currentUser.full_name} (Member)`;
+            
+            loadUserHistory();
+            loadBookCatalog();
+        };
+
+        // Load book catalog from CSV
+        async function loadBookCatalog() {
+            try {
+                const response = await fetch(CSV_URL);
+                const csvText = await response.text();
+                Papa.parse(csvText, {
+                    header: true,
+                    complete: function(results) {
+                        booksData = results.data;
+                    }
+                });
+            } catch (error) {
+                console.error('Error loading book catalog:', error);
+            }
+        }
+
+        // Load user history
+        async function loadUserHistory() {
+            try {
+                const formData = new URLSearchParams();
+                formData.append('action', 'getUserHistory');
+                formData.append('username', currentUser.username);
+
+                const response = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+                displayUserHistory(data);
+            } catch (error) {
+                console.error('Error loading history:', error);
+                document.getElementById('memberHistoryBody').innerHTML = 
+                    '<tr><td colspan="12" class="error-message">Error loading history</td></tr>';
+            }
+        }
+
+        function displayUserHistory(response) {
+            const tbody = document.getElementById('memberHistoryBody');
+            if (!response.history || response.history.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="12" style="text-align: center;">No history found</td></tr>';
+                return;
+            }
+
+            let html = '';
+            const today = new Date();
+            
+            response.history.forEach(item => {
+                const checkoutDate = new Date(item.date);
+                const daysDiff = Math.floor((today - checkoutDate) / (1000 * 60 * 60 * 24));
+                const isOverdue = item.status === 'checkout' && daysDiff > 7;
+                const fine = isOverdue ? (daysDiff - 7) * 2 : (item.fine || 0);
+                
+                let statusClass = '';
+                if (item.status === 'checkout') statusClass = 'status-checkout';
+                else if (item.status === 'checkin') statusClass = 'status-checkin';
+                else if (item.status === 'renew') statusClass = 'status-renew';
+                
+                html += '<tr>';
+                html += `<td>${item.barcode || ''}</td>`;
+                html += `<td>${item.class_no || ''}</td>`;
+                html += `<td>${item.class_name || ''}</td>`;
+                html += `<td>${item.title || ''}</td>`;
+                html += `<td>${item.author || ''}</td>`;
+                html += `<td>${item.item || ''}</td>`;
+                html += `<td>${item.publisher || ''}</td>`;
+                html += `<td>${item.pages || ''}</td>`;
+                html += `<td class="${statusClass}">${item.status || ''}</td>`;
+                html += `<td>${item.date || ''}</td>`;
+                html += `<td class="${isOverdue ? 'fine-red' : ''}">₹${fine}</td>`;
+                html += `<td>`;
+                if (item.status === 'checkout') {
+                    html += `<button class="edit-btn" onclick="openEditModal(${item.rowIndex}, '${item.barcode}', '${item.title}', '${item.status}')">Edit</button>`;
+                } else {
+                    html += `-`;
+                }
+                html += `</td>`;
+                html += '</tr>';
+            });
+            
+            tbody.innerHTML = html;
+        }
+
+        // Checkout functions
+        function openCheckoutModal() {
+            document.getElementById('checkoutModal').style.display = 'block';
+            clearCheckoutForm();
+        }
+
+        function closeCheckoutModal() {
+            document.getElementById('checkoutModal').style.display = 'none';
+        }
+
+        function clearCheckoutForm() {
+            document.getElementById('checkoutBarcode').value = '';
+            document.getElementById('checkoutClassNo').value = '';
+            document.getElementById('checkoutClassName').value = '';
+            document.getElementById('checkoutTitle').value = '';
+            document.getElementById('checkoutAuthor').value = '';
+            document.getElementById('checkoutItem').value = '';
+            document.getElementById('checkoutPublisher').value = '';
+            document.getElementById('checkoutPages').value = '';
+        }
+
+        function fetchBookDetails() {
+            const barcode = document.getElementById('checkoutBarcode').value;
+            const book = booksData.find(b => b.barcode === barcode);
+            
+            if (book) {
+                document.getElementById('checkoutClassNo').value = book.class_no || '';
+                document.getElementById('checkoutClassName').value = book.class_name || '';
+                document.getElementById('checkoutTitle').value = book.title || '';
+                document.getElementById('checkoutAuthor').value = book.author || '';
+                document.getElementById('checkoutItem').value = book.item || '';
+                document.getElementById('checkoutPublisher').value = book.publisher || '';
+                document.getElementById('checkoutPages').value = book.pages || '';
+            } else {
+                alert('Book not found in catalog');
+                clearCheckoutForm();
+            }
+        }
+
+        async function submitCheckout() {
+            const barcode = document.getElementById('checkoutBarcode').value;
+            
+            if (!barcode) {
+                alert('Please enter barcode');
+                return;
+            }
+
+            if (!document.getElementById('checkoutTitle').value) {
+                alert('Please fetch book details first');
+                return;
+            }
+
+            try {
+                const formData = new URLSearchParams();
+                formData.append('action', 'checkout');
+                formData.append('username', currentUser.username);
+                formData.append('barcode', barcode);
+                formData.append('class_no', document.getElementById('checkoutClassNo').value);
+                formData.append('class_name', document.getElementById('checkoutClassName').value);
+                formData.append('title', document.getElementById('checkoutTitle').value);
+                formData.append('author', document.getElementById('checkoutAuthor').value);
+                formData.append('item', document.getElementById('checkoutItem').value);
+                formData.append('publisher', document.getElementById('checkoutPublisher').value);
+                formData.append('pages', document.getElementById('checkoutPages').value);
+
+                const response = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+                
+                if (data.success) {
+                    alert('Book checked out successfully');
+                    closeCheckoutModal();
+                    loadUserHistory();
+                } else {
+                    alert('Error: ' + (data.error || 'Unknown error'));
+                }
+            } catch (error) {
+                alert('Error checking out book: ' + error.message);
+            }
+        }
+
+        // Edit status functions
+        function openEditModal(rowIndex, barcode, title, currentStatus) {
+            currentEditRow = rowIndex;
+            document.getElementById('editBarcode').value = barcode;
+            document.getElementById('editTitle').value = title;
+            document.getElementById('editCurrentStatus').value = currentStatus;
+            document.getElementById('editNewStatus').value = '';
+            document.getElementById('editStatusModal').style.display = 'block';
+        }
+
+        function closeEditModal() {
+            document.getElementById('editStatusModal').style.display = 'none';
+            currentEditRow = null;
+        }
+
+        async function updateStatus() {
+            const newStatus = document.getElementById('editNewStatus').value;
+            
+            if (!newStatus) {
+                alert('Please select a status');
+                return;
+            }
+
+            try {
+                const formData = new URLSearchParams();
+                formData.append('action', 'updateStatus');
+                formData.append('username', currentUser.username);
+                formData.append('rowIndex', currentEditRow);
+                formData.append('newStatus', newStatus);
+
+                const response = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+                
+                if (data.success) {
+                    alert('Status updated successfully');
+                    closeEditModal();
+                    loadUserHistory();
+                } else {
+                    alert('Error: ' + (data.error || 'Unknown error'));
+                }
+            } catch (error) {
+                alert('Error updating status: ' + error.message);
+            }
+        }
+
+        // Logout function
+        function logout() {
+            sessionStorage.removeItem('currentUser');
+            window.location.href = 'login.html';
+        }
+    </script>
+</body>
+</html>
