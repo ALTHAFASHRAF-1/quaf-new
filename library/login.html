@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library Management System - Login</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .login-card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .login-card h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 28px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 500;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .error-message {
+            color: #e74c3c;
+            text-align: center;
+            margin-top: 15px;
+            font-size: 14px;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            margin-top: 15px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-card">
+        <h2>Library Login</h2>
+        <div class="input-group">
+            <label>Username</label>
+            <input type="text" id="username" placeholder="Enter username">
+        </div>
+        <div class="input-group">
+            <label>Password</label>
+            <input type="password" id="password" placeholder="Enter password">
+        </div>
+        <button class="login-btn" onclick="login()">Login</button>
+        <div class="loading" id="loading">Processing...</div>
+        <div class="error-message" id="loginError"></div>
+    </div>
+
+    <script>
+        // HARDCODE YOUR GOOGLE APPS SCRIPT URL HERE
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxwBYueXGVLK_ijjCTRLywIChnauZuOJJsM8QDkoXZEsejhJRpLsg84Trkl8lvOreRClg/exec'; // REPLACE WITH YOUR ACTUAL URL
+
+        async function login() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const loading = document.getElementById('loading');
+            const errorDiv = document.getElementById('loginError');
+
+            if (!username || !password) {
+                errorDiv.textContent = 'Please enter username and password';
+                return;
+            }
+
+            loading.style.display = 'block';
+            errorDiv.textContent = '';
+
+            try {
+                const formData = new URLSearchParams();
+                formData.append('action', 'login');
+                formData.append('username', username);
+                formData.append('password', password);
+
+                const response = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+                
+                if (data.error) {
+                    errorDiv.textContent = data.error;
+                } else {
+                    // Store user data in sessionStorage
+                    sessionStorage.setItem('currentUser', JSON.stringify(data));
+                    // Redirect based on role
+                    if (data.role === 'admin') {
+                        window.location.href = 'admin.html';
+                    } else {
+                        window.location.href = 'member.html';
+                    }
+                }
+            } catch (error) {
+                errorDiv.textContent = 'Connection error. Please try again.';
+                console.error('Login error:', error);
+            } finally {
+                loading.style.display = 'none';
+            }
+        }
+
+        // Check if user is already logged in
+        window.onload = function() {
+            const user = sessionStorage.getItem('currentUser');
+            if (user) {
+                const userData = JSON.parse(user);
+                if (userData.role === 'admin') {
+                    window.location.href = 'admin.html';
+                } else {
+                    window.location.href = 'member.html';
+                }
+            }
+        };
+    </script>
+</body>
+</html>
