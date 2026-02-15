@@ -31,7 +31,7 @@
             font-size: 1rem;
         }
 
-        /* ----- Form Card ----- */
+        /* ----- Form Card (2‑column grid) ----- */
         .form-card {
             background: white;
             border-radius: 32px;
@@ -40,9 +40,9 @@
             margin-bottom: 2.5rem;
         }
         .form-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 1.4rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
         }
         .field {
             display: flex;
@@ -64,16 +64,22 @@
             outline: none;
             transition: 0.15s;
             background: #f9fcff;
+            width: 100%;
         }
         .field input:focus {
             border-color: #2a6f97;
             background: white;
             box-shadow: 0 0 0 4px rgba(42,111,151,0.1);
         }
+        /* Hidden fields (not displayed) */
+        .hidden-field {
+            display: none;
+        }
         .button-group {
+            grid-column: span 2;
             display: flex;
             gap: 1rem;
-            margin-top: 1.8rem;
+            margin-top: 0.8rem;
             flex-wrap: wrap;
         }
         .button-group button {
@@ -178,6 +184,17 @@
         .error { background: #f8dddd; color: #a42525; border: 1px solid #e5b3b3; }
         .info { background: #d9edf7; color: #2c6f9c; border: 1px solid #b6d9ec; }
         .loading { text-align: center; padding: 2rem; color: #2c6f9c; }
+
+        /* Mobile: stack to one column */
+        @media (max-width: 600px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            .button-group {
+                grid-column: span 1;
+            }
+        }
     </style>
 </head>
 <body>
@@ -188,13 +205,14 @@
         <!-- Message area -->
         <div id="message"></div>
 
-        <!-- Add / Edit Form Card -->
+        <!-- Add / Edit Form Card (2‑column layout) -->
         <div class="form-card">
             <form id="bookForm" class="form-grid">
                 <!-- Hidden fields -->
                 <input type="hidden" id="originalBarcode" name="originalBarcode" value="">
                 <input type="hidden" id="mode" name="mode" value="add">
 
+                <!-- Row 1: Barcode + Class No -->
                 <div class="field">
                     <label for="barcode">Barcode *</label>
                     <input type="text" id="barcode" name="barcode" required>
@@ -203,6 +221,8 @@
                     <label for="class_no">Class No *</label>
                     <input type="text" id="class_no" name="class_no" required>
                 </div>
+
+                <!-- Row 2: Class Name + Title -->
                 <div class="field">
                     <label for="class_name">Class Name *</label>
                     <input type="text" id="class_name" name="class_name" required>
@@ -211,6 +231,8 @@
                     <label for="title">Title *</label>
                     <input type="text" id="title" name="title" required>
                 </div>
+
+                <!-- Row 3: Author + Item -->
                 <div class="field">
                     <label for="author">Author *</label>
                     <input type="text" id="author" name="author" required>
@@ -219,6 +241,8 @@
                     <label for="item">Item *</label>
                     <input type="text" id="item" name="item" required>
                 </div>
+
+                <!-- Row 4: Publisher + Pages -->
                 <div class="field">
                     <label for="publisher">Publisher *</label>
                     <input type="text" id="publisher" name="publisher" required>
@@ -228,6 +252,7 @@
                     <input type="number" id="pages" name="pages" required>
                 </div>
 
+                <!-- Buttons span both columns -->
                 <div class="button-group">
                     <button type="submit" id="submitBtn">➕ Add Book</button>
                     <button type="button" id="clearBtn">🗑️ Clear form</button>
@@ -263,7 +288,7 @@
 
     <script>
         // ---------- CONFIG ----------
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyceKZmh74Lca4wVCMcrdhPI5He4HZ8nB1hhEnSL2PHVREoBF_dcGfVy_B5e4ynhtWLWg/exec'; // <--- REPLACE WITH YOUR DEPLOYED URL
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxtTcSdc2hRTSEjGwnMzN_22fwpGfroCMnP4WlECkAc7_4-n3QWI-OZS40pcaP_4PcTCQ/exec'; // <--- REPLACE WITH YOUR DEPLOYED URL
         // ----------------------------
 
         const form = document.getElementById('bookForm');
