@@ -246,7 +246,7 @@
 
     <div class="main-content">
         <div class="admin-header">
-            <div class="class-info" id="classInfo"></div>
+            <div class="class-info" id="classInfo">Admin Dashboard - All Members</div>
             <div class="search-box">
                 <input type="text" id="barcodeSearch" placeholder="Search by barcode...">
                 <button onclick="searchBarcode()">Search</button>
@@ -259,11 +259,12 @@
         </div>
 
         <div class="history-table">
-            <h3>All Members History - Class <span id="className"></span></h3>
+            <h3>All Members History</h3>
             <table id="adminHistoryTable">
                 <thead>
                     <tr>
                         <th>Member Name</th>
+                        <th>Username</th>
                         <th>Class</th>
                         <th>Barcode</th>
                         <th>Class No</th>
@@ -279,15 +280,15 @@
                     </tr>
                 </thead>
                 <tbody id="adminHistoryBody">
-                    <tr><td colspan="13" class="loading">Loading...</td></tr>
+                    <tr><td colspan="14" class="loading">Loading...</td></tr>
                 </tbody>
             </table>
         </div>
     </div>
 
     <script>
-        // HARDCODE YOUR GOOGLE APPS SCRIPT URL HERE
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxwBYueXGVLK_ijjCTRLywIChnauZuOJJsM8QDkoXZEsejhJRpLsg84Trkl8lvOreRClg/exec'; // REPLACE WITH YOUR ACTUAL URL
+        // REPLACE WITH YOUR ACTUAL GOOGLE APPS SCRIPT URL
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwlcCVyrQFHB43GrnN3M1_B_3xFFxuEvR5btLWpYNFn0_-gGdbD_PLajIWL7X5ujSUJRw/exec';
         
         let currentUser = null;
 
@@ -308,21 +309,20 @@
             }
             
             document.getElementById('profileInitial').textContent = currentUser.full_name.charAt(0).toUpperCase();
-            document.getElementById('userDisplay').textContent = `${currentUser.full_name} (Admin - Class ${currentUser.class})`;
-            document.getElementById('classInfo').textContent = `Managing Class: ${currentUser.class}`;
-            document.getElementById('className').textContent = currentUser.class;
+            document.getElementById('userDisplay').textContent = `${currentUser.full_name} (Admin)`;
+            document.getElementById('classInfo').textContent = `Admin: ${currentUser.full_name} - Viewing All Members`;
             
             loadAllMembersHistory();
         };
 
-        // Load all members history
+        // Load all members history (ALL members, regardless of class)
         async function loadAllMembersHistory() {
             try {
-                document.getElementById('adminHistoryBody').innerHTML = '<tr><td colspan="13" class="loading">Loading...</td></tr>';
+                document.getElementById('adminHistoryBody').innerHTML = '<tr><td colspan="14" class="loading">Loading...</td></tr>';
                 
                 const formData = new URLSearchParams();
                 formData.append('action', 'getAllMembersHistory');
-                formData.append('adminClass', currentUser.class);
+                formData.append('adminClass', currentUser.class); // Still pass class but backend will ignore for filtering
 
                 const response = await fetch(SCRIPT_URL, {
                     method: 'POST',
@@ -335,14 +335,14 @@
             } catch (error) {
                 console.error('Error loading history:', error);
                 document.getElementById('adminHistoryBody').innerHTML = 
-                    '<tr><td colspan="13" class="error-message">Error loading history</td></tr>';
+                    '<tr><td colspan="14" class="error-message">Error loading history</td></tr>';
             }
         }
 
         function displayAllMembersHistory(response) {
             const tbody = document.getElementById('adminHistoryBody');
             if (!response.history || response.history.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="13" style="text-align: center;">No history found for your class</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="14" style="text-align: center;">No history found</td></tr>';
                 return;
             }
 
@@ -362,6 +362,7 @@
                 
                 html += '<tr>';
                 html += `<td>${item.full_name || ''}</td>`;
+                html += `<td>${item.username || ''}</td>`;
                 html += `<td>${item.class || ''}</td>`;
                 html += `<td>${item.barcode || ''}</td>`;
                 html += `<td>${item.class_no || ''}</td>`;
@@ -382,19 +383,18 @@
 
         // Search barcode
         async function searchBarcode() {
-            const barcode = document.getElementById('barcodeSearch').value;
+            const barcode = document.getElementById('barcodeSearch').value.trim();
             if (!barcode) {
                 alert('Please enter a barcode to search');
                 return;
             }
 
             try {
-                document.getElementById('adminHistoryBody').innerHTML = '<tr><td colspan="13" class="loading">Searching...</td></tr>';
+                document.getElementById('adminHistoryBody').innerHTML = '<tr><td colspan="14" class="loading">Searching...</td></tr>';
                 
                 const formData = new URLSearchParams();
                 formData.append('action', 'searchBarcodeHistory');
                 formData.append('barcode', barcode);
-                formData.append('adminClass', currentUser.class);
 
                 const response = await fetch(SCRIPT_URL, {
                     method: 'POST',
@@ -403,6 +403,7 @@
 
                 const data = await response.json();
                 displaySearchResults(data);
+                updateStats(data.history || []);
             } catch (error) {
                 console.error('Error searching:', error);
                 alert('Error searching barcode');
@@ -412,7 +413,7 @@
         function displaySearchResults(response) {
             const tbody = document.getElementById('adminHistoryBody');
             if (!response.history || response.history.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="13" style="text-align: center;">No records found for this barcode in your class</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="14" style="text-align: center;">No records found for this barcode</td></tr>';
                 return;
             }
 
