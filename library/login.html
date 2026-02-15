@@ -112,7 +112,7 @@
 
     <script>
         // REPLACE WITH YOUR ACTUAL GOOGLE APPS SCRIPT URL
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwlcCVyrQFHB43GrnN3M1_B_3xFFxuEvR5btLWpYNFn0_-gGdbD_PLajIWL7X5ujSUJRw/exec';
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz9a1NTrbMFtZneFHIvPLDsVhJFL1C77pmF2cW3Bz6NPBdh8JZFfkoXU-XU3YVqnX_4Cw/exec';
 
         async function login() {
             const username = document.getElementById('username').value.trim();
@@ -144,9 +144,7 @@
                 if (data.error) {
                     errorDiv.textContent = data.error;
                 } else {
-                    // Store user data in sessionStorage
                     sessionStorage.setItem('currentUser', JSON.stringify(data));
-                    // Redirect based on role
                     if (data.role === 'admin') {
                         window.location.href = 'admin.html';
                     } else {
@@ -161,7 +159,6 @@
             }
         }
 
-        // Check if user is already logged in
         window.onload = function() {
             const user = sessionStorage.getItem('currentUser');
             if (user) {
