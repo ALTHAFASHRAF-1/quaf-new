@@ -24,9 +24,12 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            position: sticky;
+            position: fixed;
             top: 0;
+            left: 0;
+            right: 0;
             z-index: 1000;
+            height: 70px;
         }
 
         .nav-left {
@@ -69,7 +72,7 @@
         }
 
         .main-content {
-            padding: 30px;
+            padding: 90px 30px 30px 30px;
         }
 
         .member-header {
@@ -94,17 +97,19 @@
             background: #219a52;
         }
 
-        .history-table {
+        .table-container {
             background: white;
             border-radius: 15px;
-            padding: 20px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            overflow-x: auto;
+            overflow: auto;
+            max-height: calc(100vh - 180px);
+            position: relative;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
+            min-width: 1200px;
         }
 
         th {
@@ -114,6 +119,10 @@
             font-weight: 600;
             color: #555;
             border-bottom: 2px solid #dee2e6;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            box-shadow: 0 2px 2px -1px rgba(0,0,0,0.1);
         }
 
         td {
@@ -177,7 +186,7 @@
             background: white;
             width: 90%;
             max-width: 500px;
-            margin: 50px auto;
+            margin: 80px auto;
             border-radius: 15px;
             padding: 30px;
             position: relative;
@@ -275,8 +284,7 @@
             <button class="checkout-btn" onclick="openCheckoutModal()">Checkout Book</button>
         </div>
         
-        <div class="history-table">
-            <h3>Your Book History</h3>
+        <div class="table-container">
             <table id="memberHistoryTable">
                 <thead>
                     <tr>
@@ -375,7 +383,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
     <script>
         // REPLACE WITH YOUR ACTUAL GOOGLE APPS SCRIPT URL
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwlcCVyrQFHB43GrnN3M1_B_3xFFxuEvR5btLWpYNFn0_-gGdbD_PLajIWL7X5ujSUJRw/exec';
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz9a1NTrbMFtZneFHIvPLDsVhJFL1C77pmF2cW3Bz6NPBdh8JZFfkoXU-XU3YVqnX_4Cw/exec';
         
         // CSV URL for book catalog
         const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSsY1-Sdub2yQ-1z9WlpTA0TJOrKcxePFMNIbh4xVc5p3E-P417w56Ggsn4z5Vv8LAJjuYT8O8226Tb/pub?gid=1411745735&single=true&output=csv';
@@ -383,6 +391,31 @@
         let currentUser = null;
         let currentEditRow = null;
         let booksData = [];
+
+        // Format date function for Indian time (12-hour format)
+        function formatIndianDate(dateString) {
+            if (!dateString) return '';
+            
+            const date = new Date(dateString);
+            if (isNaN(date.getTime())) return dateString;
+            
+            const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            
+            const dayName = days[date.getDay()];
+            const monthName = months[date.getMonth()];
+            const day = date.getDate();
+            const year = date.getFullYear();
+            
+            // Format time in 12-hour format
+            let hours = date.getHours();
+            const minutes = date.getMinutes().toString().padStart(2, '0');
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+            hours = hours % 12;
+            hours = hours ? hours : 12; // 0 should be 12
+            
+            return `${dayName} ${monthName} ${day} ${year} ${hours}:${minutes} ${ampm}`;
+        }
 
         // Check authentication on page load
         window.onload = function() {
@@ -394,7 +427,6 @@
             
             currentUser = JSON.parse(user);
             
-            // Redirect if admin tries to access member page
             if (currentUser.role !== 'member') {
                 window.location.href = 'admin.html';
                 return;
@@ -407,7 +439,6 @@
             loadBookCatalog();
         };
 
-        // Load book catalog from CSV
         async function loadBookCatalog() {
             try {
                 const response = await fetch(CSV_URL);
@@ -423,7 +454,6 @@
             }
         }
 
-        // Load user history
         async function loadUserHistory() {
             try {
                 const formData = new URLSearchParams();
@@ -465,6 +495,8 @@
                 else if (item.status === 'checkin') statusClass = 'status-checkin';
                 else if (item.status === 'renew') statusClass = 'status-renew';
                 
+                const formattedDate = formatIndianDate(item.date);
+                
                 html += '<tr>';
                 html += `<td>${item.barcode || ''}</td>`;
                 html += `<td>${item.class_no || ''}</td>`;
@@ -475,10 +507,9 @@
                 html += `<td>${item.publisher || ''}</td>`;
                 html += `<td>${item.pages || ''}</td>`;
                 html += `<td class="${statusClass}">${item.status || ''}</td>`;
-                html += `<td>${item.date || ''}</td>`;
+                html += `<td>${formattedDate}</td>`;
                 html += `<td class="${isOverdue ? 'fine-red' : ''}">₹${fine}</td>`;
                 html += `<td>`;
-                // Show edit button for all statuses (allow multiple edits)
                 html += `<button class="edit-btn" onclick="openEditModal(${item.rowIndex}, '${item.barcode}', '${item.title}', '${item.status}')">Edit</button>`;
                 html += `</td>`;
                 html += '</tr>';
@@ -487,7 +518,6 @@
             tbody.innerHTML = html;
         }
 
-        // Checkout functions
         function openCheckoutModal() {
             document.getElementById('checkoutModal').style.display = 'block';
             clearCheckoutForm();
@@ -571,7 +601,6 @@
             }
         }
 
-        // Edit status functions
         function openEditModal(rowIndex, barcode, title, currentStatus) {
             currentEditRow = rowIndex;
             document.getElementById('editBarcode').value = barcode;
@@ -620,7 +649,6 @@
             }
         }
 
-        // Logout function
         function logout() {
             sessionStorage.removeItem('currentUser');
             window.location.href = 'login.html';
