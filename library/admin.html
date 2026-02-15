@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library Management System - Admin Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: #f5f5f5;
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: white;
+            padding: 15px 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .profile-img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .user-info {
+            font-weight: 500;
+            color: #333;
+        }
+
+        .logout-btn {
+            padding: 8px 20px;
+            background: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: #c0392b;
+        }
+
+        .main-content {
+            padding: 30px;
+        }
+
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .class-info {
+            background: white;
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-weight: 600;
+            color: #667eea;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .search-box {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .search-box input {
+            padding: 10px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            width: 300px;
+            font-size: 16px;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .search-box button {
+            padding: 10px 20px;
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background 0.3s;
+        }
+
+        .search-box button:hover {
+            background: #2980b9;
+        }
+
+        .search-box button.secondary {
+            background: #95a5a6;
+        }
+
+        .search-box button.secondary:hover {
+            background: #7f8c8d;
+        }
+
+        .history-table {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: #f8f9fa;
+            padding: 15px 10px;
+            text-align: left;
+            font-weight: 600;
+            color: #555;
+            border-bottom: 2px solid #dee2e6;
+            position: sticky;
+            top: 70px;
+            background: #f8f9fa;
+        }
+
+        td {
+            padding: 12px 10px;
+            border-bottom: 1px solid #dee2e6;
+            color: #333;
+        }
+
+        tr:hover {
+            background: #f8f9fa;
+        }
+
+        .status-checkout {
+            color: #27ae60;
+            font-weight: 600;
+        }
+
+        .status-checkin {
+            color: #2c3e50;
+            font-weight: 600;
+        }
+
+        .status-renew {
+            color: #3498db;
+            font-weight: 600;
+        }
+
+        .fine-red {
+            color: #e74c3c;
+            font-weight: 600;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+
+        .error-message {
+            color: #e74c3c;
+            text-align: center;
+            margin: 10px 0;
+            padding: 20px;
+        }
+
+        .stats-card {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        .stat-value {
+            color: #333;
+            font-size: 24px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div class="nav-left">
+            <div class="profile-img" id="profileInitial"></div>
+            <span class="user-info" id="userDisplay"></span>
+        </div>
+        <button class="logout-btn" onclick="logout()">Logout</button>
+    </div>
+
+    <div class="main-content">
+        <div class="admin-header">
+            <div class="class-info" id="classInfo"></div>
+            <div class="search-box">
+                <input type="text" id="barcodeSearch" placeholder="Search by barcode...">
+                <button onclick="searchBarcode()">Search</button>
+                <button class="secondary" onclick="loadAllMembersHistory()">Show All</button>
+            </div>
+        </div>
+
+        <div class="stats-grid" id="statsGrid">
+            <!-- Stats will be populated by JavaScript -->
+        </div>
+
+        <div class="history-table">
+            <h3>All Members History - Class <span id="className"></span></h3>
+            <table id="adminHistoryTable">
+                <thead>
+                    <tr>
+                        <th>Member Name</th>
+                        <th>Class</th>
+                        <th>Barcode</th>
+                        <th>Class No</th>
+                        <th>Class Name</th>
+                        <th>Title</th>
+                        <th>Author</th>
+                        <th>Item</th>
+                        <th>Publisher</th>
+                        <th>Pages</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                        <th>Fine (₹)</th>
+                    </tr>
+                </thead>
+                <tbody id="adminHistoryBody">
+                    <tr><td colspan="13" class="loading">Loading...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // HARDCODE YOUR GOOGLE APPS SCRIPT URL HERE
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxwBYueXGVLK_ijjCTRLywIChnauZuOJJsM8QDkoXZEsejhJRpLsg84Trkl8lvOreRClg/exec'; // REPLACE WITH YOUR ACTUAL URL
+        
+        let currentUser = null;
+
+        // Check authentication on page load
+        window.onload = function() {
+            const user = sessionStorage.getItem('currentUser');
+            if (!user) {
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            currentUser = JSON.parse(user);
+            
+            // Redirect if member tries to access admin page
+            if (currentUser.role !== 'admin') {
+                window.location.href = 'member.html';
+                return;
+            }
+            
+            document.getElementById('profileInitial').textContent = currentUser.full_name.charAt(0).toUpperCase();
+            document.getElementById('userDisplay').textContent = `${currentUser.full_name} (Admin - Class ${currentUser.class})`;
+            document.getElementById('classInfo').textContent = `Managing Class: ${currentUser.class}`;
+            document.getElementById('className').textContent = currentUser.class;
+            
+            loadAllMembersHistory();
+        };
+
+        // Load all members history
+        async function loadAllMembersHistory() {
+            try {
+                document.getElementById('adminHistoryBody').innerHTML = '<tr><td colspan="13" class="loading">Loading...</td></tr>';
+                
+                const formData = new URLSearchParams();
+                formData.append('action', 'getAllMembersHistory');
+                formData.append('adminClass', currentUser.class);
+
+                const response = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+                displayAllMembersHistory(data);
+                updateStats(data.history || []);
+            } catch (error) {
+                console.error('Error loading history:', error);
+                document.getElementById('adminHistoryBody').innerHTML = 
+                    '<tr><td colspan="13" class="error-message">Error loading history</td></tr>';
+            }
+        }
+
+        function displayAllMembersHistory(response) {
+            const tbody = document.getElementById('adminHistoryBody');
+            if (!response.history || response.history.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="13" style="text-align: center;">No history found for your class</td></tr>';
+                return;
+            }
+
+            let html = '';
+            const today = new Date();
+            
+            response.history.forEach(item => {
+                const checkoutDate = new Date(item.date);
+                const daysDiff = Math.floor((today - checkoutDate) / (1000 * 60 * 60 * 24));
+                const isOverdue = item.status === 'checkout' && daysDiff > 7;
+                const fine = isOverdue ? (daysDiff - 7) * 2 : (item.fine || 0);
+                
+                let statusClass = '';
+                if (item.status === 'checkout') statusClass = 'status-checkout';
+                else if (item.status === 'checkin') statusClass = 'status-checkin';
+                else if (item.status === 'renew') statusClass = 'status-renew';
+                
+                html += '<tr>';
+                html += `<td>${item.full_name || ''}</td>`;
+                html += `<td>${item.class || ''}</td>`;
+                html += `<td>${item.barcode || ''}</td>`;
+                html += `<td>${item.class_no || ''}</td>`;
+                html += `<td>${item.class_name || ''}</td>`;
+                html += `<td>${item.title || ''}</td>`;
+                html += `<td>${item.author || ''}</td>`;
+                html += `<td>${item.item || ''}</td>`;
+                html += `<td>${item.publisher || ''}</td>`;
+                html += `<td>${item.pages || ''}</td>`;
+                html += `<td class="${statusClass}">${item.status || ''}</td>`;
+                html += `<td>${item.date || ''}</td>`;
+                html += `<td class="${isOverdue ? 'fine-red' : ''}">₹${fine}</td>`;
+                html += '</tr>';
+            });
+            
+            tbody.innerHTML = html;
+        }
+
+        // Search barcode
+        async function searchBarcode() {
+            const barcode = document.getElementById('barcodeSearch').value;
+            if (!barcode) {
+                alert('Please enter a barcode to search');
+                return;
+            }
+
+            try {
+                document.getElementById('adminHistoryBody').innerHTML = '<tr><td colspan="13" class="loading">Searching...</td></tr>';
+                
+                const formData = new URLSearchParams();
+                formData.append('action', 'searchBarcodeHistory');
+                formData.append('barcode', barcode);
+                formData.append('adminClass', currentUser.class);
+
+                const response = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+                displaySearchResults(data);
+            } catch (error) {
+                console.error('Error searching:', error);
+                alert('Error searching barcode');
+            }
+        }
+
+        function displaySearchResults(response) {
+            const tbody = document.getElementById('adminHistoryBody');
+            if (!response.history || response.history.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="13" style="text-align: center;">No records found for this barcode in your class</td></tr>';
+                return;
+            }
+
+            displayAllMembersHistory(response);
+        }
+
+        // Update statistics
+        function updateStats(history) {
+            const totalBooks = history.length;
+            const checkedOut = history.filter(item => item.status === 'checkout').length;
+            const overdue = history.filter(item => {
+                if (item.status !== 'checkout') return false;
+                const daysDiff = Math.floor((new Date() - new Date(item.date)) / (1000 * 60 * 60 * 24));
+                return daysDiff > 7;
+            }).length;
+            const totalFine = history.reduce((sum, item) => {
+                if (item.status === 'checkout') {
+                    const daysDiff = Math.floor((new Date() - new Date(item.date)) / (1000 * 60 * 60 * 24));
+                    if (daysDiff > 7) {
+                        return sum + ((daysDiff - 7) * 2);
+                    }
+                }
+                return sum + (parseFloat(item.fine) || 0);
+            }, 0);
+
+            const statsGrid = document.getElementById('statsGrid');
+            statsGrid.innerHTML = `
+                <div class="stat-item">
+                    <div class="stat-label">Total Books</div>
+                    <div class="stat-value">${totalBooks}</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Currently Checked Out</div>
+                    <div class="stat-value">${checkedOut}</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Overdue Books</div>
+                    <div class="stat-value">${overdue}</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Total Fines</div>
+                    <div class="stat-value">₹${totalFine}</div>
+                </div>
+            `;
+        }
+
+        // Logout function
+        function logout() {
+            sessionStorage.removeItem('currentUser');
+            window.location.href = 'login.html';
+        }
+    </script>
+</body>
+</html>
