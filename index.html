@@ -44,6 +44,8 @@
             --shadesdark-80: #3f3c3d;
             --shadesprimary-10: #f2ebff;
             --shadessecondary-15: #fff5d9;
+            /* Defined fixed header height for consistency */
+            --header-height: 82px;
         }
         
         * {
@@ -63,6 +65,7 @@
             color: var(--maindark);
             background-color: var(--mainwhite);
             overflow-x: hidden;
+            padding-top: 0; 
         }
         
         .container {
@@ -84,7 +87,8 @@
             justify-content: center;
             text-align: center;
             padding: 2rem 0;
-            padding-top: 80px; /* Add padding for fixed navbar */
+            /* Add margin-top exactly equal to header height */
+            margin-top: var(--header-height);
         }
 
         /* Mobile background */
@@ -101,12 +105,12 @@
             }
         }
         
-        /* Navigation - Fixed and Sticky with Black Background */
+        /* Navigation - Fixed and Sticky with Black Background (Updated to match scholars.html) */
         .navbar {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 1rem;
+            padding: 1rem; /* 1rem (16px) top + 1rem bottom + 50px img = 82px total height */
             background-color: #000000;
             position: fixed;
             top: 0;
@@ -115,10 +119,10 @@
             z-index: 1000;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
             transition: all 0.3s ease;
+            height: var(--header-height); /* Enforce exact height */
         }
         
         .navbar.scrolled {
-            padding: 0.75rem 1rem;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
         }
         
@@ -165,6 +169,48 @@
             cursor: pointer;
             display: block;
             z-index: 100;
+        }
+        
+        /* Mobile Menu (Updated to match scholars.html) */
+        .mobile-menu {
+            display: none;
+            position: fixed;
+            top: var(--header-height); /* Matches header height */
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--maindark);
+            z-index: 99;
+            padding: 2rem 1rem;
+            overflow-y: auto;
+        }
+        
+        .mobile-menu.active {
+            display: block;
+        }
+        
+        .mobile-menu-links {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        
+        .mobile-menu-links a {
+            color: var(--mainwhite);
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            padding: 0.5rem 0;
+            text-decoration: none;
+        }
+        
+        .mobile-menu-links a:hover {
+            color: var(--mainwhite);
         }
         
         /* Hero Content */
@@ -980,47 +1026,6 @@
             text-align: center;
         }
         
-        /* Mobile Menu */
-        .mobile-menu {
-            display: none;
-            position: fixed;
-            top: 8px; /* Position below the fixed navbar */
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: var(--maindark);
-            z-index: 99;
-            padding: 2rem 1rem;
-            overflow-y: auto;
-        }
-        
-        .mobile-menu.active {
-            display: block;
-        }
-        
-        .mobile-menu-links {
-            list-style: none;
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-        }
-        
-        .mobile-menu-links a {
-            color: var(--mainwhite);
-            font-size: 1.2rem;
-            font-weight: 700;
-            margin-bottom: 0.25rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            cursor: pointer;
-            padding: 0.5rem 0;
-        }
-        
-        .mobile-menu-links a:hover {
-            color: var(--mainwhite);
-        }
-        
         /* Responsive Design Fixes */
         @media (min-width: 768px) {
             .nav-links {
@@ -1136,7 +1141,7 @@
     </style>
 </head>
 <body>
-    <!-- Fixed Navigation with Black Background -->
+    <!-- Fixed Navigation with Black Background (Updated to match scholars.html) -->
     <nav class="navbar">
         <div class="container" style="width: 100%; max-width: 100%; display: flex; justify-content: space-between; align-items: center;">
             <a href="#" class="logo">
@@ -1160,7 +1165,7 @@
         </div>
     </nav>
 
-    <!-- Mobile Menu -->
+    <!-- Mobile Menu (Updated to match scholars.html) -->
     <div class="mobile-menu" id="mobileMenu">
         <ul class="mobile-menu-links">
             <li><a href="#home" class="mobile-nav-link">Home</a></li>
@@ -1679,7 +1684,7 @@
     </style>
     
     <script>
-        // Mobile Menu Toggle
+        // Mobile Menu Toggle (Updated to match scholars.html)
         document.addEventListener('DOMContentLoaded', function() {
             const mobileMenuBtn = document.getElementById('mobileMenuBtn');
             const mobileMenu = document.getElementById('mobileMenu');
@@ -1692,10 +1697,8 @@
                     mobileMenu.classList.toggle('active');
                     if (mobileMenu.classList.contains('active')) {
                         document.body.style.overflow = 'hidden';
-                        mobileMenuBtn.innerHTML = '<i class="fas fa-times"></i>';
                     } else {
                         document.body.style.overflow = '';
-                        mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
                     }
                 });
             }
@@ -1705,7 +1708,6 @@
                 link.addEventListener('click', function() {
                     mobileMenu.classList.remove('active');
                     document.body.style.overflow = '';
-                    mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
                 });
             });
             
@@ -1770,7 +1772,6 @@
                     !mobileMenuBtn.contains(event.target)) {
                     mobileMenu.classList.remove('active');
                     document.body.style.overflow = '';
-                    mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
                 }
             });
             
@@ -1779,7 +1780,6 @@
                 if (window.innerWidth >= 768) {
                     mobileMenu.classList.remove('active');
                     document.body.style.overflow = '';
-                    if (mobileMenuBtn) mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
                 }
             });
             
