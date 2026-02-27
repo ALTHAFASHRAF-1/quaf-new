@@ -506,7 +506,7 @@
             letter-spacing: 0.5px;
         }
         
-        /* Reports Section */
+        /* Reports Section - Updated for dynamic content */
         .reports-section {
             background-color: var(--mainwhite);
         }
@@ -614,6 +614,68 @@
             height: 100%;
             object-fit: cover;
             border-radius: 0.4rem;
+        }
+        
+        /* Loading and Error States */
+        .loading-state {
+            text-align: center;
+            padding: 3rem 0;
+            color: var(--shadesdark-60);
+        }
+        
+        .loading-spinner {
+            border: 3px solid var(--shadesdark-10);
+            border-top: 3px solid var(--mainprimary);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .error-state {
+            text-align: center;
+            padding: 2rem;
+            color: #dc2626;
+            background-color: #fef2f2;
+            border-radius: 0.75rem;
+            margin: 1rem 0;
+        }
+        
+        .no-data-state {
+            text-align: center;
+            padding: 2rem;
+            color: var(--shadesdark-60);
+            background-color: var(--shadesdark-5);
+            border-radius: 0.75rem;
+            margin: 1rem 0;
+        }
+        
+        /* Gallery Button */
+        .view-gallery-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background-color: transparent;
+            color: var(--mainprimary);
+            border: 1.5px solid var(--mainprimary);
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.85rem;
+            margin-top: 1rem;
+        }
+        
+        .view-gallery-btn:hover {
+            background-color: rgba(122, 56, 252, 0.1);
+            transform: translateY(-2px);
         }
         
         /* Gallery Preview */
@@ -1132,7 +1194,7 @@
         </div>
     </section>
     
-        <!-- Marquee Banner -->
+    <!-- Marquee Banner -->
     <div class="marquee-banner" id="home">
         <div class="marquee-container">
             <span class="marquee-item bold">QUAF</span>
@@ -1272,7 +1334,7 @@
         </div>
     </section>
     
-    <!-- Programs & Reports Section -->
+    <!-- Programs & Reports Section - DYNAMICALLY LOADED FROM GOOGLE SHEETS -->
     <section class="reports-section section-padding">
         <div class="container">
             <div style="text-align: center; margin-bottom: 3rem;">
@@ -1282,34 +1344,37 @@
                 </p>
             </div>
             
-            <div>
-                <!-- Report 1: Freshers Meet -->
-                <div class="report-card">
-                    <div class="report-header">
-                        <span>Thursday, July-25-2024</span>
-                        <span>Programs & Reports</span>
-                    </div>
-                    <div class="report-content">
-                        <div class="report-content-inner">
-                            <div class="report-image">
-                                <img src="https://quaf2026.netlify.app/images/tarheeb.png" alt="Freshers Meet">
-                            </div>
-                            <div class="report-details">
-                                <h3 class="report-title">Freshers Meet</h3>
-                                <div class="report-time">9:00 AM - 4:00 PM</div>
-                                <p class="report-by">By Darul Huda Islamic University, Chemmad</p>
-                                <p class="report-description">
-                                    Tarhib 1446 – Freshers' Grand Meet Up is a welcoming and celebratory event organized by the Centre for Public Education and Training (CPET) and the Office of Guidance and Extension Activities (OGEA) at Darul Huda Islamic University. Designed especially for freshers, the program marks the beginning of a new academic journey by fostering connection, inspiration, and a sense of belonging within the university community.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
+            <!-- Dynamic Content Container -->
+            <div id="reports-container">
+                <!-- Loading State -->
+                <div class="loading-state" id="loadingState">
+                    <div class="loading-spinner"></div>
+                    <p>Loading latest program...</p>
                 </div>
                 
+                <!-- Error State (hidden by default) -->
+                <div class="error-state" id="errorState" style="display: none;">
+                    <i class="fas fa-exclamation-triangle" style="font-size: 2rem; margin-bottom: 1rem;"></i>
+                    <h3>Failed to Load Data</h3>
+                    <p>Unable to fetch program from Google Sheets. Please check your connection and try again.</p>
+                    <button class="btn btn-primary" id="retryBtn" style="margin-top: 1rem;">
+                        <i class="fas fa-redo" style="margin-right: 8px;"></i> Retry
+                    </button>
+                </div>
                 
-               <div style="text-align: center; margin-top: 2rem;">
+                <!-- No Data State (hidden by default) -->
+                <div class="no-data-state" id="noDataState" style="display: none;">
+                    <i class="fas fa-info-circle" style="font-size: 2rem; margin-bottom: 1rem;"></i>
+                    <h3>No Programs Found</h3>
+                    <p>No program data is available in the Google Sheet yet.</p>
+                </div>
+                
+                <!-- Program will be dynamically inserted here -->
+            </div>
+            
+            <!-- See All Programs Button -->
+            <div style="text-align: center; margin-top: 2rem;">
                 <a href="funoon.html" class="btn btn-primary">See All Programs</a>
-                </div>
             </div>
         </div>
     </section>
@@ -1428,6 +1493,191 @@
         </div>
     </footer>
     
+    <!-- Gallery Modal -->
+    <div class="gallery-modal" id="galleryModal">
+        <div class="gallery-modal-content">
+            <div class="gallery-header">
+                <span class="image-counter" id="imageCounter">1 / 0</span>
+                <button class="close-gallery" id="closeGallery">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="gallery-body">
+                <button class="gallery-nav prev" id="prevBtn">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                
+                <div class="gallery-slide-container" id="slideContainer">
+                    <!-- Slides will be dynamically inserted here -->
+                </div>
+                
+                <button class="gallery-nav next" id="nextBtn">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+                
+                <!-- Touch swipe area -->
+                <div class="gallery-swipe-area" id="swipeArea"></div>
+            </div>
+        </div>
+    </div>
+    
+    <style>
+        /* Gallery Modal Styles */
+        .gallery-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 2000;
+            overflow: hidden;
+        }
+        
+        .gallery-modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .gallery-modal-content {
+            width: 90%;
+            max-width: 900px;
+            height: 80vh;
+            background-color: var(--maindark);
+            border-radius: 12px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+        
+        .gallery-header {
+            padding: 1rem 1.5rem;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 10;
+        }
+        
+        .image-counter {
+            font-family: 'Manrope', sans-serif;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        
+        .close-gallery {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: background-color 0.3s;
+        }
+        
+        .close-gallery:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .gallery-body {
+            flex: 1;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        
+        .gallery-slide-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+        
+        .gallery-slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        
+        .gallery-slide.active {
+            opacity: 1;
+            z-index: 2;
+        }
+        
+        .gallery-image {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            padding: 4rem 2rem;
+        }
+        
+        .gallery-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: background-color 0.3s;
+            z-index: 5;
+        }
+        
+        .gallery-nav:hover {
+            background-color: rgba(122, 56, 252, 0.8);
+        }
+        
+        .gallery-nav.prev {
+            left: 20px;
+        }
+        
+        .gallery-nav.next {
+            right: 20px;
+        }
+        
+        .gallery-nav:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+        
+        .gallery-swipe-area {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 3;
+        }
+    </style>
+    
     <script>
         // Mobile Menu Toggle
         document.addEventListener('DOMContentLoaded', function() {
@@ -1442,8 +1692,10 @@
                     mobileMenu.classList.toggle('active');
                     if (mobileMenu.classList.contains('active')) {
                         document.body.style.overflow = 'hidden';
+                        mobileMenuBtn.innerHTML = '<i class="fas fa-times"></i>';
                     } else {
                         document.body.style.overflow = '';
+                        mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
                     }
                 });
             }
@@ -1453,6 +1705,7 @@
                 link.addEventListener('click', function() {
                     mobileMenu.classList.remove('active');
                     document.body.style.overflow = '';
+                    mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
                 });
             });
             
@@ -1517,6 +1770,7 @@
                     !mobileMenuBtn.contains(event.target)) {
                     mobileMenu.classList.remove('active');
                     document.body.style.overflow = '';
+                    mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
                 }
             });
             
@@ -1525,8 +1779,477 @@
                 if (window.innerWidth >= 768) {
                     mobileMenu.classList.remove('active');
                     document.body.style.overflow = '';
+                    if (mobileMenuBtn) mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
                 }
             });
+            
+            // Load latest program from Google Sheets
+            loadLatestProgram();
+            
+            // Initialize gallery modal
+            initGalleryModal();
+        });
+        
+        // --- GALLERY MODAL LOGIC ---
+        let currentGalleryImages = [];
+        let currentGalleryIndex = 0;
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        function initGalleryModal() {
+            const galleryModal = document.getElementById('galleryModal');
+            const closeGalleryBtn = document.getElementById('closeGallery');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const swipeArea = document.getElementById('swipeArea');
+
+            if (!galleryModal) return;
+
+            // Close modal
+            closeGalleryBtn.addEventListener('click', closeGallery);
+            galleryModal.addEventListener('click', function(e) {
+                if (e.target === galleryModal) {
+                    closeGallery();
+                }
+            });
+
+            // Keyboard navigation
+            document.addEventListener('keydown', function(e) {
+                if (!galleryModal.classList.contains('active')) return;
+                
+                if (e.key === 'Escape') {
+                    closeGallery();
+                } else if (e.key === 'ArrowLeft') {
+                    prevImage();
+                } else if (e.key === 'ArrowRight') {
+                    nextImage();
+                }
+            });
+
+            // Previous/Next buttons
+            prevBtn.addEventListener('click', prevImage);
+            nextBtn.addEventListener('click', nextImage);
+
+            // Touch swipe handling
+            swipeArea.addEventListener('touchstart', function(e) {
+                touchStartX = e.changedTouches[0].screenX;
+            });
+
+            swipeArea.addEventListener('touchend', function(e) {
+                touchEndX = e.changedTouches[0].screenX;
+                handleSwipe();
+            });
+        }
+
+        function openGallery(images) {
+            if (!images || images.length === 0) return;
+            
+            currentGalleryImages = images;
+            currentGalleryIndex = 0;
+            
+            const galleryModal = document.getElementById('galleryModal');
+            const slideContainer = document.getElementById('slideContainer');
+            const imageCounter = document.getElementById('imageCounter');
+            
+            if (!galleryModal || !slideContainer || !imageCounter) return;
+            
+            // Clear previous slides
+            slideContainer.innerHTML = '';
+            
+            // Create slides for each image
+            images.forEach((imgSrc, index) => {
+                const slide = document.createElement('div');
+                slide.className = `gallery-slide ${index === 0 ? 'active' : ''}`;
+                slide.innerHTML = `
+                    <img src="${imgSrc}" alt="Gallery Image ${index + 1}" class="gallery-image" 
+                         onerror="this.src='https://quaf2026.netlify.app/images/default-program.jpg'">
+                `;
+                slideContainer.appendChild(slide);
+            });
+            
+            // Update counter
+            imageCounter.textContent = `1 / ${images.length}`;
+            
+            // Show modal
+            galleryModal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            
+            // Update button states
+            updateGalleryButtons();
+        }
+
+        function closeGallery() {
+            const galleryModal = document.getElementById('galleryModal');
+            if (galleryModal) {
+                galleryModal.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        }
+
+        function nextImage() {
+            if (currentGalleryIndex < currentGalleryImages.length - 1) {
+                changeImage(currentGalleryIndex + 1);
+            }
+        }
+
+        function prevImage() {
+            if (currentGalleryIndex > 0) {
+                changeImage(currentGalleryIndex - 1);
+            }
+        }
+
+        function changeImage(newIndex) {
+            const slides = document.querySelectorAll('.gallery-slide');
+            const imageCounter = document.getElementById('imageCounter');
+            
+            if (!slides.length || !imageCounter) return;
+            
+            // Remove active class from current slide
+            slides[currentGalleryIndex].classList.remove('active');
+            
+            // Update index
+            currentGalleryIndex = newIndex;
+            
+            // Add active class to new slide
+            slides[currentGalleryIndex].classList.add('active');
+            
+            // Update counter
+            imageCounter.textContent = `${currentGalleryIndex + 1} / ${currentGalleryImages.length}`;
+            
+            // Update button states
+            updateGalleryButtons();
+        }
+
+        function updateGalleryButtons() {
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            
+            if (prevBtn && nextBtn) {
+                prevBtn.disabled = currentGalleryIndex === 0;
+                nextBtn.disabled = currentGalleryIndex === currentGalleryImages.length - 1;
+            }
+        }
+
+        function handleSwipe() {
+            const swipeThreshold = 50; // Minimum distance for swipe
+            
+            if (touchEndX < touchStartX - swipeThreshold) {
+                // Swipe left - next image
+                nextImage();
+            } else if (touchEndX > touchStartX + swipeThreshold) {
+                // Swipe right - previous image
+                prevImage();
+            }
+        }
+
+        // --- GOOGLE SHEETS INTEGRATION ---
+        const GOOGLE_SHEETS_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRuxfN3pkRvY7gU6w474iyADXj69wz4jVQI0qWMFqqJe0lmKBqSe8Z5yIwNZ5wnPmq_MNWaIjIWE6vo/pub?gid=961050982&single=true&output=csv';
+        const CACHE_KEY = 'quaf_latest_program';
+        const CACHE_TIMESTAMP_KEY = 'quaf_latest_program_timestamp';
+        const CACHE_DURATION = 2 * 60 * 60 * 1000; // 2 hours in milliseconds
+
+        async function loadLatestProgram() {
+            const loadingState = document.getElementById('loadingState');
+            const errorState = document.getElementById('errorState');
+            const noDataState = document.getElementById('noDataState');
+            const reportsContainer = document.getElementById('reports-container');
+            const retryBtn = document.getElementById('retryBtn');
+            
+            if (!reportsContainer) return;
+            
+            // Check cache first
+            const cachedData = getCachedData();
+            if (cachedData) {
+                renderLatestProgram(cachedData);
+                loadingState.style.display = 'none';
+                // Still fetch fresh data in background
+                fetchFreshData();
+                return;
+            }
+            
+            try {
+                const response = await fetch(GOOGLE_SHEETS_CSV_URL);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const csvText = await response.text();
+                const programs = parseCSV(csvText);
+                
+                // Get the latest program (first one after sorting by date)
+                const latestProgram = getLatestProgram(programs);
+                
+                if (latestProgram) {
+                    // Cache the latest program
+                    cacheData(latestProgram);
+                    
+                    // Render the latest program
+                    renderLatestProgram(latestProgram);
+                    loadingState.style.display = 'none';
+                } else {
+                    // No programs found
+                    loadingState.style.display = 'none';
+                    noDataState.style.display = 'block';
+                }
+                
+            } catch (error) {
+                console.error('Error loading program:', error);
+                loadingState.style.display = 'none';
+                errorState.style.display = 'block';
+                
+                // Try to show cached data even if expired
+                const expiredCache = getCachedData(true); // Force get even if expired
+                if (expiredCache) {
+                    renderLatestProgram(expiredCache);
+                    errorState.style.display = 'none';
+                }
+            }
+            
+            // Setup retry button
+            if (retryBtn) {
+                retryBtn.addEventListener('click', function() {
+                    errorState.style.display = 'none';
+                    loadingState.style.display = 'block';
+                    loadLatestProgram();
+                });
+            }
+        }
+        
+        function fetchFreshData() {
+            // Fetch fresh data in background without blocking UI
+            fetch(GOOGLE_SHEETS_CSV_URL)
+                .then(response => {
+                    if (!response.ok) throw new Error('Fetch failed');
+                    return response.text();
+                })
+                .then(csvText => {
+                    const programs = parseCSV(csvText);
+                    const latestProgram = getLatestProgram(programs);
+                    if (latestProgram) {
+                        cacheData(latestProgram);
+                        // Update UI if currently showing
+                        const currentDisplay = document.querySelector('.report-card');
+                        if (currentDisplay) {
+                            renderLatestProgram(latestProgram);
+                        }
+                        console.log('Latest program refreshed in background');
+                    }
+                })
+                .catch(error => {
+                    console.log('Background refresh failed:', error);
+                });
+        }
+        
+        function parseCSV(csvText) {
+            const lines = csvText.split('\n');
+            const programs = [];
+            
+            if (lines.length < 2) return programs;
+            
+            // Extract headers (first line) and convert to lowercase
+            const headers = lines[0].split(',').map(h => h.trim().toLowerCase());
+            
+            // Process each data row
+            for (let i = 1; i < lines.length; i++) {
+                const line = lines[i].trim();
+                if (!line) continue; // Skip empty lines
+                
+                // Simple CSV parsing (handles quoted fields)
+                const values = [];
+                let inQuotes = false;
+                let currentValue = '';
+                
+                for (let j = 0; j < line.length; j++) {
+                    const char = line[j];
+                    
+                    if (char === '"') {
+                        inQuotes = !inQuotes;
+                    } else if (char === ',' && !inQuotes) {
+                        values.push(currentValue.trim());
+                        currentValue = '';
+                    } else {
+                        currentValue += char;
+                    }
+                }
+                values.push(currentValue.trim());
+                
+                // Create program object with headers as keys
+                const program = {};
+                headers.forEach((header, index) => {
+                    if (values[index]) {
+                        program[header] = values[index].replace(/^"|"$/g, ''); // Remove quotes if any
+                    } else {
+                        program[header] = '';
+                    }
+                });
+                
+                // Only add if we have essential data (title and date)
+                if (program.title || program.date) {
+                    programs.push(program);
+                }
+            }
+            
+            return programs;
+        }
+        
+        function getLatestProgram(programs) {
+            if (!programs || programs.length === 0) return null;
+            
+            // Sort by date (most recent first)
+            const sorted = [...programs].sort((a, b) => {
+                const dateA = a.date ? new Date(a.date) : new Date(0);
+                const dateB = b.date ? new Date(b.date) : new Date(0);
+                return dateB - dateA;
+            });
+            
+            return sorted[0]; // Return the most recent program
+        }
+        
+        function renderLatestProgram(program) {
+            const reportsContainer = document.getElementById('reports-container');
+            const loadingState = document.getElementById('loadingState');
+            const errorState = document.getElementById('errorState');
+            const noDataState = document.getElementById('noDataState');
+            
+            if (!reportsContainer) return;
+            
+            // Hide all states
+            loadingState.style.display = 'none';
+            errorState.style.display = 'none';
+            noDataState.style.display = 'none';
+            
+            // Clear container but keep the state divs
+            const states = [loadingState, errorState, noDataState];
+            reportsContainer.innerHTML = '';
+            states.forEach(state => reportsContainer.appendChild(state));
+            
+            if (!program) {
+                noDataState.style.display = 'block';
+                return;
+            }
+            
+            // Collect all image links (img1_link through img4_link)
+            const imageLinks = [];
+            for (let i = 1; i <= 4; i++) {
+                const imgKey = `img${i}_link`;
+                if (program[imgKey] && program[imgKey].trim() && 
+                    (program[imgKey].startsWith('http') || program[imgKey].startsWith('https'))) {
+                    imageLinks.push(program[imgKey].trim());
+                }
+            }
+            
+            // Create the report card HTML
+            const reportCard = document.createElement('div');
+            reportCard.className = 'report-card';
+            
+            // Format date for display
+            const rawDate = program.date || 'Date not specified';
+            const displayDate = formatDate(rawDate);
+            
+            // Get main image (use main_image if available, otherwise first image)
+            const mainImage = program.main_image && program.main_image.trim() && 
+                             (program.main_image.startsWith('http') || program.main_image.startsWith('https'))
+                             ? program.main_image.trim() 
+                             : (imageLinks.length > 0 ? imageLinks[0] : 'https://quaf2026.netlify.app/images/default-program.jpg');
+            
+            reportCard.innerHTML = `
+                <div class="report-header">
+                    <span>${displayDate}</span>
+               
+                </div>
+                <div class="report-content">
+                    <div class="report-content-inner">
+                        <div class="report-image">
+                            <img src="${mainImage}" alt="${program.title || 'Program'}" onerror="this.src='https://quaf2026.netlify.app/images/default-program.jpg'">
+                        </div>
+                        <div class="report-details">
+                            <h3 class="report-title">${program.title || 'Untitled Program'}</h3>
+                            ${program.time ? `<div class="report-time">${program.time}</div>` : ''}
+                            ${program.by ? `<p class="report-by">By ${program.by}</p>` : ''}
+                            <p class="report-description">${program.description || 'No description available.'}</p>
+                            
+                            ${imageLinks.length > 0 ? `
+                                <button class="view-gallery-btn" id="galleryBtn_${Date.now()}">
+                                    <i class="fas fa-images"></i> View Gallery (${imageLinks.length} images)
+                                </button>
+                            ` : ''}
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            reportsContainer.appendChild(reportCard);
+            
+            // Add event listener to the gallery button if it exists
+            const galleryBtn = reportCard.querySelector('.view-gallery-btn');
+            if (galleryBtn && imageLinks.length > 0) {
+                galleryBtn.addEventListener('click', function() {
+                    openGallery(imageLinks);
+                });
+            }
+        }
+        
+        function formatDate(dateString) {
+            if (!dateString || dateString === 'Date not specified') {
+                return 'Date not specified';
+            }
+            
+            try {
+                const date = new Date(dateString);
+                if (isNaN(date.getTime())) {
+                    return dateString; // Return original if can't parse
+                }
+                
+                // Format as "Day, Month DD, YYYY" (e.g., "Thursday, July 25, 2024")
+                const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+                return date.toLocaleDateString('en-US', options);
+            } catch (e) {
+                return dateString;
+            }
+        }
+        
+        function cacheData(data) {
+            try {
+                localStorage.setItem(CACHE_KEY, JSON.stringify(data));
+                localStorage.setItem(CACHE_TIMESTAMP_KEY, Date.now().toString());
+            } catch (e) {
+                console.log('Could not cache data:', e);
+            }
+        }
+         
+        function getCachedData(force = false) {
+            try {
+                const cached = localStorage.getItem(CACHE_KEY);
+                const timestamp = localStorage.getItem(CACHE_TIMESTAMP_KEY);
+                
+                if (!cached || !timestamp) {
+                    return null;
+                }
+                
+                const age = Date.now() - parseInt(timestamp, 10);
+                
+                if (!force && age > CACHE_DURATION) {
+                    return null; // Cache expired
+                }
+                
+                return JSON.parse(cached);
+            } catch (e) {
+                console.log('Could not read cache:', e);
+                return null;
+            }
+        }
+        
+        // Refresh data every 2 hours
+        setInterval(fetchFreshData, 2 * 60 * 60 * 1000);
+        
+        // Also refresh when page becomes visible again
+        document.addEventListener('visibilitychange', function() {
+            if (!document.hidden) {
+                const cachedData = getCachedData();
+                if (!cachedData || (Date.now() - parseInt(localStorage.getItem(CACHE_TIMESTAMP_KEY) || '0', 10) > CACHE_DURATION)) {
+                    fetchFreshData();
+                }
+            }
         });
     </script>
 </body>
